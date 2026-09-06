@@ -208,24 +208,26 @@ class ResearchProgressTests(unittest.TestCase):
         workflow = (ROOT / "docs" / "research-gate-workflow.md").read_text(
             encoding="utf-8"
         ).lower()
-        skill = (SKILL / "SKILL.md").read_text(encoding="utf-8").lower()
-        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8").lower()
+        snapshot_guide = (ROOT / "docs" / "research-progress-snapshots.md").read_text(
+            encoding="utf-8"
+        ).lower()
         template = (
             ROOT / "docs" / "templates" / "review-packet-template.tex"
         ).read_text(encoding="utf-8").lower()
-        combined = "\n".join((workflow, skill, agents, template))
+        # The skill routes here; presentation policy belongs in these references.
+        combined = " ".join("\n".join((workflow, snapshot_guide, template)).split())
 
         for expected in (
             "research-progress.example.json",
             "render_research_progress.py",
-            "actual research project",
+            "state of one research project",
             "standalone svg",
             "figure_style",
             "compact",
             "compact_wrap_after",
             "holoforgeincludeprogress",
             "researchprogressfile",
-            "does not by itself strengthen a scientific claim",
+            "does not itself raise a claim's scientific-support level",
         ):
             self.assertIn(expected, combined)
 
