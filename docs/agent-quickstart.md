@@ -265,8 +265,10 @@ Confirm that the agent has:
 
 - preserved unrelated files and shown the exact diff;
 - used public sources and maintained numerical libraries where appropriate;
-- added or updated tests for changed behavior;
-- run the full test suite and relevant scientific verifier;
+- selected meaningful checks using the [change-based validation policy](agent-maintenance.md#choose-checks-that-can-establish-the-intended-behavior),
+  including the full suite and relevant verifier for executable or scientific
+  changes, or affected link, skill, and policy checks for documentation;
+- completed required default CI before accepting a public integration;
 - kept support claims within the evidence;
 - excluded private paths, secrets, unpublished results, and confidential
   material;

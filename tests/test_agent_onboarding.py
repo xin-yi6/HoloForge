@@ -1,13 +1,94 @@
 """Regression checks for public, cross-agent onboarding."""
 
+import re
 import unittest
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class AgentOnboardingTests(unittest.TestCase):
+    def test_instruction_links_resolve_files_and_sections(self) -> None:
+        paths = [
+            ROOT / "AGENTS.md",
+            ROOT / "docs/agent-maintenance.md",
+            ROOT / "docs/agent-quickstart.md",
+            ROOT / "docs/research-gate-workflow.md",
+            ROOT / "docs/private-research-workflow.md",
+        ]
+        paths.extend((ROOT / ".agents/skills").glob("*/SKILL.md"))
+        for path in paths:
+            # Examples inside code blocks are not navigation links.
+            text = re.sub(
+                r"```.*?```", "", path.read_text(encoding="utf-8"), flags=re.S
+            )
+            for href in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
+                link = urlsplit(href)
+                if link.scheme or link.netloc:
+                    continue
+                target = (
+                    (path.parent / unquote(link.path)).resolve()
+                    if link.path else path
+                )
+                with self.subTest(source=path.relative_to(ROOT), href=href):
+                    self.assertTrue(target.is_file(), f"Missing reference: {href}")
+                    self.assertIn(
+                        ROOT, target.parents,
+                        f"Reference leaves public repository: {href}",
+                    )
+                    if link.fragment:
+                        headings = re.findall(
+                            r"^#{1,6}\s+(.+?)\s*#*\s*$",
+                            target.read_text(encoding="utf-8"), re.M,
+                        )
+                        anchors = {
+                            re.sub(
+                                r"\s", "-",
+                                re.sub(r"[^\w\- ]", "", heading.lower()),
+                            )
+                            for heading in headings
+                        }
+                        self.assertIn(
+                            unquote(link.fragment), anchors,
+                            f"Missing section: {href}",
+                        )
+
+    def test_gate_router_keeps_controlling_policy_reachable(self) -> None:
+        path = ROOT / ".agents/skills/holoforge-research-gate/SKILL.md"
+        skill = path.read_text(encoding="utf-8")
+        links = set()
+        for href in re.findall(r"\[[^\]]+\]\(([^)]+)\)", skill):
+            link = urlsplit(href)
+            target = (path.parent / unquote(link.path)).resolve()
+            if target == ROOT / "docs/research-gate-workflow.md":
+                links.add(unquote(link.fragment))
+        # These are lifecycle policy dependencies, not required copies of prose.
+        required = {
+            "one-gate-one-bounded-question",
+            "use-an-owner-approved-bounded-autonomy-window",
+            "three-statuses-that-must-not-be-confused",
+            "local-git-record-for-private-research",
+            "assess-scientific-opportunity-before-execution-readiness",
+            "declare-portfolio-intent-and-search-scope",
+            "record-opportunity-and-qualify-the-next-gate",
+            "use-a-claim-sufficiency-checkpoint",
+            "check-the-version-of-record-before-a-source-stop",
+            "use-a-bounded-impasse-protocol",
+            "treat-a-model-derived-repair-as-a-new-gate",
+            "update-research-knowledge-during-the-gate",
+            "every-decision-request-includes-a-recommendation",
+            "give-the-owner-clear-response-paths",
+            "repeat-the-choices-after-a-gate-closes",
+            "learn-from-every-closed-gate",
+            "owner-review-pdf-packet",
+            "agent-updated-workflow-snapshot",
+        }
+        self.assertFalse(
+            required - links, f"Unreachable gate controls: {required - links}"
+        )
+
     def test_agent_entrypoints_are_linked_and_consistent(self) -> None:
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         claude = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")

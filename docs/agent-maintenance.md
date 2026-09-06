@@ -61,9 +61,18 @@ status or execution permission.
 
 Load the relevant records for the current operation. Preserve full histories,
 but retrieve applicable stable knowledge IDs and primary evidence instead of
-repeatedly loading every closed project. Read each controlling workflow once
-per relevant revision and revisit it when its version or the task boundary
-changes.
+repeatedly loading every closed project. Read controlling sections and their
+prerequisites once per relevant revision; revisit them when their version or
+task boundary changes. Skill entry points identify shared controls and
+phase-specific links; execution does not require rereading intake or PDF
+guidance unless that phase is relevant. This changes retrieval, not the scientific contract.
+
+When reviewing instruction changes, walk through representative status,
+targeted-review, documentation-fix, and scientific-gate requests. Check which
+records they load, what work they authorize, and where they finish. Link and
+metadata checks establish discoverability, not agent judgment or performance.
+Keep acceptance criteria, authorization, privacy and transition checks; avoid
+requiring the same policy prose in every entry point and reference.
 
 ## Choose checks that can establish the intended behavior
 

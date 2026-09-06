@@ -1,14 +1,18 @@
 ---
 name: holoforge-auto-research
-description: Run or prepare a governed end-to-end HoloForge Explore campaign in which an agent may generate and select research candidates, execute derivations and code, verify evidence, pivot within a frozen budget, and assemble a paper-and-code package without routine human choices. Use for true auto mode, autonomous paper-seeking research, unattended HoloForge campaigns, or auditing such a campaign. Do not use it to guarantee publication, change the public framework, manufacture human approval, submit or disclose work, or bypass the research-gate workflow.
+description: "Prepare, run, or audit an owner-authorized autonomous HoloForge Explore campaign with a frozen mission, budget, and framework pin. Use for campaign-level delegation; use research-gate for a single gate."
 ---
 
 # HoloForge Auto Research
 
 Use this skill as the campaign-level controller above repeated
-`holoforge-research-gate` runs. Read `CONSTITUTION.md`, `AGENTS.md`,
-`docs/autonomous-research-workflow.md`, `docs/private-research-workflow.md`, and
-`docs/research-gate-workflow.md` before preparing or running a campaign.
+`holoforge-research-gate` runs. Before preparing or running a campaign, read
+[the Constitution](../../../CONSTITUTION.md), [agent instructions](../../../AGENTS.md),
+and [campaign authority](../../../docs/autonomous-research-workflow.md).
+Follow [private-research policy](../../../docs/private-research-workflow.md)
+for workspace setup and the [gate skill](../holoforge-research-gate/SKILL.md)
+for each delegated gate. Reuse unchanged controlling records at the pinned
+revision; load phase-specific gate guidance when that operation becomes relevant.
 
 For infrastructure maintenance or a model upgrade, first use
 `docs/agent-maintenance.md`. Preserve terminal campaigns and their immutable

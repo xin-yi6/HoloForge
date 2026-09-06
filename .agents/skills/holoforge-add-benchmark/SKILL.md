@@ -1,12 +1,16 @@
 ---
 name: holoforge-add-benchmark
-description: Design, review, implement, or extend a public HoloForge Forge/Verify benchmark with explicit literature provenance, equations, boundary conditions, maintained numerical libraries, convergence evidence, acceptance gates, model cards, documentation, and tests. Use for established bottom-up models cleared for public release, including owner review of scientific contracts. When equations, tables, or plots are difficult to review reliably in Markdown, prepare a compiled and visually checked PDF review packet before requesting scientific approval. Do not use for unpublished Explore candidates or to present model agreement as empirical validation.
+description: "Design, review, or implement a public HoloForge Forge/Verify benchmark from established literature. Use for public model contracts and reproducible checks; use research-gate for unpublished hypotheses."
 ---
 
 # HoloForge Add Benchmark
 
 Add one literature-anchored executable verification target without forcing a
 new numerical problem into an unsuitable common solver interface.
+
+For status or documentation maintenance, use [agent maintenance](../../../docs/agent-maintenance.md).
+For scientific work, reuse a current approved contract and its authorization
+when the requested scope is unchanged; review only a new or changed contract.
 
 ## Freeze the benchmark contract
 

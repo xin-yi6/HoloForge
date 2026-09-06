@@ -91,13 +91,14 @@ may also be embedded in an owner-review packet. The checked-in example uses the
 compact owner-review style; the canonical state and full-size figure remain
 project-local. See the [snapshot style guide](research-progress-snapshots.md).
 
-After an approved gate is recorded and closed, the agent must repeat the
-completed/current/next summary and present fresh A-E choices for the next
-eligible handoff. This requirement applies even when the recommendation is to
-remain paused. The new menu does not reopen the completed gate, authorize a
-calculation, or turn `no approval pending` into an approval. A separate
-portfolio choice must be identified as a separate gate rather than inserted as
-false pending state in the closed research project.
+After an approved gate is recorded and closed, report completed/current/next
+status. Present fresh A-E choices when an actual next owner or portfolio
+decision is pending, including when its recommendation is to remain paused.
+If no such decision is pending, report completion or the recorded pause without
+inventing another approval menu. The new menu does not reopen the completed gate
+or authorize a calculation. A separate portfolio choice must be identified as
+a separate gate; never insert false pending state into a closed project with
+`awaiting_owner: false`. Follow the [post-closure handoff policy](research-gate-workflow.md#repeat-the-choices-after-a-gate-closes).
 
 After a detailed gate contract is frozen, the owner may reduce unnecessary
 interruptions by approving a project-local
@@ -167,12 +168,18 @@ contract so the window does not introduce an extra decision gate.
 
 ### When a gate becomes stuck
 
-Use the bounded impasse protocol in the research-gate workflow when a blocker
-recurs or the approved repair budget is nearly exhausted. Classify the blocker,
-search targeted primary and authoritative external evidence, audit the physics
-independently, inspect the matching numerical or implementation layer, and
-freeze at most one scoped repair before returning to the owner. Internet search
-is an evidence-locating step, not a substitute for physical reasoning. Preserve
+When a blocker recurs or the repair budget is nearly exhausted, first honor
+the current window or mission's [mandatory return triggers](research-gate-workflow.md#use-an-owner-approved-bounded-autonomy-window).
+If a return is required or the budget is exhausted, preserve the permitted stop
+record and return before further investigation or repair. The impasse protocol
+does not itself authorize another search, audit, calculation, or budget increase.
+
+Within explicitly authorized investigation scope and remaining limits, follow
+the [bounded impasse protocol](research-gate-workflow.md#use-a-bounded-impasse-protocol):
+classify the blocker, search targeted authoritative evidence, audit the physics
+independently, inspect the relevant implementation, and prepare at most one
+scoped repair proposal. Execute a repair only under its required frozen
+authority. Internet search locates evidence; it does not validate a fix. Preserve
 an unresolved source or technical stop if the bounded repair fails; do not
 silently loosen thresholds or expand the hypothesis.
 

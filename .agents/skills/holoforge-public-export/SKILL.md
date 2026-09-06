@@ -1,6 +1,6 @@
 ---
 name: holoforge-public-export
-description: Audit and promote a reusable artifact from private HoloForge research into the public repository without exposing unpublished science. Use when proposing to transfer code, tests, templates, schemas, workflows, documentation, or data from a private project, or when reviewing a pull request that may contain private paths, identifiers, results, or claims. Do not use it as evidence that publication or disclosure is scientifically authorized.
+description: "Audit a proposed private-to-public HoloForge artifact transfer for disclosure authority, provenance, and private content. Use before exporting private research artifacts or reviewing such a contribution."
 ---
 
 # HoloForge Public Export

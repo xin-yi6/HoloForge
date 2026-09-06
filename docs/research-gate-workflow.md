@@ -354,7 +354,16 @@ convention used by private code, or an error in the paper's physical result.
 Do not let a repeated blocker consume an open-ended sequence of retries. Use
 this protocol when the same blocker recurs, the approved repair budget is
 nearly exhausted, or hostile criticism identifies a tractable alternative
-explanation that the current contract cannot distinguish:
+explanation that the current contract cannot distinguish.
+
+First honor the current window or mission's mandatory return triggers. If
+entering this protocol requires owner return, or its budget is exhausted,
+preserve the permitted stop record and return before further investigation.
+The steps below govern an authorized impasse investigation within its remaining
+limits; they do not grant authority to continue a stopped window, enlarge a
+budget, or execute a new repair. Existing explicit mission delegation may cover
+an investigation; otherwise obtain the missing authority before it begins.
+Within that authority:
 
 1. **Classify the blocker:** source/provenance, physical dictionary or
    consistency, analytic derivation, numerical representation, or software
@@ -519,17 +528,18 @@ unlisted work, publication, merging, or release.
 
 ## Repeat the choices after a gate closes
 
-Recording an owner decision does not end the conversational handoff. The
-closure receipt must repeat the completed/current/next status, identify what
-remains closed, and name the next eligible decision. It must then give the
-owner a fresh A-E response menu for that next handoff, with an item-by-item
-recommendation when new work is proposed. Do not end only with statements such
-as `no approval is pending` or `a later portfolio decision is required` when
-the eligible choices can already be named.
+After recording a closure decision, report completed/current/next status and
+what remains closed. When an actual next owner or portfolio decision is
+pending, name its scope and give fresh A-E choices with item-by-item
+recommendations. Do not replace that real handoff with only `no approval is
+pending` or `a later portfolio decision is required` when its eligible choices
+are already defined. If there is no pending decision, report completion or the
+recorded pause without creating an approval menu.
 
 The fresh menu is not retrospective approval and does not silently reopen the
-closed gate. If no scientifically justified next action exists, recommend that
-the project remain paused and make the status-walkthrough path explicit. If
+closed gate. When the pending decision concerns whether to continue and no
+scientifically justified action exists, recommend that the project remain paused
+and make the status-walkthrough path explicit. If
 the next choice belongs to a separate project or portfolio gate, say so and
 keep the closed project's own state accurate. A project whose canonical state
 has `awaiting_owner: false` must not receive a fabricated pending owner menu
@@ -542,6 +552,11 @@ server. It represents the state of one research project: literature screening,
 frozen questions, theoretical and numerical checks, verification, critic
 review, owner decisions, feedback loops, later gates, and possible completion.
 It is not a timeline of HoloForge's own software development.
+
+The following setup and refresh steps apply when a progress view is requested
+or already adopted for the project. Do not create a new state file or figure
+for every gate by default. Once adopted, keep the view synchronized with the
+canonical research state at its durable milestones.
 
 The research-gate skill includes:
 
@@ -668,10 +683,11 @@ image, and visually check clipping, overlaps, equations, tables, plots,
 headers, and page numbers before delivery.
 
 The standalone SVG remains the easiest way to inspect the full research map.
-When a review packet is already required, enable the template's optional
-progress page by defining `\HoloForgeIncludeProgress`, set the generated PDF
-path and timestamp, and compile it into the packet. Do not create a PDF solely
-to show the progress figure when the standalone SVG or Markdown view is
+When a review packet is required and a progress view has been requested or
+adopted, enable the template's optional progress page by defining
+`\HoloForgeIncludeProgress`, set the generated PDF path and timestamp, and
+compile it into the packet. Otherwise omit the progress page. Do not create a
+PDF solely to show the progress figure when the standalone SVG or Markdown view is
 sufficient.
 
 This conditional rule applies to both private Explore gates and public

@@ -164,8 +164,7 @@ class PublicContentPolicyTests(unittest.TestCase):
 
         self.assertIn("color is never the only carrier of meaning", workflow)
         self.assertIn("short bold challenge sentence", workflow)
-        self.assertIn("semantic status commands", skill)
-        self.assertIn("short bold challenge sentence", skill)
+        self.assertIn("#owner-review-pdf-packet", skill)
 
     def test_pdf_review_rule_covers_explore_and_forge_verify(self):
         workflow = " ".join(
@@ -235,13 +234,14 @@ class PublicContentPolicyTests(unittest.TestCase):
             .split()
         )
 
-        for text in (workflow, private_workflow, skill):
+        for text in (workflow, private_workflow):
             self.assertIn("after", text)
             self.assertIn("closed", text)
             self.assertIn("completed/current/next", text)
             self.assertIn("a-e", text)
             self.assertIn("remain paused", text)
 
+        self.assertIn("#repeat-the-choices-after-a-gate-closes", skill)
         self.assertIn("awaiting_owner: false", workflow)
         self.assertIn("must not receive a fabricated pending owner menu", workflow)
         self.assertIn("does not reopen the completed gate", private_workflow)
@@ -289,12 +289,12 @@ class PublicContentPolicyTests(unittest.TestCase):
 
         self.assertIn("named human owner decides", combined)
         self.assertIn("does not by itself show", combined)
-        self.assertIn("planned model or capability construction is not a repair", combined)
+        self.assertIn("planned model or capability construction is not a numerical repair", combined)
         self.assertIn("capability receipts", combined)
-        self.assertIn("must not select the questions worth pursuing", combined)
+        self.assertIn("capability availability cannot decide which physics questions", combined)
         self.assertIn("best nonholographic baseline", combined)
-        self.assertIn("an extra dimension", combined)
-        self.assertIn("total construction and compute cost", combined)
+        self.assertIn("one extra dimension", combined)
+        self.assertIn("construction effort, and compute cost", combined)
         self.assertIn("not a novelty", scorecard)
         self.assertIn("prior-knowledge review", scorecard)
         self.assertIn("stable knowledge or lesson id", combined)
@@ -418,7 +418,7 @@ class PublicContentPolicyTests(unittest.TestCase):
         self.assertIn("directly unlocks", combined)
         self.assertIn("only the short-horizon", combined)
         self.assertIn("planned model or capability construction is not a numerical repair", combined)
-        self.assertIn("must not select the questions worth pursuing", combined)
+        self.assertIn("capability availability cannot decide which physics questions", combined)
         self.assertIn("do not weaken numerical acceptance gates", combined)
         self.assertNotIn("/users/", combined)
         self.assertNotIn("holoforge-explore-private", combined)
@@ -508,7 +508,7 @@ class PublicContentPolicyTests(unittest.TestCase):
             "conditioning",
             "maintained library",
             "one bounded repair",
-            "self-derived correction",
+            "model-derived repair",
             "technical stop",
         ):
             self.assertIn(required_term, combined)
@@ -564,7 +564,7 @@ class PublicContentPolicyTests(unittest.TestCase):
             "one local commit only when the owner explicitly checks",
             combined,
         )
-        self.assertIn("never authorizes push, merge, release", combined)
+        self.assertIn("never implies permission to push, merge, release", combined)
         self.assertNotIn("/users/", combined)
         self.assertNotIn("holoforge-explore-private", combined)
         for private_identifier in ("i13", "c01", "c02", "c03", "d001", "m001"):
@@ -632,7 +632,7 @@ class PublicContentPolicyTests(unittest.TestCase):
             "correction",
             "erratum",
             "doi",
-            "version/date",
+            "version and date",
             "exact locator",
             "preprint evidence",
             "author intent",

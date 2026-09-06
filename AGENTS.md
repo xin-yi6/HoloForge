@@ -1,144 +1,77 @@
 # HoloForge agent instructions
 
-These instructions apply to coding and research agents working in this public
-repository. Start from the repository root so the project files and local
-workflows are available.
-
-## Project identity
-
 HoloForge is a verification-first platform for bottom-up gauge/gravity
-modelling. Preserve the separation between:
+modelling. **Forge/Verify** reproduces literature-anchored models;
+**Explore** tests falsifiable hypotheses with explicit support and disclosure
+states. A passing model calculation is not empirical validation of nature.
 
-- **Forge/Verify:** literature-anchored models and reproducible checks; and
-- **Explore:** falsifiable hypotheses whose support and disclosure state must
-  remain explicit.
+## Start with the current task
 
-Read `CONSTITUTION.md` before changing a scientific contract. Do not describe a
-passing model calculation as empirical validation of nature.
-
-## Start every task
-
-1. Inspect `git status` and preserve unrelated user changes.
-2. Read `README.md` and the documentation relevant to the requested task.
-3. Classify the work as Forge/Verify, Explore, or infrastructure/documentation.
-4. State the intended files, validation, and scientific boundary before a
-   substantial change.
-5. Prefer a narrow, reversible implementation and maintained library
-   functions over custom numerical primitives.
-
-For instruction upgrades, concurrent-task maintenance, status retrieval or
-research resumption, follow `docs/agent-maintenance.md`. Honor the current
-request and authorization already recorded for its scope. A routine maintenance
-step or status answer does not open a scientific gate or require a new A-E menu.
-
-For a first session, follow `docs/agent-quickstart.md`.
+1. Inspect `git status` and preserve unrelated changes.
+2. Classify the request as Forge/Verify, Explore, or infrastructure/documentation.
+3. Load the matching workflow below and only the context needed for this task.
+   Read [README.md](README.md) and [the quickstart](docs/agent-quickstart.md)
+   when orienting to the project or its environment; reuse unchanged context.
+4. Before a substantial change, state its files, validation, and scientific
+   boundary. Prefer narrow, reversible changes and maintained library functions.
 
 ## Choose the matching workflow
 
-- Adding or extending a public benchmark: read and follow
-  `.agents/skills/holoforge-add-benchmark/SKILL.md`.
-- Running a bounded Explore gate: read and follow
-  `.agents/skills/holoforge-research-gate/SKILL.md`.
-- Preparing, running, or auditing an owner-authorized end-to-end autonomous
-  Explore campaign: read and follow
-  `.agents/skills/holoforge-auto-research/SKILL.md`.
-- Moving any artifact from private research into this repository: read and
-  follow `.agents/skills/holoforge-public-export/SKILL.md`.
+| Task | Read and follow |
+| --- | --- |
+| Status, instruction upgrades, concurrent maintenance, or resumption | [Agent maintenance](docs/agent-maintenance.md) |
+| Public benchmark design, review, implementation, or extension | [holoforge-add-benchmark](.agents/skills/holoforge-add-benchmark/SKILL.md) |
+| One bounded Explore gate | [holoforge-research-gate](.agents/skills/holoforge-research-gate/SKILL.md) |
+| An autonomous Explore campaign | [holoforge-auto-research](.agents/skills/holoforge-auto-research/SKILL.md) |
+| Any private-to-public artifact transfer | [holoforge-public-export](.agents/skills/holoforge-public-export/SKILL.md) |
 
-If the agent runtime exposes repository skills, invoke the matching skill. If
-it does not, open the named `SKILL.md` and follow it as the task procedure.
-These workflows do not replace human scientific or disclosure approval.
+Invoke repository skills when available; otherwise read the linked `SKILL.md`.
+Follow its relevant document links before the corresponding operation. Reuse
+authorization already recorded for the same scope. Ordinary maintenance and
+status requests do not open a scientific gate or require an A-E menu.
 
-## Scientific and privacy rules
+## Scientific and privacy boundaries
 
-- Record conventions, equations, boundary conditions, ensemble, numerical
-  method, tolerances, validation evidence, and limitations.
-- Treat numerics as evidence for a named claim-bearing physical decision, not
-  as the default research endpoint. Before numerical work, freeze the
-  claim-sufficiency criteria in `docs/research-gate-workflow.md`. Once they
-  pass, stop numerical refinement unless more work can change that decision,
-  test a distinct physical alternative, or materially strengthen the claim.
-  Never obtain sufficiency by weakening a threshold or dropping a failed check.
-- Use the support and review labels defined in `docs/scientific-support.md`.
-- Mark material AI involvement; human review must not erase AI provenance.
-- During an active private Explore gate, update its research knowledge base at
-  durable milestones. Keep working knowledge explicitly provisional,
-  evidence-linked, and separate from human-reviewed stable knowledge; preserve
-  challenged or retired entries and their non-inference boundaries. Capture
-  reusable knowledge from literature, dictionaries, derivations, methods,
-  data, results, decisions, and reproducibility work, not only failures.
-- Before a new Explore intake, read the private reviewed-knowledge and closure-
-  lesson indexes, inspect primary evidence for applicable entries, and record
-  how their stable IDs change the new scorecard or contract. Also declare the
-  portfolio intent, search shape, domains considered or excluded, and actual
-  candidate coverage. Before capability matching, assess scientific
-  opportunity through physical importance, gap plausibility, falsifiability,
-  physical or conceptual holographic leverage, computational or
-  representational holographic leverage, explanatory or predictive depth,
-  outcome value, and owner fit. A computational-leverage claim must name the
-  hard original problem, best nonholographic baseline, dictionary and validity
-  regime, accessible observables, accuracy, robustness, and total construction
-  and compute cost; an extra dimension alone is not an advantage. The named
-  human owner decides scientific value; capability receipts must not select
-  the question. Then classify the horizon as open
-  discovery, strategic development, or short-horizon execution. For
-  publication-targeted work, record the minimum publishable physical claim,
-  earliest honest physical-discriminator gate and prerequisites, numerical-
-  dependence lane, campaign construction budget, separate candidate-wide
-  repair budget, and non-aggregate scientific-opportunity, physical-claim,
-  source-and-novelty, and numerical-credibility status. Only the short-horizon
-  lane normally reaches the discriminator in the first or second detailed
-  gate; question-necessary model and capability construction may use an owner-
-  approved strategic campaign.
-- When a blocker recurs or a repair budget is nearly exhausted, use the bounded
-  impasse protocol in `docs/research-gate-workflow.md`: combine targeted
-  authoritative source search with an independent physics audit, then freeze
-  at most one scoped repair. The repair budget is cumulative across a
-  publication-targeted candidate; after one failed numerical repair, require a
-  portfolio-level reassessment before any second repair. Do not use internet
-  search as authority, weaken a threshold post hoc, or relabel a technical stop
-  as a physical result.
-- At every closed Explore gate, preserve the result and complete the generic
-  closure retrospective in `docs/templates/research-retrospective-template.md`;
-  feed lessons into future gates without rewriting the closed one.
-- Keep unpublished hypotheses, calculations, results, literature notes, and
-  manuscripts in a separate access-controlled repository.
-- Never add secrets, private filesystem paths, confidential correspondence,
-  or unpublished candidate identifiers to this public repository.
-- Do not infer that approval to calculate authorizes publication or public
-  transfer.
-- When an owner-approved bounded autonomy window is recorded for a frozen
-  Explore gate, finish its listed routine work without requesting approval at
-  every intermediate source, plot, test, or implementation choice. Return at
-  the first declared outcome, stop, scope or threshold change, cost or repair
-  overrun, impasse, interpretation or publication judgment, disclosure or
-  external communication, or unlisted Git/remote action. The window never
-  rolls over to another gate or candidate.
-- For an owner-authorized autonomous campaign, treat the mission hash as the
-  campaign authority. Use one coordinator as the sole canonical writer and
-  keep literature, execution, and verification roles read-only. Do not touch
-  the pinned HoloForge checkout, other projects, frozen contracts or thresholds,
-  raw evidence, human review states, credentials, global configuration, remote
-  Git state, external communications, disclosure, or submission. Return at the
-  first illegal transition, integrity mismatch, budget overrun, path escape, or
-  undelegated decision. A stopped campaign is a valid terminal deliverable.
+- Read [CONSTITUTION.md](CONSTITUTION.md) before scientific work or changing a
+  scientific contract. Record conventions, equations, boundary conditions,
+  ensemble, methods, tolerances, evidence, and limitations. Use the labels in
+  [scientific support](docs/scientific-support.md); preserve AI provenance.
+- Keep unpublished research in a separate access-controlled repository. Never
+  add secrets, private paths, confidential correspondence, or unpublished
+  identifiers, calculations, or results to this public repository. Calculation
+  authority does not authorize publication or public transfer.
+- A frozen contract, bounded autonomy window, or exact authorized mission
+  controls research execution. Preserve framework pins, thresholds, budgets,
+  raw evidence, and human review states. Finish authorized routine work and
+  return at its first declared stop, outcome, or undelegated decision. Model
+  upgrades and personal skill defaults cannot expand that authority.
+- Numerics serve a registered physical decision. Apply the prospective
+  [claim-sufficiency checkpoint](docs/research-gate-workflow.md#use-a-claim-sufficiency-checkpoint)
+  and stop refinement that cannot change the decision or strengthen the claim.
+  Never obtain sufficiency by weakening a threshold or dropping a failed check;
+  a technical stop is not automatically a physical negative result.
+- Use the research-gate workflow for opportunity assessment, cumulative repair
+  limits, milestone knowledge, and closure lessons. Keep provisional knowledge
+  evidence-linked and separate from human-reviewed knowledge. Use one canonical
+  writer per mutable research project and preserve independent verification.
 
-## Validation
+## Validation and completion
 
-Use the documented environment and choose checks by change type in
-`docs/agent-maintenance.md`. For executable infrastructure or scientific changes,
-run the relevant focused checks, then complete these integration checks once:
+Choose checks using [the maintenance policy](docs/agent-maintenance.md#choose-checks-that-can-establish-the-intended-behavior).
+For executable infrastructure or scientific changes, run focused checks, then
+these integration checks once in the documented environment:
 
 ```bash
 python -m unittest discover -s tests -v
 holoforge verify soft-wall-vector
 ```
 
-Run the relevant benchmark or comparison command for scientific changes. Also
-inspect the final diff and run `git diff --check`. Changes to scientific
-results require synchronized documentation, model records, and tests.
-For documentation-only changes, check the affected links, skills and policies;
-do not run numerical campaigns. Full CI remains required for public integration.
+Run the relevant frozen scientific controls when scientific behavior changes;
+keep results, model records, documentation, and tests synchronized. For
+documentation-only changes, inspect links and affected skill/policy checks.
+Inspect the final diff and run `git diff --check`. Finish authorized fixes and
+required validation before delivery; repeat checks only after relevant changes
+or new concerns. Full default CI remains required for public integration.
 
 ## Git and review
 
@@ -166,6 +99,3 @@ do not run numerical campaigns. Full CI remains required for public integration.
   then offer A-E paths: approve all recommendations, approve selected items,
   request revision or evidence, status walkthrough only, or a custom response.
   Recommend one path and never infer authorization beyond its stated scope.
-- When a progress picture is requested, map the actual research project rather
-  than HoloForge development. Keep its state and full-size figure project-local;
-  embed a dated PDF snapshot in a review packet only when that packet is needed.
