@@ -19,6 +19,7 @@ class AgentOnboardingTests(unittest.TestCase):
             ROOT / "docs/private-research-workflow.md",
             ROOT / "docs/physics-manuscript-writing.md",
             ROOT / "docs/physics-writing-reading-study.md",
+            ROOT / "docs/physics-writing-cross-field-study.md",
         ]
         paths.extend((ROOT / ".agents/skills").glob("*/SKILL.md"))
         for path in paths:
@@ -170,6 +171,34 @@ class AgentOnboardingTests(unittest.TestCase):
             # These checks establish navigation and stated boundaries, not prose quality.
             with self.subTest(boundary=boundary):
                 self.assertIn(boundary, study)
+
+    def test_cross_field_writing_keeps_substance_separate_from_style(self) -> None:
+        target = "physics-writing-cross-field-study.md"
+        for source in ("docs/physics-manuscript-writing.md",
+                       "docs/physics-writing-reading-study.md"):
+            with self.subTest(source=source):
+                self.assertIn(target, (ROOT / source).read_text(encoding="utf-8"))
+        study = " ".join((ROOT / "docs" / target).read_text(encoding="utf-8").split())
+        for boundary in ("reading depth", "not a quality target",
+                         "not a publication-readiness certificate",
+                         "does not authorize new science"):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, study)
+        guide = " ".join((ROOT / "docs/physics-manuscript-writing.md").read_text(
+            encoding="utf-8").split())
+        self.assertIn("Assess scientific substance separately from presentation", guide)
+        self.assertIn("not an automatic score or journal guarantee", guide)
+
+    def test_natural_prose_guidance_preserves_authorship_transparency(self) -> None:
+        guide = " ".join((ROOT / "docs/physics-manuscript-writing.md").read_text(
+            encoding="utf-8").split())
+        # A stated editorial boundary is testable; naturalness itself needs reading.
+        for boundary in ("Write natural, author-led physics prose",
+                         "Do not invent personal motivations",
+                         "does not establish human authorship or remove AI assistance",
+                         "recorded provenance, human scientific review"):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, guide)
 
 
 if __name__ == "__main__":

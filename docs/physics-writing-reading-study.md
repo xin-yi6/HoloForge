@@ -17,6 +17,11 @@ for contrast. It is not representative of every theoretical-physics field.
 Top-down examples teach exposition here; they do not change HoloForge's
 bottom-up scientific identity.
 
+The [cross-field companion](physics-writing-cross-field-study.md) adds nine
+non-holographic examples, bringing the combined study to twenty-five papers.
+It contrasts common reasoning habits with genre-specific evidence obligations;
+the original sixteen entries below retain their recorded reading scope.
+
 Entries 1–4 retain the first selected-section study. The expansion adds twelve
 papers: five read through the main text (5, 8, 9, 11, 12) and seven inspected
 in the specified sections. “Main text” includes the abstract and conclusion,

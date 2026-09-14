@@ -33,10 +33,11 @@ under the [scientific-support policy](scientific-support.md).
 
 ## Learn structure from papers, not an author's voice
 
-Use the [comparative reading study](physics-writing-reading-study.md) as a
-starting corpus, not a substitute for reading. It records sixteen examples,
-their exact versions, reading depth, contrasting argument structures and
-transferable lessons. It includes short results, conceptual proposals,
+Use the [comparative reading study](physics-writing-reading-study.md) and
+its [cross-field companion](physics-writing-cross-field-study.md) as a
+starting corpus, not a substitute for reading. Together they record twenty-five
+examples, their exact versions, reading depth, contrasting argument structures
+and transferable lessons. They include short results, conceptual proposals,
 analytic arguments, numerical studies and long frameworks. Author reputation
 can help find examples; the observable quality of the argument determines
 what to adopt. A larger bibliography alone does not establish a better style.
@@ -55,6 +56,29 @@ voice. Keep downloaded papers and project-specific reading notes out of public
 HoloForge. The public study contains only generic editorial observations and
 primary-source links. Neither an author's prominence, a two-column layout nor
 a famous paper's historical claims are substitutes for current evidence.
+
+## Share the reasoning, adapt to the evidence
+
+Physics communities share an argumentative core: identify a consequential
+question, define the physical system and assumptions, establish a result,
+and explain what it changes. Their prose and evidence conventions are not
+identical. Learn from particle physics, condensed matter, statistical physics,
+quantum foundations and cosmology as well as holography. Select examples by
+the job the argument performs, not only by the model or an author's fame.
+
+An analytic paper may make a theorem and its assumptions the backbone; a
+model paper may explain an effect through controlled limits and contrasting
+regimes; an observational paper may lead with the signal and distinguish its
+significance from parameter inference. A useful shared principle is to make
+every major equation, figure and check advance the argument. Do not impose
+an observational significance threshold on a deterministic calculation, or
+strip essential numerical methods from a theory paper to imitate a letter.
+
+The [cross-field comparisons](physics-writing-cross-field-study.md#comparative-lessons)
+include examples where an important conceptual contribution coexists with
+unresolved implementation questions. This is not an exemption from validation:
+the unresolved issue must not defeat the claim actually being made. Historical
+success and present author reputation are not acceptance criteria for new work.
 
 ## Choose an argument architecture
 
@@ -139,6 +163,73 @@ there is no blanket ban on them or on numerical-method papers.
   Neither a section-by-section inventory nor an unqualified success claim is
   an adequate ending.
 
+## Distinguish a readable draft from a submission-ready argument
+
+Assess scientific substance separately from presentation. Neither page count,
+figure count, elapsed effort nor a famous short paper establishes that a new
+manuscript contains enough work. Ask:
+
+1. What precise physical or methodological knowledge does the reader gain?
+2. How does it differ from the closest prior result, routine application or
+   known limiting behavior? State the literature search's scope and uncertainty.
+3. Does the evidence establish that claim under its stated assumptions, and
+   explain why it matters? A useful new calculation, representation or access
+   to a previously difficult observable can contribute without a new exponent.
+4. Which unresolved issues could invalidate the central result or its claimed
+   significance, and which are genuinely future extensions?
+
+Do not require every possible extension for a focused paper. Conversely, do
+not promote a working solver, a long validation history or a known mechanism
+into a new physical discovery. Publication readiness is a reasoned assessment
+for a contribution and readership, not an automatic score or journal guarantee.
+
+An early draft can reveal a missing argument before the research is complete.
+If the missing item is evidence or physical interpretation rather than prose,
+identify it and propose the smallest meaningful research milestone under the
+existing research workflow. Do not conceal it with another cosmetic rewrite,
+an ever-growing style corpus, or calculations added only to make the paper
+longer. Necessary new science needs the appropriate task authority; an
+editorial request does not open it. Preserve promising ideas and verified
+results rather than declaring a project failed merely because its draft is
+not ready for submission.
+
+## Write natural, author-led physics prose
+
+The manuscript should read as a physicist's connected argument, not an agent's
+task-completion report. Natural prose comes from precise reasoning and editorial
+judgment, not cosmetic attempts to look human. Use the reading studies to learn
+how authors explain choices, handle objections and connect results; do not
+imitate a named author's distinctive voice.
+
+- **Replace empty framing with the physical reason.** Rather than repeatedly
+  announcing a comprehensive analysis or a crucial insight, say which assumption
+  matters, what the calculation resolves and why the next step is needed.
+- **Let paragraphs have different jobs and lengths.** A definition, a derivation,
+  an objection and an interpretation need not share a stock three-part pattern.
+  Use a topic sentence when it helps; do not force every paragraph into a slogan
+  followed by evidence and a miniature conclusion.
+- **Make transitions specific.** Explain the actual dependence between results.
+  Remove repeated generic bridges, recap paragraphs and section-ending promises
+  that add no physical information. Do not mechanically ban connective words.
+- **State findings directly and qualify them where needed.** Avoid both inflated
+  importance claims and an anxious disclaimer after every sentence. Keep every
+  scientifically consequential qualification; consolidate only genuine repetition.
+- **Use ordinary technical language.** Prefer concrete observables, assumptions
+  and mechanisms to vague praise of the framework. Keep necessary terminology
+  and stable notation; do not vary technical terms merely to avoid repetition.
+- **Read the argument aloud or sentence by sentence.** Check whether its rhythm
+  is natural, pronouns are clear, and each sentence gives a physicist a reason
+  to read the next. Delete padding, not derivations needed to understand the result.
+- **Leave judgment with the authors.** Do not invent personal motivations,
+  historical anecdotes, intuitions or certainty to simulate a human voice. Ask
+  for the author's intended emphasis when it would change the scientific argument.
+
+This is an editorial objective, not a claim about how every human or AI writes.
+Do not add deliberate errors or promise an AI-detector outcome. Natural prose
+does not establish human authorship or remove AI assistance: preserve the
+recorded provenance, human scientific review and applicable disclosure duties.
+Do not replace an unresolved physical question with more fluent assertions.
+
 ## Revise without changing the science
 
 - Preserve the original draft and source evidence; write a distinguishable
@@ -175,6 +266,8 @@ docs/physics-manuscript-writing.md and its comparative reading study. Select
 relevant argument types, extend the corpus if needed, record reading scope,
 and explain which structural lessons fit this paper. Preserve all scientific
 claims, evidence, uncertainties and unresolved issues; make no new calculation.
+Use natural, author-led physics prose without formulaic recaps or invented
+author experience. Retain AI provenance and the author's scientific review.
 Keep the physical argument in the manuscript and the internal audit history in
 a private companion note. Preserve the old draft, check the revised claim map,
 and render and visually inspect the final PDF. Do not submit or disclose it.
