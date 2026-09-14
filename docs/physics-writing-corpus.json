@@ -1,0 +1,883 @@
+{
+  "study_date": "2026-09-14",
+  "schema_version": 1,
+  "scope": "Purposive editorial study, not a representative sample or universal-law claim. Fifty complete main-text readings is this study target, not a per-manuscript quota.",
+  "historical_record_count": 25,
+  "new_reading_count": 39,
+  "complete_main_text_count": 50,
+  "total_distinct_papers": 64,
+  "entries": [
+    {
+      "id": "H01",
+      "title": "Building an AdS/CFT superconductor",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/0803.3295v1"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract and sections 1–4.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 1)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H02",
+      "title": "Viscosity in Strongly Interacting Quantum Field Theories from Black Hole Physics",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/hep-th/0405231v2"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, introduction, absorption argument and concluding discussion.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 2)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H03",
+      "title": "Nonlinear Fluid Dynamics from Gravity",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/0712.2456v4"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, introduction, section 5.5, opening of section 6 and discussion.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 3)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H04",
+      "title": "Uniformizing Lee-Yang singularities",
+      "field": "holography",
+      "source_urls": [
+        "https://doi.org/10.1103/PhysRevD.105.105002",
+        "https://arxiv.org/abs/2112.14269v1"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "published abstract, introduction, model setup and conclusion.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 4)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H05",
+      "title": "Dirichlet-Branes and Ramond-Ramond Charges",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/hep-th/9510017v3"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 5)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H06",
+      "title": "The Large N Limit of Superconformal Field Theories and Supergravity",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/pdf/hep-th/9711200v3"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, sections 1–2 and section 6 discussion.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 6)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H07",
+      "title": "Anti De Sitter Space And Holography",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/hep-th/9802150v2"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "introduction, opening of “Ansatz For The Effective Action,” and “Hamiltonian Interpretation.”",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 7)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H08",
+      "title": "Gauge Theory Correlators from Non-Critical String Theory",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/hep-th/9802109v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text through conclusions.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 8)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H09",
+      "title": "Holographic Derivation of Entanglement Entropy from AdS/CFT",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/hep-th/0603001v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "abstract and sections I–V, including figure captions.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 9)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H10",
+      "title": "A bound on chaos",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/1503.01409v1"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract and sections 2–5, including the mathematical result, physical assumptions, examples and discussion; not the technical appendix.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 10)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H11",
+      "title": "Building up spacetime with quantum entanglement",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/1005.3035v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text and figure captions in this version, including the connectivity and disentangling thought experiments.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 11)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H12",
+      "title": "Dynamic universality class of the QCD critical point",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/hep-ph/0401052v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "abstract and sections I–V; not the appendix.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 12)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H13",
+      "title": "Minkowski-space correlators in AdS/CFT correspondence: recipe and applications",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/hep-th/0205051v2"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, introduction, sections 3.2–3.3, section 4.3 and conclusions.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 13)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H14",
+      "title": "Effective field theory of dissipative fluids",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/1511.03646v3"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, I.1, opening of I.2, I.9, opening of II, setup of IV and opening of IV.1, and VI discussion. This is selective reading of a long paper.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 14)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H15",
+      "title": "Theory of the Nernst effect near quantum phase transitions in condensed matter, and in dyonic black holes",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/0706.3215v3"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, introduction opening through I.1 and opening of I.2, figure 1–2 captions, and VI conclusions.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 15)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "H16",
+      "title": "Emergent quantum criticality, Fermi surfaces, and AdS2",
+      "field": "holography",
+      "source_urls": [
+        "https://arxiv.org/html/0907.2694v2"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, introduction, III.1.3, III.4, opening of IV and VII discussion.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-reading-study.md (entry 16)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X01",
+      "title": "A Model of Leptons",
+      "field": "particle theory",
+      "source_urls": [
+        "https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.19.1264"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text, including the closing discussion of renormalizability.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 1)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X02",
+      "title": "Broken Symmetries and the Masses of Gauge Bosons",
+      "field": "particle theory",
+      "source_urls": [
+        "https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.13.508"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text and the qualification concerning classical equations.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 2)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X03",
+      "title": "Model for a Quantum Hall Effect without Landau Levels: Condensed-Matter Realization of the \"Parity Anomaly\"",
+      "field": "condensed matter",
+      "source_urls": [
+        "https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.61.2015"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text and figure captions.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 3)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X04",
+      "title": "Unpaired Majorana fermions in quantum wires",
+      "field": "condensed matter",
+      "source_urls": [
+        "https://arxiv.org/html/cond-mat/0010440v2"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, introduction, section 1, the opening and final criterion of section 2, and section 3. The intervening general proof was not fully reviewed.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 4)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X05",
+      "title": "A nonequilibrium equality for free energy differences",
+      "field": "statistical physics",
+      "source_urls": [
+        "https://arxiv.org/html/cond-mat/9610209v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text, including limiting cases, proof, applicability and simulations.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 5)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X06",
+      "title": "Entropy production fluctuation theorem and the nonequilibrium work relation for free energy differences",
+      "field": "statistical physics",
+      "source_urls": [
+        "https://arxiv.org/html/cond-mat/9901352v4"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "abstract and sections I–V, including figure captions.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 6)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X07",
+      "title": "On the Einstein Podolsky Rosen paradox",
+      "field": "quantum foundations",
+      "source_urls": [
+        "https://journals.aps.org/ppf/pdf/10.1103/PhysicsPhysiqueFizika.1.195"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "sections I–VI.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 7)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X08",
+      "title": "Inflationary universe: A possible solution to the horizon and flatness problems",
+      "field": "cosmology",
+      "source_urls": [
+        "https://journals.aps.org/prd/pdf/10.1103/PhysRevD.23.347"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, section I, section III through the exponential-expansion argument, the closing inhomogeneity argument of section V, and section VI. The remaining derivations and appendix were not fully read.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 8)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "X09",
+      "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+      "field": "gravitational-wave observation",
+      "source_urls": [
+        "https://arxiv.org/pdf/1602.03837v1"
+      ],
+      "reading_status": "selected_sections",
+      "read_scope": "abstract, section I, opening of II and figure 1 caption, figure 4 caption, section V.B, opening of VI through table I, and sections VII–VIII.",
+      "provenance": "historical reading record; not reread in this expansion",
+      "record": "physics-writing-cross-field-study.md (entry 9)",
+      "pdf_sha256": null
+    },
+    {
+      "id": "E01",
+      "title": "Peres — Separability Criterion for Density Matrices",
+      "field": "quantum information",
+      "genre": "criterion",
+      "source_urls": [
+        "https://arxiv.org/abs/quant-ph/9604005v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "PDF pp. 1–5",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "6574d1af38e331a5ed4f7c58673855e1e580eb96d79fa52338f18cdc22d43998",
+      "lesson": "Compare logical implications through counterexamples, not only performance."
+    },
+    {
+      "id": "E02",
+      "title": "Seifert — Entropy production along a stochastic trajectory and an integral fluctuation theorem",
+      "field": "statistical physics",
+      "genre": "definition and relation",
+      "source_urls": [
+        "https://arxiv.org/abs/cond-mat/0503686v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "1b5855a3579722733d148008cd432ef3c854b591190585645e51f74de76f45ed",
+      "lesson": "A definition earns its use through balance, ensemble consistency and a consequence."
+    },
+    {
+      "id": "E03",
+      "title": "Barato and Seifert — Thermodynamic Uncertainty Relation for Biomolecular Processes",
+      "field": "statistical physics",
+      "genre": "bound",
+      "source_urls": [
+        "https://arxiv.org/abs/1502.05944v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4; supplement excluded",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "69ecd48da31703553ee71a60a6e503bf85a345d44839b822f8420c9d77ca7c2d",
+      "lesson": "A simple walk teaches the trade-off; distinguish proved cases from numerical evidence."
+    },
+    {
+      "id": "E04",
+      "title": "Page — Average Entropy of a Subsystem",
+      "field": "quantum information",
+      "genre": "analytic estimate",
+      "source_urls": [
+        "https://arxiv.org/abs/gr-qc/9305007v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–9",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "6da77eb4d9840b3b0e27fbe4d394f5fcdd411a585bb82c7c603adb8dc5796dfd",
+      "lesson": "Distinguish the averaging measure, finite-size conjecture and asymptotic result."
+    },
+    {
+      "id": "E05",
+      "title": "Sagawa and Ueda — Generalized Jarzynski Equality under Nonequilibrium Feedback Control",
+      "field": "statistical physics",
+      "genre": "relation",
+      "source_urls": [
+        "https://arxiv.org/abs/0907.4914v3"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4 and caption",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "ef3bf9a2f6c65c612bf175af8b5399d9d4561903b0b067450e431fd2bc587c53",
+      "lesson": "Two equations answer different operational questions; examples precede proof."
+    },
+    {
+      "id": "E06",
+      "title": "Gingrich et al. — Dissipation Bounds All Steady-State Current Fluctuations",
+      "field": "statistical physics",
+      "genre": "bound",
+      "source_urls": [
+        "https://arxiv.org/abs/1512.02212v3"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4 and captions",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "bb14232d9300bda9480a770ace8175406be47de46aab618efd75be9024f70ef7",
+      "lesson": "A weaker bound can be more useful when it requires less inaccessible information."
+    },
+    {
+      "id": "E07",
+      "title": "Hatano and Sasa — Steady-State Thermodynamics of Langevin Systems",
+      "field": "statistical physics",
+      "genre": "relation",
+      "source_urls": [
+        "https://arxiv.org/abs/cond-mat/0010405v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "4c0cbc50f28fc601e5460d6031d00269d100b33d527612c6c9cb59b9d45e4462",
+      "lesson": "Interpret auxiliary quantities and distinguish nearby relations; a numbered discussion can help."
+    },
+    {
+      "id": "E08",
+      "title": "Kurchan — Fluctuation Theorem for Stochastic Dynamics",
+      "field": "statistical physics",
+      "genre": "derivation",
+      "source_urls": [
+        "https://arxiv.org/abs/cond-mat/9709304v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "sections 1–5, PDF pp. 1–15",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "3283435c46fbf00c69246e3b52f3c52b10943926f200d8f0a7db37fad249e99e",
+      "lesson": "Explain what assumptions a simpler dynamics removes and their physical consequences."
+    },
+    {
+      "id": "E09",
+      "title": "Kane and Mele — Z2 Topological Order and the Quantum Spin Hall Effect",
+      "field": "condensed matter",
+      "genre": "classification",
+      "source_urls": [
+        "https://arxiv.org/abs/cond-mat/0506581v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4, figures and table",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "19edfeb955189c12a9d41a23b6bb148058fe2c7decdb4176bda5e1927d5215fe",
+      "lesson": "An invariant is introduced to repair a precise failure of an earlier description."
+    },
+    {
+      "id": "E10",
+      "title": "Kane and Mele — Quantum Spin Hall Effect in Graphene",
+      "field": "condensed matter",
+      "genre": "model proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/cond-mat/0411737v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4 and captions",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "485d7122421833c483d0df67e2fa289ee6e64317b0737de3a9f5ce1822dbc688",
+      "lesson": "Symmetry motivates a model term before edges, transport and parameter estimates."
+    },
+    {
+      "id": "E11",
+      "title": "Fu and Kane — Superconducting Proximity Effect and Majorana Fermions at the Surface of a Topological Insulator",
+      "field": "condensed matter",
+      "genre": "constructive proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/0707.1692v3"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–4 and captions",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "8450c9cfb91a29f2dd51744aba5942b1a3ab022113d7745ec9f8c2163af231ca",
+      "lesson": "State how an effective analogy differs from the symmetry of the whole system."
+    },
+    {
+      "id": "E12",
+      "title": "Bernevig, Hughes and Zhang — Quantum Spin Hall Effect and Topological Phase Transition in HgTe Quantum Wells",
+      "field": "condensed matter",
+      "genre": "prediction",
+      "source_urls": [
+        "https://arxiv.org/abs/cond-mat/0611399v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "PDF pp. 1–10 main text and pp. 13–15 captions; supporting material excluded",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "90e3c7a640aca55605a3271424f7bd3926eda29fb95226b8065e6a84caeb5c57",
+      "lesson": "Simple symmetry reasoning and material-specific calculations perform complementary jobs."
+    },
+    {
+      "id": "E13",
+      "title": "Kitaev — Periodic Table for Topological Insulators and Superconductors",
+      "field": "condensed matter",
+      "genre": "classification framework",
+      "source_urls": [
+        "https://arxiv.org/abs/0901.2686v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "complete main text through interactions, tables 1–2",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "003263d085801bbddfe2aed3a19d385c6e7abf128278ddaa33938e3327560b87",
+      "lesson": "Examples teach the mathematical objects; an interaction counterexample limits the classification."
+    },
+    {
+      "id": "E14",
+      "title": "Zurek — Environment-Assisted Invariance, Entanglement, and Probabilities in Quantum Physics",
+      "field": "quantum foundations",
+      "genre": "conceptual argument",
+      "source_urls": [
+        "https://arxiv.org/abs/quant-ph/0211037v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "complete main text",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "23d44b7aae0ea62ab9a53749ffd7512e2d81ec8294c398c95c3a5c18a1e5bb26",
+      "lesson": "Expose the logical obstacle before adding a symmetry and successive special cases."
+    },
+    {
+      "id": "E15",
+      "title": "Ollivier and Zurek — Quantum Discord: A Measure of the Quantumness of Correlations",
+      "field": "quantum information",
+      "genre": "definition",
+      "source_urls": [
+        "https://arxiv.org/abs/quant-ph/0105072v3"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "complete main text and final proofs",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "d07b0d53e0d1b60f1c531a7bf4462551e04280001a411ee812ddb92899f7b4eb",
+      "lesson": "Classically equivalent expressions separate quantum mechanically; an example makes the distinction tangible."
+    },
+    {
+      "id": "E16",
+      "title": "Vidal and Werner — A Computable Measure of Entanglement",
+      "field": "quantum information",
+      "genre": "method",
+      "source_urls": [
+        "https://arxiv.org/abs/quant-ph/0102117v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text sections I–VII",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "a6bc5031b04d93cf18e71e39425eea8b9b8c938252bb87d8067d890269b90f7b",
+      "lesson": "Computability, monotonicity and operational meaning are distinct evidence obligations."
+    },
+    {
+      "id": "E17",
+      "title": "Horodecki, Horodecki and Horodecki — Separability of Mixed States: Necessary and Sufficient Conditions",
+      "field": "quantum information",
+      "genre": "criterion",
+      "source_urls": [
+        "https://arxiv.org/abs/quant-ph/9605038v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "complete main text and short appendix",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "399e3bfe9d02e9279d1931968487bfd5312e0a7cc76e19b8b63b4b820acdde70",
+      "lesson": "A general criterion and its low-dimensional simplification have different domains."
+    },
+    {
+      "id": "E18",
+      "title": "Bennett et al. — Purification of Noisy Entanglement and Faithful Teleportation via Noisy Channels",
+      "field": "quantum information",
+      "genre": "protocol",
+      "source_urls": [
+        "https://arxiv.org/abs/quant-ph/9511027v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "complete main text and figure caption",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "a8074d8857aa8cb794829d3f16c55954821c3950d272134f4143526afd9b62bb",
+      "lesson": "Numbered physical operations are legitimate exposition; compare achieved yields with bounds."
+    },
+    {
+      "id": "E19",
+      "title": "Jacobson — Thermodynamics of Spacetime: The Einstein Equation of State",
+      "field": "gravity",
+      "genre": "conceptual derivation",
+      "source_urls": [
+        "https://arxiv.org/abs/gr-qc/9504004v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "PDF pp. 1–7 main text and final caption",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "85ed65e912baf62c27923dbf0e4b420ed444c4a253cb33f0a7763285b1271c4c",
+      "lesson": "An elementary example prepares a reversed implication; local-equilibrium assumptions remain essential."
+    },
+    {
+      "id": "E20",
+      "title": "Wald — Black Hole Entropy is Noether Charge",
+      "field": "gravity",
+      "genre": "derivation",
+      "source_urls": [
+        "https://arxiv.org/abs/gr-qc/9307038v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "abstract and PDF pp. 3–14 main text",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "6e204ef911df78f240109dde914a6fe6ef9f6168518a01089bfbe59979beefc5",
+      "lesson": "Introduce each restriction where an equality needs it; distinguish a result from its proposed dynamical extension."
+    },
+    {
+      "id": "E21",
+      "title": "Srednicki — Entropy and Area",
+      "field": "quantum field theory",
+      "genre": "analytic and numerical model",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-th/9303048v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "printed pp. 1–6 main text and final caption",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "aed88ccf9e75cfb26dbfbfddd7eb8bede050484f1878ace62a3108f344e24d01",
+      "lesson": "A small oscillator example supplies the field-theory method; dimensional exceptions test the intuition."
+    },
+    {
+      "id": "E22",
+      "title": "Page — Information in Black Hole Radiation",
+      "field": "gravity",
+      "genre": "conceptual counterexample",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-th/9306083v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "PDF pp. 2–10 main text and caption",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "f24dfc8d284bdf76fd21b4aa5f7b04531af8fe711faad7c2901ada357e624ba0",
+      "lesson": "Failure of a perturbative exclusion is not proof of a microscopic mechanism."
+    },
+    {
+      "id": "E23",
+      "title": "Almheiri et al. — Black Holes: Complementarity or Firewalls?",
+      "field": "gravity",
+      "genre": "consistency argument",
+      "source_urls": [
+        "https://arxiv.org/abs/1207.3123v4"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text sections 1–4, printed pp. 1–14; appendices excluded",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "ffb07cf7e94842ac8289de935f1869cbcc94ff187b18460e24d46fe4340907d5",
+      "lesson": "Incompatible assumptions organize thought experiments and alternative escape routes."
+    },
+    {
+      "id": "E24",
+      "title": "Hawking, Perry and Strominger — Soft Hair on Black Holes",
+      "field": "gravity",
+      "genre": "proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/1601.00921v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text sections 1–8",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "c734c20b67aea0d301afbb9be12068c7d46ecfcbeed75ecdaeb9fa6cecf9adeb",
+      "lesson": "Develop the simpler electromagnetic construction before gravity; constraints are not a full outgoing state."
+    },
+    {
+      "id": "E25",
+      "title": "Strominger and Vafa — Microscopic Origin of the Bekenstein-Hawking Entropy",
+      "field": "gravity",
+      "genre": "matching calculation",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-th/9601029v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text sections 1–4",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "c71d1b6e8827a7949b834211ecf4622778d3c9197b1715fdc41b61a99e7617b8",
+      "lesson": "Explain why comparison across descriptions is meaningful, not just why two formulas agree."
+    },
+    {
+      "id": "E26",
+      "title": "Susskind — The World as a Hologram",
+      "field": "gravity",
+      "genre": "conceptual proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-th/9309145v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text sections I–IV",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "8517fa847ea7537ad007ea593974b3c05857be76fda87e0f4237d1cd632b3a6f",
+      "lesson": "Speculative estimates may motivate tools not yet available; confidence does not turn consistency into proof."
+    },
+    {
+      "id": "E27",
+      "title": "Weinberg — Adiabatic Modes in Cosmology",
+      "field": "cosmology",
+      "genre": "theorem",
+      "source_urls": [
+        "https://arxiv.org/abs/astro-ph/0302326v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text sections I–IV, printed pp. 1–18; appendix excluded",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "2eae1161dcf3010b70d1bd55cdbd6e720f4387fd8a81cc5caa489fb6711a67d4",
+      "lesson": "Existence of a mode is not a statement about all modes; resolve gauge and limiting-procedure differences."
+    },
+    {
+      "id": "E28",
+      "title": "Creminelli and Zaldarriaga — Single Field Consistency Relation for the 3-Point Function",
+      "field": "cosmology",
+      "genre": "relation",
+      "source_urls": [
+        "https://arxiv.org/abs/astro-ph/0407059v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "complete four-page main text",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "e6758acf748cc386df3c9a3653ef9436354a178f4e60fe2b1e405c71125b7b51",
+      "lesson": "A short geometric proof ties assumptions to an observational discriminator."
+    },
+    {
+      "id": "E29",
+      "title": "Garriga and Mukhanov — Perturbations in k-inflation",
+      "field": "cosmology",
+      "genre": "formalism",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-th/9904176v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "complete main text through final discussion",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "c235e6284066407ddf6b3c8cef1a2484e28ff4c37f49f6b968fe66cb21c11a2b",
+      "lesson": "New variables earn their complexity by connecting a background to observable spectra and known limits."
+    },
+    {
+      "id": "E30",
+      "title": "Cheung and Remmen — Positivity of Curvature-Squared Corrections in Gravity",
+      "field": "quantum field theory",
+      "genre": "bound",
+      "source_urls": [
+        "https://arxiv.org/abs/1608.02942v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–5",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "9d44b36400fc95828df07982ec390de56b6dab178e481cb03701b2d75a4190d7",
+      "lesson": "State dimensional and coupling restrictions before the bound; use only the machinery its proof needs."
+    },
+    {
+      "id": "E31",
+      "title": "Cheung and Remmen — Naturalness and the Weak Gravity Conjecture",
+      "field": "particle theory",
+      "genre": "consistency argument",
+      "source_urls": [
+        "https://arxiv.org/abs/1402.2287v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–5",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "dcc531dab091d36702deec314d9b1193255f35dd5c6705c1a1070fdc9c835398",
+      "lesson": "Competing premises motivate a model and escape routes; retain the conjectural premise in the conclusion."
+    },
+    {
+      "id": "E32",
+      "title": "Georgi — Unparticle Physics",
+      "field": "particle theory",
+      "genre": "proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-ph/0703260v3"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "PDF pp. 2–8 main text and captions",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "e5eee8757d900fe631c78b13f838ab4cc61a48a1ef84b2357ac4b697df191887",
+      "lesson": "An operational question leads to matching, a spectrum and a known limit; do not imitate distinctive conversational rhetoric."
+    },
+    {
+      "id": "E33",
+      "title": "Goldberger and Wise — Modulus Stabilization with Bulk Fields",
+      "field": "particle theory",
+      "genre": "mechanism",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-ph/9907447v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "PDF pp. 2–7 main text",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "cf3eb3b459efbc78cefdc3e3920b4a43065a22918531af68f28a4091fc1fb912",
+      "lesson": "A specific deficiency motivates an added sector; robustness checks answer objections to the mechanism."
+    },
+    {
+      "id": "E34",
+      "title": "Randall and Sundrum — A Large Mass Hierarchy from a Small Extra Dimension",
+      "field": "particle theory",
+      "genre": "model proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-ph/9905221v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text printed pp. 1–7",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "f43dc148d9c80fac7fd71f49e07b9b99183245404fecbf90a2b15f0d6e14bba8",
+      "lesson": "Separate coordinate parameters from measured scales and state the missing stabilization requirement."
+    },
+    {
+      "id": "E35",
+      "title": "Randall and Sundrum — An Alternative to Compactification",
+      "field": "gravity",
+      "genre": "model proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-th/9906064v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text printed pp. 1–8",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "dd635a9ace996c9bcc1ef929d3918fa18e2b35d68d3f4352b6ae8cc6ada150ab",
+      "lesson": "A localized mode motivates the claim, but continuum corrections determine recovery of physical gravity."
+    },
+    {
+      "id": "E36",
+      "title": "Arkani-Hamed, Dimopoulos and Dvali — The Hierarchy Problem and New Dimensions at a Millimeter",
+      "field": "particle theory",
+      "genre": "framework proposal",
+      "source_urls": [
+        "https://arxiv.org/abs/hep-ph/9803315v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text printed pp. 1–15",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "219610bd4df9fc5e9990066306cf625cfa697a12dba2f14bb59a4805db4eeb60",
+      "lesson": "Quantify the extrapolation being challenged and confront constraints before an illustrative realization."
+    },
+    {
+      "id": "E37",
+      "title": "Margolus and Levitin — The Maximum Speed of Dynamical Evolution",
+      "field": "quantum information",
+      "genre": "bound",
+      "source_urls": [
+        "https://arxiv.org/abs/quant-ph/9710043v2"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text sections 1–4, PDF pp. 1–10; appendices excluded",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "1e3c3203ae2701651731f9426dcae9b8dfff19d1e17fa058babfca330c5571ef",
+      "lesson": "Differentiate one transition from a sustained sequence and mathematical orthogonality from useful computation."
+    },
+    {
+      "id": "E38",
+      "title": "Vicsek et al. — Novel Type of Phase Transition in a System of Self-Driven Particles",
+      "field": "active matter",
+      "genre": "numerical model",
+      "source_urls": [
+        "https://arxiv.org/abs/cond-mat/0611743v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text printed pp. 1–8 and figure captions pp. 11; later-uploaded preprint of historical work",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "39c2bdc4f073b85c137b487bf69dbf21b843d6b07d32c722cda85817ca755bd5",
+      "lesson": "The analogy specifies both shared ordering and different dynamics; finite-size evidence and assumptions are distinct."
+    },
+    {
+      "id": "E39",
+      "title": "Carleo and Troyer — Solving the Quantum Many-Body Problem with Artificial Neural Networks",
+      "field": "many-body computational physics",
+      "genre": "method",
+      "source_urls": [
+        "https://arxiv.org/abs/1606.02318v1"
+      ],
+      "reading_status": "complete_main_text",
+      "read_scope": "main text pp. 1–5 and captions; supplements excluded",
+      "provenance": "main-text reading on 2026-09-14; original editorial observation, not a scientific audit",
+      "pdf_sha256": "8ecbfe48c3c8b99f5cd511a6873a9d1e72cece656c03a50b5e90d4fc8562c6f4",
+      "lesson": "Connect representation and accuracy to physical observables, baselines and demonstrated systems, not unrestricted capability."
+    }
+  ]
+}

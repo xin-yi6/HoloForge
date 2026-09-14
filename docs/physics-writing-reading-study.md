@@ -1,5 +1,8 @@
 # Comparative study of theoretical-physics writing
 
+Historical 16-paper record. The [expanded study](physics-writing-expanded-study.md)
+now indexes the 64-paper collection; the reading depths below remain unchanged.
+
 This is an editorial companion to [the manuscript guide](physics-manuscript-writing.md),
 expanded on 14 September 2026. It asks how papers make their reasoning legible,
 not whether their scientific claims remain correct or whether a new project

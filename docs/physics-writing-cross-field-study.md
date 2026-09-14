@@ -1,5 +1,8 @@
 # Physics writing across communities
 
+Historical nine-paper extension. See the [expanded study](physics-writing-expanded-study.md)
+for the current 64-paper collection; this record retains its original scope.
+
 This editorial companion extends the [sixteen-paper study](physics-writing-reading-study.md)
 and [manuscript guide](physics-manuscript-writing.md). Nine additional papers
 were inspected on 14 September 2026. The combined corpus has twenty-five

@@ -33,22 +33,32 @@ under the [scientific-support policy](scientific-support.md).
 
 ## Learn structure from papers, not an author's voice
 
-Use the [comparative reading study](physics-writing-reading-study.md) and
-its [cross-field companion](physics-writing-cross-field-study.md) as a
-starting corpus, not a substitute for reading. Together they record twenty-five
-examples, their exact versions, reading depth, contrasting argument structures
-and transferable lessons. They include short results, conceptual proposals,
+Use the [expanded comparative study](physics-writing-expanded-study.md), its
+[machine-readable corpus](physics-writing-corpus.json), and the historical
+[reading study](physics-writing-reading-study.md) and
+[cross-field companion](physics-writing-cross-field-study.md) as a starting
+corpus, not a substitute for reading. The collection records 64 distinct papers:
+50 complete main-text readings and 14 selected-section readings, with exact
+sources, reading depth, contrasting argument structures and transferable
+lessons. This is a purposive sample, not proof of a universal writing style.
+It includes short results, conceptual proposals,
 analytic arguments, numerical studies and long frameworks. Author reputation
 can help find examples; the observable quality of the argument determines
 what to adopt. A larger bibliography alone does not establish a better style.
 
-For a new manuscript, choose the closest argument types from this corpus and
+For a new manuscript, choose two to four examples with the closest argument
+types from this corpus, plus a contrasting architecture when useful, and
 add examples when a relevant genre or field is missing. Read across abstract,
 introduction, central reasoning and conclusion; include main-text reading
 when learning an unfamiliar architecture. Record the exact version and actual
 sections inspected. Do not describe selected passages as a full-paper reading
 or any style study as a scientific audit or novelty clearance. There is no
 fixed paper-count quota for every revision.
+
+The expanded study's fifty complete readings are a one-time study target,
+not a prerequisite for each paper. Prefer deep application to the current
+argument over accumulating more names. A recurring cross-field practice is
+a candidate editorial principle; test its exceptions before adopting it.
 
 Distill principles in original prose, including counterexamples to a proposed
 rule. Do not copy distinctive sentences, paper figures, layouts or authorial
