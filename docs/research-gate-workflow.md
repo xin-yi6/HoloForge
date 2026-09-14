@@ -650,6 +650,14 @@ shortcut. Follow the separate [public-export checklist](private-research-workflo
 
 ## Owner-review PDF packet
 
+This packet is an internal decision document, not a paper manuscript. For
+paper drafting or editorial revision, follow the separate
+[physics-manuscript writing guide](physics-manuscript-writing.md). Keep the
+physical argument and necessary validity limits in the paper; preserve its
+evidence trail and owner decisions in the private companion record. Do not
+apply the packet's status boxes, progress map or approval menu to a manuscript
+by default, and do not remove a consequential caveat for stylistic reasons.
+
 When equations, tables, or plots are hard to review reliably in Markdown,
 prepare a concise PDF packet in the standard HoloForge style:
 

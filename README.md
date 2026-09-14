@@ -179,6 +179,9 @@ artifacts. Plot generation requires the optional dependency installed with
 - [`docs/agent-maintenance.md`](docs/agent-maintenance.md) defines instruction
   authority, proportionate checks, private workspace navigation, execution
   receipts, and maintenance holds before resuming research.
+- [`docs/physics-manuscript-writing.md`](docs/physics-manuscript-writing.md)
+  guides physics-led paper writing while keeping internal review packets and
+  reproducibility records separate and scientific limitations visible.
 - [`docs/learning-from-results.md`](docs/learning-from-results.md) requires a
   claim-bounded, event-driven research knowledge base that learns from papers,
   derivations, methods, data, decisions, reproducibility work, and every bounded

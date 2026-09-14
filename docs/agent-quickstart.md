@@ -209,6 +209,16 @@ state.
 
 See `docs/private-research-workflow.md` for the recommended private structure.
 
+### Draft or revise a physics manuscript
+
+Use the [physics-manuscript writing guide](physics-manuscript-writing.md)
+inside the separate private research repository. A paper develops the physical
+argument; the review packet records owner decisions and workflow status. Keep
+necessary methods and consequential limitations in the paper, with detailed
+audit history in a private companion record. Ask for a distinguishable revised
+draft, an evidence-preserving change note and a rendered PDF review. An
+editorial request does not authorize new calculations or submission.
+
 ### Run a governed autonomous research campaign
 
 Use auto mode only from a dedicated access-controlled research repository, not

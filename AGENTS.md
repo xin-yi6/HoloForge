@@ -20,6 +20,7 @@ states. A passing model calculation is not empirical validation of nature.
 | Task | Read and follow |
 | --- | --- |
 | Status, instruction upgrades, concurrent maintenance, or resumption | [Agent maintenance](docs/agent-maintenance.md) |
+| Paper drafting or editorial revision | [Physics manuscript writing](docs/physics-manuscript-writing.md), current private evidence and task authority |
 | Public benchmark design, review, implementation, or extension | [holoforge-add-benchmark](.agents/skills/holoforge-add-benchmark/SKILL.md) |
 | One bounded Explore gate | [holoforge-research-gate](.agents/skills/holoforge-research-gate/SKILL.md) |
 | An autonomous Explore campaign | [holoforge-auto-research](.agents/skills/holoforge-auto-research/SKILL.md) |

@@ -17,6 +17,7 @@ class AgentOnboardingTests(unittest.TestCase):
             ROOT / "docs/agent-quickstart.md",
             ROOT / "docs/research-gate-workflow.md",
             ROOT / "docs/private-research-workflow.md",
+            ROOT / "docs/physics-manuscript-writing.md",
         ]
         paths.extend((ROOT / ".agents/skills").glob("*/SKILL.md"))
         for path in paths:
@@ -143,6 +144,19 @@ class AgentOnboardingTests(unittest.TestCase):
             for line in (ROOT / ".gitignore").read_text(encoding="utf-8").splitlines()
         }
         self.assertIn("CLAUDE.local.md", ignored)
+
+    def test_manuscript_workflow_is_reachable_and_preserves_scope(self) -> None:
+        target = "physics-manuscript-writing.md"
+        for source in ("AGENTS.md", "README.md", "docs/agent-quickstart.md",
+                       "docs/research-gate-workflow.md"):
+            with self.subTest(source=source):
+                self.assertIn(target, (ROOT / source).read_text(encoding="utf-8"))
+        guide = " ".join((ROOT / "docs" / target).read_text(encoding="utf-8").split())
+        for boundary in ("not a new scientific gate", "must never conceal",
+                         "Preserve the original draft", "separate disclosure decision",
+                         "not an independent mathematical proof"):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, guide)
 
 
 if __name__ == "__main__":
