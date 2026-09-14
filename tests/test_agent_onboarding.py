@@ -18,6 +18,7 @@ class AgentOnboardingTests(unittest.TestCase):
             ROOT / "docs/research-gate-workflow.md",
             ROOT / "docs/private-research-workflow.md",
             ROOT / "docs/physics-manuscript-writing.md",
+            ROOT / "docs/physics-writing-reading-study.md",
         ]
         paths.extend((ROOT / ".agents/skills").glob("*/SKILL.md"))
         for path in paths:
@@ -157,6 +158,18 @@ class AgentOnboardingTests(unittest.TestCase):
                          "not an independent mathematical proof"):
             with self.subTest(boundary=boundary):
                 self.assertIn(boundary, guide)
+
+    def test_writing_study_records_scope_and_is_not_a_quality_certificate(self) -> None:
+        guide = (ROOT / "docs/physics-manuscript-writing.md").read_text(encoding="utf-8")
+        self.assertIn("physics-writing-reading-study.md", guide)
+        study = " ".join((ROOT / "docs/physics-writing-reading-study.md").read_text(
+            encoding="utf-8").split())
+        for boundary in ("Selected-section reading", "not necessarily the latest",
+                         "not a new fixed reading quota", "neither publication-readiness",
+                         "do not change HoloForge's", "physical question"):
+            # These checks establish navigation and stated boundaries, not prose quality.
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, study)
 
 
 if __name__ == "__main__":

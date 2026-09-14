@@ -33,50 +33,47 @@ under the [scientific-support policy](scientific-support.md).
 
 ## Learn structure from papers, not an author's voice
 
-Choose a small, task-relevant set spanning the needed forms: an analytic
-argument, a numerical model study, or a methods paper. Inspect the abstract,
-introduction, a central result with its equations/figures, and the conclusion.
-Record the exact version and inspected sections; do not describe selective
-reading as a full scientific audit. Read further only when it resolves a
-specific writing or interpretation question.
+Use the [comparative reading study](physics-writing-reading-study.md) as a
+starting corpus, not a substitute for reading. It records sixteen examples,
+their exact versions, reading depth, contrasting argument structures and
+transferable lessons. It includes short results, conceptual proposals,
+analytic arguments, numerical studies and long frameworks. Author reputation
+can help find examples; the observable quality of the argument determines
+what to adopt. A larger bibliography alone does not establish a better style.
 
-These examples illustrate useful rhetorical choices, not a universal journal
-template or an endorsement of every historical scientific claim:
+For a new manuscript, choose the closest argument types from this corpus and
+add examples when a relevant genre or field is missing. Read across abstract,
+introduction, central reasoning and conclusion; include main-text reading
+when learning an unfamiliar architecture. Record the exact version and actual
+sections inspected. Do not describe selected passages as a full-paper reading
+or any style study as a scientific audit or novelty clearance. There is no
+fixed paper-count quota for every revision.
 
-- **Hartnoll, Herzog and Horowitz, _Building an AdS/CFT superconductor_**,
-  [arXiv:0803.3295v1](https://arxiv.org/html/0803.3295v1), published in
-  [PRL 101, 031601](https://doi.org/10.1103/PhysRevLett.101.031601).
-  The inspected abstract and sections 1-4 move from a physical motivation to
-  the minimal model, boundary observables, figures and their interpretation.
-  The probe approximation's low-temperature limitation is explained where
-  it matters. This illustrates connecting a numerical result to physics.
-- **Kovtun, Son and Starinets, _Viscosity in Strongly Interacting Quantum
-  Field Theories from Black Hole Physics_**,
-  [arXiv:hep-th/0405231v2](https://arxiv.org/html/hep-th/0405231v2), published in
-  [PRL 94, 111601](https://doi.org/10.1103/PhysRevLett.94.111601).
-  The abstract, introduction, absorption argument and discussion foreground
-  a compact result, derive it under specified assumptions, and distinguish
-  it from a broader conjecture. Adopt that distinction, not a historical
-  conjecture as an unrestricted current theorem.
-- **Bhattacharyya, Hubeny, Minwalla and Rangamani, _Nonlinear Fluid Dynamics
-  from Gravity_**, [arXiv:0712.2456v4](https://arxiv.org/html/0712.2456v4),
-  published in [JHEP 02 (2008) 045](https://doi.org/10.1088/1126-6708/2008/02/045).
-  The abstract, introduction, section 5.5, opening of section 6 and discussion
-  link a systematic construction to a stress tensor and its physical uses.
-  The long derivation serves the result; length alone is not poor style.
-- **Basar, Dunne and Yin, _Uniformizing Lee-Yang singularities_**,
-  [PRD 105, 105002](https://doi.org/10.1103/PhysRevD.105.105002), with
-  [arXiv:2112.14269v1](https://arxiv.org/abs/2112.14269v1).
-  The published abstract, introduction, model setup and conclusion organize
-  the method around physical information it recovers and the comparisons
-  demonstrating that recovery. A methods paper still needs a scientific
-  question, interpretable examples and a defined domain of validity.
+Distill principles in original prose, including counterexamples to a proposed
+rule. Do not copy distinctive sentences, paper figures, layouts or authorial
+voice. Keep downloaded papers and project-specific reading notes out of public
+HoloForge. The public study contains only generic editorial observations and
+primary-source links. Neither an author's prominence, a two-column layout nor
+a famous paper's historical claims are substitutes for current evidence.
 
-These are editorial observations from selected passages, not a systematic
-survey of theoretical physics. Distill general principles in original prose;
-do not copy distinctive sentences, paper figures, layouts or authorial voice.
-Keep downloaded papers and project-specific reading notes out of public
-HoloForge. A journal class or two-column layout cannot repair a weak argument.
+## Choose an argument architecture
+
+Start from what the reader must understand to accept the result, not a rigid
+Introduction/Methods/Results template. These are alternatives, not quotas:
+
+| Main contribution | Useful progression | Editorial risk to avoid |
+| --- | --- | --- |
+| New physical proposal | Puzzle; precise proposal; tractable check; extensions and limits | Presenting an analogy as an established dictionary |
+| Analytic result or bound | Question; statement and assumptions; mechanism or proof; examples and applicability | Hiding physical assumptions inside a mathematical lemma |
+| Numerical model study | Physical distinction; model and observable; decisive calculation; interpretation and controls | Making solver chronology the paper's argument |
+| New method | Previously inaccessible question; method; known-case check; informative application | Reporting accuracy without explaining what becomes knowable |
+| Broad framework | Physical motivation; organizing structures; worked sector; general construction and consequences | Introducing all machinery before a reader sees its purpose |
+
+Several forms can coexist. Give the paper a principal result and explain why
+secondary results follow from it or test its interpretation. Do not make every
+calculation a coequal headline. Conversely, do not remove a long derivation
+when it supplies the physical mechanism. The reading study contrasts
+simple-example-first, result-first and framework-first approaches.
 
 ## Build the argument before polishing sentences
 
@@ -119,6 +116,29 @@ Avoid unnecessary bold slogans, marketing claims and workflow jargon. Lists,
 tables and negative results are legitimate when they clarify the argument;
 there is no blanket ban on them or on numerical-method papers.
 
+## Make the reasoning visible at paragraph scale
+
+- **Open a paragraph with a physical task or inference.** Then supply the
+  evidence and explain its consequence. Change paragraphs when the logical
+  job changes, not after every equation. This is a diagnostic, not a mandatory
+  three-sentence formula.
+- **Bridge adjacent sections.** Explain what the preceding result leaves
+  unresolved and why the next calculation answers it. A table of contents
+  alone does not establish that dependence.
+- **Interpret organizing equations.** State which term controls the effect,
+  which information remains model-dependent and which limit is being taken.
+  Do not add a physical interpretation that the existing evidence cannot bear.
+- **Contrast meaningful alternatives.** A baseline, counterexample or known
+  limit should isolate the physical distinction, not merely provide another
+  curve. State what a successful check does and does not establish.
+- **Place qualifications by consequence.** Put a limitation beside the claim
+  it changes. Group remaining scope limits coherently in the discussion;
+  avoid repeatedly attaching the whole audit disclaimer to each result.
+- **Use the conclusion to synthesize.** Answer the opening question, explain
+  the mechanism or information gained, and identify the consequential unknown.
+  Neither a section-by-section inventory nor an unqualified success claim is
+  an adequate ending.
+
 ## Revise without changing the science
 
 - Preserve the original draft and source evidence; write a distinguishable
@@ -137,6 +157,11 @@ there is no blanket ban on them or on numerical-method papers.
 - Ask whether a physicist can explain the question and result after reading
   the abstract, introduction and figures without the private gate log.
   Report this as editorial review, not an independent mathematical proof.
+- Make separate revision passes for argument order, paragraph/equation
+  reasoning, and scientific preservation. In the private change note, connect
+  substantial edits to specific lessons and explain why they fit this paper.
+  Check that the abstract's headline is actually established in the main text
+  and that restructuring has not hidden a failed comparison or source issue.
 - Keep drafts private until the owner's separate disclosure decision. Never
   invent authors, affiliations, funding, acknowledgments or code-availability
   promises. Proposed authorship, AI-use statements and journal requirements
@@ -146,8 +171,9 @@ there is no blanket ban on them or on numerical-method papers.
 
 ```text
 Rewrite the authorized draft as a theoretical-physics manuscript using
-docs/physics-manuscript-writing.md. Read a small relevant sample of primary
-papers for structure and explain what you adopt. Preserve all scientific
+docs/physics-manuscript-writing.md and its comparative reading study. Select
+relevant argument types, extend the corpus if needed, record reading scope,
+and explain which structural lessons fit this paper. Preserve all scientific
 claims, evidence, uncertainties and unresolved issues; make no new calculation.
 Keep the physical argument in the manuscript and the internal audit history in
 a private companion note. Preserve the old draft, check the revised claim map,
