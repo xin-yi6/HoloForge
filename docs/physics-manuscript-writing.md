@@ -280,6 +280,64 @@ Do not replace an unresolved physical question with more fluent assertions.
   promises. Proposed authorship, AI-use statements and journal requirements
   need author review before submission.
 
+## Use journal templates and source-backed bibliographies
+
+For an APS/Physical Review manuscript, use the maintained
+[REVTeX 4.2 class and official examples](https://journals.aps.org/revtex), not
+an imitation made by changing the margins of the standard `article` class.
+Choose the actual journal option with the authors; a formatting choice is not
+a commitment to submit to that journal. For example:
+
+```latex
+\documentclass[aps,prd,reprint,amsmath,amssymb]{revtex4-2}
+% Use preprint instead of reprint for the single-column review layout.
+```
+
+Use the owner's preferred two-column layout for a proposed arXiv version;
+offer a single-column review copy when long derivations benefit from it. Keep
+both derived from the same content, figures and bibliography. Neither layout
+authorizes uploading to arXiv. REVTeX approximates journal appearance; it is
+not a publisher's final typeset version. Follow its current author guide rather
+than overriding its grid, fonts or bibliography machinery. REVTeX supplies
+natbib; the APS bibliography style is `apsrev4-2`.
+
+Reflow long equations without changing their mathematical content. Prefer
+logical line breaks; use `widetext`, `figure*` or `table*` when a full-width
+object is necessary. Inspect equations, captions, legends, tables and reference
+links at the final column width. Do not shrink material until it is unreadable,
+change significant figures to fit, or stretch a plot out of proportion. Build
+with BibTeX and enough LaTeX passes to resolve citations and cross-references,
+then render every page. Record the class, options and build versions privately.
+
+**Use INSPIRE HEP BibTeX exports whenever the cited work is indexed there.**
+Resolve the exact work by DOI, arXiv ID or record ID, check title and authors,
+then use the record's export rather than manually reconstructing its fields.
+The [official INSPIRE API documentation](https://github.com/inspirehep/rest-api-doc)
+describes the `format=bibtex` parameter and `application/x-bibtex` response.
+The web interface's BibTeX export is equally suitable.
+
+- Keep the raw export, record URL/ID, retrieval date and checksum in the private
+  source record. Preserve the original export separately from any build copy.
+- Check journal, year, volume, article/page number, DOI and arXiv identifier.
+  Use available publication metadata without implying that an unread published
+  version was inspected. Keep the exact version actually read in the evidence
+  record; a metadata refresh is not a scientific source reconciliation.
+- Preserve stable citation keys or record an explicit key mapping. Document
+  necessary TeX-encoding corrections without silently changing bibliographic
+  facts. Deduplicate entries and check every cited key resolves after building.
+- If INSPIRE has no record, use a publisher or another authoritative source
+  and record that fallback honestly. This supports cross-field research; it
+  does not restrict citations to high-energy physics or justify invented data.
+- A plausible-looking `.bib` entry does not prove its provenance. When the
+  earlier export is missing, say so and obtain a verifiable new export; never
+  retroactively label the old file as an exact INSPIRE download.
+
+Record formatting review separately from physical-result review. An attractive
+APS draft, a clean BibTeX build and author approval of presentation do not mean
+that the derivation, novelty, unresolved discrepancies or submission statements
+have been accepted. Identify claim-critical remaining work; do not require
+unrelated extensions merely to increase the paper's length.
+
 ## Reusable request
 
 ```text
