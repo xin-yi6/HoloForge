@@ -18,6 +18,8 @@ class AgentOnboardingTests(unittest.TestCase):
             ROOT / "docs/research-gate-workflow.md",
             ROOT / "docs/private-research-workflow.md",
             ROOT / "docs/physics-manuscript-writing.md",
+            ROOT / "docs/physics-figure-design.md",
+            ROOT / "docs/physics-figure-reading-study.md",
             ROOT / "docs/physics-writing-reading-study.md",
             ROOT / "docs/physics-writing-cross-field-study.md",
         ]

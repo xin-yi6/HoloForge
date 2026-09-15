@@ -152,6 +152,13 @@ there is no blanket ban on them or on numerical-method papers.
 
 ## Make the reasoning visible at paragraph scale
 
+Section length is not a quality target. When a draft feels thin, distinguish
+missing explanation from missing scientific evidence. Restore the motivation,
+equation-to-equation reasoning, physical interpretation and meaningful
+comparisons already supported by the record; merge unnecessary fragments.
+Do not pad sections, remove necessary derivations to imitate a short letter,
+or commission calculations merely to make a manuscript longer.
+
 - **Open a paragraph with a physical task or inference.** Then supply the
   evidence and explain its consequence. Change paragraphs when the logical
   job changes, not after every equation. This is a diagnostic, not a mandatory
@@ -165,6 +172,11 @@ there is no blanket ban on them or on numerical-method papers.
 - **Contrast meaningful alternatives.** A baseline, counterexample or known
   limit should isolate the physical distinction, not merely provide another
   curve. State what a successful check does and does not establish.
+- **Design the figures as part of the argument.** Follow the separate
+  [physics figure guide](physics-figure-design.md) and its
+  [visual reading study](physics-figure-reading-study.md). Prose reading does
+  not imply visual inspection. Explain physical effect size as well as numerical
+  improvement, and keep author-review graphics separate from manuscript figures.
 - **Place qualifications by consequence.** Put a limitation beside the claim
   it changes. Group remaining scope limits coherently in the discussion;
   avoid repeatedly attaching the whole audit disclaimer to each result.
