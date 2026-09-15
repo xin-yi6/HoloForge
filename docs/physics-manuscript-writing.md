@@ -126,7 +126,10 @@ simple-example-first, result-first and framework-first approaches.
 4. **Use the introduction to locate the question.** Explain why it matters,
    what prior work establishes, what remains to be answered and precisely
    what this work contributes. Cite sources for claims, not decorative breadth.
-   Do not claim priority from a small style-reading sample.
+   Use [claim-led citation tracing](#find-references-by-tracing-claims)
+   to locate missing sources; do not claim priority from a small style-reading
+   sample. Integrate the relevant papers around the physical question rather
+   than inserting an author-by-author literature catalogue before it.
 5. **Make equations part of sentences and reasoning.** Introduce the physical
    quantity, state assumptions and conventions, define symbols when used,
    present the equation, then explain its consequence. Preserve dimensions,
@@ -149,6 +152,41 @@ qualifications with confident assertions, or all conclusions with caveats.
 Avoid unnecessary bold slogans, marketing claims and workflow jargon. Lists,
 tables and negative results are legitimate when they clarify the argument;
 there is no blanket ban on them or on numerical-method papers.
+
+## Check the physical story as a connected argument
+
+A good physical story explains why a question matters, why the chosen method
+can answer it, what the evidence establishes, and what the result changes.
+It is not a dramatic success narrative or a record of the order in which the
+agent completed tasks. Background, motivation, methods, results and analysis
+must connect, whether or not they appear as separate named sections.
+
+Before a substantial rewrite, summarize that connection in a short private
+outline using existing evidence:
+
+1. **Background and motivation:** what is known, what consequential question
+   remains, and why the reader should care about answering it.
+2. **Approach:** why this model, observable, approximation or calculation
+   addresses that question, including the assumptions that make it informative.
+3. **Result:** what was actually established relative to the relevant baseline
+   or alternative, and which equation or figure carries the evidence.
+4. **Analysis:** what mechanism, relation or calculational access is learned;
+   distinguish demonstrated explanation from a plausible interpretation.
+5. **Consequence and limits:** how the result answers the opening question,
+   where it applies, and which unresolved issue changes that answer.
+
+This is a coherence check, not a required five-paragraph template or a new
+approval gate. The abstract, introduction and conclusion must describe the
+same question and level of claim. Every major section should either advance
+that answer or establish a necessary condition for trusting it. Explain why
+secondary results belong; place useful but separate investigations in an
+appendix or a companion when appropriate, without concealing their implications.
+
+Use the outline to distinguish a missing transition or explanation from missing
+scientific evidence. Rewrite the former from the existing record; report the
+latter for a separately authorized research decision. An interesting story
+does not justify omitting contradictory results, inventing a mechanism,
+inflating novelty, or presenting a partly answered question as settled.
 
 ## Make the reasoning visible at paragraph scale
 
@@ -338,13 +376,62 @@ that the derivation, novelty, unresolved discrepancies or submission statements
 have been accepted. Identify claim-critical remaining work; do not require
 unrelated extensions merely to increase the paper's length.
 
+## Find references by tracing claims
+
+Inspecting the reference lists of relevant papers is **backward citation
+chaining**; following later papers that cite them is forward citation chaining.
+Both are useful discovery routes, as described in
+[Abertay University's citation-chaining guide](https://intranet.abertay.ac.uk/students/study-skills/guides/researching/searching/citation-chaining/).
+Use them to fill a concrete gap in attribution or context, not to reach a
+reference-count target. In HoloForge, discovery and verification remain separate:
+
+1. Identify the manuscript statement that needs support: a foundational idea,
+   equation, method, prior result, competing explanation or limitation.
+2. In a relevant paper already being read, inspect both the reference list and
+   the passage that cites a candidate source. A citation may mark disagreement
+   or background rather than evidence for the statement being written.
+3. Retrieve the candidate itself and read the relevant argument, assumptions
+   and result before using it as direct support. Paper A citing paper B does
+   not verify B. Record the version and section, equation or page actually
+   inspected; check available publication corrections when pertinent. If only
+   an abstract or a secondary account is accessible, record that limit and do
+   not claim to have verified a technical result available only in the full text.
+4. Cite the original contribution for what it establishes. Also credit a later
+   paper when using its interpretation, extension or method; finding the
+   original does not erase that contribution. Use the INSPIRE export convention
+   [above](#use-journal-templates-and-source-backed-bibliographies) for metadata.
+5. Reuse the private claim/source notes to record the manuscript claim, source
+   locator, citation purpose and any access limit; a short entry is sufficient.
+   Retain the discovery link when useful. Do not copy another paper's citation
+   bundle, distinctive wording or paragraph structure into the manuscript.
+
+Read the cited papers to understand how the physical problem developed and
+what is still unresolved, not just to harvest their bibliography. In the
+introduction, synthesize that understanding in original prose around the
+question being asked. Attribute borrowed ideas even when paraphrased.
+
+One citation chain can miss another approach or newer contrary evidence. Use
+other relevant starting papers and, where needed, forward citation or targeted
+database searches. Include consequential competing results, not only sources
+that support the preferred story. This complements the
+[APS referencing policy](https://journals.aps.org/authors/editorial-policies#references-to-other-work):
+appropriate credit and current, representative coverage, without citation
+inflation. Neither a famous author nor inclusion in a seed paper is a relevance
+criterion. Stop this editorial search when the identified claims and necessary
+context are adequately supported; record unresolved gaps rather than claiming
+an exhaustive review or novelty clearance.
+
 ## Reusable request
 
 ```text
 Rewrite the authorized draft as a theoretical-physics manuscript using
 docs/physics-manuscript-writing.md and its comparative reading study. Select
 relevant argument types, extend the corpus if needed, record reading scope,
-and explain which structural lessons fit this paper. Preserve all scientific
+and explain which structural lessons fit this paper. Check that motivation,
+method, results and interpretation form one evidence-supported physical story.
+Trace missing references through relevant cited papers, read the candidate
+sources, and integrate their contributions in original, claim-led prose.
+Preserve all scientific
 claims, evidence, uncertainties and unresolved issues; make no new calculation.
 Use natural, author-led physics prose without formulaic recaps or invented
 author experience. Retain AI provenance and the author's scientific review.

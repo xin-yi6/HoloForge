@@ -202,6 +202,24 @@ class AgentOnboardingTests(unittest.TestCase):
             with self.subTest(boundary=boundary):
                 self.assertIn(boundary, guide)
 
+    def test_manuscript_story_and_citation_guidance_preserve_evidence(self) -> None:
+        guide = " ".join((ROOT / "docs/physics-manuscript-writing.md").read_text(
+            encoding="utf-8").split())
+        # Check discoverable safeguards, not the quality or truth of a manuscript.
+        for boundary in (
+            "Check the physical story as a connected argument",
+            "missing scientific evidence",
+            "does not justify omitting contradictory results",
+            "Find references by tracing claims",
+            "discovery and verification remain separate",
+            "Paper A citing paper B does not verify B",
+            "If only an abstract or a secondary account is accessible",
+            "Do not copy another paper's citation bundle",
+            "Include consequential competing results",
+        ):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, guide)
+
 
 if __name__ == "__main__":
     unittest.main()
