@@ -220,6 +220,25 @@ class AgentOnboardingTests(unittest.TestCase):
             with self.subTest(boundary=boundary):
                 self.assertIn(boundary, guide)
 
+    def test_external_feedback_and_physical_framing_keep_evidence_boundaries(self) -> None:
+        guide = " ".join((ROOT / "docs/physics-manuscript-writing.md").read_text(
+            encoding="utf-8").split())
+        # These checks establish stated policy, not scientific judgment or prose quality.
+        for boundary in (
+            "Lead with physical variables",
+            "not an independent numerical validation",
+            "physical effect size",
+            "resolving its smaller remainder",
+            "Do not split work to hide contrary evidence",
+            "Triage external feedback before rewriting",
+            "proposed evidence, not automatic authority or proof",
+            "confirmed error from a diagnostic hypothesis",
+            "Do not promote an AI review to human scientific acceptance",
+            "completed changes and still-proposed tests separately",
+        ):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, guide)
+
 
 if __name__ == "__main__":
     unittest.main()

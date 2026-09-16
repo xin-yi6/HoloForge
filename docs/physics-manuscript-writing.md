@@ -188,6 +188,44 @@ latter for a separately authorized research decision. An interesting story
 does not justify omitting contradictory results, inventing a mechanism,
 inflating novelty, or presenting a partly answered question as settled.
 
+## Lead with physical variables when they carry the argument
+
+For a model calculation, introduce the observable, physical control variables,
+local assumptions and predicted relation before implementation coordinates or
+solver notation, when the logical dependencies permit it. Then explain how the
+implementation evaluates those quantities. Do not force this order when the
+construction itself is the contribution. A symbolic change of variables is not
+an independent numerical validation, and a model's local inputs must not be
+described as experimentally or observationally accessible without a dictionary.
+
+State the physical effect size as well as any improvement over a baseline.
+A large error-reduction ratio can coexist with a small physical correction.
+Distinguish resolving the leading effect from resolving its smaller remainder;
+evidence adequate for one need not establish the other. Do not promote a
+tested interval or a small retained correction into a controlled validity
+domain without examining the relevant omitted terms and numerical resolution.
+
+An incomplete secondary study can become a separate methods note when it
+does not support the paper's central claim. Preserve all failed attempts and
+their interpretation, retain any limitation that changes the central claim,
+and record the relocation explicitly. Do not split work to hide contrary evidence.
+
+## Triage external feedback before rewriting
+
+Treat human or AI review as proposed evidence, not automatic authority or proof.
+For each substantive comment, record: adopt now, propose a scientific test,
+defer as a stronger-claim extension, or decline with a reason. Distinguish a
+confirmed error from a diagnostic hypothesis. Reproducing printed algebra or
+rounded numbers does not validate the solver, raw inputs, uncertainties or
+novelty. Do not promote an AI review to human scientific acceptance.
+
+Implement authorized, evidence-supported corrections promptly. Separate them
+from new calculations, which retain the research contract and any required
+prospective approval. Decide which checks bear on the actual claim rather than
+adopting every suggested extension or sample count. Report completed changes
+and still-proposed tests separately; an improved narrative cannot replace
+missing physical evidence.
+
 ## Make the reasoning visible at paragraph scale
 
 Section length is not a quality target. When a draft feels thin, distinguish
