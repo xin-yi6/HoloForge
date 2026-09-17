@@ -239,6 +239,21 @@ class AgentOnboardingTests(unittest.TestCase):
             with self.subTest(boundary=boundary):
                 self.assertIn(boundary, guide)
 
+    def test_contribution_comparison_does_not_substitute_for_research(self) -> None:
+        guide = " ".join((ROOT / "docs/physics-manuscript-writing.md").read_text(
+            encoding="utf-8").split())
+        # Policy discoverability only; this cannot establish originality or accuracy.
+        for boundary in (
+            "contribution comparison",
+            "relevant equation, method or result",
+            "A missing search hit is not priority evidence",
+            "inputs are independently available",
+            "Previously inspected but unfitted targets",
+            "not authority to change scientific contracts",
+        ):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, guide)
+
 
 if __name__ == "__main__":
     unittest.main()

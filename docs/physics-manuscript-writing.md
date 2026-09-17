@@ -263,6 +263,16 @@ or commission calculations merely to make a manuscript longer.
 
 ## Distinguish a readable draft from a submission-ready argument
 
+Before another substantial rewrite, make a short **contribution comparison**
+against the closest primary sources: identify the relevant equation, method
+or result; separate the standard consequence, the model-specific calculation
+and the proposed new knowledge; then state why that difference matters to a
+reader. Record what was actually inspected and what remains uncertain. A
+missing search hit is not priority evidence. If the differentiated consequence
+is only proposed, describe it as an open research question, not the paper's
+accomplishment. This comparison supports judgment; it is not a publication
+score or a requirement that every useful paper discover a new phenomenon.
+
 Assess scientific substance separately from presentation. Neither page count,
 figure count, elapsed effort nor a famous short paper establishes that a new
 manuscript contains enough work. Ask:
@@ -290,6 +300,18 @@ longer. Necessary new science needs the appropriate task authority; an
 editorial request does not open it. Preserve promising ideas and verified
 results rather than declaring a project failed merely because its draft is
 not ready for submission.
+
+For quantitative predictions, state which inputs are independently available
+and which already encode the answer. A benchmark supplied with a known
+reference point is not automatically a method for finding an unknown one.
+Keep reference coordinates, fitted parameters, derivatives and targets
+consistent; do not substitute rounded literature values into a locally
+defined expansion without checking the consequence. Distinguish numerical
+precision, systematic accuracy and parameter uncertainty. Previously inspected
+but unfitted targets can still test a deterministic prediction; label them
+honestly rather than making blinding a universal condition for a physics paper.
+These are reporting requirements, not authority to change scientific contracts
+or launch the calculations needed to close an evidential gap.
 
 ## Write natural, author-led physics prose
 
