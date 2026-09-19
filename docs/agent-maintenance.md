@@ -59,6 +59,12 @@ indexes should include source hashes and exact line locators, stay visibly
 derived, and be regenerated after the source changes. They never grant review
 status or execution permission.
 
+When claim-level navigation is useful, the opt-in
+[claim/evidence index](claim-evidence-index.md) can check pinned references and
+flag affected dependencies. It is primarily agent-facing; PDF remains the
+human review format when needed. Adopting the utility does not migrate frozen
+framework pins, rewrite historical reviews, or create another owner gate.
+
 Load the relevant records for the current operation. Preserve full histories,
 but retrieve applicable stable knowledge IDs and primary evidence instead of
 repeatedly loading every closed project. Read controlling sections and their

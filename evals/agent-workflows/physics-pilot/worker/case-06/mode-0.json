@@ -1,0 +1,10 @@
+{
+  "mode": 0,
+  "state": {
+    "length": 1.0,
+    "points": 255,
+    "left": "dirichlet",
+    "right": "dirichlet"
+  },
+  "eigenvalue": 9.869480539639497
+}

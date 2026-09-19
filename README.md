@@ -189,6 +189,10 @@ artifacts. Plot generation requires the optional dependency installed with
 - [`docs/research-progress-snapshots.md`](docs/research-progress-snapshots.md)
   defines the compact and grouped project-progress figures used in private
   research and owner-review packets.
+- [`docs/claim-evidence-index.md`](docs/claim-evidence-index.md) describes an
+  optional agent-facing evidence index and dependency-freshness checks that
+  feed the existing human PDF review workflow without assigning scientific
+  support or approval.
 - [`docs/version-0.5-compatibility-policy.md`](docs/version-0.5-compatibility-policy.md)
   defines the protected `0.5.x` commands, Python API, schemas, migrations, and
   platform support; [`SECURITY.md`](SECURITY.md) gives the private reporting

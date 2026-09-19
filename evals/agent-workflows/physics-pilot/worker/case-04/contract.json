@@ -1,0 +1,10 @@
+{
+  "equation": "-u_dd(x)=lambda*u(x)",
+  "coordinate": "dimensionless x in [0,1]",
+  "boundary": {
+    "left": "u_d(0)=u(0)",
+    "right": "u_d(1)=u(1)"
+  },
+  "function_class": "Nonzero real twice continuously differentiable functions satisfying both boundary conditions",
+  "budget": "One integration-by-parts audit or exact counterexample; numerical solves unnecessary."
+}

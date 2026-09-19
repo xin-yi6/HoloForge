@@ -1,0 +1,34 @@
+{
+  "implementation": "spectral.py",
+  "right_boundary_used": "dirichlet",
+  "runs": [
+    {
+      "points": 63,
+      "length": 1.0,
+      "eigenvalues": [
+        9.867622767227147,
+        39.44671910136398,
+        88.66603036851532
+      ]
+    },
+    {
+      "points": 127,
+      "length": 1.0,
+      "eigenvalues": [
+        9.869108962781034,
+        39.47049106890512,
+        88.78631555267961
+      ]
+    },
+    {
+      "points": 255,
+      "length": 1.0,
+      "eigenvalues": [
+        9.869480539639497,
+        39.47643585114048,
+        88.81640723588427
+      ]
+    }
+  ],
+  "candidate_comment": "The eigenvalues stabilize with increasing resolution."
+}

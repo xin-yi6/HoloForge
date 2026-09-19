@@ -1,0 +1,12 @@
+{
+  "statement": "The converged eigenvalues reproduce the registered Dirichlet interval problem within its tolerance.",
+  "scope": "Manufactured workflow fixture only",
+  "support_level": "hypothesis",
+  "generated_by_ai": true,
+  "review": {
+    "state": "unreviewed",
+    "reviewer": null,
+    "date": null
+  },
+  "authority": "Inspect and perform bounded checks; no change to the question or acceptance criteria."
+}

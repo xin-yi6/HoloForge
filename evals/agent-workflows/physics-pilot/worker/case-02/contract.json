@@ -1,0 +1,17 @@
+{
+  "equation": "-u_dd(x) = lambda*u(x)",
+  "coordinate": "dimensionless x in [0,1]",
+  "boundary": {
+    "left": "u(0)=0",
+    "right": "u(1)=0"
+  },
+  "length": 1.0,
+  "modes": [
+    0,
+    1,
+    2
+  ],
+  "relative_error_ceiling": 0.001,
+  "scope": "Model-internal eigenvalues, not empirical validation",
+  "budget": "Three supplied resolutions and at most one independent analytic check. No repair."
+}

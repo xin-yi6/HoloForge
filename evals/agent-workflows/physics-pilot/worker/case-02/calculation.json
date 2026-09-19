@@ -1,0 +1,34 @@
+{
+  "implementation": "spectral.py",
+  "right_boundary_used": "neumann",
+  "runs": [
+    {
+      "points": 63,
+      "length": 1.0,
+      "eigenvalues": [
+        2.467275282512816,
+        22.19642032662874,
+        61.60642989090237
+      ]
+    },
+    {
+      "points": 127,
+      "length": 1.0,
+      "eigenvalues": [
+        2.4673698915668028,
+        22.204082099963898,
+        61.66552443685437
+      ]
+    },
+    {
+      "points": 255,
+      "length": 1.0,
+      "eigenvalues": [
+        2.467393328553607,
+        22.205980401292603,
+        61.680170342546134
+      ]
+    }
+  ],
+  "candidate_comment": "The eigenvalues stabilize with increasing resolution."
+}

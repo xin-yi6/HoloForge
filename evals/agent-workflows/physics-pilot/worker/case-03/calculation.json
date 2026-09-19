@@ -1,0 +1,8 @@
+{
+  "solver_converged": false,
+  "residual": 0.003,
+  "iteration_limit_reached": true,
+  "independent_check": null,
+  "completed_attempts": 1,
+  "candidate_comment": "No nontrivial branch was returned."
+}

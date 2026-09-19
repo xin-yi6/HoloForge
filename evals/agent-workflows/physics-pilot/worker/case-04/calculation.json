@@ -1,0 +1,4 @@
+{
+  "argument": "Multiply by u and integrate. lambda*integral(u^2)=integral((u_d)^2)>=0. Therefore lambda>=0.",
+  "boundary_term": "Omitted in the supplied derivation."
+}

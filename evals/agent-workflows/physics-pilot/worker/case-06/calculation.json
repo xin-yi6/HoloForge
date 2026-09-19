@@ -1,0 +1,25 @@
+{
+  "status": "Saved checkpoint before completion; no claim of an observed live crash.",
+  "current_state": {
+    "length": 1.0,
+    "points": 255,
+    "left": "dirichlet",
+    "right": "dirichlet"
+  },
+  "cache": [
+    {
+      "mode": 0,
+      "path": "mode-0.json",
+      "sha256": "3be8558f9f8694e7fd027b29392a9a4b6b066bf36150beeffc1f9ae0abd67b88"
+    },
+    {
+      "mode": 1,
+      "path": "mode-1.json",
+      "sha256": "91b493d49a9d980e6e4e7066f4cd7b0ad999d7a420cbbdc4d5ca4e8760633dac"
+    }
+  ],
+  "remaining_modes": [
+    2
+  ],
+  "candidate_comment": "Both existing files have valid hashes; reuse both."
+}

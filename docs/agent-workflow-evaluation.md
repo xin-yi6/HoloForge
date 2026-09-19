@@ -5,6 +5,16 @@ Regression tests can establish numerical or record-handling behavior. A role
 arrangement needs observed task outcomes, cost, intervention and recovery
 measurements before it becomes a default.
 
+## Prepared physics workflow pilot
+
+The separate [physics pilot](../evals/agent-workflows/physics-pilot/README.md)
+adds six public synthetic cases and a prospective comparison of the current
+workflow with the optional [claim/evidence index](claim-evidence-index.md).
+It includes a valid acceptance control as well as scientific and numerical
+failure cases. Its protocol is **prepared, not run**: fixture/software tests
+are not evidence of improved agent judgment, human review time or discovery
+productivity. The historical role pilot below remains unchanged.
+
 ## Synthetic role pilot
 
 The first pilot compares the current four-role pattern with a consolidated

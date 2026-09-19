@@ -10,6 +10,11 @@ changed and that required provenance fields are present. It does not establish
 that the underlying model is physically correct, empirically validated, novel,
 or appropriate for a later calculation.
 
+An optional [claim/evidence navigation utility](claim-evidence-index.md) can
+link canonical records and flag changed dependencies for agents and the
+existing PDF review workflow. Its freshness checks do not replace this bundle
+audit, infer scientific support, or change the protected bundle schema.
+
 ## Create and audit a bundle
 
 Every current `verify` and `compare` command accepts an optional

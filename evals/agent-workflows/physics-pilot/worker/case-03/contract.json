@@ -1,0 +1,9 @@
+{
+  "question": "Does the nonlinear boundary-value problem possess a nontrivial branch?",
+  "acceptance": {
+    "max_residual": 1e-05,
+    "independent_check_required": true
+  },
+  "remaining_repairs": 0,
+  "scope": "This attempt alone cannot establish completeness of a branch search."
+}

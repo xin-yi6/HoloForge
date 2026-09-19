@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "disclosure": "public",
+  "resources": [
+    {
+      "id": "claim-record",
+      "path": "record.json",
+      "sha256": "b1a02c6d233230690523beb684464385f2ac756ec48edbf4f617d7055b5e8cde",
+      "locator": {
+        "pointer": ""
+      }
+    },
+    {
+      "id": "review-record",
+      "path": "record.json",
+      "sha256": "b1a02c6d233230690523beb684464385f2ac756ec48edbf4f617d7055b5e8cde",
+      "locator": {
+        "pointer": "/review"
+      }
+    },
+    {
+      "id": "assumptions",
+      "path": "contract.json",
+      "sha256": "6f97dba3f3d12cff9311e7943c994d3fdec2b05867664694a7f935b599ac3147",
+      "locator": {
+        "pointer": ""
+      }
+    },
+    {
+      "id": "calculation",
+      "path": "calculation.json",
+      "sha256": "adad3266f7ba5917c6834496c8acde3658e80ebe3004e425a90a1b4f077d4e2a",
+      "locator": {
+        "pointer": ""
+      }
+    },
+    {
+      "id": "mode-0",
+      "path": "mode-0.json",
+      "sha256": "3be8558f9f8694e7fd027b29392a9a4b6b066bf36150beeffc1f9ae0abd67b88",
+      "locator": {
+        "pointer": ""
+      }
+    },
+    {
+      "id": "mode-1",
+      "path": "mode-1.json",
+      "sha256": "91b493d49a9d980e6e4e7066f4cd7b0ad999d7a420cbbdc4d5ca4e8760633dac",
+      "locator": {
+        "pointer": ""
+      }
+    }
+  ],
+  "claims": [
+    {
+      "id": "candidate",
+      "record": "claim-record",
+      "review": "review-record",
+      "assumptions": [
+        "assumptions"
+      ],
+      "supports": [
+        "calculation",
+        "mode-0",
+        "mode-1"
+      ],
+      "contradicts": [],
+      "open_checks": [],
+      "depends_on": []
+    }
+  ]
+}

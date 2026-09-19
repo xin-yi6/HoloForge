@@ -1,0 +1,17 @@
+{
+  "equation": "-u_dd(x)=lambda*u(x)",
+  "coordinate": "dimensionless x in [0,1]",
+  "boundary": {
+    "left": "u(0)=0",
+    "right": "u(1)=0"
+  },
+  "length": 1.0,
+  "modes": [
+    0,
+    1,
+    2
+  ],
+  "points": 255,
+  "relative_error_ceiling": 0.001,
+  "budget": "Reuse matching artifacts and recompute only missing or incompatible modes at the declared resolution. No new model or repair."
+}

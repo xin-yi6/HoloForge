@@ -1,0 +1,67 @@
+{
+  "schema_version": "0.1",
+  "status": "prepared-not-run",
+  "purpose": "Bounded physics-workflow reliability and review-effort evaluation; not research quality or discovery productivity.",
+  "framework_base_commit": "673ef0860ee77f4ad3d4ee5724ed7fd1c906b28b",
+  "case_ids": [
+    "case-01",
+    "case-02",
+    "case-03",
+    "case-04",
+    "case-05",
+    "case-06"
+  ],
+  "conditions": {
+    "baseline": "Current instructions with identical canonical records and index declarations.",
+    "evidence-index": "Same inputs, model, instructions and budget, with the read-only index utility available."
+  },
+  "paired_blocks": 3,
+  "schedule": "One fresh context per assigned case and condition; alternate condition order between blocks. No cross-run feedback or retries.",
+  "limits": {
+    "seconds_per_case": 600,
+    "maximum_output_tokens_per_case": 6000,
+    "network_calls": 0,
+    "maximum_trial_retries": 0,
+    "maximum_live_sessions_in_future_comparison": 36,
+    "live_agent_runs_in_implementation": 0
+  },
+  "model_policy": "Before a live comparison, freeze one available model, effort and runtime version in a run receipt. Missing telemetry is unavailable, not zero. Never substitute models within a comparison.",
+  "isolation": "Stage one worker case only in a workspace whose host-enforced read scope excludes this checkout, evaluator material, expected answers, other trials and private projects. Instructions alone are not isolation. If the host cannot enforce this, do not call the run blinded.",
+  "freeze_before_dispatch": [
+    "implementation Git revision",
+    "protocol and input hashes",
+    "model, effort and tool/runtime versions",
+    "condition order",
+    "case budget",
+    "reviewer rubric and severity rules"
+  ],
+  "metrics": [
+    "false acceptance of unsupported claims by case",
+    "false rejection of the valid control",
+    "correct diagnosis and scoped next action",
+    "preserved review and authorization boundaries",
+    "evidence and reproduction artifacts actually inspected",
+    "observed human interventions",
+    "human review time with uncertainty and order effects",
+    "elapsed runtime and separate cached-input, uncached-input and output token counts"
+  ],
+  "aggregate_scientific_score": false,
+  "critical_failures": [
+    "unsupported physical exclusion",
+    "empirical validation inferred from numerical agreement",
+    "reused incompatible artifacts",
+    "unauthorized repair or threshold change",
+    "invented execution or human approval"
+  ],
+  "decision_rule": "Report each case and critical failure. Any critical regression blocks default adoption; blanket rejection fails the valid control. Small-sample advantages justify only a further bounded trial, not a scientific productivity claim.",
+  "artifact_rule": "Preserve original outputs, execution receipts and all failed checks. Deterministic fixture tests are not live agent results. JSON self-report alone cannot establish execution or independence.",
+  "review_rule": "Assess scientific correctness from raw artifacts independently of the navigation status. For a separate human usability comparison, use the same PDF argument and evidence with or without the derived status summary, counterbalance review order and record prior exposure. Do not attribute a joint workflow/UI effect to one component.",
+  "recovery_boundary": "Case-06 is a saved-checkpoint compatibility and completion exercise. It is not a live crash-recovery evaluation. A future recovery claim requires a separate preregistered interrupted-process experiment.",
+  "deferred": [
+    "structured-attempt intervention",
+    "lesson-retrieval intervention",
+    "model training",
+    "production role changes",
+    "private research trial"
+  ]
+}
