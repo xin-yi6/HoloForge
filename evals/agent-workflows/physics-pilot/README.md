@@ -1,4 +1,15 @@
-# Physics workflow pilot — prepared, not run
+# Physics workflow pilot
+
+The [September 21 execution report](../results/physics-pilot-2026-09-21.md)
+records all 36 fresh sessions. Both conditions satisfied the six case-specific
+checks in all three blocks under AI controller review. No session used the
+utility to inspect an index, so this availability comparison does not establish
+a benefit from using it. The utility remains optional; no production default
+or scientific workflow changes follow from this small pilot.
+
+The prospective protocol retains its original `prepared-not-run` status and
+bytes. The separate dated result records the later execution without rewriting
+that historical record.
 
 This is a new infrastructure pilot alongside the preserved September role
 pilot. The [protocol](protocol.json) defines one intervention: availability of
@@ -41,7 +52,7 @@ development exercise and do not claim a controlled evaluation.
 ## Evaluate the behavior, not the self-report
 
 Freeze the implementation revision, protocol/input hashes, model, effort,
-runtime, budgets and order before dispatch. The proposed comparison has three
+runtime, budgets and order before dispatch. The comparison has three
 paired blocks over six cases, with one fresh context per case/condition and no
 retries or shared answers. Keep both conditions' ordinary instructions and
 evidence identical; record the tool availability difference explicitly.
@@ -77,5 +88,6 @@ experiment and execution receipts.
 the correct control and wrong-boundary limit, cache-state differences, index
 integrity and staging isolation at the file-copy level. The index's adverse
 tests are in `tests/test_claim_evidence.py`. These are software and fixture
-checks, **not executed agent trials**. No performance result or default change
-is registered by preparing this pilot.
+checks, **not executed agent trials**. The later live execution and its limits
+are documented in the dated report above; preparing the fixtures alone did not
+establish agent performance.

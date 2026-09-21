@@ -5,15 +5,27 @@ Regression tests can establish numerical or record-handling behavior. A role
 arrangement needs observed task outcomes, cost, intervention and recovery
 measurements before it becomes a default.
 
-## Prepared physics workflow pilot
+## Physics workflow availability pilot — 2026-09-21
 
 The separate [physics pilot](../evals/agent-workflows/physics-pilot/README.md)
-adds six public synthetic cases and a prospective comparison of the current
-workflow with the optional [claim/evidence index](claim-evidence-index.md).
-It includes a valid acceptance control as well as scientific and numerical
-failure cases. Its protocol is **prepared, not run**: fixture/software tests
-are not evidence of improved agent judgment, human review time or discovery
-productivity. The historical role pilot below remains unchanged.
+uses six public synthetic cases to compare otherwise matched sessions with
+and without the optional [claim/evidence index](claim-evidence-index.md)
+utility. It includes a valid acceptance control as well as scientific and
+numerical failure cases.
+
+The [execution report](../evals/agent-workflows/results/physics-pilot-2026-09-21.md)
+records 36 fresh sessions across three paired blocks. Both conditions met all
+case-specific requirements under AI controller review, with no observed critical
+failures. None of the 18 utility-available sessions actually inspected an index
+with the utility; two invoked its help. Both groups received identical index
+declarations. This result cannot establish a benefit from using the utility or
+from the declarations themselves, and human PDF review time was not measured.
+
+**Decision:** keep the utility optional and production roles unchanged. The
+small, explicit fixtures do not establish improved research judgment or
+discovery productivity. The prospective protocol retains its historical
+`prepared-not-run` status; the dated report records the subsequent execution.
+The historical role pilot below remains unchanged.
 
 ## Synthetic role pilot
 
