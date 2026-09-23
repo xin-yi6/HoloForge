@@ -85,7 +85,7 @@ the shared project instructions. Scientific review remains part of the workflow.
 
 ## Project status
 
-The latest public release is `0.6.1`. HoloForge is **pre-1.0**: public interfaces
+The latest public release is [`0.7.0`](docs/version-0.7.md). HoloForge is **pre-1.0**: public interfaces
 may change, so record the exact version or commit used for a calculation.
 See the [changelog](CHANGELOG.md) for release history and
 [CITATION.cff](CITATION.cff) for citation metadata.

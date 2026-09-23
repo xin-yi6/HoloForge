@@ -109,14 +109,14 @@ class Version05PolicyTests(unittest.TestCase):
         self.assertIn("*.json text eol=lf", attributes)
 
     def test_release_metadata_is_synchronized(self) -> None:
-        self.assertEqual(holoforge.__version__, "0.6.1")
+        self.assertEqual(holoforge.__version__, "0.7.0")
         citation = (ROOT / "CITATION.cff").read_text()
         changelog = (ROOT / "CHANGELOG.md").read_text()
         readme = (ROOT / "README.md").read_text()
-        self.assertIn("version: 0.6.1", citation)
-        self.assertIn("date-released: 2026-08-29", citation)
-        self.assertIn("## [0.6.1] - 2026-08-29", changelog)
-        self.assertIn("latest public release is `0.6.1`", readme)
+        self.assertIn("version: 0.7.0", citation)
+        self.assertIn("date-released: 2026-09-23", citation)
+        self.assertIn("## [0.7.0] - 2026-09-23", changelog)
+        self.assertIn("latest public release is [`0.7.0`](docs/version-0.7.md)", readme)
 
 
 if __name__ == "__main__":

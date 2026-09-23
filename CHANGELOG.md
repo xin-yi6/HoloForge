@@ -4,6 +4,10 @@ All notable changes to HoloForge are recorded here.
 
 ## [Unreleased]
 
+No changes recorded yet.
+
+## [0.7.0] - 2026-09-23
+
 ### Added
 
 - Agent maintenance and resumption guidance with private-workspace entry
@@ -12,6 +16,15 @@ All notable changes to HoloForge are recorded here.
 - An experimental governed auto-research workflow, repository skill, mission,
   state and terminal-package schemas, and a deterministic semantic validator
   for unattended private Explore campaigns with honest stopped outcomes.
+- An opt-in, read-only claim/evidence navigation utility with pinned source
+  hashes, exact locators and dependency attention flags. Freshness checks do
+  not establish scientific support or owner approval.
+- Public synthetic workflow evaluations with preserved protocols, execution
+  measurements, case-specific checks and bounded interpretation. The physics
+  availability pilot demonstrated no benefit from making the navigation
+  utility available; it remains optional.
+- Physics manuscript, citation and figure-design guidance, supported by a
+  comparative reading corpus and separated from internal review packets.
 
 ### Changed
 
@@ -34,6 +47,22 @@ All notable changes to HoloForge are recorded here.
 - Permit an owner to delegate candidate generation, policy-bounded selection,
   repeated frozen gates, and bounded pivots through one prospectively approved
   autonomous mission while preserving human scientific and disclosure review.
+- Return numerical work to the registered physical decision once its evidence
+  is sufficient; preserve failed checks and cumulative repair limits.
+- Use Python 3.11 for routine pre-1.0 CI, with the wider compatibility matrix
+  available explicitly. No broader platform claim follows from the smaller run.
+- Simplify the README and agent entry points. Keep scientific PDFs as the human
+  review artifacts; routine reports use a short status summary, with process
+  diagrams and separate progress PDFs only on explicit request.
+
+### Compatibility and adoption
+
+- Preserve the existing numerical library, verifier commands, Python API and
+  scientific record schemas. The new workflow tools are repository utilities,
+  not new installed-package CLI commands.
+- Keep experimental tools opt-in and existing private framework pins unchanged.
+  The workflow evaluations do not establish improved scientific productivity,
+  novelty judgment or research quality. See the [release guide](docs/version-0.7.md).
 
 ### Scientific results
 
@@ -594,6 +623,8 @@ All notable changes to HoloForge are recorded here.
 - Added machine-readable model-card and hypothesis-card schemas.
 - Added the verified quadratic soft-wall vector-spectrum benchmark.
 
+[Unreleased]: https://github.com/xin-yi6/HoloForge/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/xin-yi6/HoloForge/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/xin-yi6/HoloForge/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/xin-yi6/HoloForge/compare/v0.5.9...v0.6.0
 [0.5.9]: https://github.com/xin-yi6/HoloForge/compare/v0.5.8...v0.5.9

@@ -1,8 +1,10 @@
 # Version 0.5 compatibility, migration, support, and security policy
 
 This policy defines the bounded public contract for the HoloForge `0.5.x`
-series. It does not freeze undocumented internals and does not turn a passing
-calculation into empirical validation.
+series. Versions 0.6 and [0.7](version-0.7.md) preserve those protected
+interfaces; the runtime and support guidance below applies to the current
+release. This policy does not freeze undocumented internals and does not turn
+a passing calculation into empirical validation.
 
 ## Supported runtime and platforms
 
@@ -47,8 +49,9 @@ commit and results. A version or platform is not claimed tested on a revision
 unless its checks passed there. Earlier release receipts remain historical
 evidence, not proof for a newer commit.
 
-Only the latest `0.5.x` patch receives new compatibility and security fixes.
-Exact older releases remain available for reproducibility.
+New compatibility and security fixes target the latest release in the current
+pre-1.0 minor line, now `0.7.x`. Exact older releases remain available for
+reproducibility; their availability does not promise ongoing maintenance.
 
 ## Protected command behavior
 
