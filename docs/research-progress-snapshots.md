@@ -1,8 +1,18 @@
 # Research-progress snapshots
 
 HoloForge can render one project-local research state as Markdown/Mermaid and
-as standalone SVG, PNG, or PDF figures. The JSON state is canonical; figures
-are generated views and must be refreshed after a durable research milestone.
+as standalone SVG, PNG, or PDF figures. These are optional views, generated
+only on an explicit owner request. Routine scientific reports use a short
+completed / unresolved / next decision or action summary, without a separate
+progress diagram or progress PDF. Earlier adoption does not require continued
+rendering; an explicit ongoing request can be stopped by the owner.
+
+The JSON supplies one consistent input for a requested view. Canonical project
+status, attempt history, evidence links and owner decisions remain maintained
+whether or not a figure is requested. If the JSON itself serves as canonical
+state, keep its state fields current without requiring a figure. Preserve old
+snapshots and reviewed packets as dated history, and read current status before
+resuming research. Refresh the view's inputs before rendering it again.
 
 The snapshot describes the actual research project: source review, frozen
 questions, calculations, verification, stops, owner decisions, and later
@@ -13,7 +23,7 @@ background telemetry.
 
 Set the optional top-level `figure_style` field to one of:
 
-- `compact` — the recommended owner-review and PDF-packet style. It uses a
+- `compact` — the recommended style for a requested owner-review figure. It uses a
   clean stage rail, uniform rounded boxes, semantic status colors, a strong
   outline for the current or blocked stage, and dashed boxes for pending or
   skipped work. Group membership remains in the canonical JSON and Mermaid
@@ -23,11 +33,11 @@ Set the optional top-level `figure_style` field to one of:
 
 Records created before `figure_style` existed remain valid and render with
 `grouped`. The checked-in example selects `compact`, so new projects receive
-the simpler owner-facing style by default when they copy the example.
+the simpler owner-facing style when an explicitly requested view uses the example.
 
 Use `layout_direction: "TB"` for a vertical research path and `"LR"` for a
-wide map. The compact style is designed first for `TB`, which normally fits a
-dedicated progress page in the review-packet template.
+wide map. The compact style is designed first for `TB`, which can fit an
+explicitly requested progress page in the review-packet template.
 
 For a long, mostly sequential `compact`/`TB` path, the optional integer
 `compact_wrap_after` sets the maximum number of stages in each display column.
@@ -72,30 +82,32 @@ It does not increase the scientific-support level of a claim.
 
 ## Render from one state
 
-Copy the generic state and replace every example stage with reviewed project
-state:
+When a view is requested, copy the generic state and replace every example
+stage with reviewed project state:
 
 ```bash
 cp .agents/skills/holoforge-research-gate/assets/research-progress.example.json \
   /path/to/private-project/research-progress.json
 ```
 
-Then render every view from that same JSON file:
+Render only the requested views from that same JSON file. For Markdown and SVG:
 
 ```bash
 python .agents/skills/holoforge-research-gate/scripts/render_research_progress.py \
   /path/to/private-project/research-progress.json \
   --output /path/to/private-project/research-progress.md \
-  --figure-output /path/to/private-project/research-progress.svg \
-  --figure-output /path/to/private-project/research-progress.pdf
+  --figure-output /path/to/private-project/research-progress.svg
 ```
 
 Markdown rendering needs only Python. Standalone figures require the
-maintained Graphviz `dot` program. Keep the SVG as the ordinary full-size view.
-Embed the PDF on its own page only when an owner-review packet is already
-needed; set `\HoloForgeIncludeProgress`, `\researchprogressfile`, and
+maintained Graphviz `dot` program. To fulfill an explicit request for a PDF
+diagram, add `--figure-output /path/to/private-project/research-progress.pdf`.
+Include it on its own page only when the owner requests a process figure in
+that packet; set `\HoloForgeIncludeProgress`, `\researchprogressfile`, and
 `\researchprogressupdated` in
 [`review-packet-template.tex`](templates/review-packet-template.tex).
+Needing a scientific PDF does not itself request a diagram. Scientific plots,
+equations and evidence tables remain part of the ordinary review report.
 
 ## Privacy boundary
 

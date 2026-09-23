@@ -32,7 +32,9 @@
 \newcommand{\statusretained}{\textcolor{navy}{\textbf{retained}}}
 
 % Uncomment \def\HoloForgeIncludeProgress{1} and replace the filename only
-% when the packet should contain the project-local research-progress view.
+% when the owner explicitly requests a research-process figure in this packet.
+% Leave disabled for routine scientific reports, even if an old packet used it.
+% Do not generate a separate progress PDF by default. Keep useful physics plots.
 % The compact renderer style is recommended for this owner-review page; the
 % grouped style remains available when group boxes materially aid review.
 % \def\HoloForgeIncludeProgress{1}
@@ -53,6 +55,11 @@
 the most important limitation. Do not place an extrapolation or a broader
 physical claim in this box.
 }}
+
+\textbf{Completed:} State what this milestone established.\\
+\textbf{Unresolved / current status:} State the main open issue or recorded pause.\\
+\textbf{Next decision or action:} Name the proposed choice or authorized action;
+write none when there is no pending decision or continuation.
 
 \ifdefined\HoloForgeIncludeProgress
 \clearpage
@@ -91,7 +98,7 @@ Example residual & $1.0\times10^{-9}$ & $<1.0\times10^{-8}$ & \statuspass\\
 \end{center}
 
 \clearpage
-\section*{3. Figure, if required}
+\section*{3. Scientific figure, if required}
 \thispagestyle{fancy}
 
 % \begin{center}

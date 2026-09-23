@@ -455,10 +455,11 @@ may remain provisional or challenged. Promotion must not retroactively change
 the frozen contract, thresholds, support label, result record, or owner
 decision.
 
-Update the knowledge base and research-progress snapshot in the same bounded
-work session when a milestone changes both evidence and stage. This is
-agent-updated live state, not background telemetry; its currency is the last
-recorded evidence-linked revision.
+Update the knowledge base and canonical project status in the same bounded
+work session when a milestone changes both evidence and stage. Keep attempt
+history, evidence links and owner decisions current. A separate diagram state
+or rendered progress snapshot is optional under the presentation policy below;
+it is not another required milestone report.
 
 ## Learn from every closed gate
 
@@ -553,10 +554,21 @@ frozen questions, theoretical and numerical checks, verification, critic
 review, owner decisions, feedback loops, later gates, and possible completion.
 It is not a timeline of HoloForge's own software development.
 
-The following setup and refresh steps apply when a progress view is requested
-or already adopted for the project. Do not create a new state file or figure
-for every gate by default. Once adopted, keep the view synchronized with the
-canonical research state at its durable milestones.
+Use a short **completed / unresolved / next decision or action** summary in
+the scientific report or handoff by default. Keep the canonical project status,
+attempt history, evidence and decisions current without requiring a separate
+progress diagram, diagram-state file or progress PDF.
+
+Generate or refresh a research-process diagram only on an explicit owner
+request, including an explicit ongoing request. Earlier adoption or inclusion
+in an old packet is not an ongoing request. A request for a scientific PDF
+alone does not request a process figure. Preserve existing snapshots and
+reviewed packets as dated history; consult canonical status for the current
+state. If a snapshot JSON is itself canonical state, continue maintaining its
+scientific and authorization fields without requiring a rendered diagram.
+
+The setup below applies only to a requested view. Refresh its inputs from the
+canonical records before rendering, and honor any later request to stop.
 
 The research-gate skill includes:
 
@@ -580,28 +592,26 @@ integer `compact_wrap_after` to lay the declared stage order out in
 serpentine columns. The turns are presentation hints only: preserve every
 real transition, branch, current or blocked state, and closed-scope boundary.
 
-Copy the JSON template into the research project, update it after each durable
-milestone, and render Markdown/Mermaid from the public HoloForge checkout:
+For a requested view, copy the JSON template into the research project and
+render Markdown/Mermaid from the public HoloForge checkout:
 
 ```bash
 python PATH_TO_HOLOFORGE/.agents/skills/holoforge-research-gate/scripts/render_research_progress.py \
   RESEARCH_PROGRESS.json --output RESEARCH_PROGRESS.md
 ```
 
-For a standalone figure and a PDF-ready copy, use the maintained Graphviz
-layout engine:
+For a requested standalone SVG, use the maintained Graphviz layout engine:
 
 ```bash
 python PATH_TO_HOLOFORGE/.agents/skills/holoforge-research-gate/scripts/render_research_progress.py \
   RESEARCH_PROGRESS.json --output RESEARCH_PROGRESS.md \
-  --figure-output RESEARCH_PROGRESS.svg \
-  --figure-output RESEARCH_PROGRESS.pdf
+  --figure-output RESEARCH_PROGRESS.svg
 ```
 
-The SVG is the ordinary full-size progress figure. The PDF rendering may be
-embedded as a dated snapshot in an owner-review packet. Both are derived from
-the same project-local JSON record; the embedded page does not replace the
-standalone figure or the canonical state. If Graphviz `dot` is unavailable,
+Add `--figure-output RESEARCH_PROGRESS.pdf` only when a PDF diagram is
+explicitly requested, either separately or for inclusion in a review packet.
+Every rendered view derives from the same project-local JSON record. It does
+not replace the canonical research records. If Graphviz `dot` is unavailable,
 the Markdown/Mermaid route still works without it.
 
 The state records completed work, one current research stage, pending and
@@ -680,8 +690,8 @@ prepare a concise PDF packet in the standard HoloForge style:
 - an item-by-item recommended response with a concise reason and scope effect;
 - the completed, current, and proposed next stage plus the A-E response
   paths;
-- when requested, a dated research-progress snapshot generated from the same
-  project-local state as the standalone figure; and
+- only when explicitly requested, a dated research-process diagram; otherwise
+  use the short status summary without a separate progress page; and
 - a footer reiterating the disclosure boundary.
 
 The reusable source is
@@ -690,13 +700,12 @@ Compile twice, inspect the log for layout warnings, render every page to an
 image, and visually check clipping, overlaps, equations, tables, plots,
 headers, and page numbers before delivery.
 
-The standalone SVG remains the easiest way to inspect the full research map.
-When a review packet is required and a progress view has been requested or
-adopted, enable the template's optional progress page by defining
-`\HoloForgeIncludeProgress`, set the generated PDF path and timestamp, and
-compile it into the packet. Otherwise omit the progress page. Do not create a
-PDF solely to show the progress figure when the standalone SVG or Markdown view is
-sufficient.
+Keep scientific figures that explain the physics, results or uncertainty.
+Omit the research-process figure and separate progress PDF by default, even
+when an earlier packet included them. When the owner explicitly requests a
+process figure in this packet, enable the template's optional progress page
+with `\HoloForgeIncludeProgress` and set the generated PDF path and timestamp.
+The optional renderer remains available; routine review does not require it.
 
 This conditional rule applies to both private Explore gates and public
 Forge/Verify scientific-contract reviews. When the decision owner has stated

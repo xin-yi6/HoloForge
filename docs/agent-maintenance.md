@@ -73,6 +73,13 @@ task boundary changes. Skill entry points identify shared controls and
 phase-specific links; execution does not require rereading intake or PDF
 guidance unless that phase is relevant. This changes retrieval, not the scientific contract.
 
+Presentation changes apply prospectively: routine reports use a short status
+summary, with research-process figures and separate progress PDFs only on an
+explicit owner request. Preserve historical snapshots, reviewed PDFs and
+frozen manifests. Keep canonical research state current and link it for
+resumption instead of treating an old diagram as live state. A reporting
+preference does not migrate a framework pin or authorize scientific work.
+
 When reviewing instruction changes, walk through representative status,
 targeted-review, documentation-fix, and scientific-gate requests. Check which
 records they load, what work they authorize, and where they finish. Link and

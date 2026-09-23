@@ -34,7 +34,9 @@ Check and bound only the routine work needed to reach the return milestone:
 - [ ] implement only the already specified local calculation;
 - [ ] run the frozen analytic, physical, numerical, and independent checks;
 - [ ] prepare plots, tables, machine-readable evidence, and a review packet;
-- [ ] update working knowledge and the project-local progress snapshot;
+- [ ] update working knowledge and canonical project status;
+- [ ] render a process diagram only if explicitly requested; name the view
+      and whether this request covers one milestone or ongoing updates;
 - [ ] write the hostile critic report and consolidated owner recommendations;
 - [ ] create one local commit for the reviewed gate, **only if separately
       checked here and explicitly included by the owner**.
@@ -55,7 +57,8 @@ owner gate.
 - **Additional-numerics test:** `<which claim-bearing physical decision could
   more precision or another run change; write none when no further numerical
   work is authorized>`
-- **Review artifacts:** `<required result, critic, progress, and PDF records>`
+- **Review artifacts:** `<required result, critic, short status summary, and
+  scientific PDF records; no process diagram or separate progress PDF by default>`
 
 ## Mandatory return triggers
 

@@ -126,7 +126,9 @@ records with the summary here.
 2. Update it in the same bounded work session that records a durable milestone.
 3. Link evidence; do not store an unsupported conversational conclusion.
 4. Record lifecycle-state changes and retain challenged or retired entries.
-5. Update the project progress snapshot when the milestone also changes stage.
+5. Update canonical project status when the milestone also changes stage.
+   Keep attempt history and decisions; render a process diagram only on an
+   explicit owner request, not as another required knowledge report.
 6. Promote literature, derivation, method, data, decision, or tooling knowledge
    only after its named review; do not wait for failure or gate closure when a
    durable review milestone already exists.

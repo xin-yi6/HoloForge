@@ -190,7 +190,10 @@ stage, and what remains closed. It should then offer five paths: A, approve all
 recommendations; B, approve selected decisions; C, request revision or
 evidence; D, receive a status walkthrough only; or E, write a custom response.
 The post-closure menu applies only to the next eligible handoff and must not
-silently reopen the completed gate. Ask for the optional project-local
+silently reopen the completed gate. Use a short completed / unresolved / next
+decision or action summary in routine reports. A process diagram and separate
+progress PDF are not required, including for projects that used them before.
+When an overview would help, explicitly request the optional project-local
 research picture with:
 
 ```text
@@ -201,11 +204,11 @@ the exact next action. Do not show HoloForge's software-development timeline,
 and do not treat this status request as approval for further work.
 ```
 
-The snapshot is updated when the agent records a milestone; it is not a
-background monitor. Keep the full-size SVG and canonical state in the private
-project. If a PDF review packet is already required, include a dated PDF
-rendering of the same map; GitHub can show only the last committed and pushed
-state.
+The snapshot is updated for the requested view; it is not a background monitor.
+Keep canonical research records current and generated views in the private
+project. Include a dated process figure in a scientific PDF only if that figure
+is explicitly requested. Preserve historical snapshots; GitHub can show only
+the last committed and pushed state.
 
 See `docs/private-research-workflow.md` for the recommended private structure.
 

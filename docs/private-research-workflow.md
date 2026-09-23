@@ -83,13 +83,14 @@ The concise gate sequence below is expanded in the reusable
 contracts, hostile critic reports, owner decisions, local Git records, and the
 standard PDF review-packet style. Every request for owner approval or choice
 must also include an item-by-item recommendation and its reason, an A-E
-response menu, and a completed/current/next status summary. The optional
-agent-updated research-progress map is generated from a state file kept in the
-private repository. Its standalone figure tracks literature, frozen gates,
-parallel checks, decisions, and later research stages; a dated PDF rendering
-may also be embedded in an owner-review packet. The checked-in example uses the
-compact owner-review style; the canonical state and full-size figure remain
-project-local. See the [snapshot style guide](research-progress-snapshots.md).
+response menu, and a completed/current/next status summary. Routine scientific
+reports retain equations, results, uncertainty and useful physics figures;
+use a short status summary without a research-process diagram or separate
+progress PDF. Generate those optional views only on explicit owner request,
+even if older reports used them. Keep status, attempt history, evidence links
+and decisions current; preserve historical snapshots and reviewed packets.
+Requested views remain project-local; see the
+[snapshot style guide](research-progress-snapshots.md).
 
 After an approved gate is recorded and closed, report completed/current/next
 status. Present fresh A-E choices when an actual next owner or portfolio
