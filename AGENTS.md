@@ -46,6 +46,10 @@ status requests do not open a scientific gate or require an A-E menu.
   raw evidence, and human review states. Finish authorized routine work and
   return at its first declared stop, outcome, or undelegated decision. Model
   upgrades and personal skill defaults cannot expand that authority.
+- For new numerical work, distinguish an explicitly approved
+  [development allowance](docs/research-gate-workflow.md#separate-development-from-confirmation)
+  from confirmatory qualification. Recoverable development failures block
+  production, not permitted debugging; this never overrides an older stop.
 - Numerics serve a registered physical decision. Apply the prospective
   [claim-sufficiency checkpoint](docs/research-gate-workflow.md#use-a-claim-sufficiency-checkpoint)
   and stop refinement that cannot change the decision or strengthen the claim.

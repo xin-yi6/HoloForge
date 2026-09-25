@@ -59,6 +59,12 @@ indexes should include source hashes and exact line locators, stay visibly
 derived, and be regenerated after the source changes. They never grant review
 status or execution permission.
 
+For routine milestone reporting, follow [consolidated state and delivery](research-gate-workflow.md#consolidate-current-state-and-delivery).
+Keep navigation as links to authoritative facts, and avoid propagating a lead
+project's internal updates into unchanged paused projects. Maintain separate
+execution, numerical, physical, integrity and review outcomes; delivery checks
+do not establish scientific support.
+
 When claim-level navigation is useful, the opt-in
 [claim/evidence index](claim-evidence-index.md) can check pinned references and
 flag affected dependencies. It is primarily agent-facing; PDF remains the
@@ -113,6 +119,10 @@ routing tests cannot qualify the solver they mock. After a changed numerical
 representation or tolerance, explicitly identify which fitted or derived
 inputs need requalification under the same frozen physical conditions; do not
 silently reuse a stale fitted input or expand an exhausted repair window.
+Use the [physical-comparison policy](research-gate-workflow.md#verify-the-physical-comparison)
+to record the affected references and the consistency bridge required before
+combining old and new results. This impact review is not blanket permission
+to rerun old calculations.
 
 ## Record execution, not just requested roles
 

@@ -174,14 +174,24 @@ This delegates execution only. It does not delegate the physical verdict,
 novelty or publication judgment, disclosure decision, or permission to push,
 merge, release, or start another gate.
 
+When a new numerical capability needs development, include the template's
+[development allowance](research-gate-workflow.md#separate-development-from-confirmation)
+in that same approval: permitted changes, cumulative resources, recoverable
+test failures, and the final qualification boundary. Failed development tests
+remain recorded and block production, but need not trigger another approval.
+Freeze the exact implementation before confirmation, then use the qualified
+revision for the already authorized physical calculation. Existing stopped
+contracts are not reopened by this guidance.
+
 If the same blocker recurs, ask the agent to use the bounded impasse protocol:
 classify the problem, inspect targeted authoritative external evidence, audit
 the physics independently, inspect the corresponding numerical or software
 layer, and propose at most one costed repair before returning for approval.
 Internet search locates evidence; it does not validate a fix or authorize a
 post-hoc threshold change. For a publication-targeted candidate, a failed first
-repair triggers portfolio-level reassessment; a second repair needs a new
-owner-approved rationale showing that it directly unlocks the frozen physical
+repair at its declared qualification boundary triggers portfolio-level
+reassessment; a second repair needs a new owner-approved rationale showing
+that it directly unlocks the frozen physical
 discriminator.
 
 At each owner gate, and again after an approved gate is recorded and closed,

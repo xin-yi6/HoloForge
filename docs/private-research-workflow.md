@@ -112,6 +112,12 @@ stops and impasses, interpretation or publication judgments, disclosure,
 external communication, and Git or remote actions. It never rolls over to a
 new gate or candidate. The owner may approve it together with the frozen
 contract so the window does not introduce an extra decision gate.
+For new numerical capabilities, include [bounded development and confirmatory
+qualification](research-gate-workflow.md#separate-development-from-confirmation)
+inside that same window. A prospectively designated development-test failure
+blocks production but may permit further authorized debugging. It is not a new
+owner gate unless a milestone stop or another return trigger fires. Preserve
+old first-failure contracts; do not apply this distinction retroactively.
 
 1. **Intake:** read the current private reviewed-knowledge and closure-lesson
    indexes and record which stable knowledge and lesson IDs and evidence apply
@@ -185,8 +191,9 @@ an unresolved source or technical stop if the bounded repair fails; do not
 silently loosen thresholds or expand the hypothesis.
 
 For publication-targeted work, the repair budget is cumulative across the
-candidate, not reset by each small gate. After a first numerical repair fails,
-return to a portfolio-level reassessment. A second repair requires a new owner-
+candidate, not reset by each small gate. After a first numerical repair fails
+at its declared qualification/return boundary, return to a portfolio-level
+reassessment. A second repair requires a new owner-
 approved rationale showing that it directly unlocks the already frozen
 physical discriminator within the remaining cost ceiling. Otherwise pause or
 pivot the candidate. Planned, owner-approved model and capability construction
@@ -194,6 +201,38 @@ uses the separate campaign construction budget and is not counted as a repair.
 Every prerequisite milestone must remain necessary for the selected physical
 question and retain a planned physical checkpoint; generic infrastructure work
 cannot be treated as hidden research progress.
+
+## Preserve recoverable evidence
+
+Hash integrity, Git tracking, backup and reproducibility are different claims.
+A hash cannot restore a lost file, and a clean Git tree does not protect ignored
+raw arrays. Check existing backup coverage before proposing another system;
+record unknown coverage as unknown, not as a verified absence of all backups.
+
+For evidence needed to support a result, keep a private manifest of paths,
+sizes and hashes, the source revision, numerical environment, configurations
+and reproduction instructions. Record whether each required artifact is
+recoverable from an approved backup or intentionally regenerable, with the
+cost and any irreplaceable external inputs. Regenerability must not be assumed
+from the existence of code alone. Preserve unique inputs and failed-attempt
+evidence when they cannot reliably be regenerated.
+
+Use only an owner-approved, access-controlled backup destination. Approval for
+local research or a public workflow update does not authorize uploading private
+data, contacting a cloud service or choosing a new destination. An additional
+copy on the same device does not protect against device loss.
+
+Within explicit restoration authority, restore representative required files
+to an isolated location without overwriting working evidence, then compare
+their hashes. Record the destination reference, covered snapshot, actual check
+and remaining gaps privately. A representative restore is not proof that all
+files are recoverable. Separately, a clean-environment reproduction should
+recover a relevant observable within its declared tolerance when that execution
+is authorized. Do not run a physical calculation merely to check a backup.
+
+Add recovery status to the existing evidence record, not another public data
+registry. Neither a successful backup nor restoration establishes physical
+validity, independent verification or permission to disclose.
 
 ## Public export checklist
 

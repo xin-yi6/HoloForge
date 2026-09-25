@@ -35,6 +35,12 @@ in-scope recommendation is followed. Each candidate layer still follows the
 claim, evidence, impasse, retrospective, and non-inference requirements in
 [`research-gate-workflow.md`](research-gate-workflow.md).
 
+An authorized candidate gate may include [bounded development](research-gate-workflow.md#separate-development-from-confirmation)
+before confirmatory qualification. This does not add a campaign phase, schema
+field or runtime permission. Attempt logs remain candidate artifacts; all
+mission transitions, delegation checks and cumulative limits still apply.
+Existing frozen missions and terminal campaigns are not migrated or reopened.
+
 ## Authorization contract
 
 Before any research begins, copy and complete the mission example from

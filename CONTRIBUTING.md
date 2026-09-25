@@ -69,9 +69,10 @@ credibility status remain non-aggregate. Capability receipts inform the route
 and cost but never decide which question is valuable. When a blocker recurs,
 use the workflow's bounded impasse protocol rather than
 retrying indefinitely or loosening a threshold after seeing the result. A
-failed first numerical repair requires portfolio-level reassessment before a
-second repair. Every owner decision list must include an explicit item-by-item
-recommendation, a concise evidence-based reason, a completed/current/next
+failed first numerical repair at its declared qualification boundary requires
+portfolio-level reassessment before a second repair. Every owner decision list
+must include an explicit item-by-item recommendation, a concise evidence-based
+reason, a completed/current/next
 status summary, and the standard A-E response paths.
 After a detailed contract is frozen, an owner may approve the
 [`bounded autonomy window template`](docs/templates/bounded-autonomy-window-template.md)
@@ -79,6 +80,12 @@ so routine in-scope work reaches one consolidated owner return instead of many
 intermediate approval gates. The window preserves mandatory returns for scope,
 threshold, cost, repair, interpretation, disclosure, Git, and external-action
 changes and never rolls over to another gate.
+Where development is needed, include its permitted changes and recoverable
+test failures in the same allowance; see [development and confirmation](docs/research-gate-workflow.md#separate-development-from-confirmation).
+Failed development tests block production, not all remaining authorized
+debugging. Preserve historical stops and cumulative costs. Qualification must
+cover the exact implementation used for the physical comparison, including
+affected reference results when a shared method changes.
 When requested, maintain the optional research-progress map in the private
 project; it describes research stages and branches, not HoloForge development.
 When a gate closes, preserve its result and complete the generic

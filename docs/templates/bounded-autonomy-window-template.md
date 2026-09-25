@@ -7,6 +7,9 @@ contract, or authorize disclosure or remote actions.
 
 The window may be prepared alongside the frozen contract and approved in the
 same owner decision. It has no effect until that approval is recorded.
+An optional development allowance can be part of that same decision; follow
+[development and confirmation](../research-gate-workflow.md#separate-development-from-confirmation).
+Existing stopped or stricter contracts are not amended by using this template.
 
 ## Authorization record
 
@@ -32,6 +35,7 @@ Check and bound only the routine work needed to reach the return milestone:
       frozen source classes;
 - [ ] complete the frozen analytic derivation or consistency audit;
 - [ ] implement only the already specified local calculation;
+- [ ] develop and debug within the explicitly completed allowance below;
 - [ ] run the frozen analytic, physical, numerical, and independent checks;
 - [ ] prepare plots, tables, machine-readable evidence, and a review packet;
 - [ ] update working knowledge and canonical project status;
@@ -46,6 +50,30 @@ choose among routine implementation alternatives only when the contract's
 decision criteria already distinguish them. Record the choice, evidence, and
 uncertainty in the gate ledger; do not turn each routine choice into a new
 owner gate.
+
+## Development and qualification boundary
+
+Complete this section when development is needed; otherwise write `not
+authorized`. Do not add a separate approval for routine attempts inside it.
+
+- **Permitted changes:** `<components, algorithms/representations and limits>`
+- **Development allowance:** `<finite attempts and aggregate effort/compute;
+  how these charge the existing construction or repair budget>`
+- **Recoverable development failures:** `<tests that block production but
+  permit further in-scope debugging; all other stop rules still apply>`
+- **Attempt record:** `<one existing log with revision, rationale, settings,
+  outcome, evidence and cumulative usage; retain failed attempts>`
+- **Confirmatory qualification:** `<prospective acceptance tests, operating
+  regime and independent/untuned challenges; code/configuration/environment
+  recorded before execution; failure return or explicitly delegated revision>`
+- **Production boundary:** `<exact qualified revision and settings, affected
+  requalification if changed, and already authorized physical calculation>`
+- **Method-change impact:** `<affected references and old/new consistency or
+  targeted revalidation needed before comparison>`
+- **Physical error justification:** `<how intermediate accuracy controls the
+  observable/decision; uncertainty type and limitations>`
+- **Verification coverage:** `<important check, failure mode, shared
+  dependencies, actual reviewer/method and independence limitations>`
 
 ## Cost and repair ceilings
 
@@ -64,7 +92,7 @@ owner gate.
 
 Stop the window and return to the owner as soon as any trigger fires:
 
-1. the frozen physical discriminator is reached, an acceptance or stop
+1. the frozen physical discriminator is reached, a milestone acceptance or stop
    condition fires, the claim-sufficiency checkpoint passes, or the stated
    return milestone is complete;
 2. the scientific question, action or model, ensemble or branch, boundary
@@ -85,6 +113,10 @@ Stop the window and return to the owner as soon as any trigger fires:
 The decision owner may revoke or narrow the window at any time. A window ends
 at its first mandatory return and never rolls over to another gate or
 candidate automatically.
+An explicitly recoverable development-test failure is recorded and blocks
+production; it is not by itself trigger 1. This exception must be agreed before
+the test and cannot waive another trigger, an exhausted budget or a stricter
+contract. A failed confirmation cannot be relabeled as development afterward.
 
 ## Consolidated return receipt
 
@@ -93,8 +125,12 @@ candidate automatically.
 - **Return trigger:** `<milestone or numbered trigger>`
 - **Completed work:** `<evidence-linked summary>`
 - **Checks passed and failed:** `<non-aggregate ledger>`
+- **Separate statuses:** `<execution; numerical qualification; physical-question
+  outcome; artifact integrity; independent verification; human review. Unknown
+  or not performed is not passed; delivery success implies none of the others>`
 - **Scientific support and non-claims:** `<what is and is not established>`
-- **Budget used:** `<sources, compute, repair, and review>`
+- **Budget used:** `<sources, development, compute, repair, reporting and relevant
+  owner wait; measured usage versus ceilings, unknown where not measured>`
 - **Current stage:** `<project-local stage>`
 - **Recommended next decision:** `<one bounded recommendation with reason>`
 - **Scope that remains closed:** `<explicit list>`

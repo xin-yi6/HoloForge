@@ -151,6 +151,14 @@ may open only when the owner approves a new rationale showing that it directly
 unlocks the already frozen physical discriminator within the remaining cost
 ceiling. Otherwise pause or pivot the candidate.
 
+Count this at the declared qualification/return boundary, not at every failed
+development test inside an approved allowance. [Bounded development](#separate-development-from-confirmation)
+does not reset cumulative costs or permit relabeling a stopped repair. At an
+investment decision, briefly compare the remaining effort and plausible route
+to resolution, the physical value of either outcome, and the strongest
+alternative use of that effort. A concrete next repair is not by itself a
+reason to prefer it; a technical stop is not a reason to discard the physics.
+
 Do not weaken numerical acceptance gates to create apparent physical progress.
 The purpose of this rule is to change research ordering and investment, not
 verification rigor.
@@ -248,9 +256,11 @@ unpublished candidate identities, literature notes, equations, or results.
 Every research gate should contain the following records:
 
 1. **Frozen contract:** written before the calculation and limited to one
-   question. It fixes inputs, methods, diagnostics, acceptance thresholds,
-   stop conditions, exclusions, the claim-bearing physical decision, the
-   prospective claim-sufficiency checkpoint, and the decision owner.
+   question. It fixes inputs, permitted methods, diagnostics, acceptance
+   thresholds, stop conditions, exclusions, the claim-bearing physical decision, the
+   prospective claim-sufficiency checkpoint, and the decision owner. When
+   development is needed, declare its allowance and qualification boundary;
+   freezing scientific criteria does not require freezing untested code.
 2. **Calculation and durable artifacts:** code, configuration, environment
    metadata, machine-readable results, and plots needed to inspect the gate.
    Prefer well-tested library functions over new local implementations.
@@ -277,6 +287,71 @@ If a stop condition fires, stop the gate, preserve the bounded stopped result
 under its correct outcome class, and return to owner review. Do not expand the
 scope to rescue the hypothesis.
 
+### Separate development from confirmation
+
+Use one owner-approved milestone, not an approval chain for each debugging
+attempt. Before any test, fix the physical question, model, dictionary,
+observable, acceptance criteria, allowed implementation/representation changes,
+total resources, and return triggers. Explicitly distinguish recoverable
+development-test failures from milestone stops. If that distinction is absent,
+the existing first-failure rule controls; this policy never reopens a stopped
+gate or overrides a stricter frozen contract.
+
+Within the declared allowance, the agent may diagnose failed synthetic tests,
+correct code, inspect conditioning and compare permitted representations
+without asking again. Keep a compact attempt log: revision, changed component,
+rationale, test/configuration, outcome and cumulative cost, including failures.
+A failed development test blocks production use of that implementation, not
+all remaining authorized development. Scope, safety, disclosure and budget
+stops apply in every phase. Development is not an unlimited retry entitlement.
+
+Once the implementation is ready, record its exact code, configuration,
+environment and input hashes **before confirmatory qualification**. Test the
+relevant operating regime and include checks not used to tune it where tuning
+could conceal bias. Distinguish exact-answer implementation fixtures from
+out-of-family approximation/robustness tests; specify what each must establish
+before looking at results. Do not drop a failed fixture after seeing it.
+Production must use the qualified revision and configuration. Any subsequent
+method change invalidates affected qualification and dependent comparisons
+until rechecked; retaining old hashes alone does not qualify new code.
+
+A failed confirmatory qualification returns at the declared boundary, unless
+the approved mission explicitly delegates a bounded revision and its new
+qualification. Do not relabel confirmation as development after a failure.
+All revisions consume the same cumulative allowance. When qualification
+passes, proceed to an already authorized physical calculation without an
+extra approval. Return once with the scientific outcome, relevant failed
+attempts, verification and the next real decision.
+
+### Verify the physical comparison
+
+For every changed shared extractor, normalization or numerical representation,
+trace affected dependencies from raw solution through fitted quantities,
+physical state matching, observable and comparison. In the existing result
+record, classify each affected reference: demonstrated old/new agreement in
+its applicable regime; re-extracted/revalidated under the qualified method;
+or awaiting targeted revalidation. Preserve historical results, and update
+their current support assessment without rewriting the old evidence. Do not
+invalidate unrelated findings or claim a matched comparison before this
+bridge is established. Required recalculations need execution authority.
+
+Tie intermediate tolerances to the physical decision through justified error
+propagation, sensitivity tests, convergence or controlled comparisons. Include
+normalization, state matching, derivatives and small denominators when relevant.
+Distinguish rigorous bounds, statistical uncertainty and empirical sensitivity
+enclosures; an interval or a smooth curve does not automatically bound total
+error. Unresolved uncertainty means an unresolved decision, not a reason to
+loosen a threshold. A prospective calibration can propose new criteria for a
+future approved contract; it cannot change a past verdict.
+
+For important checks, record the failure mode tested and shared assumptions or
+code that limit independence. Known-answer accuracy, an independent derivation,
+derivative checks and alternative formulations address different risks; select
+what the claim needs rather than requiring all of them everywhere. A checking
+skill, fresh reviewer or different model is not itself independent replication.
+Separate same-agent checks, independent methods and named human review. Passing
+component counts are bookkeeping, not a measure of scientific support.
+
 ## Use an owner-approved bounded autonomy window
 
 This section governs routine execution inside one frozen gate. It is distinct
@@ -298,6 +373,8 @@ until that approval is recorded.
 Before work starts, it must identify the frozen contract, allowed routine
 work, source and compute limits, implementation boundary, repair budget,
 return milestone, disclosure class, expiry, and scope that remains closed.
+When needed, include the development allowance and confirmatory qualification
+in the same authorization under [the phase rules above](#separate-development-from-confirmation).
 Inside that exact window, the agent should continue through source inspection,
 derivation, local implementation, frozen checks, evidence generation,
 knowledge and progress updates, hostile criticism, and packet preparation
@@ -355,6 +432,12 @@ Do not let a repeated blocker consume an open-ended sequence of retries. Use
 this protocol when the same blocker recurs, the approved repair budget is
 nearly exhausted, or hostile criticism identifies a tractable alternative
 explanation that the current contract cannot distinguish.
+
+Inside an explicitly approved development allowance, recurrence of a designated
+recoverable test failure is diagnostic evidence, not automatically a new owner
+gate. Apply the declared development/impasse boundary and return when that
+boundary is reached or resolution needs undelegated work. This does not waive
+scientific-scope, safety or cumulative-budget stops.
 
 First honor the current window or mission's mandatory return triggers. If
 entering this protocol requires owner return, or its budget is exhausted,
@@ -460,6 +543,36 @@ work session when a milestone changes both evidence and stage. Keep attempt
 history, evidence links and owner decisions current. A separate diagram state
 or rendered progress snapshot is optional under the presentation policy below;
 it is not another required milestone report.
+
+### Consolidate current state and delivery
+
+Use one authoritative record for each current fact and link it from navigation;
+do not require one monolithic record for all research. Keep the portfolio's
+lead/reserve assignment in one place. A lead project's internal development
+step should not require rewriting unchanged paused projects. Generate any
+duplicate views from their authoritative record, or replace duplication with
+a link. Keep historical decisions and evidence unchanged.
+
+Collect development attempts within the milestone; distill knowledge at a
+durable evidence boundary and prepare one consolidated review when needed.
+A failed unit test is not by itself a new gate, retrospective or PDF. Retain
+scientific PDFs for equations, figures and owner review needs. Reuse tested
+integrity checks rather than writing new ad hoc validators for each packet.
+
+In project-local structured delivery records, distinguish execution status,
+numerical qualification, physical-question outcome, artifact integrity,
+independent verification and human review. For example, completed execution
+and passed artifact checks can coexist with failed qualification, an unresolved
+physical question and no independent review. Mark unperformed checks explicitly;
+never derive these states from one generic `checks_passed` boolean. Map to
+existing schema fields where available rather than changing public contracts.
+Approval to continue is not independent review of a derivation. Lead the human
+summary with what changed in the physical evidence, not delivery success.
+
+Record actual development, computation and reporting effort where measurable,
+and owner-wait time when relevant; mark unavailable measurements as unknown.
+Do not treat ceilings as usage or present pass counts and completed milestones
+as physical progress. This is a short receipt, not another tracking system.
 
 ## Learn from every closed gate
 
@@ -657,6 +770,9 @@ practice is:
 
 The private repository is a research ledger. It should not be made public as a
 shortcut. Follow the separate [public-export checklist](private-research-workflow.md#public-export-checklist).
+For ignored raw evidence, also follow the separate
+[recoverability policy](private-research-workflow.md#preserve-recoverable-evidence):
+Git history and matching hashes are not a backup of untracked data.
 
 ## Owner-review PDF packet
 

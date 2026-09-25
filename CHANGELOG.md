@@ -4,7 +4,20 @@ All notable changes to HoloForge are recorded here.
 
 ## [Unreleased]
 
-No changes recorded yet.
+### Changed
+
+- Separate prospectively authorized numerical development from confirmatory
+  qualification within one research milestone. Retain failed attempts,
+  cumulative budgets, exact qualified revisions and historical stop rules.
+- Require targeted consistency checks when a shared extraction or
+  normalization method changes; connect tolerances and verification coverage
+  to the physical decision rather than aggregate pass counts.
+- Consolidate current-state reporting and distinguish delivery integrity,
+  numerical qualification, physical outcomes and actual review.
+- Add private evidence-recovery guidance, including approved destinations,
+  restore checks and the distinction between backup and reproducibility.
+- These are workflow and template changes, not solver, schema, threshold or
+  result changes. Existing scientific pins and autonomous missions are unchanged.
 
 ## [0.7.0] - 2026-09-23
 

@@ -17,6 +17,9 @@ class AgentOnboardingTests(unittest.TestCase):
             ROOT / "docs/agent-quickstart.md",
             ROOT / "docs/research-gate-workflow.md",
             ROOT / "docs/private-research-workflow.md",
+            ROOT / "docs/autonomous-research-workflow.md",
+            ROOT / "docs/templates/bounded-autonomy-window-template.md",
+            ROOT / "CONTRIBUTING.md",
             ROOT / "docs/physics-manuscript-writing.md",
             ROOT / "docs/physics-figure-design.md",
             ROOT / "docs/physics-figure-reading-study.md",
@@ -72,6 +75,9 @@ class AgentOnboardingTests(unittest.TestCase):
         # These are lifecycle policy dependencies, not required copies of prose.
         required = {
             "one-gate-one-bounded-question",
+            "separate-development-from-confirmation",
+            "verify-the-physical-comparison",
+            "consolidate-current-state-and-delivery",
             "use-an-owner-approved-bounded-autonomy-window",
             "three-statuses-that-must-not-be-confused",
             "local-git-record-for-private-research",
