@@ -21,6 +21,9 @@ from holoforge.core.registry import (
 )
 
 
+SPECTRUM_CHECK_ID = "exact-spectrum-relative-error"
+
+
 SOFT_WALL_MODEL_CARD = ModelCardReference(
     identifier="qcd.soft-wall-vector.kkss",
     schema_version="0.1",
@@ -131,21 +134,40 @@ def _render_soft_wall(execution: BenchmarkExecution) -> Sequence[str]:
             f"{record['analytic_mass_squared_gev2']:12.8f}    "
             f"{record['relative_error']:14.6e}"
         )
-    status = "PASS" if execution.passed else "FAIL"
-    lines.extend(
-        (
-            (
-                f"{status}: max relative error = "
-                f"{payload['max_relative_error']:.6e}; "
-                f"tolerance = {payload['tolerance']:.6e}"
-            ),
-            (
-                "Scope: numerical reproduction of the model equation, not "
-                "empirical validation."
-            ),
-        )
+    checks = payload["acceptance_checks"]
+    spectrum_checks = [
+        check for check in checks if check["id"] == SPECTRUM_CHECK_ID
+    ]
+    spectrum_passed = (
+        spectrum_checks[0]["passed"] if spectrum_checks else execution.passed
+    )
+    lines.append(
+        f"{_status(spectrum_passed)}: max relative error = "
+        f"{payload['max_relative_error']:.6e}; "
+        f"tolerance = {payload['tolerance']:.6e}"
+    )
+    # Each remaining gate reports its own state, so a failed refinement check
+    # is never attributed to the analytic-spectrum tolerance.
+    for check in checks:
+        if check["id"] == SPECTRUM_CHECK_ID:
+            continue
+        detail = f"{_status(check['passed'])}: {check['id']}"
+        if "value" in check:
+            detail += f"; value = {check['value']:.6e}"
+        if "criterion" in check:
+            detail += f"; criterion: {check['criterion']}"
+        lines.append(detail)
+    if len(checks) > 1:
+        lines.append(f"{_status(execution.passed)}: all declared acceptance gates")
+    lines.append(
+        "Scope: numerical reproduction of the model equation, not "
+        "empirical validation."
     )
     return lines
+
+
+def _status(passed: bool) -> str:
+    return "PASS" if passed else "FAIL"
 
 
 def _soft_wall_state(result: Mapping[str, Any]) -> Mapping[str, Any]:

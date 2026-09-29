@@ -11,6 +11,15 @@ All notable changes to HoloForge are recorded here.
   names, and `long double` epsilon in every verification record's
   `software_versions`. No numerical result, acceptance check or schema changes.
 
+### Fixed
+
+- The soft-wall human-readable summary now reports each acceptance gate
+  separately. A failed spectral refinement check is no longer shown as
+  `FAIL: max relative error` when the analytic-spectrum tolerance passes.
+  Default finite-difference output is unchanged, and so are the gates
+  themselves. The refinement check's known false failures at spectral degrees
+  of 56 or more are documented, not changed.
+
 ### Changed
 
 - Separate prospectively authorized numerical development from confirmatory
