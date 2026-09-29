@@ -4,6 +4,13 @@ All notable changes to HoloForge are recorded here.
 
 ## [Unreleased]
 
+### Added
+
+- Record the executed source digest, the Git commit and `src/` modification
+  state when running from a checkout, NumPy/SciPy BLAS and LAPACK backend
+  names, and `long double` epsilon in every verification record's
+  `software_versions`. No numerical result, acceptance check or schema changes.
+
 ### Changed
 
 - Separate prospectively authorized numerical development from confirmatory
