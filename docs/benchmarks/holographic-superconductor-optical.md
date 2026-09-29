@@ -173,11 +173,28 @@ spectral-versus-Riccati conductivity difference is `1.46e-6` against `5e-4`,
 and all other gates pass. Linux CI with the same NumPy and SciPy versions
 passes.
 
-The cause of the high-frequency residual is not yet identified: it may be
-discretization, differentiation or normalization, or arithmetic. The equation
-check is retained unchanged. On such a platform the verifier's FAIL is the
-recorded result. The non-blocking gate-telemetry workflow records the values
-and backend on Linux and macOS for a later, evidence-based decision.
+The same controlled comparison used for the
+[Gubser--Nellore guide](gubser-nellore-ed.md#known-platform-issue-collocation-gate-on-macos-arm64)
+runs on one macOS arm64 machine with identical NumPy and SciPy versions:
+
+| Backend | Threads | Aggregate numerics ratio | Spectral-vs-Riccati difference | Verdict |
+| --- | --- | ---: | ---: | --- |
+| Accelerate | default or 1 | `1.0011431` | `1.4623232e-6` | FAIL |
+| OpenBLAS | default | `0.9786119` | `1.4619025e-6` | PASS |
+| OpenBLAS | 1 | `0.9397609` | `1.4619026e-6` | PASS |
+
+The backend decides the verdict, and even the OpenBLAS thread count moves the
+ratio by several percent. Meanwhile the independent conductivity comparison
+agrees to four significant digits across all runs. This indicates arithmetic
+sensitivity of the `omega/T = 60` equation residual near its ceiling rather
+than a change in the physical response. It does not identify whether
+discretization, differentiation or normalization makes that residual
+arithmetic-limited.
+
+The equation check is retained unchanged. On an Accelerate platform the
+verifier's FAIL is the recorded result, and any amendment needs its own
+prospective calibration and adverse controls. The diagnostic gate-telemetry
+workflow records the values and backend on Linux and macOS.
 
 ## Interpretation limits
 

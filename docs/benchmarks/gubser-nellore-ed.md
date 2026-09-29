@@ -161,11 +161,33 @@ exactly one gate. The maximum scaled collocation residual is
 above, including the independently oversampled equations and the DOP853
 comparison. Linux CI with the same NumPy and SciPy versions passes.
 
-The cause is not yet isolated between the math backend, CPU architecture,
-compiler and threading. The frozen gate is unchanged: on such a platform the
-verifier's FAIL is the recorded result and must not be read as a pass. The
-non-blocking gate-telemetry workflow records the gate values and backend on
-Linux and macOS so any amendment can be decided from evidence.
+A controlled comparison on one macOS arm64 machine isolates the BLAS/LAPACK
+backend. It keeps NumPy 2.4.6, SciPy 1.17.1, Python 3.11 and the HoloForge
+source fixed, and swaps only the wheels:
+
+| Backend (wheel tags) | Threads | Collocation residual | Verdict |
+| --- | --- | ---: | --- |
+| Accelerate (`macosx_14_0_arm64`) | default or `VECLIB_MAXIMUM_THREADS=1` | `1.7161236e-9` | FAIL |
+| OpenBLAS (`macosx_11_0` NumPy, `macosx_12_0` SciPy) | default or `OPENBLAS_NUM_THREADS=1` | `9.9608137e-10` | PASS |
+
+The passing backend is also within 0.4% of the `1e-9` limit. The physical
+checks barely move: the oversampled equation residual is `9.42e-8` against
+`9.37e-8`, and the DOP853 difference `9.76e-10` against `1.10e-9`. Together
+this indicates that the collocation gate sits at the floating-point rounding
+floor of the dense solve rather than resolving a physical discrepancy. This
+diagnosis does not by itself justify changing the gate.
+
+The frozen gate is unchanged: on an Accelerate platform the verifier's FAIL is
+the recorded result and must not be read as a pass. Any amendment needs its
+own prospective calibration and adverse controls. The diagnostic
+gate-telemetry workflow records the gate values and backend on Linux and
+macOS. To reproduce the OpenBLAS side on Apple silicon, install the
+OpenBLAS-backed wheels of the same versions into a separate environment:
+
+```bash
+python -m pip download --only-binary=:all: --no-deps --platform macosx_11_0_arm64 --python-version 3.11 -d wheels numpy==2.4.6
+python -m pip download --only-binary=:all: --no-deps --platform macosx_12_0_arm64 --python-version 3.11 -d wheels scipy==1.17.1
+```
 
 ## Review and limitations
 

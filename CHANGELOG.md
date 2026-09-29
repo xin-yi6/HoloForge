@@ -35,8 +35,11 @@ All notable changes to HoloForge are recorded here.
   (`1.716e-9` against `1e-9`). `holographic-superconductor-optical` fails its
   aggregate response-numerics gate through the `omega/T = 60` equation
   residual (`1.0011e-5` against `1e-5`). All other gates of both verifiers
-  pass, and Linux CI passes. The cause is not yet isolated, the gates are
-  unchanged, and the benchmark guides record the details.
+  pass, and Linux CI passes. A controlled same-machine comparison with
+  OpenBLAS-backed wheels of the same versions passes both verifiers, which
+  isolates the BLAS/LAPACK backend. Even then the collocation residual is
+  `9.96e-10`, within 0.4% of its limit. The gates are unchanged, and the
+  benchmark guides record the evidence and a reproduction recipe.
 
 ### Changed
 
