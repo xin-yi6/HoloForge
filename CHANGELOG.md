@@ -10,6 +10,9 @@ All notable changes to HoloForge are recorded here.
   state when running from a checkout, NumPy/SciPy BLAS and LAPACK backend
   names, and `long double` epsilon in every verification record's
   `software_versions`. No numerical result, acceptance check or schema changes.
+- Add `tools/environment_report.py`, a read-only, path-free diagnostic of the
+  runtime provenance, test dependencies, installed-package metadata and BLAS
+  thread variables. It flags stale installations and missing test extras.
 
 ### Fixed
 
