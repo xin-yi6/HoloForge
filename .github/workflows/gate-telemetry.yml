@@ -1,0 +1,106 @@
+name: Gate telemetry
+
+# Diagnostic only. Records acceptance-gate values, verifier exit codes and the
+# numerical backend on Linux and macOS so that platform-sensitive gates can be
+# compared from evidence. A verifier FAIL is recorded, not propagated: this
+# workflow never replaces, relaxes or enforces a scientific verdict. It fails
+# only when the telemetry tooling itself breaks. Required checks remain in
+# ci.yml.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "tools/**"
+      - "setup.cfg"
+      - "pyproject.toml"
+      - ".github/workflows/gate-telemetry.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "tools/**"
+      - "setup.cfg"
+      - "pyproject.toml"
+      - ".github/workflows/gate-telemetry.yml"
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  telemetry:
+    name: Gate telemetry (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            setup.cfg
+
+      - name: Install HoloForge and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+
+      - name: Record environment, verifier exit codes and gate values
+        run: |
+          mkdir -p gate-telemetry
+          python tools/environment_report.py > gate-telemetry/environment.json
+          record() {
+            local name="$1"
+            shift
+            local status=0
+            holoforge verify "$@" --json > "gate-telemetry/${name}.json" || status=$?
+            echo "${name}: exit ${status}" | tee -a gate-telemetry/exit-codes.txt
+          }
+          record gubser-nellore-ed gubser-nellore-ed
+          record holographic-superconductor-optical holographic-superconductor-optical
+          record soft-wall-vector-spectral-64 soft-wall-vector --method spectral --spectral-degree 64
+          records=(
+            gate-telemetry/gubser-nellore-ed.json
+            gate-telemetry/holographic-superconductor-optical.json
+            gate-telemetry/soft-wall-vector-spectral-64.json
+          )
+          python tools/gate_margins.py "${records[@]}" --json > gate-telemetry/margins.json
+          {
+            echo "## Gate telemetry (${{ matrix.os }})"
+            echo
+            echo "Diagnostic only; verifier verdicts are recorded, not enforced here."
+            echo
+            echo '```text'
+            cat gate-telemetry/exit-codes.txt
+            echo
+            python tools/gate_margins.py "${records[@]}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload telemetry
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gate-telemetry-${{ matrix.os }}
+          path: gate-telemetry/
+          if-no-files-found: error

@@ -13,6 +13,11 @@ All notable changes to HoloForge are recorded here.
 - Add `tools/environment_report.py`, a read-only, path-free diagnostic of the
   runtime provenance, test dependencies, installed-package metadata and BLAS
   thread variables. It flags stale installations and missing test extras.
+- Add `tools/gate_margins.py` and a diagnostic, non-required **Gate
+  telemetry** workflow on Ubuntu and macOS. It records the Gubser--Nellore,
+  HHH optical and degree-64 spectral soft-wall gate values, verifier exit
+  codes and environment report as artifacts. Verdicts are recorded, not
+  enforced, and required CI is unchanged.
 
 ### Fixed
 

@@ -32,6 +32,17 @@ calculations already required in the main test job. Ordinary pushes, pull
 requests, tags, and default manual runs therefore use four jobs, all on Python
 3.11.
 
+A separate, diagnostic **Gate telemetry** workflow runs on Ubuntu and macOS
+for changes to code, tests, tools or packaging, weekly, and on manual
+dispatch. It runs the platform-sensitive Gubser--Nellore and HHH optical
+verifiers and the degree-64 spectral soft-wall case. It uploads their JSON
+records, verifier exit codes, the environment report and a gate-margin
+summary. A verifier FAIL there is recorded, not enforced. The workflow fails
+only if the telemetry tooling breaks, and it is not a required check or a
+substitute for the fail-closed CI jobs above. Its purpose is to let
+platform-dependent gate values be compared from evidence before any
+prospective contract amendment.
+
 For a wider check, open **Actions -> CI -> Run workflow** and enable
 `full_compatibility`, or run:
 
