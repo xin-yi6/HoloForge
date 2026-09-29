@@ -152,6 +152,21 @@ quantities, not empirical QCD measurements or a predicted physical critical
 temperature. The complete machine record and curve CSV are under
 `docs/generated/gubser-nellore-ed/`.
 
+## Known platform issue: collocation gate on macOS arm64
+
+On macOS arm64 with NumPy 2.4.6 and SciPy 1.17.1 wheels that report Apple
+Accelerate as their BLAS/LAPACK backend, the default `anchor` profile fails
+exactly one gate. The maximum scaled collocation residual is
+`1.7161236e-9` against `1e-9`. Every other gate passes with the values listed
+above, including the independently oversampled equations and the DOP853
+comparison. Linux CI with the same NumPy and SciPy versions passes.
+
+The cause is not yet isolated between the math backend, CPU architecture,
+compiler and threading. The frozen gate is unchanged: on such a platform the
+verifier's FAIL is the recorded result and must not be read as a pass. The
+non-blocking gate-telemetry workflow records the gate values and backend on
+Linux and macOS so any amendment can be decided from evidence.
+
 ## Review and limitations
 
 The implementation, derived-anchor records, model card, and reproduced claim

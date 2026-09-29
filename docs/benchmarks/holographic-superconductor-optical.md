@@ -161,6 +161,24 @@ holoforge verify holographic-superconductor-optical \
 Plotting requires `holoforge[plot]`. The diagnostic contains no source artwork
 or digitized source curve and is labelled as not being a Figure 2 reproduction.
 
+## Known platform issue: high-frequency equation gate on macOS arm64
+
+On macOS arm64 with NumPy 2.4.6 and SciPy 1.17.1 wheels that report Apple
+Accelerate as their BLAS/LAPACK backend, the aggregate
+`optical-response-numerics` gate fails with a normalized ratio of `1.0011`.
+Its largest term is the independent spectral equation residual at
+`omega/T = 60`, `1.0011431e-5` against its `1e-5` ceiling. At that frequency
+the resolution change of the conductivity is about `1.2e-12`. The maximum
+spectral-versus-Riccati conductivity difference is `1.46e-6` against `5e-4`,
+and all other gates pass. Linux CI with the same NumPy and SciPy versions
+passes.
+
+The cause of the high-frequency residual is not yet identified: it may be
+discretization, differentiation or normalization, or arithmetic. The equation
+check is retained unchanged. On such a platform the verifier's FAIL is the
+recorded result. The non-blocking gate-telemetry workflow records the values
+and backend on Linux and macOS for a later, evidence-based decision.
+
 ## Interpretation limits
 
 - The calculation is in the probe limit and is not a controlled

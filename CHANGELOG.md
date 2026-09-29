@@ -28,6 +28,16 @@ All notable changes to HoloForge are recorded here.
   themselves. The refinement check's known false failures at spectral degrees
   of 56 or more are documented, not changed.
 
+### Known issues
+
+- On macOS arm64 with NumPy 2.4.6 and SciPy 1.17.1 wheels backed by Apple
+  Accelerate, `gubser-nellore-ed` fails its scaled collocation gate
+  (`1.716e-9` against `1e-9`). `holographic-superconductor-optical` fails its
+  aggregate response-numerics gate through the `omega/T = 60` equation
+  residual (`1.0011e-5` against `1e-5`). All other gates of both verifiers
+  pass, and Linux CI passes. The cause is not yet isolated, the gates are
+  unchanged, and the benchmark guides record the details.
+
 ### Changed
 
 - Separate prospectively authorized numerical development from confirmatory
