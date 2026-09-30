@@ -70,7 +70,7 @@ source and numerical backend:
 
 | Field | Meaning |
 | --- | --- |
-| `holoforge_source_sha256` | Digest of the imported package's `.py` sources and bundled JSON data, keyed by package-relative path; identical bytes give the same digest from a checkout, sdist, or wheel |
+| `holoforge_source_sha256` | Fingerprint of the package's `.py` sources and bundled JSON data as they are on disk when the record is created, keyed by package-relative path. Identical files give the same digest from a checkout, sdist, or wheel. It is recomputed for every record, but cannot show which bytes an already running interpreter imported before a file changed |
 | `holoforge_git_commit` | Checkout commit when HoloForge runs from a Git checkout that tracks `src/holoforge`; otherwise `unknown` |
 | `holoforge_git_src_modified` | `true` when `src/` differs from that commit, including untracked files; `false`; or `unknown` |
 | `numpy_blas`, `numpy_lapack`, `scipy_blas`, `scipy_lapack` | Library name, and version when reported, from each package's build report, for example `accelerate` or `scipy-openblas 0.3.29`; `unknown` for builds without a structured report |

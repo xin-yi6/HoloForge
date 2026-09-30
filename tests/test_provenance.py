@@ -7,7 +7,9 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
+from holoforge.core import provenance
 from holoforge.core.provenance import (
     UNKNOWN,
     backend_fields,
@@ -125,6 +127,19 @@ class SourceDigestTests(unittest.TestCase):
                 '{"a": 1}', encoding="utf-8"
             )
             self.assertNotEqual(package_source_digest(package), first)
+
+    def test_fingerprint_refreshes_within_one_interpreter(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            package = Path(directory) / "holoforge"
+            package.mkdir()
+            (package / "__init__.py").write_text("VALUE = 1\n", encoding="utf-8")
+            (package / "reference.json").write_text("{}", encoding="utf-8")
+            with patch.object(provenance, "_PACKAGE_DIRECTORY", package):
+                first = runtime_versions()["holoforge_source_sha256"]
+                (package / "reference.json").write_text('{"a": 1}', encoding="utf-8")
+                second = runtime_versions()["holoforge_source_sha256"]
+            self.assertNotEqual(first, second)
+            self.assertEqual(second, package_source_digest(package))
 
     def test_empty_package_is_unknown(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

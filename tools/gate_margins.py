@@ -7,9 +7,16 @@ conditions, Boolean gates) are listed as not parsed rather than guessed.
 
 This is telemetry for comparing platforms and settings. It is not an
 acceptance gate: a ratio near one is not a failure, and the verifier's own
-``passed`` state remains the only verdict.
+``passed`` state remains the only verdict. A legitimate scientific FAIL is
+reported normally. A malformed or internally inconsistent record, which
+indicates broken execution or evidence rather than a scientific verdict,
+makes the command exit with status 2.
 
 Usage:  python tools/gate_margins.py RECORD.json [RECORD.json ...] [--json]
+
+Each record is labelled by the path exactly as given, so downloaded records
+with the same file name from different platforms stay distinct. Passing the
+same path twice is rejected.
 """
 
 from __future__ import annotations
@@ -29,6 +36,10 @@ _UPPER_BOUND = re.compile(
 _COMPOUND = re.compile(r"\b(?:and|or)\b", re.IGNORECASE)
 
 
+class MalformedRecordError(ValueError):
+    """A record that cannot be a valid verifier result."""
+
+
 def parse_upper_bound(criterion: Any) -> Optional[float]:
     """Return LIMIT for a single ``... <= LIMIT`` criterion, else ``None``."""
 
@@ -43,36 +54,67 @@ def parse_upper_bound(criterion: Any) -> Optional[float]:
     return limit
 
 
+def validate_record(label: str, record: Any) -> None:
+    """Reject records that no successful verifier execution could produce."""
+
+    if not isinstance(record, Mapping):
+        raise MalformedRecordError(f"{label}: record is not a JSON object")
+    if not isinstance(record.get("passed"), bool):
+        raise MalformedRecordError(f"{label}: 'passed' is not a Boolean")
+    checks = record.get("acceptance_checks")
+    if not isinstance(checks, list) or not checks:
+        raise MalformedRecordError(f"{label}: 'acceptance_checks' is missing or empty")
+    for index, check in enumerate(checks):
+        where = f"{label}: acceptance_checks[{index}]"
+        if not isinstance(check, Mapping):
+            raise MalformedRecordError(f"{where} is not an object")
+        if not isinstance(check.get("id"), str) or not check["id"].strip():
+            raise MalformedRecordError(f"{where} has no identifier")
+        if not isinstance(check.get("passed"), bool):
+            raise MalformedRecordError(f"{where} 'passed' is not a Boolean")
+        if "value" in check:
+            value = check["value"]
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(value)
+            ):
+                raise MalformedRecordError(f"{where} 'value' is not a finite number")
+    if record["passed"] != all(check["passed"] for check in checks):
+        raise MalformedRecordError(
+            f"{label}: record verdict disagrees with its acceptance checks"
+        )
+
+
 def summarize(records: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
-    """Summarize gate margins for records keyed by a display label."""
+    """Summarize gate margins for validated records keyed by a unique label."""
 
     parsed: List[Dict[str, Any]] = []
     unparsed: List[Dict[str, Any]] = []
-    verdicts: Dict[str, Any] = {}
+    verdicts: Dict[str, bool] = {}
     for label, record in records.items():
-        verdicts[label] = record.get("passed")
-        for check in record.get("acceptance_checks", []):
+        validate_record(label, record)
+        verdicts[label] = record["passed"]
+        for check in record["acceptance_checks"]:
             limit = parse_upper_bound(check.get("criterion"))
-            value = check.get("value")
-            entry = {
+            entry: Dict[str, Any] = {
                 "record": label,
-                "id": check.get("id"),
-                "passed": check.get("passed"),
+                "id": check["id"],
+                "passed": check["passed"],
             }
-            if limit is None or not isinstance(value, (int, float)):
+            if limit is None or "value" not in check:
                 entry["criterion"] = check.get("criterion")
                 unparsed.append(entry)
                 continue
-            entry.update(
-                {"value": float(value), "limit": limit, "ratio": float(value) / limit}
-            )
+            value = float(check["value"])
+            entry.update({"value": value, "limit": limit, "ratio": value / limit})
             parsed.append(entry)
     parsed.sort(key=lambda item: item["ratio"], reverse=True)
     return {"records": verdicts, "gates": parsed, "not_parsed": unparsed}
 
 
 def render_text(summary: Mapping[str, Any]) -> List[str]:
-    lines = ["Record verdicts (from the verifiers):"]
+    lines = ["Record verdicts (scientific results reported by the verifiers):"]
     for label, passed in summary["records"].items():
         lines.append(f"  {label}: {'PASS' if passed else 'FAIL'}")
     lines.append("")
@@ -93,20 +135,34 @@ def render_text(summary: Mapping[str, Any]) -> List[str]:
     return lines
 
 
+def _reject_constants(value: str) -> Any:
+    raise ValueError(f"non-finite JSON constant {value}")
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("records", nargs="+", type=Path)
     parser.add_argument("--json", action="store_true", help="Emit JSON.")
     args = parser.parse_args(argv)
 
-    records = {}
+    records: Dict[str, Any] = {}
     for path in args.records:
-        try:
-            records[path.name] = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
-            print(f"cannot read verification record {path.name}: {exc}", file=sys.stderr)
+        label = path.as_posix()
+        if label in records:
+            print(f"record {label} was given more than once", file=sys.stderr)
             return 2
-    summary = summarize(records)
+        try:
+            records[label] = json.loads(
+                path.read_text(encoding="utf-8"), parse_constant=_reject_constants
+            )
+        except (OSError, ValueError) as exc:
+            print(f"cannot read verification record {label}: {exc}", file=sys.stderr)
+            return 2
+    try:
+        summary = summarize(records)
+    except MalformedRecordError as exc:
+        print(f"malformed verification record: {exc}", file=sys.stderr)
+        return 2
     if args.json:
         print(json.dumps(summary, indent=2, sort_keys=True))
     else:

@@ -61,22 +61,22 @@ jobs:
         run: |
           mkdir -p gate-telemetry
           python tools/environment_report.py > gate-telemetry/environment.json
+          # Exit 0 is a scientific PASS and exit 1 a scientific FAIL; both are
+          # recorded. Any other status is an execution error and fails the job.
+          execution_errors=0
           record() {
             local name="$1"
             shift
             local status=0
             holoforge verify "$@" --json > "gate-telemetry/${name}.json" || status=$?
             echo "${name}: exit ${status}" | tee -a gate-telemetry/exit-codes.txt
+            if [ "${status}" -gt 1 ]; then
+              execution_errors=$((execution_errors + 1))
+            fi
           }
           record gubser-nellore-ed gubser-nellore-ed
           record holographic-superconductor-optical holographic-superconductor-optical
           record soft-wall-vector-spectral-64 soft-wall-vector --method spectral --spectral-degree 64
-          records=(
-            gate-telemetry/gubser-nellore-ed.json
-            gate-telemetry/holographic-superconductor-optical.json
-            gate-telemetry/soft-wall-vector-spectral-64.json
-          )
-          python tools/gate_margins.py "${records[@]}" --json > gate-telemetry/margins.json
           {
             echo "## Gate telemetry (${{ matrix.os }})"
             echo
@@ -84,7 +84,21 @@ jobs:
             echo
             echo '```text'
             cat gate-telemetry/exit-codes.txt
-            echo
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "${execution_errors}" -gt 0 ]; then
+            echo "::error::A verifier exited with an execution error; see exit-codes.txt."
+            exit 1
+          fi
+          records=(
+            gate-telemetry/gubser-nellore-ed.json
+            gate-telemetry/holographic-superconductor-optical.json
+            gate-telemetry/soft-wall-vector-spectral-64.json
+          )
+          # gate_margins.py exits 2 on a malformed or inconsistent record.
+          python tools/gate_margins.py "${records[@]}" --json > gate-telemetry/margins.json
+          {
+            echo '```text'
             python tools/gate_margins.py "${records[@]}"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

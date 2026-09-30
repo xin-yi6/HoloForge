@@ -31,12 +31,15 @@ _GIT_TIMEOUT_SECONDS = 10.0
 def runtime_versions() -> Dict[str, str]:
     """Return privacy-safe runtime and numerical-build provenance.
 
-    Besides interpreter and library versions, the record identifies the
-    executed HoloForge source by digest, the Git commit when the package runs
-    from a HoloForge checkout, the BLAS/LAPACK backends reported by NumPy and
-    SciPy, and the ``long double`` machine epsilon.  Unavailable facts are
-    recorded as ``"unknown"`` rather than guessed.  No field contains a
-    filesystem path.
+    Besides interpreter and library versions, the record fingerprints the
+    HoloForge package as it is on disk when the record is made, gives the Git
+    commit when the package runs from a HoloForge checkout, and reports the
+    BLAS/LAPACK backends of NumPy and SciPy and the ``long double`` machine
+    epsilon.  The source fingerprint and Git state are recomputed on every
+    call, so a long-lived interpreter does not report a stale snapshot.  They
+    describe files on disk, not which bytes an already running interpreter
+    imported earlier.  Unavailable facts are recorded as ``"unknown"`` rather
+    than guessed.  No field contains a filesystem path.
     """
 
     versions = {
@@ -140,9 +143,8 @@ def _safe_token(value: Any) -> str:
     return token
 
 
-@lru_cache(maxsize=1)
 def _source_identity() -> Tuple[Tuple[str, str], ...]:
-    """Identify the executed package source once per process."""
+    """Fingerprint the on-disk package and its checkout state, uncached."""
 
     commit, modified = git_source_state(_PACKAGE_DIRECTORY)
     return (
@@ -171,8 +173,10 @@ def package_source_files(package_directory: Path) -> List[str]:
 def package_source_digest(package_directory: Path) -> str:
     """Hash Python sources and bundled JSON data by package-relative path.
 
-    The digest identifies the bytes that were actually imported, whether they
-    come from a checkout, a source distribution, or a wheel.
+    This fingerprints the package files as they are on disk now. Identical
+    files give the same digest from a checkout, a source distribution, or a
+    wheel.  It cannot prove which bytes an already running interpreter
+    imported, because modules loaded before a file changed stay in memory.
     """
 
     try:
@@ -212,13 +216,21 @@ def git_source_state(package_directory: Path) -> Tuple[str, str]:
     )
     if tracked is None:
         return unknown
-    commit = _run_git(checkout, "rev-parse", "--verify", "HEAD")
-    if commit is None or not _COMMIT.fullmatch(commit):
-        return unknown
-    status = _run_git(checkout, "status", "--porcelain", "--", "src")
+    # One status query reports both the HEAD commit and any change under src/.
+    status = _run_git(checkout, "status", "--porcelain=v2", "--branch", "--", "src")
     if status is None:
-        return commit, UNKNOWN
-    return commit, "true" if status else "false"
+        return unknown
+    commit = UNKNOWN
+    modified = False
+    for line in status.splitlines():
+        if line.startswith("# branch.oid "):
+            candidate = line[len("# branch.oid "):].strip()
+            commit = candidate if _COMMIT.fullmatch(candidate) else UNKNOWN
+        elif line and not line.startswith("#"):
+            modified = True
+    if commit == UNKNOWN:
+        return unknown
+    return commit, "true" if modified else "false"
 
 
 def _run_git(checkout: Path, *arguments: str) -> Optional[str]:

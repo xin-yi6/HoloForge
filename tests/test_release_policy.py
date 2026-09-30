@@ -113,6 +113,8 @@ class Version05PolicyTests(unittest.TestCase):
         ):
             self.assertIn(command, telemetry)
         self.assertIn("|| status=$?", telemetry)
+        self.assertIn('if [ "${status}" -gt 1 ]; then', telemetry)
+        self.assertIn('if [ "${execution_errors}" -gt 0 ]; then', telemetry)
         self.assertNotIn("continue-on-error", telemetry)
         ci = (ROOT / ".github/workflows/ci.yml").read_text()
         self.assertNotIn("gate_margins", ci)

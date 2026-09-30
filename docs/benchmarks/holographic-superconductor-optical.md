@@ -173,23 +173,26 @@ spectral-versus-Riccati conductivity difference is `1.46e-6` against `5e-4`,
 and all other gates pass. Linux CI with the same NumPy and SciPy versions
 passes.
 
-The same controlled comparison used for the
+The same wheel-variant comparison used for the
 [Gubser--Nellore guide](gubser-nellore-ed.md#known-platform-issue-collocation-gate-on-macos-arm64)
-runs on one macOS arm64 machine with identical NumPy and SciPy versions:
+runs on one macOS arm64 machine with identical NumPy and SciPy versions.
+The variants differ chiefly, but not only, in their BLAS/LAPACK backend:
 
-| Backend | Threads | Aggregate numerics ratio | Spectral-vs-Riccati difference | Verdict |
+| Wheel backend | Threads | Aggregate numerics ratio | Spectral-vs-Riccati difference | Verdict |
 | --- | --- | ---: | ---: | --- |
 | Accelerate | default or 1 | `1.0011431` | `1.4623232e-6` | FAIL |
 | OpenBLAS | default | `0.9786119` | `1.4619025e-6` | PASS |
 | OpenBLAS | 1 | `0.9397609` | `1.4619026e-6` | PASS |
 
-The backend decides the verdict, and even the OpenBLAS thread count moves the
-ratio by several percent. Meanwhile the independent conductivity comparison
-agrees to four significant digits across all runs. This indicates arithmetic
-sensitivity of the `omega/T = 60` equation residual near its ceiling rather
-than a change in the physical response. It does not identify whether
+The numerical build decides the verdict, and even the OpenBLAS thread count
+moves the ratio by several percent. Linux CI (x86_64, OpenBLAS) records
+`0.9958`, 99.6% of the limit. Meanwhile the independent conductivity
+comparison agrees to four significant digits across all runs. This is
+consistent with arithmetic sensitivity of the `omega/T = 60` equation
+residual near its ceiling rather than a change in the physical response. The
+mechanism is not established. In particular, it is not yet known whether
 discretization, differentiation or normalization makes that residual
-arithmetic-limited.
+sensitive to arithmetic.
 
 The equation check is retained unchanged. On an Accelerate platform the
 verifier's FAIL is the recorded result, and any amendment needs its own

@@ -161,9 +161,12 @@ exactly one gate. The maximum scaled collocation residual is
 above, including the independently oversampled equations and the DOP853
 comparison. Linux CI with the same NumPy and SciPy versions passes.
 
-A controlled comparison on one macOS arm64 machine isolates the BLAS/LAPACK
-backend. It keeps NumPy 2.4.6, SciPy 1.17.1, Python 3.11 and the HoloForge
-source fixed, and swaps only the wheels:
+A comparison on one macOS arm64 machine shows that the verdict depends on the
+numerical build. NumPy 2.4.6, SciPy 1.17.1, Python 3.11 and the HoloForge
+source are kept fixed, and only the wheel variants are swapped. The variants
+differ chiefly in their BLAS/LAPACK backend, but also in other build settings
+such as the minimum macOS target, so this does not fully isolate BLAS from
+other build differences:
 
 | Backend (wheel tags) | Threads | Collocation residual | Verdict |
 | --- | --- | ---: | --- |
@@ -172,10 +175,12 @@ source fixed, and swaps only the wheels:
 
 The passing backend is also within 0.4% of the `1e-9` limit. The physical
 checks barely move: the oversampled equation residual is `9.42e-8` against
-`9.37e-8`, and the DOP853 difference `9.76e-10` against `1.10e-9`. Together
-this indicates that the collocation gate sits at the floating-point rounding
-floor of the dense solve rather than resolving a physical discrepancy. This
-diagnosis does not by itself justify changing the gate.
+`9.37e-8`, and the DOP853 difference `9.76e-10` against `1.10e-9`. Linux CI
+(x86_64, OpenBLAS) records `9.854e-10`, 98.5% of the limit. This is
+consistent with a gate close to the floating-point rounding floor of the
+dense solve rather than one resolving a physical discrepancy. That mechanism
+is not yet established, and it needs calibration before it could justify
+changing the gate.
 
 The frozen gate is unchanged: on an Accelerate platform the verifier's FAIL is
 the recorded result and must not be read as a pass. Any amendment needs its

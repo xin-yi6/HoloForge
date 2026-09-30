@@ -6,10 +6,11 @@ All notable changes to HoloForge are recorded here.
 
 ### Added
 
-- Record the executed source digest, the Git commit and `src/` modification
-  state when running from a checkout, NumPy/SciPy BLAS and LAPACK backend
-  names, and `long double` epsilon in every verification record's
-  `software_versions`. No numerical result, acceptance check or schema changes.
+- Record an on-disk package source fingerprint, the Git commit and `src/`
+  modification state when running from a checkout (both recomputed per
+  record), NumPy/SciPy BLAS and LAPACK backend names, and `long double`
+  epsilon in every verification record's `software_versions`. No numerical
+  result, acceptance check or schema changes.
 - Add `tools/environment_report.py`, a read-only, path-free diagnostic of the
   runtime provenance, test dependencies, installed-package metadata and BLAS
   thread variables. It flags stale installations and missing test extras.
@@ -35,11 +36,13 @@ All notable changes to HoloForge are recorded here.
   (`1.716e-9` against `1e-9`). `holographic-superconductor-optical` fails its
   aggregate response-numerics gate through the `omega/T = 60` equation
   residual (`1.0011e-5` against `1e-5`). All other gates of both verifiers
-  pass, and Linux CI passes. A controlled same-machine comparison with
-  OpenBLAS-backed wheels of the same versions passes both verifiers, which
-  isolates the BLAS/LAPACK backend. Even then the collocation residual is
-  `9.96e-10`, within 0.4% of its limit. The gates are unchanged, and the
-  benchmark guides record the evidence and a reproduction recipe.
+  pass, and Linux CI passes. A same-machine comparison with OpenBLAS-backed
+  wheels of the same versions passes both verifiers. That shows sensitivity
+  to the numerical build, chiefly but not provably only the BLAS/LAPACK
+  backend. Even the passing builds sit near the limits: the OpenBLAS
+  collocation residual is `9.96e-10` on the Mac and `9.85e-10` on Linux. The
+  mechanism is not established, the gates are unchanged, and the benchmark
+  guides record the evidence and a reproduction recipe.
 
 ### Changed
 
