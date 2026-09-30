@@ -11,6 +11,12 @@ Subcommands (each prints JSON):
     python tools/gate_calibration.py soft-wall
     python tools/gate_calibration.py gn
     python tools/gate_calibration.py optical
+    python tools/gate_calibration.py optical-ob
+
+``optical-ob`` implements the separate O-B plan,
+``docs/numerics/optical-ob-diagnosis-plan.md``: a 50-digit evaluation of
+the stored optical solution's polynomial at the single-node spike. It has
+no adverse controls or confirmation cases.
 
 ``--adverse`` adds the plan's adverse controls. ``--case-set confirmation``
 selects the reserved confirmation cases, which Batch 2a must not run.
@@ -785,8 +791,14 @@ def optical_solve_with_capture(frequency: float, degree: int, background) -> Tup
 def optical_residual_profiles(
     nodes, regular, scalar_profile, frequency, degree, lower, upper,
     *, exponent_override=None, frequency_squared_scale: float = 1.0,
+    first_index: int = 3,
 ) -> Dict[str, Any]:
-    """Per-point A-form (production formula) and a-form residuals."""
+    """Per-point A-form (production formula) and a-form residuals.
+
+    ``first_index`` is the first check node included; production excludes
+    three per endpoint. A smaller value is used only to report diagnostic
+    values at excluded nodes, never for a production maximum.
+    """
 
     from holoforge.benchmarks import holographic_superconductor_optical as optical
     from holoforge.numerics.interpolation import deterministic_barycentric_interpolator
@@ -801,7 +813,7 @@ def optical_residual_profiles(
     a1 = np.asarray(interpolator.derivative(local, der=1), dtype=complex)
     a2 = np.asarray(interpolator.derivative(local, der=2), dtype=complex)
     scalar = np.asarray(scalar_profile(coordinate), dtype=float)
-    selected = np.arange(3, check.size - 3)
+    selected = np.arange(int(first_index), check.size - 3)
     uu = coordinate[selected]
     one_minus = 1.0 - uu
     s = optical.ingoing_exponent(frequency) if exponent_override is None else exponent_override
@@ -859,6 +871,21 @@ def optical_residual_profiles(
         "regular_maximum_coordinate": float(uu[int(np.argmax(regular_normalized))]),
         "regular_at_production_maximum": float(regular_normalized[index]),
         "field_abs_max": float(np.max(np.abs(field))),
+        # Per-node arrays on ``selected`` (O-B), plus the inputs they use.
+        "selected": selected,
+        "check_coordinate": coordinate,
+        "check_local": local,
+        "local_nodes": local_nodes,
+        "width": width,
+        "scalar": scalar[selected],
+        "a": a[selected],
+        "a1": a1[selected],
+        "a2": a2[selected],
+        "phase": phase,
+        "residual": residual,
+        "scale": scale,
+        "regular_residual": regular_residual,
+        "regular_scale": regular_scale,
     }
 
 
@@ -950,6 +977,491 @@ def optical_adverse(background) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# Optical single-node diagnosis (O-B)
+# ---------------------------------------------------------------------------
+#
+# Implements ``docs/numerics/optical-ob-diagnosis-plan.md``. Complex Decimal
+# numbers are (real, imaginary) pairs; every Decimal operation follows the
+# active context, set by the caller.
+
+OPTICAL_OB_PLAN = Path("docs/numerics/optical-ob-diagnosis-plan.md")
+OPTICAL_OB_CASES = ((50.0, 640), (58.0, 640), (59.0, 640), (60.0, 640),
+                    (61.0, 640), (62.0, 640), (70.0, 640), (60.0, 512))
+OPTICAL_OB_NEIGHBOURS = 2
+OPTICAL_OB_LOCAL_NODES = 12
+OPTICAL_OB_CROSS_CHECK_DIGITS = 70
+# Section 4 of the plan. "Accounts for" is taken to mean that the residual
+# change implied by the derivative differences alone is within a factor of
+# two of the double-minus-50-digit residual difference.
+OPTICAL_OB_ARTIFACT_FACTOR = 10.0
+OPTICAL_OB_DEFECT_FACTOR = 2.0
+
+
+def _dc(value: Any) -> Tuple[Decimal, Decimal]:
+    """Convert a double (complex) value to an exact Decimal pair."""
+
+    value = complex(value)
+    return Decimal(value.real), Decimal(value.imag)
+
+
+def _cadd(a, b):
+    return a[0] + b[0], a[1] + b[1]
+
+
+def _csub(a, b):
+    return a[0] - b[0], a[1] - b[1]
+
+
+def _cmul(a, b):
+    return a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]
+
+
+def _cscale(a, factor):
+    return a[0] * factor, a[1] * factor
+
+
+def _cabs(a) -> Decimal:
+    return (a[0] * a[0] + a[1] * a[1]).sqrt()
+
+
+def _cfloat(a) -> complex:
+    return complex(float(a[0]), float(a[1]))
+
+
+def decimal_barycentric_weights(nodes: Sequence[Decimal]) -> List[Decimal]:
+    """Return ``w_j = 1 / prod_{k != j} (x_j - x_k)`` for the given nodes."""
+
+    weights = []
+    for j, node in enumerate(nodes):
+        product = Decimal(1)
+        for k, other in enumerate(nodes):
+            if k != j:
+                product *= node - other
+        weights.append(1 / product)
+    return weights
+
+
+def _decimal_nodal_derivatives(nodes, weights, values, index):
+    """Value and first two derivatives at node ``index`` (Berrut-Trefethen)."""
+
+    node, weight, value = nodes[index], weights[index], values[index]
+    entries = []
+    diagonal = Decimal(0)
+    for j, other in enumerate(nodes):
+        if j != index:
+            entry = (weights[j] / weight) / (node - other)
+            entries.append((j, entry))
+            diagonal -= entry
+    first = (Decimal(0), Decimal(0))
+    second = (Decimal(0), Decimal(0))
+    for j, entry in entries:
+        difference = _csub(values[j], value)
+        first = _cadd(first, _cscale(difference, entry))
+        second_entry = 2 * entry * (diagonal - 1 / (node - nodes[j]))
+        second = _cadd(second, _cscale(difference, second_entry))
+    return value, first, second
+
+
+def decimal_interpolant_derivatives(nodes, weights, values, point):
+    """Return ``p, p', p''`` at ``point`` for the polynomial through the data.
+
+    Uses the second-kind barycentric formula with
+    ``p' = -sum w_j (f_j - p)/(x - x_j)^2 / D`` and
+    ``p'' = 2 sum w_j [p'/(x - x_j)^2 + (f_j - p)/(x - x_j)^3] / D``,
+    ``D = sum w_j/(x - x_j)``; at an exact node, the differentiation-matrix
+    row is used instead.
+    """
+
+    for index, node in enumerate(nodes):
+        if node == point:
+            return _decimal_nodal_derivatives(nodes, weights, values, index)
+    differences = [point - node for node in nodes]
+    denominator = Decimal(0)
+    numerator = (Decimal(0), Decimal(0))
+    for weight, difference, value in zip(weights, differences, values):
+        factor = weight / difference
+        denominator += factor
+        numerator = _cadd(numerator, _cscale(value, factor))
+    value_at = _cscale(numerator, 1 / denominator)
+    first = (Decimal(0), Decimal(0))
+    for weight, difference, value in zip(weights, differences, values):
+        first = _cadd(first, _cscale(_csub(value, value_at), weight / (difference * difference)))
+    first = _cscale(first, -1 / denominator)
+    second = (Decimal(0), Decimal(0))
+    for weight, difference, value in zip(weights, differences, values):
+        squared = difference * difference
+        term = _cadd(
+            _cscale(first, 1 / squared),
+            _cscale(_csub(value, value_at), 1 / (squared * difference)),
+        )
+        second = _cadd(second, _cscale(term, weight))
+    second = _cscale(second, 2 / denominator)
+    return value_at, first, second
+
+
+def decimal_regular_residual(u, width, frequency, scalar, a, a1, a2) -> Dict[str, Any]:
+    """Regular-factor residual ``R_a`` and the A-form scale at one node.
+
+    ``frequency`` is the dimensionless omega. The A-form magnitudes use
+    ``|(1-u)^s| = 1``, which holds for real frequency.
+    """
+
+    one = Decimal(1)
+    one_minus = one - u
+    blackening = one - u ** 3
+    blackening_prime = -3 * u * u
+    third = frequency / 3
+    exponent = (Decimal(0), -third)
+    exponent_product = _cmul(exponent, (Decimal(-1), -third))
+    potential = (frequency * frequency / (blackening * blackening)
+                 - 2 * scalar * scalar / (u * u * blackening))
+    first_coefficient = _cadd((blackening_prime / blackening, Decimal(0)),
+                              _cscale(exponent, Decimal(-2) / one_minus))
+    regular_potential = _cadd(
+        _csub(_cscale(exponent_product, 1 / (one_minus * one_minus)),
+              _cscale(exponent, blackening_prime / (one_minus * blackening))),
+        (potential, Decimal(0)),
+    )
+    terms = (
+        a2,
+        _cscale(_cmul(first_coefficient, a1), width),
+        _cscale(_cmul(regular_potential, a), width * width),
+    )
+    residual = _cadd(_cadd(terms[0], terms[1]), terms[2])
+    field_first = _csub(a1, _cscale(_cmul(exponent, a), width / one_minus))
+    field_second = _cadd(
+        _csub(a2, _cscale(_cmul(exponent, a1), 2 * width / one_minus)),
+        _cscale(_cmul(exponent_product, a), width * width / (one_minus * one_minus)),
+    )
+    scale = (_cabs(field_second)
+             + abs(width * blackening_prime / blackening) * _cabs(field_first)
+             + width * width * abs(potential) * _cabs(a)
+             + width * width)
+    return {
+        "residual": residual,
+        "terms": terms,
+        "scale": scale,
+        "first_coefficient": first_coefficient,
+        "regular_potential": regular_potential,
+    }
+
+
+def _decimal_node_evaluation(profile, regular, frequency, check_index, digits, weight_cache):
+    """50-digit (or ``digits``) interpolant and residual at one check node."""
+
+    with localcontext() as context:
+        context.prec = digits
+        key = (digits, profile["local_nodes"].tobytes())
+        if key not in weight_cache:
+            nodes = [Decimal(float(x)) for x in profile["local_nodes"]]
+            weight_cache[key] = (nodes, decimal_barycentric_weights(nodes))
+        nodes, weights = weight_cache[key]
+        values = [_dc(value) for value in regular]
+        point = Decimal(float(profile["check_local"][check_index]))
+        a, a1, a2 = decimal_interpolant_derivatives(nodes, weights, values, point)
+        position = check_index - int(profile["selected"][0])
+        evaluation = decimal_regular_residual(
+            Decimal(float(profile["check_coordinate"][check_index])),
+            Decimal(float(profile["width"])),
+            Decimal(float(frequency)),
+            Decimal(float(profile["scalar"][position])),
+            a, a1, a2,
+        )
+        evaluation.update({"a": a, "a1": a1, "a2": a2})
+        return evaluation
+
+
+def optical_ob_interpretation(double_abs: float, high_abs: float, residual_difference: float,
+                              derivative_part: float) -> str:
+    """Apply the plan's prospective interpretation rules (Section 4)."""
+
+    accounts = (residual_difference > 0.0
+                and 1.0 / OPTICAL_OB_DEFECT_FACTOR
+                <= derivative_part / residual_difference
+                <= OPTICAL_OB_DEFECT_FACTOR)
+    if high_abs * OPTICAL_OB_ARTIFACT_FACTOR <= double_abs and accounts:
+        return "evaluation-artifact"
+    if double_abs / OPTICAL_OB_DEFECT_FACTOR <= high_abs <= OPTICAL_OB_DEFECT_FACTOR * double_abs:
+        return "polynomial-defect"
+    return "unresolved"
+
+
+def optical_ob_node(profile, regular, frequency, check_index, weight_cache) -> Dict[str, Any]:
+    """Measurement 2 at one check node: double versus 50-digit evaluation."""
+
+    position = check_index - int(profile["selected"][0])
+    double = {
+        "a": complex(profile["a"][position]),
+        "a1": complex(profile["a1"][position]),
+        "a2": complex(profile["a2"][position]),
+    }
+    double_residual = complex(profile["regular_residual"][position])
+    high = _decimal_node_evaluation(profile, regular, frequency, check_index,
+                                    HIGH_PRECISION_DIGITS, weight_cache)
+    with localcontext() as context:
+        context.prec = HIGH_PRECISION_DIGITS
+        differences = {name: _csub(_dc(double[name]), high[name]) for name in ("a", "a1", "a2")}
+        width = Decimal(float(profile["width"]))
+        derivative_part = _cadd(
+            _cadd(differences["a2"],
+                  _cscale(_cmul(high["first_coefficient"], differences["a1"]), width)),
+            _cscale(_cmul(high["regular_potential"], differences["a"]), width * width),
+        )
+        residual_difference = _cabs(_csub(_dc(double_residual), high["residual"]))
+        high_abs = _cabs(high["residual"])
+        record = {
+            "check_index": int(check_index),
+            "coordinate": float(profile["check_coordinate"][check_index]),
+            "local_coordinate": float(profile["check_local"][check_index]),
+            "double": {name: double[name] for name in double},
+            "high_precision": {name: _cfloat(high[name]) for name in ("a", "a1", "a2")},
+            "relative_differences": {
+                name: float(_cabs(differences[name]) / _cabs(high[name])) for name in differences
+            },
+            "double_regular_residual_abs": abs(double_residual),
+            "double_a_form_numerator_abs": float(abs(profile["residual"][position])),
+            "double_a_form_normalized": float(profile["normalized"][position]),
+            "high_precision_regular_residual": _cfloat(high["residual"]),
+            "high_precision_regular_residual_abs": float(high_abs),
+            "high_precision_terms_abs": [float(_cabs(term)) for term in high["terms"]],
+            "high_precision_a_form_scale": float(high["scale"]),
+            "high_precision_a_form_normalized": float(high_abs / high["scale"]),
+            "residual_difference_abs": float(residual_difference),
+            "derivative_difference_residual_abs": float(_cabs(derivative_part)),
+        }
+    return record
+
+
+def _nearest_collocation(local_nodes: np.ndarray, point: float) -> Dict[str, Any]:
+    distances = np.abs(local_nodes - point)
+    index = int(np.argmin(distances))
+    lower = local_nodes[max(index - 1, 0)]
+    upper = local_nodes[min(index + 1, local_nodes.size - 1)]
+    spacing = float(max(upper - lower, 0.0) / 2.0)
+    return {
+        "collocation_index": index,
+        "local_distance": float(distances[index]),
+        "distance_over_local_spacing": float(distances[index] / spacing) if spacing > 0 else None,
+    }
+
+
+def optical_ob_case_record(frequency: float, degree: int, background, weight_cache,
+                           *, draws: int = 8) -> Dict[str, Any]:
+    response, captured = optical_solve_with_capture(frequency, degree, background)
+    args = captured["args"]
+    nodes, regular, dimensionless = args[0], args[1], args[3]
+    profile = optical_residual_profiles(*args)
+    wide = optical_residual_profiles(*args, first_index=1)
+    spike_position = profile["maximum_index"]
+    spike = int(profile["selected"][spike_position])
+
+    # Measurement 1: raw numerators, identity and a common denominator.
+    residual = profile["residual"]
+    regular_residual = profile["regular_residual"]
+    scale = profile["scale"]
+    # The plan's relative defect is large wherever |R_A| is itself at
+    # rounding level, so the defect under the common denominator is also kept.
+    identity_numerator = np.abs(residual - profile["phase"] * regular_residual)
+    identity_defect = identity_numerator / np.abs(residual)
+    identity_common = identity_numerator / scale
+    common_a_form = np.abs(residual) / scale
+    common_regular = np.abs(regular_residual) / scale
+    measurement_1 = {
+        "maximum_identity_defect": float(np.max(identity_defect)),
+        "maximum_identity_defect_check_index": int(profile["selected"][int(np.argmax(identity_defect))]),
+        "maximum_identity_defect_common_denominator": float(np.max(identity_common)),
+        "common_denominator_maximum": {
+            "a_form": float(np.max(common_a_form)),
+            "a_form_check_index": int(profile["selected"][int(np.argmax(common_a_form))]),
+            "regular_form": float(np.max(common_regular)),
+            "regular_form_check_index": int(profile["selected"][int(np.argmax(common_regular))]),
+        },
+        "at_spike": {
+            "check_index": spike,
+            "a_form_numerator": complex(residual[spike_position]),
+            "regular_numerator": complex(regular_residual[spike_position]),
+            "a_form_numerator_abs": float(abs(residual[spike_position])),
+            "regular_numerator_abs": float(abs(regular_residual[spike_position])),
+            "a_form_scale": float(scale[spike_position]),
+            "regular_scale": float(profile["regular_scale"][spike_position]),
+            "identity_defect": float(identity_defect[spike_position]),
+            "a_form_common": float(common_a_form[spike_position]),
+            "regular_form_common": float(common_regular[spike_position]),
+            "regular_form_own_denominator": float(profile["regular_normalized"][spike_position]),
+        },
+    }
+
+    # Measurement 2: 50-digit polynomial at the spike and its neighbours.
+    neighbours = range(max(spike - OPTICAL_OB_NEIGHBOURS, 1), spike + OPTICAL_OB_NEIGHBOURS + 1)
+    measurement_2 = [optical_ob_node(wide, regular, dimensionless, index, weight_cache)
+                     for index in neighbours]
+    at_spike = next(item for item in measurement_2 if item["check_index"] == spike)
+    cross = _decimal_node_evaluation(wide, regular, dimensionless, spike,
+                                     OPTICAL_OB_CROSS_CHECK_DIGITS, weight_cache)
+    with localcontext() as context:
+        context.prec = OPTICAL_OB_CROSS_CHECK_DIGITS
+        base = _decimal_node_evaluation(wide, regular, dimensionless, spike,
+                                        HIGH_PRECISION_DIGITS, weight_cache)
+        precision_check = max(
+            float(_cabs(_csub(base[name], cross[name])) / _cabs(cross[name]))
+            for name in ("a", "a1", "a2", "residual")
+        )
+    double_abs = at_spike["double_regular_residual_abs"]
+    interpretation = optical_ob_interpretation(
+        double_abs,
+        at_spike["high_precision_regular_residual_abs"],
+        at_spike["residual_difference_abs"],
+        at_spike["derivative_difference_residual_abs"],
+    )
+
+    # Measurement 3: input sensitivity (eps perturbations, as in Batch 2a).
+    rng = np.random.default_rng(20260930 + int(frequency * 10) + degree)
+    maximum_changes, spike_changes = [], []
+    for _ in range(draws):
+        noise = 1.0 + EPS * (rng.standard_normal(regular.size) + 1j * rng.standard_normal(regular.size))
+        perturbed = optical_residual_profiles(nodes, regular * noise, *args[2:])
+        maximum_changes.append(abs(perturbed["maximum"] - profile["maximum"]))
+        spike_changes.append(abs(perturbed["residual"][spike_position] - residual[spike_position]))
+    measurement_3 = {
+        "eps_perturbation_max_change": float(max(maximum_changes)),
+        "eps_perturbation_spike_numerator_change": float(max(spike_changes)),
+        "evaluation_error_spike_numerator": at_spike["residual_difference_abs"],
+        "draws": int(draws),
+    }
+
+    # Measurement 4: local structure at the first checked nodes.
+    measurement_4 = []
+    for position in range(OPTICAL_OB_LOCAL_NODES):
+        check_index = int(profile["selected"][position])
+        entry = {
+            "check_index": check_index,
+            "coordinate": float(profile["check_coordinate"][check_index]),
+            "a_form_normalized": float(profile["normalized"][position]),
+            "a_form_numerator_abs": float(abs(residual[position])),
+            "a_form_scale": float(scale[position]),
+        }
+        entry.update(_nearest_collocation(profile["local_nodes"],
+                                          float(profile["check_local"][check_index])))
+        measurement_4.append(entry)
+
+    return {
+        "omega_over_temperature": float(frequency),
+        "degree": int(degree),
+        "dimensionless_omega": float(dimensionless),
+        "identity_check": {
+            "production_equation_residual": float(response.equation_residual),
+            "reconstructed_maximum": profile["maximum"],
+            "exact_match": profile["maximum"] == float(response.equation_residual),
+        },
+        "spike_check_index": spike,
+        "spike_coordinate": profile["maximum_coordinate"],
+        "measurement_1": measurement_1,
+        "measurement_2": measurement_2,
+        "precision_cross_check": {
+            "digits": [HIGH_PRECISION_DIGITS, OPTICAL_OB_CROSS_CHECK_DIGITS],
+            "max_relative_difference_at_spike": precision_check,
+        },
+        "measurement_3": measurement_3,
+        "measurement_4": measurement_4,
+        "interpretation": interpretation,
+        "condition_number": float(response.condition_number),
+    }
+
+
+def optical_ob_identity_fixture() -> Dict[str, Any]:
+    """Check the 50-digit evaluator before any production case is examined.
+
+    (1) The plan's check: reproduce the double interpolant and derivatives to
+    ``1e-10`` relative at a well-separated point. (2) Exact reproduction, to
+    ``1e-30`` relative, of a known polynomial on degree-640 nodes near the
+    UV end, off-node and at a node.
+    """
+
+    from holoforge.numerics.interpolation import deterministic_barycentric_interpolator
+
+    checks: Dict[str, Any] = {}
+    grid = chebyshev_lobatto_grid(16, 0.0, 1.0).nodes
+    values = np.exp(2.0 * grid) + 1j * np.cos(3.0 * grid)
+    point = 0.5 * (grid[7] + grid[8])
+    interpolator = deterministic_barycentric_interpolator(grid, values)
+    double = [complex(interpolator(point)),
+              complex(interpolator.derivative(point, der=1)),
+              complex(interpolator.derivative(point, der=2))]
+    with localcontext() as context:
+        context.prec = HIGH_PRECISION_DIGITS
+        nodes = [Decimal(float(x)) for x in grid]
+        high = decimal_interpolant_derivatives(
+            nodes, decimal_barycentric_weights(nodes), [_dc(v) for v in values],
+            Decimal(float(point)),
+        )
+    difference = max(abs(_cfloat(h) - d) / abs(d) for h, d in zip(high, double))
+    checks["double_agreement_well_separated"] = {
+        "max_relative_difference": float(difference), "limit": 1.0e-10,
+        "passed": bool(difference <= 1.0e-10),
+    }
+
+    grid = chebyshev_lobatto_grid(640, 0.0, 1.0).nodes
+    check = chebyshev_lobatto_grid(1280, 0.0, 1.0).nodes
+    with localcontext() as context:
+        context.prec = HIGH_PRECISION_DIGITS
+        coefficients = [(Decimal(c), Decimal(d)) for c, d in
+                        ((1, 0), (2, -1), (-3, 0.5), (0.25, 4), (5, 0), (0, -2), (1.5, 1))]
+
+        def polynomial(x):
+            # Powers by repeated multiplication: Decimal leaves 0 ** 0 undefined.
+            powers = [Decimal(1)]
+            for _ in coefficients[1:]:
+                powers.append(powers[-1] * x)
+            value = first = second = (Decimal(0), Decimal(0))
+            for power, coefficient in enumerate(coefficients):
+                value = _cadd(value, _cscale(coefficient, powers[power]))
+                if power >= 1:
+                    first = _cadd(first, _cscale(coefficient, power * powers[power - 1]))
+                if power >= 2:
+                    second = _cadd(second, _cscale(coefficient, power * (power - 1) * powers[power - 2]))
+            return value, first, second
+
+        nodes = [Decimal(float(x)) for x in grid]
+        weights = decimal_barycentric_weights(nodes)
+        values = [polynomial(x)[0] for x in nodes]
+        worst = Decimal(0)
+        for point in (Decimal(float(check[3])), nodes[1], Decimal(float(check[641]))):
+            exact = polynomial(point)
+            evaluated = decimal_interpolant_derivatives(nodes, weights, values, point)
+            for got, want in zip(evaluated, exact):
+                worst = max(worst, _cabs(_csub(got, want)) / _cabs(want))
+    checks["exact_polynomial_degree_640"] = {
+        "max_relative_difference": float(worst), "limit": 1.0e-30,
+        "passed": bool(worst <= Decimal("1e-30")),
+    }
+    return {"checks": checks, "passed": all(item["passed"] for item in checks.values())}
+
+
+def optical_ob_run(case_set: str, adverse: bool) -> Dict[str, Any]:
+    if case_set != "calibration":
+        return {"stopped": "O-B uses only previously examined cases; reserved cases stay unused"}
+    if adverse:
+        return {"stopped": "the O-B plan defines no adverse controls"}
+    fixture = optical_ob_identity_fixture()
+    if not fixture["passed"]:
+        return {"identity_fixture": fixture, "stopped": "identity fixture failed"}
+    background = optical_background()
+    weight_cache: Dict[Any, Any] = {}
+    records = [optical_ob_case_record(frequency, degree, background, weight_cache)
+               for frequency, degree in OPTICAL_OB_CASES]
+    return {
+        "identity_fixture": fixture,
+        "interpretation_rule": {
+            "evaluation_artifact": "50-digit |R_a| <= double |R_a| / 10 and derivative part "
+                                   "within a factor 2 of the residual difference",
+            "polynomial_defect": "50-digit |R_a| within a factor 2 of double |R_a|",
+            "otherwise": "unresolved",
+        },
+        "records": records,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Command line
 # ---------------------------------------------------------------------------
 
@@ -958,6 +1470,7 @@ RUNNERS: Dict[str, Callable[[str, bool], Dict[str, Any]]] = {
     "soft-wall-sa": soft_wall_sa_run,
     "gn": gn_run,
     "optical": optical_run,
+    "optical-ob": optical_ob_run,
 }
 
 
@@ -978,6 +1491,7 @@ def _jsonable(value: Any) -> Any:
 
 
 PLAN = Path("docs/numerics/gate-calibration-2026-09-plan.md")
+GATE_PLANS = {"optical-ob": OPTICAL_OB_PLAN}
 THREAD_VARIABLES = (
     "OMP_NUM_THREADS",
     "OPENBLAS_NUM_THREADS",
@@ -1038,7 +1552,7 @@ def _installed_wheel_tags(name: str) -> List[str]:
     return [line.split(":", 1)[1].strip() for line in wheel.splitlines() if line.startswith("Tag:")]
 
 
-def execution_metadata() -> Dict[str, Any]:
+def execution_metadata(plan: Path = PLAN) -> Dict[str, Any]:
     """Record the diagnostic's own identity and execution settings (path-free)."""
 
     import os
@@ -1051,7 +1565,7 @@ def execution_metadata() -> Dict[str, Any]:
             threads[variable] = value.strip() if value.strip().isdigit() else "set"
     return {
         "tool_sha256": _file_sha256(Path(__file__).resolve()),
-        "plan_sha256": _file_sha256(root / PLAN),
+        "plan_sha256": _file_sha256(root / plan),
         "thread_environment": threads,
         "installed_wheel_tags": {
             name: _installed_wheel_tags(name) for name in ("numpy", "scipy")
@@ -1076,16 +1590,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     started = time.perf_counter()
     result = RUNNERS[args.gate](args.case_set, args.adverse)
     errors = diagnostic_errors(result)
+    plan = GATE_PLANS.get(args.gate, PLAN)
     payload = {
         "tool": "gate-calibration",
-        "plan": PLAN.as_posix(),
+        "plan": plan.as_posix(),
         "gate": args.gate,
         "case_set": args.case_set,
         "adverse": bool(args.adverse),
         "status": "ok" if not errors else "diagnostic-error",
         "diagnostic_errors": errors,
         "identity_scope": "maximum value of each reconstructed residual, not every node",
-        "execution": execution_metadata(),
+        "execution": execution_metadata(plan),
         "runtime": runtime_versions(),
         "wall_seconds": time.perf_counter() - started,
         "result": result,
