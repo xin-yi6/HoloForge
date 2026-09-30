@@ -120,21 +120,17 @@ class Version05PolicyTests(unittest.TestCase):
             "if: github.event_name == 'workflow_dispatch' && inputs.calibration",
             telemetry,
         )
-        self.assertNotIn("--case-set confirmation", telemetry)
+        # Reserved confirmation cases run only in the S-A job, on manual
+        # dispatch with its explicit input, never in routine telemetry.
+        self.assertEqual(telemetry.count("--case-set confirmation"), 1)
+        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.soft_wall_sa", telemetry)
+        self.assertIn("soft-wall-sa --case-set confirmation", telemetry)
+        self.assertIn("numpy==2.3.5 scipy==1.16.3", telemetry)
         ci = (ROOT / ".github/workflows/ci.yml").read_text()
         self.assertNotIn("gate_margins", ci)
         policy = (ROOT / "docs/version-0.5-compatibility-policy.md").read_text()
         self.assertIn("Gate telemetry", policy)
         self.assertIn("recorded, not enforced", policy)
-
-    def test_soft_wall_sa_confirmation_is_manual_and_diagnostic(self) -> None:
-        workflow = (ROOT / ".github/workflows/soft-wall-sa-confirmation.yml").read_text()
-        self.assertIn("workflow_dispatch:", workflow)
-        for trigger in ("pull_request", "push:", "schedule"):
-            self.assertNotIn(trigger, workflow)
-        self.assertIn("soft-wall-sa --case-set confirmation", workflow)
-        self.assertIn("numpy==2.3.5 scipy==1.16.3", workflow)
-        self.assertNotIn("continue-on-error", workflow)
 
     def test_policy_documents_current_and_historical_ci_tiers(self) -> None:
         policy = (ROOT / "docs/version-0.5-compatibility-policy.md").read_text()
