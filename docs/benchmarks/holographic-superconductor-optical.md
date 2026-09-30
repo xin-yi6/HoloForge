@@ -187,12 +187,22 @@ The variants differ chiefly, but not only, in their BLAS/LAPACK backend:
 The numerical build decides the verdict, and even the OpenBLAS thread count
 moves the ratio by several percent. Linux CI (x86_64, OpenBLAS) records
 `0.9958`, 99.6% of the limit. Meanwhile the independent conductivity
-comparison agrees to four significant digits across all runs. This is
-consistent with arithmetic sensitivity of the `omega/T = 60` equation
-residual near its ceiling rather than a change in the physical response. The
-mechanism is not established. In particular, it is not yet known whether
-discretization, differentiation or normalization makes that residual
-sensitive to arithmetic.
+comparison agrees to four significant digits across all runs.
+
+The [Batch 2a calibration](../numerics/gate-calibration-2026-09-report.md)
+localizes the maximum to one check node, `u = 2.355e-5`, the first checked
+node at the UV end of the bulk element. There two terms of about `4.73` each
+cancel.
+- The maximum sits at this node on every build; builds move it by only a few
+  percent.
+- It varies sharply with frequency. The unused frequency `omega/T = 59`
+  exceeds the limit on every build.
+- A regular-factor form of the same check gives much smaller *normalized*
+  values. That is not evidence of a smaller defect: for real frequency the
+  two raw residuals are related exactly by a unit-modulus phase, and the two
+  forms use different normalizing denominators.
+
+The cause of the single-node value is not yet established.
 
 The equation check is retained unchanged. On an Accelerate platform the
 verifier's FAIL is the recorded result, and any amendment needs its own

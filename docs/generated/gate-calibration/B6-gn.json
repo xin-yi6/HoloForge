@@ -1,0 +1,312 @@
+{
+ "adverse": true,
+ "case_set": "calibration",
+ "gate": "gn",
+ "plan": "docs/numerics/gate-calibration-2026-09-plan.md",
+ "result": {
+  "adverse": {
+   "bump-1e-06": {
+    "collocation_residual": 0.0009650920822670235,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 0.0009762030453458812,
+    "residual_to_bound_ratio": 1017768.6885850889
+   },
+   "bump-1e-08": {
+    "collocation_residual": 9.66015328202283e-06,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 9.771131844462182e-06,
+    "residual_to_bound_ratio": 10177.69452686114
+   },
+   "bump-1e-10-supplementary": {
+    "collocation_residual": 9.660202604635259e-08,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 2.882820293857807e-07,
+    "residual_to_bound_ratio": 101.77711575958611
+   },
+   "bump-1e-11-supplementary": {
+    "collocation_residual": 9.662246562751504e-09,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 2.882820293857807e-07,
+    "residual_to_bound_ratio": 10.179647553973469
+   },
+   "degree-24": {
+    "collocation_residual": 4.1869137751988014e-11,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 0.9805326911182948,
+    "residual_to_bound_ratio": 0.8246657939309474,
+    "solver_success": true
+   },
+   "horizon-condition-1e-6": {
+    "collocation_residual": 0.0002031447873297061,
+    "oversampled_boundary_residual": 1e-06,
+    "oversampled_equation_residual": 0.0008638125686028827,
+    "residual_to_bound_ratio": 4503599627.370496
+   },
+   "potential-b-times-1.01": {
+    "collocation_residual": 0.15633979433491643,
+    "oversampled_boundary_residual": 0.0006891871468069086,
+    "oversampled_equation_residual": 0.15633979433460685,
+    "residual_to_bound_ratio": 3221481468725.2095
+   },
+   "reference": {
+    "collocation_residual": 9.82973027771553e-10,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 2.882820293857807e-07,
+    "residual_to_bound_ratio": 0.753924911221003
+   }
+  },
+  "identity_fixture": {
+   "max_difference_off_solution": 2.8033131371785203e-14,
+   "passed": true
+  },
+  "records": [
+   {
+    "branch_seconds": 25.964971041000013,
+    "degree": 150,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 1.7161236078298979e-09,
+     "reconstructed_final_residual": 1.7161236078298979e-09
+    },
+    "max_double_residual": 1.7161236078298979e-09,
+    "max_evaluation_error": 3.5742653691751845e-10,
+    "max_high_precision_residual": 1.3586970709123794e-09,
+    "max_location": {
+     "equation": "warp",
+     "node": 150,
+     "rounding_bound_there": 6.121916077195749e-06,
+     "u": 1.0
+    },
+    "max_residual_to_bound_ratio": 180.52320359401543,
+    "max_rounding_bound": 6.121916077195749e-06,
+    "nonlinear": {
+     "final_scaled_residual": 1.7161236078298979e-09,
+     "final_success": true,
+     "polish": {
+      "applied": true,
+      "function_evaluations": 6,
+      "message": "`xtol` termination condition is satisfied.",
+      "success": true
+     },
+     "root": {
+      "function_evaluations": 459,
+      "message": "The solution converged.",
+      "scaled_residual": 8.792182160016912e-09,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 1.897093761486463e-10,
+     "f_horizon": 1.5747735495614444e-14,
+     "f_uv": 2.220446049250313e-16,
+     "horizon_scalar_equation": 2.9289534055189643e-13,
+     "maximum_boundary_residual": 7.108376387510162e-14,
+     "maximum_equation_residual": 2.135396015058291e-08,
+     "scalar_equation": 1.366509116404974e-10,
+     "scalar_uv": 1.9984014443252818e-15,
+     "warp_equation": 2.135396015058291e-08,
+     "warp_uv": 7.108376387510162e-14
+    },
+    "preset": "qcd-like",
+    "x_h": 1.23
+   },
+   {
+    "branch_seconds": 25.964971041000013,
+    "degree": 80,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 9.82973027771553e-10,
+     "reconstructed_final_residual": 9.82973027771553e-10
+    },
+    "max_double_residual": 9.82973027771553e-10,
+    "max_evaluation_error": 7.670346069210401e-12,
+    "max_high_precision_residual": 9.792166906261685e-10,
+    "max_location": {
+     "equation": "f",
+     "node": 64,
+     "rounding_bound_there": 7.814229990868816e-09,
+     "u": 0.9045084971874737
+    },
+    "max_residual_to_bound_ratio": 0.753924911221003,
+    "max_rounding_bound": 4.54229805046521e-08,
+    "nonlinear": {
+     "final_scaled_residual": 9.82973027771553e-10,
+     "final_success": true,
+     "polish": {
+      "applied": false,
+      "function_evaluations": 0,
+      "message": "not applied",
+      "success": false
+     },
+     "root": {
+      "function_evaluations": 507,
+      "message": "The solution converged.",
+      "scaled_residual": 9.82973027771553e-10,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 5.769682400759096e-09,
+     "f_horizon": 8.410581455286916e-218,
+     "f_uv": 0.0,
+     "horizon_scalar_equation": 3.1813777955793494e-13,
+     "maximum_boundary_residual": 8.673617379884035e-19,
+     "maximum_equation_residual": 2.882820293857807e-07,
+     "scalar_equation": 2.0117497881645622e-09,
+     "scalar_uv": 0.0,
+     "warp_equation": 2.882820293857807e-07,
+     "warp_uv": 8.673617379884035e-19
+    },
+    "preset": "qcd-like",
+    "x_h": 1.04
+   },
+   {
+    "branch_seconds": 25.964971041000013,
+    "degree": 150,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 9.716053730279035e-10,
+     "reconstructed_final_residual": 9.716053730279035e-10
+    },
+    "max_double_residual": 9.716053730279035e-10,
+    "max_evaluation_error": 2.8630560135081614e-11,
+    "max_high_precision_residual": 9.716166687090193e-10,
+    "max_location": {
+     "equation": "warp",
+     "node": 93,
+     "rounding_bound_there": 3.908198943286356e-09,
+     "u": 0.6840622763423391
+    },
+    "max_residual_to_bound_ratio": 78.44360824893194,
+    "max_rounding_bound": 2.1876529575756717e-06,
+    "nonlinear": {
+     "final_scaled_residual": 9.716053730279035e-10,
+     "final_success": true,
+     "polish": {
+      "applied": false,
+      "function_evaluations": 0,
+      "message": "not applied",
+      "success": false
+     },
+     "root": {
+      "function_evaluations": 457,
+      "message": "The solution converged.",
+      "scaled_residual": 9.716053730279035e-10,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 2.8602407332419005e-10,
+     "f_horizon": 7.375856387975249e-42,
+     "f_uv": 0.0,
+     "horizon_scalar_equation": 2.1115514820298176e-13,
+     "maximum_boundary_residual": 8.673617379884035e-19,
+     "maximum_equation_residual": 9.737592819969216e-10,
+     "scalar_equation": 1.9964133683648242e-11,
+     "scalar_uv": 0.0,
+     "warp_equation": 9.737592819969216e-10,
+     "warp_uv": 8.673617379884035e-19
+    },
+    "preset": "qcd-like",
+    "x_h": 1.1
+   },
+   {
+    "branch_summary": {
+     "count_above_5e-10": 19,
+     "polished": 9,
+     "profiles": 318,
+     "worst": {
+      "degree": 150,
+      "final_residual": 1.7161236078298979e-09,
+      "x_h": 1.23
+     }
+    },
+    "preset": "qcd-like"
+   },
+   {
+    "branch_seconds": 9.682306124999968,
+    "degree": 80,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 2.4802074597880716e-10,
+     "reconstructed_final_residual": 2.4802074597880716e-10
+    },
+    "max_double_residual": 2.4802074597880716e-10,
+    "max_evaluation_error": 1.3449022457985717e-11,
+    "max_high_precision_residual": 2.3457172352082144e-10,
+    "max_location": {
+     "equation": "warp",
+     "node": 80,
+     "rounding_bound_there": 3.7902417460130754e-07,
+     "u": 1.0
+    },
+    "max_residual_to_bound_ratio": 0.018465577261918054,
+    "max_rounding_bound": 3.7902417460130754e-07,
+    "nonlinear": {
+     "final_scaled_residual": 2.4802074597880716e-10,
+     "final_success": true,
+     "polish": {
+      "applied": false,
+      "function_evaluations": 0,
+      "message": "not applied",
+      "success": false
+     },
+     "root": {
+      "function_evaluations": 502,
+      "message": "The solution converged.",
+      "scaled_residual": 2.4802074597880716e-10,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 4.220166661634258e-11,
+     "f_horizon": 0.0,
+     "f_uv": 0.0,
+     "horizon_scalar_equation": 2.457849718265344e-11,
+     "maximum_boundary_residual": 3.469446951953614e-18,
+     "maximum_equation_residual": 2.0034376485847992e-10,
+     "scalar_equation": 2.457849718265344e-11,
+     "scalar_uv": 0.0,
+     "warp_equation": 2.0034376485847992e-10,
+     "warp_uv": 3.469446951953614e-18
+    },
+    "preset": "cosh-calibration",
+    "x_h": 2.9397695973673903
+   },
+   {
+    "branch_summary": {
+     "count_above_5e-10": 0,
+     "polished": 0,
+     "profiles": 300,
+     "worst": {
+      "degree": 80,
+      "final_residual": 2.4802074597880716e-10,
+      "x_h": 2.9397695973673903
+     }
+    },
+    "preset": "cosh-calibration"
+   }
+  ]
+ },
+ "runtime": {
+  "byteorder": "little",
+  "holoforge": "0.7.0",
+  "holoforge_git_commit": "c4a15a2c7bf51db3d4d086f50e0544899c50bb09",
+  "holoforge_git_src_modified": "false",
+  "holoforge_source_sha256": "fe719a6499a7d9939f091cb8d90c1d61e4a03ab9f099db190677d4f66c3e8aa8",
+  "longdouble_epsilon": "2.220446049250313e-16",
+  "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+  "numpy": "2.4.6",
+  "numpy_blas": "accelerate",
+  "numpy_lapack": "accelerate",
+  "platform_machine": "arm64",
+  "platform_system": "Darwin",
+  "python": "3.11.9",
+  "python_implementation": "CPython",
+  "scipy": "1.17.1",
+  "scipy_blas": "accelerate",
+  "scipy_lapack": "accelerate"
+ },
+ "tool": "gate-calibration",
+ "wall_seconds": 62.15565133299998
+}

@@ -116,6 +116,11 @@ class Version05PolicyTests(unittest.TestCase):
         self.assertIn('if [ "${status}" -gt 1 ]; then', telemetry)
         self.assertIn('if [ "${execution_errors}" -gt 0 ]; then', telemetry)
         self.assertNotIn("continue-on-error", telemetry)
+        self.assertIn(
+            "if: github.event_name == 'workflow_dispatch' && inputs.calibration",
+            telemetry,
+        )
+        self.assertNotIn("--case-set confirmation", telemetry)
         ci = (ROOT / ".github/workflows/ci.yml").read_text()
         self.assertNotIn("gate_margins", ci)
         policy = (ROOT / "docs/version-0.5-compatibility-policy.md").read_text()

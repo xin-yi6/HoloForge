@@ -1,0 +1,320 @@
+{
+ "adverse": true,
+ "case_set": "calibration",
+ "gate": "optical",
+ "plan": "docs/numerics/gate-calibration-2026-09-plan.md",
+ "result": {
+  "adverse": {
+   "absolute-perturbation-1e-6-bulk": {
+    "a_form": 0.291498938236856,
+    "regular_form": 0.29150067097001925
+   },
+   "conjugated-exponent": {
+    "a_form": 0.9992891245433224,
+    "regular_form": 0.9970554916794669
+   },
+   "degree-192": {
+    "a_form": 0.2264624927088178,
+    "production_equation_residual": 0.2264624927088178,
+    "regular_form": 0.2263824470863035
+   },
+   "field_abs_mid_element": 5.187078678980077e-16,
+   "frequency-squared-times-1.01": {
+    "a_form": 0.16253788817196382,
+    "regular_form": 0.0002490307366402589
+   },
+   "reference": {
+    "a_form": 1.0011431258251274e-05,
+    "regular_form": 6.49230671289419e-08
+   },
+   "relative-perturbation-1e-6-near-uv": {
+    "a_form": 0.00036615653583226703,
+    "regular_form": 4.6986874536161235e-07
+   }
+  },
+  "records": [
+   {
+    "condition_number": 1865345.1165939984,
+    "conductivity": [
+     6.995010199009145e-14,
+     29.763939290649656
+    ],
+    "degree": 640,
+    "distance_to_horizon": 0.9999764463577214,
+    "eps_perturbation_max_change": 2.837337398083837e-07,
+    "field_abs_at_maximum": 0.9899581626989289,
+    "field_abs_max": 0.9899581626989289,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 1.0011431258251274e-05,
+     "production_maximum_coordinate": 2.355364227857315e-05,
+     "reconstructed_maximum": 1.0011431258251274e-05
+    },
+    "maximum_coordinate": 2.355364227857315e-05,
+    "omega_over_temperature": 60.0,
+    "regular_form_at_production_maximum": 1.2842548970065252e-08,
+    "regular_form_maximum": 6.49230671289419e-08,
+    "regular_form_maximum_coordinate": 0.9999864463577215,
+    "scale_at_maximum": 10.464470150808127,
+    "terms_at_maximum_abs": [
+     4.732297456692122,
+     7.095533855948353e-07,
+     4.73219198446262
+    ]
+   },
+   {
+    "condition_number": 1793561.5582406095,
+    "conductivity": [
+     7.000638044214604e-14,
+     35.72146348766294
+    ],
+    "degree": 640,
+    "distance_to_horizon": 0.9999764463577214,
+    "eps_perturbation_max_change": 9.22036865717416e-08,
+    "field_abs_at_maximum": 0.9899568484048968,
+    "field_abs_max": 0.9899568484048968,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 8.729378733095969e-07,
+     "production_maximum_coordinate": 2.355364227857315e-05,
+     "reconstructed_maximum": 8.729378733095969e-07
+    },
+    "maximum_coordinate": 2.355364227857315e-05,
+    "omega_over_temperature": 50.0,
+    "regular_form_at_production_maximum": 1.472430372567504e-08,
+    "regular_form_maximum": 6.456580012833495e-08,
+    "regular_form_maximum_coordinate": 0.9999864463577215,
+    "scale_at_maximum": 115.65872968155044,
+    "terms_at_maximum_abs": [
+     57.329323650231316,
+     7.096450324228641e-07,
+     57.32942532157409
+    ]
+   },
+   {
+    "condition_number": 1932740.9457288196,
+    "conductivity": [
+     7.045688009939139e-14,
+     25.50794940889967
+    ],
+    "degree": 640,
+    "distance_to_horizon": 0.9999764463577214,
+    "eps_perturbation_max_change": 2.8313335591859078e-08,
+    "field_abs_at_maximum": 0.9899597160918254,
+    "field_abs_max": 0.9899597160918254,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 6.459511314417744e-07,
+     "production_maximum_coordinate": 2.355364227857315e-05,
+     "reconstructed_maximum": 6.459511314417744e-07
+    },
+    "maximum_coordinate": 2.355364227857315e-05,
+    "omega_over_temperature": 70.0,
+    "regular_form_at_production_maximum": 1.0637676698639382e-08,
+    "regular_form_maximum": 6.480075281554296e-08,
+    "regular_form_maximum_coordinate": 0.9999864463577215,
+    "scale_at_maximum": 157.15598728437504,
+    "terms_at_maximum_abs": [
+     78.07805439852552,
+     7.094450660781828e-07,
+     78.07795217630446
+    ]
+   },
+   {
+    "condition_number": 1855357.4055227346,
+    "conductivity": [
+     7.00083781118757e-14,
+     30.791158052110113
+    ],
+    "degree": 640,
+    "distance_to_horizon": 0.9999764463577214,
+    "eps_perturbation_max_change": 2.1646315993781057e-07,
+    "field_abs_at_maximum": 0.9899578807142094,
+    "field_abs_max": 0.9899578807142094,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 5.449474722204721e-06,
+     "production_maximum_coordinate": 2.355364227857315e-05,
+     "reconstructed_maximum": 5.449474722204721e-06
+    },
+    "maximum_coordinate": 2.355364227857315e-05,
+    "omega_over_temperature": 58.0,
+    "regular_form_at_production_maximum": 1.2533886610978224e-08,
+    "regular_form_maximum": 6.460965885269341e-08,
+    "regular_form_maximum_coordinate": 0.9999864463577215,
+    "scale_at_maximum": 18.16560059876718,
+    "terms_at_maximum_abs": [
+     8.582760094082305,
+     7.095730486345114e-07,
+     8.58285979501183
+    ]
+   },
+   {
+    "condition_number": 1860177.007813169,
+    "conductivity": [
+     7.013480467644588e-14,
+     30.26884707854576
+    ],
+    "degree": 640,
+    "distance_to_horizon": 0.9999764463577214,
+    "eps_perturbation_max_change": 6.984135507899931e-07,
+    "field_abs_at_maximum": 0.9899580205111087,
+    "field_abs_max": 0.9899580205111087,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 2.0116967966574006e-05,
+     "production_maximum_coordinate": 2.355364227857315e-05,
+     "reconstructed_maximum": 2.0116967966574006e-05
+    },
+    "maximum_coordinate": 2.355364227857315e-05,
+    "omega_over_temperature": 59.0,
+    "regular_form_at_production_maximum": 1.2437783206466101e-08,
+    "regular_form_maximum": 6.453322177767006e-08,
+    "regular_form_maximum_coordinate": 0.9999864463577215,
+    "scale_at_maximum": 4.963389282059619,
+    "terms_at_maximum_abs": [
+     1.9816540080791107,
+     7.095633004756149e-07,
+     1.9817545643172074
+    ]
+   },
+   {
+    "condition_number": 1870844.6140634725,
+    "conductivity": [
+     6.897669311069008e-14,
+     29.275578793892507
+    ],
+    "degree": 640,
+    "distance_to_horizon": 0.9999764463577214,
+    "eps_perturbation_max_change": 1.5390818642861155e-07,
+    "field_abs_at_maximum": 0.9899583072777256,
+    "field_abs_max": 0.9899583072777256,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 4.241112245048312e-06,
+     "production_maximum_coordinate": 2.355364227857315e-05,
+     "reconstructed_maximum": 4.241112245048312e-06
+    },
+    "maximum_coordinate": 2.355364227857315e-05,
+    "omega_over_temperature": 61.0,
+    "regular_form_at_production_maximum": 1.234245801661886e-08,
+    "regular_form_maximum": 6.45127699580204e-08,
+    "regular_form_maximum_coordinate": 0.9999864463577215,
+    "scale_at_maximum": 24.118043601966214,
+    "terms_at_maximum_abs": [
+     11.559082943727104,
+     7.095433039878281e-07,
+     11.558979948595807
+    ]
+   },
+   {
+    "condition_number": 1876658.986748658,
+    "conductivity": [
+     7.018597249939191e-14,
+     28.802964912693305
+    ],
+    "degree": 640,
+    "distance_to_horizon": 0.9999764463577214,
+    "eps_perturbation_max_change": 1.1454039319139833e-07,
+    "field_abs_at_maximum": 0.9899584542475673,
+    "field_abs_max": 0.9899584542475673,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 2.7620453677725253e-06,
+     "production_maximum_coordinate": 2.355364227857315e-05,
+     "reconstructed_maximum": 2.7620453677725253e-06
+    },
+    "maximum_coordinate": 2.355364227857315e-05,
+    "omega_over_temperature": 62.0,
+    "regular_form_at_production_maximum": 1.2467745446457823e-08,
+    "regular_form_maximum": 6.46689267396627e-08,
+    "regular_form_maximum_coordinate": 0.9999864463577215,
+    "scale_at_maximum": 37.997305221660646,
+    "terms_at_maximum_abs": [
+     18.498715085040207,
+     7.095330556502039e-07,
+     18.498609426987382
+    ]
+   },
+   {
+    "condition_number": 1098953.4728287605,
+    "conductivity": [
+     2.1696802381488074e-13,
+     29.76393929068732
+    ],
+    "degree": 512,
+    "distance_to_horizon": 0.9999688224877592,
+    "eps_perturbation_max_change": 4.464129048762017e-09,
+    "field_abs_at_maximum": 0.9867078011096376,
+    "field_abs_max": 0.9867078011096376,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 2.0642957200495886e-07,
+     "production_maximum_coordinate": 3.117751224079868e-05,
+     "reconstructed_maximum": 2.0642957200495886e-07
+    },
+    "maximum_coordinate": 3.117751224079868e-05,
+    "omega_over_temperature": 60.0,
+    "regular_form_at_production_maximum": 7.1769053828995355e-09,
+    "regular_form_maximum": 1.3498162391292054e-07,
+    "regular_form_maximum_coordinate": 0.9999788224877593,
+    "scale_at_maximum": 288.82221534545374,
+    "terms_at_maximum_abs": [
+     143.9110866191355,
+     1.243229564575883e-06,
+     143.91114748298872
+    ]
+   },
+   {
+    "condition_number": 578292.3130965094,
+    "conductivity": [
+     -1.2152326899075747e-11,
+     29.763939289524856
+    ],
+    "degree": 384,
+    "distance_to_horizon": 0.9766432536468951,
+    "eps_perturbation_max_change": 2.6710330885236765e-10,
+    "field_abs_at_maximum": 5.5977840478484705e-08,
+    "field_abs_max": 0.9796855151996122,
+    "identity_check": {
+     "exact_match": true,
+     "production_equation_residual": 3.910237255394155e-06,
+     "production_maximum_coordinate": 0.023356746353104918,
+     "reconstructed_maximum": 3.910237255394155e-06
+    },
+    "maximum_coordinate": 0.023356746353104918,
+    "omega_over_temperature": 60.0,
+    "regular_form_at_production_maximum": 3.908764088293441e-06,
+    "regular_form_maximum": 3.908764088293441e-06,
+    "regular_form_maximum_coordinate": 0.023356746353104918,
+    "scale_at_maximum": 1.0587389692583655,
+    "terms_at_maximum_abs": [
+     0.02937736248876481,
+     6.635447522460819e-08,
+     0.02938154031512535
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "byteorder": "little",
+  "holoforge": "0.7.0",
+  "holoforge_git_commit": "c4a15a2c7bf51db3d4d086f50e0544899c50bb09",
+  "holoforge_git_src_modified": "false",
+  "holoforge_source_sha256": "fe719a6499a7d9939f091cb8d90c1d61e4a03ab9f099db190677d4f66c3e8aa8",
+  "longdouble_epsilon": "2.220446049250313e-16",
+  "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+  "numpy": "2.4.6",
+  "numpy_blas": "accelerate",
+  "numpy_lapack": "accelerate",
+  "platform_machine": "arm64",
+  "platform_system": "Darwin",
+  "python": "3.11.16",
+  "python_implementation": "CPython",
+  "scipy": "1.17.1",
+  "scipy_blas": "accelerate",
+  "scipy_lapack": "accelerate"
+ },
+ "tool": "gate-calibration",
+ "wall_seconds": 13.8479193749954
+}

@@ -21,6 +21,12 @@ on:
   schedule:
     - cron: "17 3 * * 1"
   workflow_dispatch:
+    inputs:
+      calibration:
+        description: Also run the Batch 2a gate-calibration diagnostics (tools/gate_calibration.py)
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -102,6 +108,13 @@ jobs:
             python tools/gate_margins.py "${records[@]}"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run gate-calibration diagnostics (manual dispatch only)
+        if: github.event_name == 'workflow_dispatch' && inputs.calibration
+        run: |
+          for gate in soft-wall optical gn; do
+            python tools/gate_calibration.py "${gate}" --adverse > "gate-telemetry/calibration-${gate}.json"
+          done
 
       - name: Upload telemetry
         if: always()

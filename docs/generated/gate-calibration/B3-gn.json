@@ -1,0 +1,312 @@
+{
+ "adverse": true,
+ "case_set": "calibration",
+ "gate": "gn",
+ "plan": "docs/numerics/gate-calibration-2026-09-plan.md",
+ "result": {
+  "adverse": {
+   "bump-1e-06": {
+    "collocation_residual": 0.0009650920795904387,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 0.0009762030457809654,
+    "residual_to_bound_ratio": 1017768.6877521992
+   },
+   "bump-1e-08": {
+    "collocation_residual": 9.660149637638454e-06,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 9.771131607979511e-06,
+    "residual_to_bound_ratio": 10177.691300157627
+   },
+   "bump-1e-10-supplementary": {
+    "collocation_residual": 9.66009597507275e-08,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 2.8828850388750574e-07,
+    "residual_to_bound_ratio": 101.77692576259228
+   },
+   "bump-1e-11-supplementary": {
+    "collocation_residual": 9.65919698679787e-09,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 2.8828850388750574e-07,
+    "residual_to_bound_ratio": 10.177471693706478
+   },
+   "degree-24": {
+    "collocation_residual": 9.630072953998265e-12,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 0.980532691118246,
+    "residual_to_bound_ratio": 0.1896765060095416,
+    "solver_success": true
+   },
+   "horizon-condition-1e-6": {
+    "collocation_residual": 0.00020314479686489893,
+    "oversampled_boundary_residual": 1e-06,
+    "oversampled_equation_residual": 0.000863812573269112,
+    "residual_to_bound_ratio": 4503599627.370496
+   },
+   "potential-b-times-1.01": {
+    "collocation_residual": 0.15633979433491105,
+    "oversampled_boundary_residual": 0.0006891871468069086,
+    "oversampled_equation_residual": 0.1563397943346017,
+    "residual_to_bound_ratio": 3221481468725.2095
+   },
+   "reference": {
+    "collocation_residual": 9.960813696202087e-10,
+    "oversampled_boundary_residual": 8.673617379884035e-19,
+    "oversampled_equation_residual": 2.8828850388750574e-07,
+    "residual_to_bound_ratio": 0.6950746397957591
+   }
+  },
+  "identity_fixture": {
+   "max_difference_off_solution": 1.199040866595169e-14,
+   "passed": true
+  },
+  "records": [
+   {
+    "branch_seconds": 66.84856320801191,
+    "degree": 150,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 1.0064658688062015e-10,
+     "reconstructed_final_residual": 1.0064658688062015e-10
+    },
+    "max_double_residual": 1.0064658688062015e-10,
+    "max_evaluation_error": 8.983769803152689e-11,
+    "max_high_precision_residual": 1.227078937641917e-10,
+    "max_location": {
+     "equation": "warp",
+     "node": 150,
+     "rounding_bound_there": 6.121916067151246e-06,
+     "u": 1.0
+    },
+    "max_residual_to_bound_ratio": 0.002284248035339456,
+    "max_rounding_bound": 6.121916067151246e-06,
+    "nonlinear": {
+     "final_scaled_residual": 1.0064658688062015e-10,
+     "final_success": true,
+     "polish": {
+      "applied": false,
+      "function_evaluations": 0,
+      "message": "not applied",
+      "success": false
+     },
+     "root": {
+      "function_evaluations": 459,
+      "message": "The solution converged.",
+      "scaled_residual": 1.0064658688062015e-10,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 9.78420413253764e-11,
+     "f_horizon": 8.985421641403164e-300,
+     "f_uv": 0.0,
+     "horizon_scalar_equation": 2.4970382352031406e-13,
+     "maximum_boundary_residual": 8.673617379884035e-19,
+     "maximum_equation_residual": 2.9135362781741066e-08,
+     "scalar_equation": 1.4410367704905974e-10,
+     "scalar_uv": 0.0,
+     "warp_equation": 2.9135362781741066e-08,
+     "warp_uv": 8.673617379884035e-19
+    },
+    "preset": "qcd-like",
+    "x_h": 1.23
+   },
+   {
+    "branch_seconds": 66.84856320801191,
+    "degree": 80,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 9.960813696202087e-10,
+     "reconstructed_final_residual": 9.960813696202087e-10
+    },
+    "max_double_residual": 9.960813696202087e-10,
+    "max_evaluation_error": 1.5850937453216164e-11,
+    "max_high_precision_residual": 9.95537482583111e-10,
+    "max_location": {
+     "equation": "f",
+     "node": 66,
+     "rounding_bound_there": 3.0910046781154277e-09,
+     "u": 0.9263200821770461
+    },
+    "max_residual_to_bound_ratio": 0.6950746397957591,
+    "max_rounding_bound": 4.542298050473663e-08,
+    "nonlinear": {
+     "final_scaled_residual": 9.960813696202087e-10,
+     "final_success": true,
+     "polish": {
+      "applied": false,
+      "function_evaluations": 0,
+      "message": "not applied",
+      "success": false
+     },
+     "root": {
+      "function_evaluations": 507,
+      "message": "The solution converged.",
+      "scaled_residual": 9.960813696202087e-10,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 5.7934143307448615e-09,
+     "f_horizon": 5.802284400196521e-175,
+     "f_uv": 0.0,
+     "horizon_scalar_equation": 3.2353920313298817e-13,
+     "maximum_boundary_residual": 8.673617379884035e-19,
+     "maximum_equation_residual": 2.8828850388750574e-07,
+     "scalar_equation": 2.0117294773896043e-09,
+     "scalar_uv": 0.0,
+     "warp_equation": 2.8828850388750574e-07,
+     "warp_uv": 8.673617379884035e-19
+    },
+    "preset": "qcd-like",
+    "x_h": 1.04
+   },
+   {
+    "branch_seconds": 66.84856320801191,
+    "degree": 150,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 8.786080265999617e-10,
+     "reconstructed_final_residual": 8.786080265999617e-10
+    },
+    "max_double_residual": 8.786080265999617e-10,
+    "max_evaluation_error": 4.138128519063317e-11,
+    "max_high_precision_residual": 8.785974402867822e-10,
+    "max_location": {
+     "equation": "warp",
+     "node": 93,
+     "rounding_bound_there": 3.9081989436490875e-09,
+     "u": 0.6840622763423391
+    },
+    "max_residual_to_bound_ratio": 119.65966764935689,
+    "max_rounding_bound": 2.1876529575673572e-06,
+    "nonlinear": {
+     "final_scaled_residual": 8.786080265999617e-10,
+     "final_success": true,
+     "polish": {
+      "applied": false,
+      "function_evaluations": 0,
+      "message": "not applied",
+      "success": false
+     },
+     "root": {
+      "function_evaluations": 457,
+      "message": "The solution converged.",
+      "scaled_residual": 8.786080265999617e-10,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 2.5766081029608864e-10,
+     "f_horizon": 3.75e-321,
+     "f_uv": 0.0,
+     "horizon_scalar_equation": 1.7039463785005979e-13,
+     "maximum_boundary_residual": 8.673617379884035e-19,
+     "maximum_equation_residual": 8.813037144467118e-10,
+     "scalar_equation": 1.9726709067578633e-11,
+     "scalar_uv": 0.0,
+     "warp_equation": 8.813037144467118e-10,
+     "warp_uv": 8.673617379884035e-19
+    },
+    "preset": "qcd-like",
+    "x_h": 1.1
+   },
+   {
+    "branch_summary": {
+     "count_above_5e-10": 11,
+     "polished": 7,
+     "profiles": 318,
+     "worst": {
+      "degree": 80,
+      "final_residual": 9.960813696202087e-10,
+      "x_h": 1.04
+     }
+    },
+    "preset": "qcd-like"
+   },
+   {
+    "branch_seconds": 11.086981375003234,
+    "degree": 80,
+    "identity_check": {
+     "exact_match": true,
+     "production_final_residual": 2.327254684519024e-10,
+     "reconstructed_final_residual": 2.327254684519024e-10
+    },
+    "max_double_residual": 2.327254684519024e-10,
+    "max_evaluation_error": 1.5281565752799462e-11,
+    "max_high_precision_residual": 2.4800703420470186e-10,
+    "max_location": {
+     "equation": "warp",
+     "node": 80,
+     "rounding_bound_there": 3.7902417460716424e-07,
+     "u": 1.0
+    },
+    "max_residual_to_bound_ratio": 0.006112189076443186,
+    "max_rounding_bound": 3.7902417460716424e-07,
+    "nonlinear": {
+     "final_scaled_residual": 2.327254684519024e-10,
+     "final_success": true,
+     "polish": {
+      "applied": false,
+      "function_evaluations": 0,
+      "message": "not applied",
+      "success": false
+     },
+     "root": {
+      "function_evaluations": 502,
+      "message": "The solution converged.",
+      "scaled_residual": 2.327254684519024e-10,
+      "success": true
+     }
+    },
+    "oversampled_equations": {
+     "blackening_equation": 4.191640933778347e-11,
+     "f_horizon": 1.3659088930639882e-161,
+     "f_uv": 0.0,
+     "horizon_scalar_equation": 2.335554488129852e-11,
+     "maximum_boundary_residual": 3.469446951953614e-18,
+     "maximum_equation_residual": 1.9685437526515179e-10,
+     "scalar_equation": 2.335554488129852e-11,
+     "scalar_uv": 0.0,
+     "warp_equation": 1.9685437526515179e-10,
+     "warp_uv": 3.469446951953614e-18
+    },
+    "preset": "cosh-calibration",
+    "x_h": 2.9397695973673903
+   },
+   {
+    "branch_summary": {
+     "count_above_5e-10": 0,
+     "polished": 0,
+     "profiles": 300,
+     "worst": {
+      "degree": 80,
+      "final_residual": 2.327254684519024e-10,
+      "x_h": 2.9397695973673903
+     }
+    },
+    "preset": "cosh-calibration"
+   }
+  ]
+ },
+ "runtime": {
+  "byteorder": "little",
+  "holoforge": "0.7.0",
+  "holoforge_git_commit": "c4a15a2c7bf51db3d4d086f50e0544899c50bb09",
+  "holoforge_git_src_modified": "false",
+  "holoforge_source_sha256": "fe719a6499a7d9939f091cb8d90c1d61e4a03ab9f099db190677d4f66c3e8aa8",
+  "longdouble_epsilon": "2.220446049250313e-16",
+  "numerical_build_sha256": "74df72fa86c3331ba158d6acce2ff637844cdc1157eb6e3b5418bda2ee693888",
+  "numpy": "2.4.6",
+  "numpy_blas": "scipy-openblas 0.3.31.188.0",
+  "numpy_lapack": "scipy-openblas 0.3.31.188.0",
+  "platform_machine": "arm64",
+  "platform_system": "Darwin",
+  "python": "3.11.16",
+  "python_implementation": "CPython",
+  "scipy": "1.17.1",
+  "scipy_blas": "scipy-openblas 0.3.30",
+  "scipy_lapack": "scipy-openblas 0.3.30"
+ },
+ "tool": "gate-calibration",
+ "wall_seconds": 164.03167216596194
+}
