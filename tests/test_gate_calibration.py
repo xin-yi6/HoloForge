@@ -259,6 +259,27 @@ class DiagnosticStatusTests(unittest.TestCase):
         for value in (complex(1.0, -2.0), np.complex128(3.0j), np.float64(1.0), np.array([1.0j])):
             self.assertEqual(calibration.diagnostic_errors({"residual": value}), [])
 
+    def test_zero_dimensional_arrays_are_checked_as_scalars(self) -> None:
+        for value in (np.array(float("nan")), np.array(complex(0.0, float("inf"))),
+                      np.array(np.longdouble("inf"))):
+            self.assertEqual(len(calibration.diagnostic_errors({"residual": value})), 1, value)
+        for value in (np.array(1.5), np.array(2.0j), np.array(3), np.array(True)):
+            self.assertEqual(calibration.diagnostic_errors({"residual": value}), [], value)
+
+    def test_extended_precision_scalars_are_checked_and_serialized(self) -> None:
+        nan = float("nan")
+        self.assertTrue(calibration.diagnostic_errors({"x": np.longdouble(nan)}))
+        self.assertTrue(calibration.diagnostic_errors({"x": np.clongdouble(complex(nan, 0.0))}))
+        self.assertEqual(calibration.diagnostic_errors({"x": np.longdouble(1.5)}), [])
+        self.assertEqual(calibration._jsonable(np.longdouble(1.5)), 1.5)
+        self.assertEqual(calibration._jsonable(np.longdouble(nan)), "nan")
+        self.assertEqual(calibration._jsonable(np.clongdouble(complex(1.0, nan))), [1.0, "nan"])
+        self.assertEqual(calibration._jsonable(np.array(np.longdouble(2.5))), 2.5)
+        self.assertEqual(calibration._jsonable(np.int64(3)), 3)
+        text = json.dumps(calibration._jsonable({"a": [np.longdouble("inf"), np.float32(0.5)]}),
+                          allow_nan=False)
+        self.assertEqual(json.loads(text), {"a": ["inf", 0.5]})
+
     def test_non_finite_complex_result_exits_with_strict_json(self) -> None:
         def strict(token):
             raise AssertionError(f"non-strict JSON token {token}")

@@ -1507,8 +1507,14 @@ def _jsonable(value: Any) -> Any:
         return _jsonable(value.tolist())
     if isinstance(value, np.bool_):
         return bool(value)
-    if isinstance(value, (np.floating, np.integer, np.complexfloating)):
-        return _jsonable(value.item())
+    # Explicit conversions: ``item()`` keeps ``longdouble`` as a NumPy scalar.
+    # Extended values are rounded to double, which is what JSON holds.
+    if isinstance(value, np.integer):
+        return int(value)
+    if isinstance(value, np.floating):
+        return _jsonable(float(value))
+    if isinstance(value, np.complexfloating):
+        return _jsonable(complex(value))
     if isinstance(value, complex):
         return [_jsonable(value.real), _jsonable(value.imag)]
     if isinstance(value, float) and not math.isfinite(value):
@@ -1549,14 +1555,19 @@ def diagnostic_errors(result: Any, location: str = "result") -> List[str]:
             if key in ("identity_fixture", "identity_check"):
                 continue
             errors.extend(diagnostic_errors(value, f"{location}.{key}"))
+    elif isinstance(result, np.ndarray) and result.ndim == 0:
+        errors.extend(diagnostic_errors(result[()], location))
     elif isinstance(result, (list, tuple, np.ndarray)):
         for index, value in enumerate(result):
             errors.extend(diagnostic_errors(value, f"{location}[{index}]"))
-    elif isinstance(result, (complex, np.complexfloating)):
-        value = complex(result)
-        if not (math.isfinite(value.real) and math.isfinite(value.imag)):
+    elif isinstance(result, (np.floating, np.complexfloating)):
+        # np.isfinite handles longdouble without first rounding to double.
+        if not bool(np.isfinite(result)):
             errors.append(f"{location} is not finite")
-    elif isinstance(result, (float, np.floating)) and not math.isfinite(float(result)):
+    elif isinstance(result, complex):
+        if not (math.isfinite(result.real) and math.isfinite(result.imag)):
+            errors.append(f"{location} is not finite")
+    elif isinstance(result, float) and not math.isfinite(result):
         errors.append(f"{location} is not finite")
     return errors
 
