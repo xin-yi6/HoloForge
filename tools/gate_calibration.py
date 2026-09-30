@@ -14,6 +14,16 @@ Subcommands (each prints JSON):
 
 ``--adverse`` adds the plan's adverse controls. ``--case-set confirmation``
 selects the reserved confirmation cases, which Batch 2a must not run.
+
+Exit status: 0 when every identity check and fixture passes and every
+diagnostic number is finite, whatever the scientific values; 2 when the
+diagnostic itself failed (the JSON is still printed, with ``status`` and
+``diagnostic_errors``). Identity checks compare the maximum of each
+reconstructed residual with production, not every node.
+
+The soft-wall ``relative_floor_estimates`` are the first-order perturbation
+scale ``eps ||H||_2 kappa_j / |lambda_j|`` for a simple eigenvalue. It is an
+order-of-magnitude reference, not a proved lower error floor.
 """
 
 from __future__ import annotations
@@ -775,7 +785,97 @@ def _jsonable(value: Any) -> Any:
     return value
 
 
+PLAN = Path("docs/numerics/gate-calibration-2026-09-plan.md")
+THREAD_VARIABLES = (
+    "OMP_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "VECLIB_MAXIMUM_THREADS",
+)
+
+
+def diagnostic_errors(result: Any, location: str = "result") -> List[str]:
+    """Return tool-integrity failures found in a diagnostic result.
+
+    A failed identity fixture, a reconstruction that does not reproduce its
+    production value, or a non-finite diagnostic number is an execution
+    error. Large residuals or controls that exceed a production limit are
+    scientific data, not errors.
+    """
+
+    errors: List[str] = []
+    if isinstance(result, Mapping):
+        if "stopped" in result:
+            errors.append(f"{location}: stopped: {result['stopped']}")
+        fixture = result.get("identity_fixture")
+        if isinstance(fixture, Mapping) and fixture.get("passed") is not True:
+            errors.append(f"{location}.identity_fixture did not pass")
+        check = result.get("identity_check")
+        if isinstance(check, Mapping) and check.get("exact_match") is not True:
+            errors.append(f"{location}.identity_check does not reproduce production")
+        for key, value in result.items():
+            if key in ("identity_fixture", "identity_check"):
+                continue
+            errors.extend(diagnostic_errors(value, f"{location}.{key}"))
+    elif isinstance(result, (list, tuple)):
+        for index, value in enumerate(result):
+            errors.extend(diagnostic_errors(value, f"{location}[{index}]"))
+    elif isinstance(result, (float, np.floating)) and not math.isfinite(float(result)):
+        errors.append(f"{location} is not finite")
+    return errors
+
+
+def _file_sha256(path: Path) -> str:
+    import hashlib
+
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return "unknown"
+
+
+def _installed_wheel_tags(name: str) -> List[str]:
+    """Return the wheel tags recorded in an installed distribution, if any."""
+
+    import importlib.metadata
+
+    try:
+        wheel = importlib.metadata.distribution(name).read_text("WHEEL") or ""
+    except importlib.metadata.PackageNotFoundError:
+        return []
+    return [line.split(":", 1)[1].strip() for line in wheel.splitlines() if line.startswith("Tag:")]
+
+
+def execution_metadata() -> Dict[str, Any]:
+    """Record the diagnostic's own identity and execution settings (path-free)."""
+
+    import os
+
+    root = Path(__file__).resolve().parents[1]
+    threads = {}
+    for variable in THREAD_VARIABLES:
+        value = os.environ.get(variable)
+        if value is not None:
+            threads[variable] = value.strip() if value.strip().isdigit() else "set"
+    return {
+        "tool_sha256": _file_sha256(Path(__file__).resolve()),
+        "plan_sha256": _file_sha256(root / PLAN),
+        "thread_environment": threads,
+        "installed_wheel_tags": {
+            name: _installed_wheel_tags(name) for name in ("numpy", "scipy")
+        },
+    }
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
+    """Print the diagnostic JSON; exit 2 on a tool-integrity failure.
+
+    Exit 0 means every identity check and fixture passed and all diagnostic
+    numbers are finite, whatever the scientific values. Exit 2 means the
+    output, which is still printed for inspection, must not be used as
+    calibration evidence.
+    """
+
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("gate", choices=sorted(RUNNERS))
     parser.add_argument("--case-set", choices=("calibration", "confirmation"), default="calibration")
@@ -783,17 +883,25 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parser.parse_args(argv)
     started = time.perf_counter()
     result = RUNNERS[args.gate](args.case_set, args.adverse)
+    errors = diagnostic_errors(result)
     payload = {
         "tool": "gate-calibration",
-        "plan": "docs/numerics/gate-calibration-2026-09-plan.md",
+        "plan": PLAN.as_posix(),
         "gate": args.gate,
         "case_set": args.case_set,
         "adverse": bool(args.adverse),
+        "status": "ok" if not errors else "diagnostic-error",
+        "diagnostic_errors": errors,
+        "identity_scope": "maximum value of each reconstructed residual, not every node",
+        "execution": execution_metadata(),
         "runtime": runtime_versions(),
         "wall_seconds": time.perf_counter() - started,
         "result": result,
     }
     print(json.dumps(_jsonable(payload), indent=2, sort_keys=True))
+    if errors:
+        print("gate calibration diagnostic error: " + "; ".join(errors), file=sys.stderr)
+        return 2
     return 0
 
 

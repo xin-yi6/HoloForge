@@ -12,6 +12,7 @@ import io
 import json
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 
@@ -90,6 +91,61 @@ class SoftWallDiagnosticTests(unittest.TestCase):
         self.assertEqual(payload["gate"], "soft-wall")
         self.assertEqual(payload["case_set"], "calibration")
         self.assertIn("numpy_blas", payload["runtime"])
+
+
+class DiagnosticStatusTests(unittest.TestCase):
+    """A failed prerequisite must fail the command; scientific values must not."""
+
+    def _run(self, gate, fake_result):
+        output, errors = io.StringIO(), io.StringIO()
+        with patch.dict(calibration.RUNNERS, {gate: lambda case_set, adverse: fake_result}):
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
+                status = calibration.main([gate])
+        return status, json.loads(output.getvalue()), errors.getvalue()
+
+    def test_failed_identity_fixture_exits_with_error(self) -> None:
+        status, payload, errors = self._run(
+            "gn", {"identity_fixture": {"passed": False}, "stopped": "identity fixture failed"}
+        )
+        self.assertEqual(status, 2)
+        self.assertEqual(payload["status"], "diagnostic-error")
+        self.assertTrue(payload["diagnostic_errors"])
+        self.assertIn("identity", errors)
+
+    def test_identity_mismatch_exits_with_error(self) -> None:
+        status, payload, _ = self._run(
+            "optical", {"records": [{"identity_check": {"exact_match": False}}]}
+        )
+        self.assertEqual(status, 2)
+        self.assertEqual(payload["status"], "diagnostic-error")
+
+    def test_non_finite_diagnostic_value_exits_with_error(self) -> None:
+        status, payload, _ = self._run(
+            "soft-wall", {"records": [{"max_relative_error": float("nan")}]}
+        )
+        self.assertEqual(status, 2)
+        self.assertEqual(payload["status"], "diagnostic-error")
+
+    def test_large_scientific_values_are_not_errors(self) -> None:
+        status, payload, _ = self._run(
+            "gn",
+            {
+                "identity_fixture": {"passed": True},
+                "records": [{"identity_check": {"exact_match": True}, "max_double_residual": 5.0}],
+            },
+        )
+        self.assertEqual(status, 0)
+        self.assertEqual(payload["status"], "ok")
+        self.assertEqual(payload["diagnostic_errors"], [])
+
+    def test_execution_metadata_is_recorded(self) -> None:
+        _, payload, _ = self._run("soft-wall", {"records": []})
+        execution = payload["execution"]
+        self.assertRegex(execution["tool_sha256"], r"^[0-9a-f]{64}$")
+        self.assertRegex(execution["plan_sha256"], r"^[0-9a-f]{64}$")
+        self.assertEqual(set(execution["installed_wheel_tags"]), {"numpy", "scipy"})
+        self.assertIsInstance(execution["thread_environment"], dict)
+        self.assertIn("maximum value", payload["identity_scope"])
 
 
 class RoundingConstantTests(unittest.TestCase):

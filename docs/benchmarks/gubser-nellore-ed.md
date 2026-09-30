@@ -181,9 +181,9 @@ checks barely move: the oversampled equation residual is `9.42e-8` against
 The [Batch 2a calibration](../numerics/gate-calibration-2026-09-report.md)
 shows that the value is set by where the nonlinear solve stops, not by
 evaluation rounding. A 50-digit re-evaluation gives `1.36e-9` for the stored
-Accelerate solution, and rounding contributes at most `3.6e-10`. The
-finite-difference root path differs between builds, and which profile needs
-the least-squares polish differs with it. On Accelerate the polish stops on
+Accelerate solution, and rounding contributes at most `3.6e-10`. The root
+residuals of the same profile differ between builds, and so does which
+profile needs the least-squares polish. On Accelerate the polish stops on
 its step criterion at `1.7e-9`. The same `1e-9` constant triggers that polish
 and sets the acceptance limit. Any amendment returns separately for owner
 approval.
