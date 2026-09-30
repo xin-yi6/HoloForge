@@ -127,6 +127,15 @@ class Version05PolicyTests(unittest.TestCase):
         self.assertIn("Gate telemetry", policy)
         self.assertIn("recorded, not enforced", policy)
 
+    def test_soft_wall_sa_confirmation_is_manual_and_diagnostic(self) -> None:
+        workflow = (ROOT / ".github/workflows/soft-wall-sa-confirmation.yml").read_text()
+        self.assertIn("workflow_dispatch:", workflow)
+        for trigger in ("pull_request", "push:", "schedule"):
+            self.assertNotIn(trigger, workflow)
+        self.assertIn("soft-wall-sa --case-set confirmation", workflow)
+        self.assertIn("numpy==2.3.5 scipy==1.16.3", workflow)
+        self.assertNotIn("continue-on-error", workflow)
+
     def test_policy_documents_current_and_historical_ci_tiers(self) -> None:
         policy = (ROOT / "docs/version-0.5-compatibility-policy.md").read_text()
         self.assertIn("runs every current scientific verifier", policy)

@@ -169,6 +169,192 @@ def soft_wall_adverse() -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# Candidate soft-wall refinement rule S-A (docs/numerics/soft-wall-refinement-sa-contract.md)
+# ---------------------------------------------------------------------------
+
+SA_CONTRACT = Path("docs/numerics/soft-wall-refinement-sa-contract.md")
+SA_MODES = 4
+SA_MATCH_FACTOR = 1.0
+SA_PLATEAU_FACTOR = 1.0
+
+SA_CASES = {
+    "calibration": {
+        "cases": tuple((n, 1.0, None) for n in range(24, 121, 8)),
+        "adverse": tuple((n, 1.0, factor) for factor in (4.0, 6.0) for n in (48, 56, 64)),
+    },
+    "confirmation": {
+        "cases": tuple((n, kappa, None) for kappa in (0.5, 0.7, 2.0) for n in (60, 76, 92)),
+        "adverse": (),
+    },
+}
+
+
+def soft_wall_level(degree: int, kappa: float, z_max_factor: Optional[float]) -> Dict[str, Any]:
+    """Production eigenvalues and per-mode perturbation data at one degree."""
+
+    from holoforge.benchmarks import soft_wall_vector as soft_wall
+
+    z_max = None if z_max_factor is None else z_max_factor / kappa
+    config = soft_wall.SoftWallConfig(
+        kappa_gev=kappa, z_max_gev_inverse=z_max, spectral_degree=max(degree, 24)
+    )
+    eigenvalues, _ = soft_wall._spectral_spectrum(config, SA_MODES, degree)
+    analytic = soft_wall.analytic_mass_squared(SA_MODES, kappa)
+    grid = chebyshev_lobatto_grid(degree, 0.0, config.resolved_z_max_gev_inverse)
+    interior = slice(1, -1)
+    operator = -grid.second_derivative[interior, interior] + np.diag(
+        soft_wall.schrodinger_potential(grid.nodes[interior], kappa)
+    )
+    values, left, right = eig(operator, left=True, right=True)
+    norm = float(np.linalg.norm(operator, 2))
+    matched, conditions = [], []
+    for target in eigenvalues:
+        index = int(np.argmin(np.abs(values - target)))
+        x, y = right[:, index], left[:, index]
+        conditions.append(float(np.linalg.norm(x) * np.linalg.norm(y) / abs(np.vdot(y, x))))
+        matched.append(complex(values[index]))
+    return {
+        "degree": int(degree),
+        "eigenvalues": [float(value) for value in eigenvalues],
+        "analytic": [float(value) for value in analytic],
+        "matched_with_vectors": [[value.real, value.imag] for value in matched],
+        "condition_numbers": conditions,
+        "operator_two_norm": norm,
+    }
+
+
+def sa_verdict(levels: Sequence[Mapping[str, Any]], spectrum_tolerance: float = 2.0e-4,
+               accuracy: float = 1.0e-8) -> Dict[str, Any]:
+    """Evaluate the current rule and candidate S-A on three refinement levels.
+
+    Pure function of the recorded level data, so synthetic adverse cases can
+    be evaluated without a solve.
+    """
+
+    def errors(level):
+        lam = np.asarray(level["eigenvalues"], dtype=float)
+        exact = np.asarray(level["analytic"], dtype=float)
+        return np.abs(lam - exact) / exact
+
+    def scales(level):
+        lam = np.asarray(level["eigenvalues"], dtype=float)
+        return EPS * level["operator_two_norm"] * np.asarray(level["condition_numbers"]) / np.abs(lam)
+
+    per_level = [errors(level) for level in levels]
+    maxima = [float(np.max(item)) if np.all(np.isfinite(item)) else float("nan") for item in per_level]
+    finite = all(math.isfinite(value) for value in maxima)
+    branch_a = finite and maxima[0] > maxima[1] > maxima[2]
+    branch_b = finite and maxima[2] <= accuracy
+    spectrum = finite and maxima[2] <= spectrum_tolerance
+
+    plateau_rows = []
+    branch_p = finite
+    for level, err in zip(levels[1:], per_level[1:]):
+        lam = np.asarray(level["eigenvalues"], dtype=float)
+        scale = scales(level)
+        mu = np.asarray([complex(a, b) for a, b in level["matched_with_vectors"]])
+        match = np.abs(mu - lam) / np.abs(lam)
+        ok_finite = bool(np.all(np.isfinite(lam)) and np.all(np.isfinite(err)) and np.all(np.isfinite(scale)))
+        ok_match = ok_finite and bool(np.all(match <= SA_MATCH_FACTOR * scale))
+        ok_plateau = ok_finite and bool(np.all(err <= SA_PLATEAU_FACTOR * scale))
+        branch_p = branch_p and ok_finite and ok_match and ok_plateau
+        plateau_rows.append({
+            "degree": level["degree"],
+            "max_error_to_scale": float(np.max(err / scale)) if ok_finite else None,
+            "max_match_to_scale": float(np.max(match / scale)) if ok_finite else None,
+            "finite": ok_finite, "match": ok_match, "plateau": ok_plateau,
+        })
+    stability = None
+    if branch_p:
+        fine, middle = levels[2], levels[1]
+        lam_n = np.asarray(fine["eigenvalues"])
+        lam_m = np.asarray(middle["eigenvalues"])
+        allowed = scales(fine) + scales(middle)
+        ratio = np.abs(lam_n - lam_m) / np.abs(lam_n) / allowed
+        stability = float(np.max(ratio))
+        branch_p = branch_p and bool(np.all(ratio <= 1.0))
+    return {
+        "max_errors": maxima,
+        "current_rule_pass": bool(branch_a and branch_b),
+        "sa_pass": bool(branch_b and (branch_a or branch_p)),
+        "branch_a_strict_decrease": bool(branch_a),
+        "branch_b_accuracy": bool(branch_b),
+        "branch_p_plateau": bool(branch_p),
+        "spectrum_tolerance_pass": bool(spectrum),
+        "plateau_levels": plateau_rows,
+        "stability_to_allowed": stability,
+    }
+
+
+def soft_wall_sa_case(n: int, kappa: float, z_max_factor: Optional[float]) -> Dict[str, Any]:
+    from holoforge.benchmarks import soft_wall_vector as soft_wall
+
+    levels = [soft_wall_level(d, kappa, z_max_factor) for d in (n - 16, n - 8, n)]
+    verdict = sa_verdict(levels)
+    z_max = None if z_max_factor is None else z_max_factor / kappa
+    production = soft_wall.solve_spectrum(
+        soft_wall.SoftWallConfig(kappa_gev=kappa, z_max_gev_inverse=z_max, spectral_degree=n),
+        num_modes=SA_MODES, method="spectral",
+    )
+    record = production.to_dict(soft_wall.DEFAULT_TOLERANCE)
+    production_refinement = next(
+        check["passed"] for check in record["acceptance_checks"]
+        if check["id"] == "spectral-degree-refinement"
+    )
+    identity = (
+        list(production.spectral_refinement_errors) == verdict["max_errors"]
+        and production_refinement == verdict["current_rule_pass"]
+    )
+    return {
+        "N": int(n), "kappa_gev": float(kappa),
+        "z_max_factor": z_max_factor,
+        "levels": levels,
+        "verdict": verdict,
+        "identity_check": {
+            "production_refinement_errors": list(production.spectral_refinement_errors),
+            "production_refinement_pass": bool(production_refinement),
+            "exact_match": bool(identity),
+        },
+    }
+
+
+def soft_wall_sa_synthetic(base: Mapping[str, Any]) -> Dict[str, Any]:
+    """Swapped and non-finite eigenvalue controls on a recorded plateau case."""
+
+    swapped = [dict(level) for level in base["levels"]]
+    finest = list(swapped[2]["eigenvalues"])
+    finest[0], finest[1] = finest[1], finest[0]
+    swapped[2] = {**swapped[2], "eigenvalues": finest}
+    nonfinite = [dict(level) for level in base["levels"]]
+    finest = list(nonfinite[2]["eigenvalues"])
+    finest[2] = float("nan")
+    nonfinite[2] = {**nonfinite[2], "eigenvalues": finest}
+    swapped_verdict = sa_verdict(swapped)
+    nonfinite_verdict = sa_verdict(nonfinite)
+    # A non-finite value is the expected input of this control, not a tool failure.
+    nonfinite_verdict["max_errors"] = [str(value) for value in nonfinite_verdict["max_errors"]]
+    return {
+        "base_N": base["N"],
+        "swapped": {k: swapped_verdict[k] for k in ("current_rule_pass", "sa_pass", "spectrum_tolerance_pass")},
+        "non_finite": {k: nonfinite_verdict[k] for k in ("current_rule_pass", "sa_pass", "spectrum_tolerance_pass")},
+    }
+
+
+def soft_wall_sa_run(case_set: str, adverse: bool) -> Dict[str, Any]:
+    spec = SA_CASES[case_set]
+    records = [soft_wall_sa_case(n, kappa, factor) for n, kappa, factor in spec["cases"]]
+    result: Dict[str, Any] = {
+        "contract_sha256": _file_sha256(Path(__file__).resolve().parents[1] / SA_CONTRACT),
+        "records": records,
+    }
+    if adverse:
+        result["adverse"] = [soft_wall_sa_case(n, kappa, factor) for n, kappa, factor in spec["adverse"]]
+        plateau = next((r for r in records if r["N"] == 64 and r["kappa_gev"] == 1.0), records[-1])
+        result["synthetic"] = soft_wall_sa_synthetic(plateau)
+    return result
+
+
+# ---------------------------------------------------------------------------
 # Gubser--Nellore collocation residual
 # ---------------------------------------------------------------------------
 
@@ -764,6 +950,7 @@ def optical_adverse(background) -> Dict[str, Any]:
 
 RUNNERS: Dict[str, Callable[[str, bool], Dict[str, Any]]] = {
     "soft-wall": soft_wall_run,
+    "soft-wall-sa": soft_wall_sa_run,
     "gn": gn_run,
     "optical": optical_run,
 }

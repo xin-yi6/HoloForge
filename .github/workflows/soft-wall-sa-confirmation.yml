@@ -1,0 +1,68 @@
+name: Soft-wall S-A confirmation
+
+# Manual-dispatch diagnostic for docs/numerics/soft-wall-refinement-sa-contract.md.
+# Runs the frozen reserved confirmation cases and the seen regression
+# controls on the contract's CI builds, and uploads the JSON evidence. It
+# evaluates a candidate rule side by side with the production rule; it does
+# not change or enforce any production gate. Not a required check.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  confirm:
+    name: S-A confirmation (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: R3-linux-numpy-2.3.5-scipy-1.16.3
+            os: ubuntu-latest
+            pins: "numpy==2.3.5 scipy==1.16.3"
+          - label: R4-linux-default
+            os: ubuntu-latest
+            pins: ""
+          - label: R5-macos-x86_64
+            os: macos-15-intel
+            pins: ""
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install HoloForge and the build's dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+          if [ -n "${{ matrix.pins }}" ]; then
+            python -m pip install ${{ matrix.pins }}
+          fi
+
+      - name: Run regression controls and reserved confirmation cases
+        run: |
+          mkdir -p sa-confirmation
+          python tools/environment_report.py > sa-confirmation/environment.json
+          python tools/gate_calibration.py soft-wall-sa --adverse > sa-confirmation/regression.json
+          python tools/gate_calibration.py soft-wall-sa --case-set confirmation > sa-confirmation/confirmation.json
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: sa-confirmation-${{ matrix.label }}
+          path: sa-confirmation/
+          if-no-files-found: error
