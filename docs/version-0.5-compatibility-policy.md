@@ -33,8 +33,8 @@ requests, tags, and default manual runs therefore use four jobs, all on Python
 3.11.
 
 A separate, diagnostic **Gate telemetry** workflow runs on Ubuntu and macOS
-for changes to code, tests, tools or packaging, weekly, and on manual
-dispatch. It runs the platform-sensitive Gubser--Nellore and HHH optical
+for pull requests that change code, tests, tools, packaging or the workflow
+itself, weekly, and on manual dispatch. Only this workflow is path-filtered. It runs the platform-sensitive Gubser--Nellore and HHH optical
 verifiers and the degree-64 spectral soft-wall case. It uploads their JSON
 records, verifier exit codes, the environment report and a gate-margin
 summary. A verifier FAIL there is recorded, not enforced. The workflow fails

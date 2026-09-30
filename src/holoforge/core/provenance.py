@@ -12,7 +12,7 @@ import platform
 import re
 import subprocess
 import sys
-from typing import Any, Callable, Dict, Mapping, Optional, Tuple
+from typing import Any, Callable, Dict, List, Mapping, Optional, Tuple
 import warnings
 
 import numpy as np
@@ -152,31 +152,38 @@ def _source_identity() -> Tuple[Tuple[str, str], ...]:
     )
 
 
+def package_source_files(package_directory: Path) -> List[str]:
+    """Return the sorted package-relative paths covered by the source digest.
+
+    These are the ``.py`` sources and bundled ``.json`` data; bytecode caches
+    and every other file type are excluded.
+    """
+
+    return sorted(
+        path.relative_to(package_directory).as_posix()
+        for path in package_directory.rglob("*")
+        if path.suffix in _SOURCE_SUFFIXES
+        and path.is_file()
+        and "__pycache__" not in path.relative_to(package_directory).parts
+    )
+
+
 def package_source_digest(package_directory: Path) -> str:
     """Hash Python sources and bundled JSON data by package-relative path.
 
     The digest identifies the bytes that were actually imported, whether they
-    come from a checkout, a source distribution, or a wheel.  Bytecode caches
-    and other file types are excluded.
+    come from a checkout, a source distribution, or a wheel.
     """
 
     try:
-        files = sorted(
-            (path.relative_to(package_directory).as_posix(), path)
-            for path in package_directory.rglob("*")
-            if path.suffix in _SOURCE_SUFFIXES
-            and path.is_file()
-            and "__pycache__" not in path.relative_to(package_directory).parts
-        )
+        files = package_source_files(package_directory)
         if not files:
             return UNKNOWN
         digest = hashlib.sha256()
-        for relative, path in files:
+        for relative in files:
+            content = (package_directory / relative).read_bytes()
             digest.update(relative.encode("utf-8") + b"\0")
-            digest.update(
-                hashlib.sha256(path.read_bytes()).hexdigest().encode("ascii")
-                + b"\n"
-            )
+            digest.update(hashlib.sha256(content).hexdigest().encode("ascii") + b"\n")
     except OSError:
         return UNKNOWN
     return digest.hexdigest()

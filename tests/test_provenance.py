@@ -1,5 +1,6 @@
 """Tests for privacy-safe numerical runtime provenance."""
 
+import configparser
 from pathlib import Path
 import re
 import shutil
@@ -12,8 +13,12 @@ from holoforge.core.provenance import (
     backend_fields,
     git_source_state,
     package_source_digest,
+    package_source_files,
     runtime_versions,
 )
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class RuntimeProvenanceTests(unittest.TestCase):
@@ -124,6 +129,48 @@ class SourceDigestTests(unittest.TestCase):
     def test_empty_package_is_unknown(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             self.assertEqual(package_source_digest(Path(directory)), UNKNOWN)
+
+    def test_digested_files_are_exactly_those_a_wheel_installs(self) -> None:
+        """A checkout and a wheel of the same source must share one digest.
+
+        The digest depends only on relative paths and contents, so this holds
+        when the checkout's digested file set equals the wheel's installed set:
+        the modules of every package plus the declared package data.
+        """
+
+        package = ROOT / "src" / "holoforge"
+        config = configparser.ConfigParser()
+        config.read(ROOT / "setup.cfg", encoding="utf-8")
+        patterns = [
+            line.strip()
+            for line in config["options.package_data"]["holoforge"].splitlines()
+            if line.strip()
+        ]
+
+        def is_package(directory: Path) -> bool:
+            parts = directory.relative_to(package).parts
+            chain = [package.joinpath(*parts[:depth]) for depth in range(len(parts) + 1)]
+            return all((item / "__init__.py").is_file() for item in chain)
+
+        directories = [package] + [
+            path
+            for path in package.rglob("*")
+            if path.is_dir() and "__pycache__" not in path.parts
+        ]
+        expected = {
+            module.relative_to(package).as_posix()
+            for directory in directories
+            if is_package(directory)
+            for module in directory.glob("*.py")
+        }
+        for pattern in patterns:
+            expected |= {
+                path.relative_to(package).as_posix()
+                for path in package.glob(pattern)
+                if path.is_file()
+            }
+        self.assertTrue(any(name.endswith(".json") for name in expected))
+        self.assertEqual(set(package_source_files(package)), expected)
 
 
 @unittest.skipUnless(shutil.which("git"), "Git is not available")

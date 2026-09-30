@@ -5,19 +5,11 @@ name: Gate telemetry
 # compared from evidence. A verifier FAIL is recorded, not propagated: this
 # workflow never replaces, relaxes or enforces a scientific verdict. It fails
 # only when the telemetry tooling itself breaks. Required checks remain in
-# ci.yml.
+# ci.yml, whose triggers are deliberately not path-filtered; path filters
+# apply only to this diagnostic workflow.
 
 on:
   pull_request:
-    branches: [main]
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "tools/**"
-      - "setup.cfg"
-      - "pyproject.toml"
-      - ".github/workflows/gate-telemetry.yml"
-  push:
     branches: [main]
     paths:
       - "src/**"
