@@ -195,6 +195,7 @@
     "The truncated action omits higher operators such as F^3 that can affect the rho-pion-pion coupling.",
     "The benchmark excludes Model B, strange quarks, baryons, glueballs, anomaly terms, finite temperature or density, and improved holographic QCD.",
     "Passing reproduces the selected effective-model calculation and does not empirically validate QCD or establish phenomenological precision.",
+    "Following EKSS, the chiral scalar's operator normalization is implicitly a = 1, so the printed m_q = 2.29 MeV and sigma = (327 MeV)^3 are model-convention parameters, not QCD's quark mass and condensate. Cherman, Cohen and Werbos (Phys. Rev. C 79, 045203 (2009)) find that large-N_c matching requires a = sqrt(N_c)/(2 pi), which gives m_q = 8.3 MeV and sigma = (213 MeV)^3 from the same fit. The model fixes only a*m_q and sigma/a, so the GMOR product m_q*sigma is convention-independent; neither parameter carries QCD's renormalization-scale dependence.",
     "The implementation and record are AI-assisted; Xin-Yi Liu approved the numerical result and model-card provenance on 2026-08-20 without widening the stated support or publication scope."
   ],
   "provenance": {

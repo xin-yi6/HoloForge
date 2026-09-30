@@ -21,7 +21,7 @@ HARD_WALL_CHIRAL_MODEL_CARD = ModelCardReference(
     identifier="qcd.hard-wall-chiral.ekss-model-a",
     schema_version="0.1",
     repository_path="domains/qcd/hard_wall_chiral/model-card.json",
-    sha256="4d8f74df62a1a5369b10d82cc98ad230156431b713bb951eee8518a19daee021",
+    sha256="9deaa54d3a474543b67aa2c68fbd4a52f5736b13ae354c0fcb4fdad5b7eefe88",
 )
 
 

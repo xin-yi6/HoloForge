@@ -22,6 +22,13 @@ All notable changes to HoloForge are recorded here.
 
 ### Fixed
 
+- The hard-wall chiral model card and guide now state the operator-
+  normalization caveat for the printed `m_q` and `sigma` (Cherman, Cohen and
+  Werbos, *Phys. Rev. C* 79, 045203 (2009)). These are EKSS-convention
+  parameters, not QCD's quark mass and condensate; the checked observables and
+  the GMOR product are unaffected. The model card's pinned hash is updated. No
+  numerical result or gate changes.
+
 - The soft-wall human-readable summary now reports each acceptance gate
   separately. A failed spectral refinement check is no longer shown as
   `FAIL: max relative error` when the analytic-spectrum tolerance passes.
