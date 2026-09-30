@@ -133,6 +133,61 @@ class OpticalOBTests(unittest.TestCase):
         self.assertEqual(rule(1.0e-4, 1.9e-4, 9.0e-5, 9.0e-5), "polynomial-defect")
         self.assertEqual(rule(1.0e-4, 3.0e-5, 7.0e-5, 7.0e-5), "unresolved")
 
+    def test_zero_residual_is_not_classified_as_a_defect(self) -> None:
+        rule = calibration.optical_ob_interpretation
+        self.assertEqual(rule(0.0, 0.0, 0.0, 0.0), "zero-residual")
+        self.assertEqual(rule(0, 0, 0, 0), "zero-residual")
+        self.assertEqual(rule(0.0, 1.0e-6, 1.0e-6, 1.0e-6), "unresolved")
+
+    def test_invalid_magnitudes_are_rejected(self) -> None:
+        rule = calibration.optical_ob_interpretation
+        for bad in (float("nan"), float("inf"), -1.0e-6, complex(1.0e-6, 0.0), None, True, "1e-6"):
+            for position in range(4):
+                arguments = [1.0e-4, 1.0e-4, 1.0e-6, 1.0e-6]
+                arguments[position] = bad
+                with self.assertRaises(ValueError, msg=(bad, position)):
+                    rule(*arguments)
+
+    def test_rejected_interpretation_stops_the_record(self) -> None:
+        background = type(
+            "NormalState", (), {
+                "scalar_profile": staticmethod(optical.zero_scalar_profile),
+                "scalar_response": 0.0,
+                "horizon_scalar": 0.0,
+            },
+        )
+
+        def reject(*arguments):
+            raise ValueError("injected")
+
+        with patch.object(calibration, "optical_ob_interpretation", reject):
+            record = calibration.optical_ob_case_record(40.0, 64, background, {})
+        self.assertIsNone(record["interpretation"])
+        self.assertIn("injected", record["stopped"])
+        self.assertTrue(calibration.diagnostic_errors({"records": [record]}))
+
+    def test_saved_evidence_classifications_are_preserved(self) -> None:
+        rule = calibration.optical_ob_interpretation
+        count = 0
+        for build in ("B1", "B3"):
+            path = ROOT / f"docs/generated/optical-ob/{build}-optical-ob.json"
+            records = json.loads(path.read_text())["result"]["records"]
+            for record in records:
+                spike = next(
+                    node for node in record["measurement_2"]
+                    if node["check_index"] == record["spike_check_index"]
+                )
+                verdict = rule(
+                    spike["double_regular_residual_abs"],
+                    spike["high_precision_regular_residual_abs"],
+                    spike["residual_difference_abs"],
+                    spike["derivative_difference_residual_abs"],
+                )
+                self.assertEqual(verdict, record["interpretation"])
+                self.assertEqual(verdict, "polynomial-defect")
+                count += 1
+        self.assertEqual(count, 16)
+
     def test_reserved_cases_and_adverse_controls_are_refused(self) -> None:
         for arguments in (["optical-ob", "--case-set", "confirmation"], ["optical-ob", "--adverse"]):
             output = io.StringIO()
@@ -194,6 +249,33 @@ class DiagnosticStatusTests(unittest.TestCase):
         )
         self.assertEqual(status, 2)
         self.assertEqual(payload["status"], "diagnostic-error")
+
+    def test_non_finite_complex_values_are_errors(self) -> None:
+        nan, inf = float("nan"), float("inf")
+        for value in (complex(nan, 0.0), complex(0.0, inf), np.complex128(complex(0.0, nan)),
+                      np.complex64(complex(inf, 0.0)), [1.0, complex(nan, nan)],
+                      np.array([1.0 + 0.0j, complex(0.0, nan)])):
+            self.assertTrue(calibration.diagnostic_errors({"residual": value}), value)
+        for value in (complex(1.0, -2.0), np.complex128(3.0j), np.float64(1.0), np.array([1.0j])):
+            self.assertEqual(calibration.diagnostic_errors({"residual": value}), [])
+
+    def test_non_finite_complex_result_exits_with_strict_json(self) -> None:
+        def strict(token):
+            raise AssertionError(f"non-strict JSON token {token}")
+
+        output = io.StringIO()
+        result = {"records": [{"identity_check": {"exact_match": True},
+                               "residual": complex(float("nan"), 0.0),
+                               "scale": np.float64(float("inf"))}]}
+        with patch.dict(calibration.RUNNERS, {"optical-ob": lambda case_set, adverse: result}):
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(io.StringIO()):
+                status = calibration.main(["optical-ob"])
+        payload = json.loads(output.getvalue(), parse_constant=strict)
+        self.assertEqual(status, 2)
+        self.assertEqual(payload["status"], "diagnostic-error")
+        self.assertEqual(payload["result"]["records"][0]["residual"], ["nan", 0.0])
+        self.assertEqual(payload["result"]["records"][0]["scale"], "inf")
+        self.assertEqual(len(payload["diagnostic_errors"]), 2)
 
     def test_large_scientific_values_are_not_errors(self) -> None:
         status, payload, _ = self._run(

@@ -1,38 +1,41 @@
 # Optical single-node diagnosis (O-B): report
 
 - **Status:** completed under the [frozen plan](optical-ob-diagnosis-plan.md)
-  (commit `18d02f5`, SHA-256 `a158b07a…d7118`). AI-assisted (Claude); awaiting
-  Codex review. **Diagnosis only.** No production solver, gate, threshold,
-  record or verdict changed. On Accelerate the optical verifier's FAIL
-  remains the recorded result.
+  (commit `18d02f5`, SHA-256 `a158b07a…d7118`). AI-assisted (Claude); revised
+  after Codex review (Section 6). **Diagnosis only.** No production solver,
+  gate, threshold, record or verdict changed. On Accelerate the optical
+  verifier's FAIL remains the recorded result.
 - **Evidence:** [`B1-optical-ob.json`](../generated/optical-ob/B1-optical-ob.json)
   (Accelerate) and [`B3-optical-ob.json`](../generated/optical-ob/B3-optical-ob.json)
   (OpenBLAS wheels), from `python tools/gate_calibration.py optical-ob`.
   - Both runs record plan commit `18d02f5` with `src/` unmodified, the plan
     hash above, and tool SHA-256 `8ee96206…34f78`.
-  - The tool was not yet committed when it ran. This change commits it with
-    identical bytes.
+  - That tool version is commit `a651a51`, byte-identical to the file that
+    ran. Later tool corrections (Section 6) postdate the evidence, which is
+    preserved unchanged.
 - **Scientific boundary:** a statement about the numerics of one benchmark
-  check. It is not a physical result, and it does not validate or invalidate
+  check. It is not a physical result. O-B does not reassess the accuracy of
   the conductivity.
 
 ## Answer
 
-Every case on both builds (16 case-build pairs) falls in category **(b), a
-genuine polynomial defect**, under the plan's prospective rules:
-- The polynomial through the stored solution does not satisfy the equation at
-  the spike node. Evaluated in exact (50-digit) arithmetic, its raw residual
-  is about `1e-4`.
-- Double-precision evaluation changes it by only 1–5%.
+In every sampled case on both builds (16 case-build pairs), the result falls
+in category **(b), a genuine polynomial defect**, under the plan's
+prospective rules:
+- The exact interpolating polynomial through the stored solution does not
+  satisfy the equation at the spike node. A 50-digit evaluation of it gives a
+  raw residual of about `1e-4`.
+- Double-precision evaluation changes that by only 1–5%.
 - The value is therefore **not an evaluation artifact**. More precise
   evaluation of the residual would not change the verdict.
 
 Two further observations, from the same evidence:
-- **The frequency dependence is a denominator effect.** The raw defect is
-  nearly the same at every frequency, while the normalizing scale varies
-  more than 30-fold.
+- **In the sampled frequencies, the frequency dependence is a denominator
+  effect.** The raw defect is nearly the same at every sampled frequency,
+  while the normalizing scale varies more than 30-fold.
 - **The defect is already present at collocation nodes near the UV end,**
-  where an exactly solved discrete system would have none.
+  where an exactly solved discrete system would have none (with the caveat
+  in Section 4, item 1).
 
 Its origin within the discrete system is not established (Section 4).
 
@@ -51,7 +54,7 @@ Its origin within the discrete system is not established (Section 4).
   - **Fixture.** The fixture passed before any production case was examined:
     - agreement with the double interpolant at a well-separated point:
       `1.2e-14`, against a limit of `1e-10`;
-    - exact reproduction of a known degree-6 polynomial on degree-640 nodes,
+    - reproduction of a known degree-6 polynomial on degree-640 nodes,
       off-node near the UV end, at an exact node, and mid-element:
       `8.4e-40`, against `1e-30`.
   - **Correction.** The fixture needed one correction, in its own test
@@ -60,25 +63,34 @@ Its origin within the discrete system is not established (Section 4).
   changes `p`, `p'`, `p''` and `R_a` by at most `2.5e-34` relative.
 - **Stop conditions:** none reached.
 
-Choices made while implementing, before any plan case was run:
+### Implementation choices and deviations
+
+Choices made before any plan case was run:
 - **Neighbours.** The spike's four neighbours are check indices 1, 2, 4 and
   5. Indices 1 and 2 lie in the three excluded endpoint nodes and are
   reported for diagnosis only.
 - **"Accounts for".** This rule (Section 4 of the plan) is taken to mean
   that the residual change implied by the derivative differences alone is
   within a factor of 2 of the double-minus-50-digit residual difference.
-- **Measurement 1.**
-  - It is computed at every check node, but saved as maxima, argmaxima and
-    the spike's full values. The first 12 nodes are also saved under
-    measurement 4.
-  - The plan's relative identity defect `|R_A - (1-u)^s R_a| / |R_A|` is
-    large wherever `|R_A|` itself is at rounding level. The defect under the
-    common A-form denominator is therefore also reported.
+- **Identity defect.** The plan's relative identity defect
+  `|R_A - (1-u)^s R_a| / |R_A|` is large wherever `|R_A|` itself is at
+  rounding level. The defect under the common A-form denominator is
+  therefore also reported.
 - **Coverage.** B3 ran all four measurements (the plan required 1 and 2).
   The 70-digit cross-check was added.
 - **Smoke test.** A normal-state case (`omega/T = 40`, degree 64) served as
   a development smoke test. It is not a plan case, and its values are not
   used here.
+
+**Deviation: per-node arrays were not saved.**
+- Measurement 1 of the plan asks for the raw numerators to be recorded at
+  every check node. They were computed at every node, but the evidence saves
+  only:
+  - their maxima and argmaxima;
+  - the spike's full values;
+  - the first 12 checked nodes (under measurement 4).
+- The all-node arrays are not in the evidence. Recovering them requires a
+  rerun, which this revision does not perform.
 
 ## 2. Measurements
 
@@ -87,8 +99,10 @@ Terminology:
   UV end. It is `u = 2.355e-5` at degree 640 and `u = 3.118e-5` at degree 512.
 - `R_A` is the production A-form numerator, and `R_a` the regular-factor
   numerator.
-- "50-digit" means the exact polynomial through the stored double nodes and
-  values, evaluated with the same double coefficient inputs.
+- "50-digit" means a 50-digit evaluation of the exact interpolating
+  polynomial through the stored double nodes and values. Its coefficient
+  inputs are the same doubles, converted exactly. The nodes and coordinates
+  follow the production check's convention (Section 4, item 1).
 
 | Case (`omega/T`) | Raw `\|R_A\|`, B1 / B3 | A-form scale, B1 | Production normalized, B1 / B3 | 50-digit `\|R_a\|`, B1 / B3 | 50-digit / double, B1 / B3 |
 | --- | --- | ---: | --- | --- | --- |
@@ -103,7 +117,7 @@ Terminology:
 
 **Measurement 1: raw numerators and a common normalization.**
 - At the spike, `|R_A|` and `|R_a|` agree to within `1.4e-8` relative, and
-  under the common denominator they agree everywhere to `1.3e-13`. Both
+  under the common denominator they agree at every node to `1.3e-13`. Both
   forms' common-denominator maxima lie at check index 3 and agree to
   `3.5e-10` relative.
 - The regular form's own denominator at the spike is `6.9e3`–`9.5e3`. Its
@@ -112,7 +126,7 @@ Terminology:
   regular form" values in the Batch 2a report. That report's open question
   is closed: the two forms describe the same defect.
 
-**Measurement 2: exact polynomial at the spike.**
+**Measurement 2: the interpolating polynomial at the spike.**
 - The 50-digit residual is 0.6–4.9% larger than the double one.
 - The residual change implied by the derivative differences equals the
   double-minus-50-digit difference to six digits (ratio `1.000000`). The
@@ -136,18 +150,19 @@ and `2.3e-5`–`2.5e-5`.
 
 **Measurement 3: input sensitivity versus evaluation error.** Both are
 small compared with the defect:
-- **Input sensitivity.** Relative `eps` perturbations of the stored values
-  (8 draws) move the spike numerator by `1.3e-6`–`1.1e-5`. On the normalized
-  maximum they reproduce the Batch 2a figures, for example `2.8e-7` at
-  ω/T = 60 on B1.
+- **Input sensitivity.** Eight random relative `eps` perturbations of the
+  stored values move the spike numerator by `1.3e-6`–`1.1e-5`. On the
+  normalized maximum they reproduce the Batch 2a figures, for example
+  `2.8e-7` at ω/T = 60 on B1.
 - **Evaluation error.** At fixed inputs it is `6.1e-7`–`4.8e-6`.
 
 **Measurement 4: local structure** over the first 12 checked nodes (check
 indices 3–14):
 - **Alternation.** Checked nodes that coincide with collocation nodes have
   raw `|R_A|` of `3.7e-7`–`3.3e-5` at degree 640, the largest on collocation
-  node 2 in every case. Nodes between collocation nodes, at 0.52–0.63 of the local spacing,
-  have `1.3e-5`–`1.0e-4`, the largest at the spike in every case.
+  node 2 in every case. Nodes between collocation nodes, at 0.52–0.63 of the
+  local spacing, have `1.3e-5`–`1.0e-4`, the largest at the spike in every
+  case.
 - **Normalized values.** These fall quickly inward because the scale grows.
   At ω/T = 60 they are `1.0e-5`, `5.8e-8` and `3.4e-8` at check indices 3–5,
   and at most `5e-9` beyond.
@@ -158,23 +173,30 @@ indices 3–14):
   never smaller than the double one by more than a few percent, let alone
   10-fold.
 - **Established by the prospective rule: polynomial defect, category (b).**
-  This holds for all 16 case-build pairs.
-- **The frequency dependence is a denominator effect.**
+  This holds for all 16 sampled case-build pairs.
+- **In the sampled cases, the frequency dependence is a denominator effect.**
   - The raw defect at the spike is `9.2e-5`–`1.05e-4` (50-digit:
-    `9.5e-5`–`1.07e-4`) from ω/T = 50 to 70 on both builds.
+    `9.5e-5`–`1.07e-4`) at the seven sampled frequencies from ω/T = 50 to 70,
+    on both builds.
   - The production scale varies from `4.96` to `157`, so the normalized value
     varies about 30-fold.
-  - The scale is smallest at ω/T = 59. From the saved Batch 2a terms, the
-    near-UV potential `omega^2/F^2 - 2 psi^2/(u^2 F)` at the spike changes
-    sign between ω/T = 59 and 60. There the two cancelling terms, `|A''|`
-    and the potential term, are smallest: about `2.0` at 59 and `4.7` at 60.
-    This is inferred from the saved term magnitudes and `omega^2`; it was
-    not measured separately.
-  - The unused frequency ω/T = 59 therefore fails because the local scale is
-    smallest there, not because the defect is largest.
-- **Input sensitivity (c) is minor.** `eps` perturbations and the difference
-  between builds each change the defect by at most about 10%. Most of it is
-  common to B1 and B3.
+  - Among the sampled frequencies, the scale is smallest at ω/T = 59. From
+    the saved Batch 2a terms, the near-UV potential
+    `omega^2/F^2 - 2 psi^2/(u^2 F)` at the spike changes sign between
+    ω/T = 59 and 60. There the two cancelling terms, `|A''|` and the
+    potential term, are smallest: about `2.0` at 59 and `4.7` at 60. This is
+    inferred from the saved term magnitudes and `omega^2`; it was not
+    measured separately.
+  - The unused frequency ω/T = 59 therefore fails because its local scale is
+    the smallest of the sampled set, not because its defect is the largest.
+    Frequencies between the sampled ones were not examined.
+- **Input sensitivity (c): small within the tested perturbations.**
+  - The eight random `eps` perturbations and the B1-versus-B3 difference each
+    change the defect by at most about 10%, and most of the defect is common
+    to both builds.
+  - This is not a worst-case bound. It does not test the backward error of
+    the linear solve, which could perturb the stored values by much more
+    than `eps`.
 
 ## 4. What the evidence suggests but does not establish
 
@@ -183,36 +205,47 @@ indices 3–14):
      differentiation matrices. Its interpolating polynomial would satisfy
      the equation exactly at every interior collocation node.
    - The 50-digit residuals on collocation nodes 1 and 2 (`2.5e-4`–`3.0e-4`
-     and `2.1e-5`–`2.7e-5`) therefore measure how the discrete system was
+     and `2.1e-5`–`2.7e-5`) therefore reflect how the discrete system was
      built and solved in double precision.
+   - **Caveat on conventions.** O-B follows the production check's
+     convention: local nodes `fl((u_j - lower)/width)` and a width-scaled
+     local derivative. The collocation itself uses the physical nodes `u_j`
+     and derivatives in `u`. The two polynomials differ only through
+     node-position rounding. That difference is expected to be negligible
+     here but was not measured; O-C would use one consistent convention.
    - The spike lies between these two nodes, and its value lies between
      theirs. This points to a UV-end boundary layer of defect in the stored
      solution, mostly inside the three excluded check nodes. The first
      included node catches its tail.
-2. **The defect grows with degree** at ω/T = 60:
-   - spike `1.05e-4` at degree 640 against `6.0e-5` at degree 512;
+2. **At ω/T = 60 the defect is larger at degree 640 than at 512:**
+   - spike `1.05e-4` against `6.0e-5`;
    - collocation node 1: `2.9e-4` against `5.9e-5`.
 
-   An under-resolved discretization would shrink with degree. Growth is
-   consistent with rounding amplified by the degree-N differentiation
-   operators near the endpoint. Only two degrees were compared, at different
-   node positions, so no scaling law is claimed.
+   If both degrees were in the convergent regime, a truncation-dominated
+   defect would be expected to shrink with degree, and growth would point to
+   rounding amplified by the degree-N differentiation operators near the
+   endpoint. Two degrees at different node positions do not establish that
+   regime, so under-resolution is not ruled out and no scaling law is
+   claimed.
 3. **Candidate mechanisms not distinguished by O-B:**
-   - rounding in the double-precision differentiation matrices of the
-     collocation system;
-   - the backward error of the linear solve.
+   - rounding in the double-precision differentiation matrices;
+   - rounding in operator assembly and row equilibration;
+   - the backward error of the linear solve;
+   - under-resolution.
 
    The largely build-independent value favours a deterministic contribution
-   but does not decide between them. The background scalar profile is a
-   `solve_bvp` cubic spline, which is only C¹. It enters the potential
-   through `2 psi^2/(u^2 F)`, about `200` at the spike (inferred from the
-   saved terms and `omega^2`). It cannot produce residuals *on* collocation
-   nodes, where the same values are collocated, but it could contribute
-   between them.
+   but does not decide among them.
 
-The conductivity itself is not in question here. Its resolution change is
-about `1.2e-12`, and the spectral-versus-Riccati difference is `1.46e-6`
-against `5e-4`.
+   The background scalar profile is a `solve_bvp` cubic spline, which is only
+   C¹. It enters the potential through `2 psi^2/(u^2 F)`, about `200` at the
+   spike (inferred from the saved terms and `omega^2`). It cannot produce
+   residuals *on* collocation nodes, where the same values are collocated,
+   but it could contribute between them.
+
+O-B does not reassess the conductivity. For context only, the existing
+records report a resolution change of about `1.2e-12` and a
+spectral-versus-Riccati difference of `1.46e-6` against `5e-4`. Neither was
+re-examined here.
 
 ## 5. Consequences and next decision (for owner and Codex review)
 
@@ -220,21 +253,46 @@ against `5e-4`.
   example extended precision), and reading the regular-form normalization
   as evidence of a smaller defect.
 - **Not supported:**
-  - Widening the `1e-5` threshold. The normalized value is governed by the
-    local scale at one node, so any fixed threshold passes or fails
-    according to how close the frequencies in use come to the potential's
-    sign change, not according to the defect.
+  - Widening the `1e-5` threshold. In the sampled cases the normalized value
+    is governed by the local scale at one node. A fixed threshold would
+    therefore pass or fail according to how close the frequencies in use
+    come to the potential's sign change, not according to the defect.
   - Excluding more nodes is not supported by this evidence alone.
 - **Candidates for a separate, prospectively calibrated proposal:**
-  - **Separate the construction and solve contributions.** A bounded
-    follow-up diagnosis (O-C) would do this at collocation nodes 1–3: the
-    50-digit discrete residual of the stored solution with the production
-    double matrices, compared with the exact matrices. This determines
-    whether a construction fix (in production) or a change of gate
-    definition is the principled response. It can therefore change the
-    decision, which is why it is recommended before any gate change.
+  - **Separate the contributions.** A bounded follow-up diagnosis (O-C)
+    would separate operator construction, assembly and equilibration, and
+    the solve, using consistent conventions and complex residual
+    differences. This bears on whether the principled response is a solver
+    improvement, a construction repair or an independently justified gate
+    redesign. It can therefore change the decision, which is why it is
+    recommended before any gate change.
   - **Revise the normalization.** A gate normalization that does not
     collapse where the local potential changes sign, with its own adverse
     controls.
 
 Nothing here authorizes a gate, threshold, solver or record change.
+
+## 6. Post-review corrections (30 September 2026)
+
+After Codex's review of `a651a51`, the tool was corrected. The evidence and
+the frozen plan are unchanged.
+- **Non-finite guard.** The diagnostic now treats a complex value with a
+  non-finite real or imaginary part as a non-finite diagnostic number, as it
+  already did for real values. Such a result gives `diagnostic-error` and
+  exit status 2.
+- **Strict JSON.** Output is strict JSON: non-finite parts are written as
+  strings, including NumPy scalars and arrays.
+- **Interpretation rule.**
+  - It returns `zero-residual`, not a defect, when both residuals are
+    exactly zero.
+  - It rejects non-finite, negative or non-real magnitudes. The case record
+    then stops with a diagnostic error.
+- **Scope of the gap.** This was a gap in a helper that predates O-B. The
+  saved O-B evidence contains no non-finite values.
+- **Classifications preserved.** A regression test reapplies the corrected
+  rule to the saved spike values and recovers the saved classification in
+  all 16 cases.
+- **Reproduction check (executor-reported, output not saved).** On B1, the
+  corrected tool's `optical-ob` result section reproduces the saved B1
+  evidence exactly, apart from the added description of the zero-residual
+  rule.

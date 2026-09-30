@@ -1173,8 +1173,20 @@ def _decimal_node_evaluation(profile, regular, frequency, check_index, digits, w
 
 def optical_ob_interpretation(double_abs: float, high_abs: float, residual_difference: float,
                               derivative_part: float) -> str:
-    """Apply the plan's prospective interpretation rules (Section 4)."""
+    """Apply the plan's prospective interpretation rules (Section 4).
 
+    Every magnitude must be a finite, non-negative real number; otherwise
+    ``ValueError`` is raised. When both residuals are exactly zero there is
+    no defect to classify, and ``"zero-residual"`` is returned.
+    """
+
+    for magnitude in (double_abs, high_abs, residual_difference, derivative_part):
+        if (isinstance(magnitude, (bool, np.bool_))
+                or not isinstance(magnitude, (int, float, np.integer, np.floating))
+                or not math.isfinite(float(magnitude)) or float(magnitude) < 0.0):
+            raise ValueError(f"invalid residual magnitude {magnitude!r}")
+    if double_abs == 0.0 and high_abs == 0.0:
+        return "zero-residual"
     accounts = (residual_difference > 0.0
                 and 1.0 / OPTICAL_OB_DEFECT_FACTOR
                 <= derivative_part / residual_difference
@@ -1307,12 +1319,16 @@ def optical_ob_case_record(frequency: float, degree: int, background, weight_cac
             for name in ("a", "a1", "a2", "residual")
         )
     double_abs = at_spike["double_regular_residual_abs"]
-    interpretation = optical_ob_interpretation(
-        double_abs,
-        at_spike["high_precision_regular_residual_abs"],
-        at_spike["residual_difference_abs"],
-        at_spike["derivative_difference_residual_abs"],
-    )
+    rejected = None
+    try:
+        interpretation = optical_ob_interpretation(
+            double_abs,
+            at_spike["high_precision_regular_residual_abs"],
+            at_spike["residual_difference_abs"],
+            at_spike["derivative_difference_residual_abs"],
+        )
+    except ValueError as error:
+        interpretation, rejected = None, f"interpretation rejected: {error}"
 
     # Measurement 3: input sensitivity (eps perturbations, as in Batch 2a).
     rng = np.random.default_rng(20260930 + int(frequency * 10) + degree)
@@ -1365,6 +1381,7 @@ def optical_ob_case_record(frequency: float, degree: int, background, weight_cac
         "measurement_4": measurement_4,
         "interpretation": interpretation,
         "condition_number": float(response.condition_number),
+        **({"stopped": rejected} if rejected else {}),
     }
 
 
@@ -1455,6 +1472,7 @@ def optical_ob_run(case_set: str, adverse: bool) -> Dict[str, Any]:
             "evaluation_artifact": "50-digit |R_a| <= double |R_a| / 10 and derivative part "
                                    "within a factor 2 of the residual difference",
             "polynomial_defect": "50-digit |R_a| within a factor 2 of double |R_a|",
+            "zero_residual": "both residuals exactly zero; no defect to classify",
             "otherwise": "unresolved",
         },
         "records": records,
@@ -1475,16 +1493,24 @@ RUNNERS: Dict[str, Callable[[str, bool], Dict[str, Any]]] = {
 
 
 def _jsonable(value: Any) -> Any:
+    """Return a strict-JSON form; non-finite numbers become strings.
+
+    Complex numbers become ``[real, imaginary]``, each part converted the
+    same way, so a non-finite part never reaches the output as a bare token.
+    """
+
     if isinstance(value, dict):
         return {str(key): _jsonable(item) for key, item in value.items()}
     if isinstance(value, (list, tuple)):
         return [_jsonable(item) for item in value]
-    if isinstance(value, (np.floating, np.integer)):
-        return value.item()
+    if isinstance(value, np.ndarray):
+        return _jsonable(value.tolist())
     if isinstance(value, np.bool_):
         return bool(value)
+    if isinstance(value, (np.floating, np.integer, np.complexfloating)):
+        return _jsonable(value.item())
     if isinstance(value, complex):
-        return [value.real, value.imag]
+        return [_jsonable(value.real), _jsonable(value.imag)]
     if isinstance(value, float) and not math.isfinite(value):
         return str(value)
     return value
@@ -1523,9 +1549,13 @@ def diagnostic_errors(result: Any, location: str = "result") -> List[str]:
             if key in ("identity_fixture", "identity_check"):
                 continue
             errors.extend(diagnostic_errors(value, f"{location}.{key}"))
-    elif isinstance(result, (list, tuple)):
+    elif isinstance(result, (list, tuple, np.ndarray)):
         for index, value in enumerate(result):
             errors.extend(diagnostic_errors(value, f"{location}[{index}]"))
+    elif isinstance(result, (complex, np.complexfloating)):
+        value = complex(result)
+        if not (math.isfinite(value.real) and math.isfinite(value.imag)):
+            errors.append(f"{location} is not finite")
     elif isinstance(result, (float, np.floating)) and not math.isfinite(float(result)):
         errors.append(f"{location} is not finite")
     return errors
@@ -1605,7 +1635,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "wall_seconds": time.perf_counter() - started,
         "result": result,
     }
-    print(json.dumps(_jsonable(payload), indent=2, sort_keys=True))
+    print(json.dumps(_jsonable(payload), indent=2, sort_keys=True, allow_nan=False))
     if errors:
         print("gate calibration diagnostic error: " + "; ".join(errors), file=sys.stderr)
         return 2
