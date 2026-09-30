@@ -202,7 +202,22 @@ cancel.
   two raw residuals are related exactly by a unit-modulus phase, and the two
   forms use different normalizing denominators.
 
-The cause of the single-node value is not yet established.
+The [O-B diagnosis](../numerics/optical-ob-diagnosis-report.md) evaluated
+the exact interpolating polynomial of the stored solution at that node in
+50-digit arithmetic.
+- **Not an evaluation artifact.** The 50-digit residual agrees with the
+  double value to within 5% on every sampled case and build, and the two
+  forms describe the same raw defect.
+- **About `1e-4` at every sampled frequency.** The raw defect barely changes
+  across `omega/T = 50`–`70`; the normalizing scale is what varies. Among the
+  sampled frequencies the scale is smallest at `omega/T = 59`, near where the
+  local potential changes sign.
+- **Present at collocation nodes near the UV end,** where an exactly solved
+  discrete system would have none, and larger at degree 640 than at 512.
+  Two degrees do not rule out under-resolution.
+
+Its origin within the discrete system is not yet established; the report
+lists the candidate mechanisms.
 
 The equation check is retained unchanged. On an Accelerate platform the
 verifier's FAIL is the recorded result, and any amendment needs its own

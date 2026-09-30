@@ -1,0 +1,3715 @@
+{
+  "adverse": false,
+  "case_set": "calibration",
+  "diagnostic_errors": [],
+  "execution": {
+    "installed_wheel_tags": {
+      "numpy": [
+        "cp311-cp311-macosx_11_0_arm64"
+      ],
+      "scipy": [
+        "cp311-cp311-macosx_12_0_arm64"
+      ]
+    },
+    "plan_sha256": "a158b07aae1bba128520328e2edc68e8af41887d1556a77060f3b452d95d7118",
+    "thread_environment": {},
+    "tool_sha256": "8ee96206c86dfc84142e9936c45e41b6a5e8b437c30d6c73e023cfeba8634f78"
+  },
+  "gate": "optical-ob",
+  "identity_scope": "maximum value of each reconstructed residual, not every node",
+  "plan": "docs/numerics/optical-ob-diagnosis-plan.md",
+  "result": {
+    "identity_fixture": {
+      "checks": {
+        "double_agreement_well_separated": {
+          "limit": 1e-10,
+          "max_relative_difference": 8.982152845896987e-15,
+          "passed": true
+        },
+        "exact_polynomial_degree_640": {
+          "limit": 1e-30,
+          "max_relative_difference": 8.3824661189381e-40,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    "interpretation_rule": {
+      "evaluation_artifact": "50-digit |R_a| <= double |R_a| / 10 and derivative part within a factor 2 of the residual difference",
+      "otherwise": "unresolved",
+      "polynomial_defect": "50-digit |R_a| within a factor 2 of double |R_a|"
+    },
+    "records": [
+      {
+        "condition_number": 1793561.5582315694,
+        "degree": 640,
+        "dimensionless_omega": 11.93662073189215,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 8.572009127898897e-07,
+          "reconstructed_maximum": 8.572009127898897e-07
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 8.572009127898897e-07,
+            "a_form_numerator": [
+              -9.914156308354904e-05,
+              -4.892395396901315e-07
+            ],
+            "a_form_numerator_abs": 9.914277021536433e-05,
+            "a_form_scale": 115.65873150168402,
+            "check_index": 3,
+            "identity_defect": 1.091215048456865e-09,
+            "regular_form_common": 8.572009126857859e-07,
+            "regular_form_own_denominator": 1.4458860334614859e-08,
+            "regular_numerator": [
+              -9.914160848722986e-05,
+              -4.799480741723983e-07
+            ],
+            "regular_numerator_abs": 9.91427702033238e-05,
+            "regular_scale": 6856.886912862255
+          },
+          "common_denominator_maximum": {
+            "a_form": 8.572009127898897e-07,
+            "a_form_check_index": 3,
+            "regular_form": 8.572009126857859e-07,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.000977152160997326,
+          "maximum_identity_defect_check_index": 48,
+          "maximum_identity_defect_common_denominator": 9.353905355872885e-16
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.1505966301117443e-05,
+            "derivative_difference_residual_abs": 3.634179314419626e-05,
+            "double": {
+              "a": [
+                0.9950939201173894,
+                -4.5556443224765655e-05
+              ],
+              "a1": [
+                -426.3909307276289,
+                -3.9398382527122893
+              ],
+              "a2": [
+                -109.78450013783862,
+                3389.1605463438927
+              ]
+            },
+            "double_a_form_normalized": 2.3496758304087852e-06,
+            "double_a_form_numerator_abs": 0.00044496100095837787,
+            "double_regular_residual_abs": 0.0004449610009431029,
+            "high_precision": {
+              "a": [
+                0.9950939201173896,
+                -4.555644322476554e-05
+              ],
+              "a1": [
+                -426.3909307277012,
+                -3.9398382527122364
+              ],
+              "a2": [
+                -109.78446379608876,
+                3389.1605462881207
+              ]
+            },
+            "high_precision_a_form_normalized": 2.1577869868259494e-06,
+            "high_precision_a_form_scale": 189.37119316992312,
+            "high_precision_regular_residual": [
+              -0.0004085886531337665,
+              -5.274510712630215e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00040862269630176324,
+            "high_precision_terms_abs": [
+              3390.938194218082,
+              3393.261169660474,
+              78.53146426171017
+            ],
+            "local_coordinate": 1.5059813609310514e-06,
+            "relative_differences": {
+              "a": 2.0889655207035443e-16,
+              "a1": 1.6945589772955338e-13,
+              "a2": 1.0717326763634779e-08
+            },
+            "residual_difference_abs": 3.6341793113989675e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.6023856132418857e-05,
+            "derivative_difference_residual_abs": 1.1880663062852037e-05,
+            "double": {
+              "a": [
+                0.9931675126232083,
+                -6.332178698913315e-05
+              ],
+              "a1": [
+                -426.3913307549956,
+                -3.9245261883132656
+              ],
+              "a2": [
+                -64.88614216633134,
+                3389.185246616995
+              ]
+            },
+            "double_a_form_normalized": 2.8874995135081674e-06,
+            "double_a_form_numerator_abs": 0.0002880489666921267,
+            "double_regular_residual_abs": 0.0002880489666886504,
+            "high_precision": {
+              "a": [
+                0.9931675126232083,
+                -6.332178698913315e-05
+              ],
+              "a1": [
+                -426.3913307549647,
+                -3.924526188313341
+              ],
+              "a2": [
+                -64.8861302856711,
+                3389.185246609483
+              ]
+            },
+            "high_precision_a_form_normalized": 2.7684097625324276e-06,
+            "high_precision_a_form_scale": 99.75722282867434,
+            "high_precision_regular_residual": [
+              -0.0002761567804322296,
+              -2.5840155711634503e-06
+            ],
+            "high_precision_regular_residual_abs": 0.0002761688695620248,
+            "high_precision_terms_abs": [
+              3389.8063138974226,
+              3393.278559829565,
+              33.886236658116935
+            ],
+            "local_coordinate": 6.023916371582572e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 7.237571432488593e-14,
+              "a2": 3.5048204869625475e-09
+            },
+            "residual_difference_abs": 1.1880663062575076e-05
+          },
+          {
+            "check_index": 3,
+            "coordinate": 2.355364227857315e-05,
+            "derivative_difference_residual_abs": 4.144620838752575e-06,
+            "double": {
+              "a": [
+                0.9899568440574547,
+                -9.277684371035491e-05
+              ],
+              "a1": [
+                -426.39144203978566,
+                -3.8990059694226504
+              ],
+              "a2": [
+                41.974094083698425,
+                3389.2154127704434
+              ]
+            },
+            "double_a_form_normalized": 8.572009127898897e-07,
+            "double_a_form_numerator_abs": 9.914277021536433e-05,
+            "double_regular_residual_abs": 9.91427702033238e-05,
+            "high_precision": {
+              "a": [
+                0.9899568440574548,
+                -9.27768437103553e-05
+              ],
+              "a1": [
+                -426.3914420397395,
+                -3.8990059694226717
+              ],
+              "a2": [
+                41.97408993910025,
+                3389.215412783833
+              ]
+            },
+            "high_precision_a_form_normalized": 8.930347145302756e-07,
+            "high_precision_a_form_scale": 115.65872735708473,
+            "high_precision_regular_residual": [
+              -0.00010328620647596384,
+              -4.66191326656116e-07
+            ],
+            "high_precision_regular_residual_abs": 0.00010328725856826913,
+            "high_precision_terms_abs": [
+              3389.475319054219,
+              3393.3031335851733,
+              73.10848018445796
+            ],
+            "local_coordinate": 1.3553777816351313e-05,
+            "relative_differences": {
+              "a": 6.774267403810877e-17,
+              "a1": 1.0828179353249285e-13,
+              "a2": 1.222790966471978e-09
+            },
+            "residual_difference_abs": 4.144620819365747e-06
+          },
+          {
+            "check_index": 4,
+            "coordinate": 3.409527938080803e-05,
+            "derivative_difference_residual_abs": 4.5866196542584575e-06,
+            "double": {
+              "a": [
+                0.9854619412407832,
+                -0.0001336908414127878
+              ],
+              "a1": [
+                -426.38992815254824,
+                -3.8632776451905215
+              ],
+              "a2": [
+                258.09300107695157,
+                3389.224596274973
+              ]
+            },
+            "double_a_form_normalized": 5.299862049804845e-08,
+            "double_a_form_numerator_abs": 2.9015177185528025e-05,
+            "double_regular_residual_abs": 2.9015177113791517e-05,
+            "high_precision": {
+              "a": [
+                0.9854619412407832,
+                -0.0001336908414127878
+              ],
+              "a1": [
+                -426.3899281525591,
+                -3.8632776451904483
+              ],
+              "a2": [
+                258.09299649033306,
+                3389.224596277293
+              ]
+            },
+            "high_precision_a_form_normalized": 4.462109825973209e-08,
+            "high_precision_a_form_scale": 547.4704184708345,
+            "high_precision_regular_residual": [
+              2.4427741331414345e-05,
+              2.1992765891875582e-07
+            ],
+            "high_precision_regular_residual_abs": 2.442873133688375e-05,
+            "high_precision_terms_abs": [
+              3399.0374165119656,
+              3393.3242709549836,
+              288.86385139445
+            ],
+            "local_coordinate": 2.409552033601139e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 2.5453538925363637e-14,
+              "a2": 1.3493876502564673e-09
+            },
+            "residual_difference_abs": 4.58661966277095e-06
+          },
+          {
+            "check_index": 5,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 8.403303034205766e-07,
+            "double": {
+              "a": [
+                0.9796828744163755,
+                -0.00018574070985940218
+              ],
+              "a1": [
+                -426.38392817025453,
+                -3.8173419310044276
+              ],
+              "a2": [
+                648.1117325680805,
+                3389.156276739661
+              ]
+            },
+            "double_a_form_normalized": 3.3537176349191405e-08,
+            "double_a_form_numerator_abs": 4.4502497312143765e-05,
+            "double_regular_residual_abs": 4.450249718675532e-05,
+            "high_precision": {
+              "a": [
+                0.9796828744163756,
+                -0.00018574070985940164
+              ],
+              "a1": [
+                -426.3839281702886,
+                -3.8173419310044117
+              ],
+              "a2": [
+                648.1117334083716,
+                3389.156276731796
+              ]
+            },
+            "high_precision_a_form_normalized": 3.417040362885585e-08,
+            "high_precision_a_form_scale": 1326.960173300272,
+            "high_precision_regular_residual": [
+              4.534262976102367e-05,
+              1.1062959171524323e-07
+            ],
+            "high_precision_regular_residual_abs": 4.534276472108679e-05,
+            "high_precision_terms_abs": [
+              3450.5693859263483,
+              3393.3192257905043,
+              678.5022268687196
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 9.996561005602249e-17,
+              "a1": 7.984122984215461e-14,
+              "a2": 2.4353311780350706e-10
+            },
+            "residual_difference_abs": 8.403304346170759e-07
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 8.317983104219813e-08,
+          "eps_perturbation_spike_numerator_change": 9.64764873250091e-06,
+          "evaluation_error_spike_numerator": 4.144620819365747e-06
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 8.572009127898897e-07,
+            "a_form_numerator_abs": 9.914277021536433e-05,
+            "a_form_scale": 115.65873150168402,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 2.355364227857315e-05,
+            "distance_over_local_spacing": 0.6250009412343062,
+            "local_distance": 7.529861444768741e-06
+          },
+          {
+            "a_form_normalized": 5.299862049804845e-08,
+            "a_form_numerator_abs": 2.9015177185528025e-05,
+            "a_form_scale": 547.4704230574538,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 3.409527938080803e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 3.3537176349191405e-08,
+            "a_form_numerator_abs": 4.4502497312143765e-05,
+            "a_form_scale": 1326.9601724599793,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.5624997176139604,
+            "local_distance": 1.3553560091768402e-05
+          },
+          {
+            "a_form_normalized": 7.121995364057974e-10,
+            "a_form_numerator_abs": 1.8621185969205267e-06,
+            "a_form_scale": 2614.602371574036,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 6.421383430221805e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.456171846384941e-09,
+            "a_form_numerator_abs": 2.048557976416423e-05,
+            "a_form_scale": 4597.125171638771,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 8.379057068952367e-05,
+            "distance_over_local_spacing": 0.5416653070500436,
+            "local_distance": 1.957693215662718e-05
+          },
+          {
+            "a_form_normalized": 5.394801685390671e-10,
+            "a_form_numerator_abs": 4.03579381139801e-06,
+            "a_form_scale": 7480.893732066359,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00010637879517000348,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 1.184621755241771e-09,
+            "a_form_numerator_abs": 1.3603519231638786e-05,
+            "a_form_scale": 11483.428504875317,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00013197837167394644,
+            "distance_over_local_spacing": 0.5312475997278312,
+            "local_distance": 2.559983250226798e-05
+          },
+          {
+            "a_form_normalized": 9.577975737142794e-11,
+            "a_form_numerator_abs": 1.6113008148050393e-06,
+            "a_form_scale": 16822.97866506923,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.300021179902321e-10,
+            "a_form_numerator_abs": 1.967622607150368e-05,
+            "a_form_scale": 23706.235978225828,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.00019221094577315245,
+            "distance_over_local_spacing": 0.5249965736754072,
+            "local_distance": 3.162211600293805e-05
+          },
+          {
+            "a_form_normalized": 8.751999013232122e-11,
+            "a_form_numerator_abs": 2.8281640931617384e-06,
+            "a_form_scale": 32314.49282484888,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.00022684358053193243,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.826307615049902e-10,
+            "a_form_numerator_abs": 2.9208955604313276e-05,
+            "a_form_scale": 42788.80655761329,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.0002644868416432078,
+            "distance_over_local_spacing": 0.5208288882286816,
+            "local_distance": 3.764363754765081e-05
+          },
+          {
+            "a_form_normalized": 2.4596857461064085e-11,
+            "a_form_numerator_abs": 1.3581155848184576e-06,
+            "a_form_scale": 55215.00406986154,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00030514050234681234,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 50.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 1.6019870278504337e-34
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 2.355364227857315e-05
+      },
+      {
+        "condition_number": 1855357.4054878901,
+        "degree": 640,
+        "dimensionless_omega": 13.846480048994895,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 5.3009224895224415e-06,
+          "reconstructed_maximum": 5.3009224895224415e-06
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 5.3009224895224415e-06,
+            "a_form_numerator": [
+              -9.629278766354332e-05,
+              -5.666729606047927e-07
+            ],
+            "a_form_numerator_abs": 9.629445505459036e-05,
+            "a_form_scale": 18.165603297335796,
+            "check_index": 3,
+            "identity_defect": 4.546328681593106e-09,
+            "regular_form_common": 5.300922490049739e-06,
+            "regular_form_own_denominator": 1.2192215705364551e-08,
+            "regular_numerator": [
+              -9.629284870626975e-05,
+              -5.562051210716845e-07
+            ],
+            "regular_numerator_abs": 9.6294455064169e-05,
+            "regular_scale": 7898.0275112586505
+          },
+          "common_denominator_maximum": {
+            "a_form": 5.3009224895224415e-06,
+            "a_form_check_index": 3,
+            "regular_form": 5.300922490049739e-06,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.0003472700796535128,
+          "maximum_identity_defect_check_index": 44,
+          "maximum_identity_defect_common_denominator": 2.4099735953017808e-14
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.1505966301117443e-05,
+            "derivative_difference_residual_abs": 6.0991329708640286e-05,
+            "double": {
+              "a": [
+                0.9950944274365912,
+                -5.2845501095189925e-05
+              ],
+              "a1": [
+                -426.34715285878315,
+                -4.570217042867782
+              ],
+              "a2": [
+                -164.1750194415514,
+                3931.0244309179816
+              ]
+            },
+            "double_a_form_normalized": 1.513393626546481e-06,
+            "double_a_form_numerator_abs": 0.00043490456939746983,
+            "double_regular_residual_abs": 0.00043490456941486303,
+            "high_precision": {
+              "a": [
+                0.9950944274365915,
+                -5.284550109518978e-05
+              ],
+              "a1": [
+                -426.34715285891605,
+                -4.57021704286773
+              ],
+              "a2": [
+                -164.1749584502517,
+                3931.0244308582714
+              ]
+            },
+            "high_precision_a_form_normalized": 1.3011819781143537e-06,
+            "high_precision_a_form_scale": 287.3703638398826,
+            "high_precision_regular_residual": [
+              -0.0003738711127848514,
+              -6.116275147273122e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00037392113847261997,
+            "high_precision_terms_abs": [
+              3934.4512314917233,
+              3935.836932639887,
+              122.07309575100984
+            ],
+            "local_coordinate": 1.5059813609310514e-06,
+            "relative_differences": {
+              "a": 2.963609254631072e-16,
+              "a1": 3.117584879153554e-13,
+              "a2": 1.5501864261765317e-08
+            },
+            "residual_difference_abs": 6.099132966336985e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.6023856132418857e-05,
+            "derivative_difference_residual_abs": 2.2583153423384864e-05,
+            "double": {
+              "a": [
+                0.993168217173304,
+                -7.345332504932687e-05
+              ],
+              "a1": [
+                -426.3477983334742,
+                -4.552456856331112
+              ],
+              "a2": [
+                -119.15026847273111,
+                3931.0562482306414
+              ]
+            },
+            "double_a_form_normalized": 1.4239268549476793e-06,
+            "double_a_form_numerator_abs": 0.0002813205440875864,
+            "double_regular_residual_abs": 0.00028132054407397364,
+            "high_precision": {
+              "a": [
+                0.993168217173304,
+                -7.345332504932687e-05
+              ],
+              "a1": [
+                -426.34779833342697,
+                -4.552456856331198
+              ],
+              "a2": [
+                -119.15024588957948,
+                3931.0562482234777
+              ]
+            },
+            "high_precision_a_form_normalized": 1.3096279489635244e-06,
+            "high_precision_a_form_scale": 197.5666874694665,
+            "high_precision_regular_residual": [
+              -0.0002587215094903393,
+              -2.9959928172619664e-06
+            ],
+            "high_precision_regular_residual_abs": 0.0002587388556941551,
+            "high_precision_terms_abs": [
+              3932.86155461801,
+              3935.858918775968,
+              77.26183305557846
+            ],
+            "local_coordinate": 6.023916371582572e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 1.1084481231037229e-13,
+              "a2": 5.7421682539158806e-09
+            },
+            "residual_difference_abs": 2.2583153408213708e-05
+          },
+          {
+            "check_index": 3,
+            "coordinate": 2.355364227857315e-05,
+            "derivative_difference_residual_abs": 4.305666942298835e-06,
+            "double": {
+              "a": [
+                0.9899578748642879,
+                -0.0001076212508749666
+              ],
+              "a1": [
+                -426.3483174262995,
+                -4.522856384303893
+              ],
+              "a2": [
+                -12.079301638292707,
+                3931.096496460123
+              ]
+            },
+            "double_a_form_normalized": 5.3009224895224415e-06,
+            "double_a_form_numerator_abs": 9.629445505459036e-05,
+            "double_regular_residual_abs": 9.6294455064169e-05,
+            "high_precision": {
+              "a": [
+                0.9899578748642883,
+                -0.00010762125087496706
+              ],
+              "a1": [
+                -426.3483174262046,
+                -4.522856384303915
+              ],
+              "a2": [
+                -12.079305943930445,
+                3931.096496475157
+              ]
+            },
+            "high_precision_a_form_normalized": 5.537936690428444e-06,
+            "high_precision_a_form_scale": 18.16559899169655,
+            "high_precision_regular_residual": [
+              -0.00010059848626108873,
+              -5.402948439701211e-07
+            ],
+            "high_precision_regular_residual_abs": 0.00010059993715972629,
+            "high_precision_terms_abs": [
+              3931.115054819859,
+              3935.890439175459,
+              30.0220372906209
+            ],
+            "local_coordinate": 1.3553777816351313e-05,
+            "relative_differences": {
+              "a": 4.739869684219992e-16,
+              "a1": 2.225788239412535e-13,
+              "a2": 1.0952780378524325e-09
+            },
+            "residual_difference_abs": 4.305666950704042e-06
+          },
+          {
+            "check_index": 4,
+            "coordinate": 3.409527938080803e-05,
+            "derivative_difference_residual_abs": 7.454589461459657e-06,
+            "double": {
+              "a": [
+                0.9854634236582239,
+                -0.00015508160965451286
+              ],
+              "a1": [
+                -426.3473718001096,
+                -4.48141563652274
+              ],
+              "a2": [
+                204.33485033689067,
+                3931.114466023755
+              ]
+            },
+            "double_a_form_normalized": 6.481163507161021e-08,
+            "double_a_form_numerator_abs": 2.9192496807701516e-05,
+            "double_regular_residual_abs": 2.9192496826331395e-05,
+            "high_precision": {
+              "a": [
+                0.9854634236582239,
+                -0.00015508160965451286
+              ],
+              "a1": [
+                -426.347371800095,
+                -4.481415636522658
+              ],
+              "a2": [
+                204.33484288230235,
+                3931.1144660260543
+              ]
+            },
+            "high_precision_a_form_normalized": 4.826224607320481e-08,
+            "high_precision_a_form_scale": 450.4206118593163,
+            "high_precision_regular_residual": [
+              2.1736816355812817e-05,
+              2.5486078784377954e-07
+            ],
+            "high_precision_regular_residual_abs": 2.173831040599779e-05,
+            "high_precision_terms_abs": [
+              3936.4214298033494,
+              3935.91916313648,
+              245.74652612351375
+            ],
+            "local_coordinate": 2.409552033601139e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 3.4299941161293045e-14,
+              "a2": 1.8937476055643394e-09
+            },
+            "residual_difference_abs": 7.454589487469242e-06
+          },
+          {
+            "check_index": 5,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 1.2626440865848436e-07,
+            "double": {
+              "a": [
+                0.9796849286978702,
+                -0.0002154596761221376
+              ],
+              "a1": [
+                -426.34209785687005,
+                -4.428135377268121
+              ],
+              "a2": [
+                594.7337102574905,
+                3931.0445521479546
+              ]
+            },
+            "double_a_form_normalized": 3.5758780464259234e-08,
+            "double_a_form_numerator_abs": 4.400051463261677e-05,
+            "double_regular_residual_abs": 4.4000514662806634e-05,
+            "high_precision": {
+              "a": [
+                0.9796849286978704,
+                -0.00021545967612213694
+              ],
+              "a1": [
+                -426.34209785690416,
+                -4.428135377268108
+              ],
+              "a2": [
+                594.7337103834188,
+                3931.0445521390584
+              ]
+            },
+            "high_precision_a_form_normalized": 3.5861097919386734e-08,
+            "high_precision_a_form_scale": 1230.4814108830763,
+            "high_precision_regular_residual": [
+              4.412622880358774e-05,
+              1.2796939915422934e-07
+            ],
+            "high_precision_regular_residual_abs": 4.4126414363663137e-05,
+            "high_precision_terms_abs": [
+              3975.779100650412,
+              3935.9186890650876,
+              635.628362786534
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 2.815046303722449e-16,
+              "a1": 7.996049640954732e-14,
+              "a2": 3.175280617659917e-11
+            },
+            "residual_difference_abs": 1.2626442089122365e-07
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 1.984516328123086e-07,
+          "eps_perturbation_spike_numerator_change": 5.094694331515205e-06,
+          "evaluation_error_spike_numerator": 4.305666950704042e-06
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 5.3009224895224415e-06,
+            "a_form_numerator_abs": 9.629445505459036e-05,
+            "a_form_scale": 18.165603297335796,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 2.355364227857315e-05,
+            "distance_over_local_spacing": 0.6250009412343062,
+            "local_distance": 7.529861444768741e-06
+          },
+          {
+            "a_form_normalized": 6.481163507161021e-08,
+            "a_form_numerator_abs": 2.9192496807701516e-05,
+            "a_form_scale": 450.4206193139056,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 3.409527938080803e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 3.5758780464259234e-08,
+            "a_form_numerator_abs": 4.400051463261677e-05,
+            "a_form_scale": 1230.481410757146,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.5624997176139604,
+            "local_distance": 1.3553560091768402e-05
+          },
+          {
+            "a_form_normalized": 7.286456687884286e-10,
+            "a_form_numerator_abs": 1.8353300015230262e-06,
+            "a_form_scale": 2518.823730297829,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 6.421383430221805e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.460387128980788e-09,
+            "a_form_numerator_abs": 2.0081456702788448e-05,
+            "a_form_scale": 4502.177977402854,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 8.379057068952367e-05,
+            "distance_over_local_spacing": 0.5416653070500436,
+            "local_distance": 1.957693215662718e-05
+          },
+          {
+            "a_form_normalized": 5.692004484601263e-10,
+            "a_form_numerator_abs": 4.204634035090746e-06,
+            "a_form_scale": 7386.912723743734,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00010637879517000348,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 1.185241133339754e-09,
+            "a_form_numerator_abs": 1.3500552242816402e-05,
+            "a_form_scale": 11390.553249510298,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00013197837167394644,
+            "distance_over_local_spacing": 0.5312475997278312,
+            "local_distance": 2.559983250226798e-05
+          },
+          {
+            "a_form_normalized": 9.279715192275347e-11,
+            "a_form_numerator_abs": 1.5526221068352432e-06,
+            "a_form_scale": 16731.355161930856,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.183756392997763e-10,
+            "a_form_numerator_abs": 1.9326774111143948e-05,
+            "a_form_scale": 23616.018345414635,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.00019221094577315245,
+            "distance_over_local_spacing": 0.5249965736754072,
+            "local_distance": 3.162211600293805e-05
+          },
+          {
+            "a_form_normalized": 7.859720972428613e-11,
+            "a_form_numerator_abs": 2.5328614916315788e-06,
+            "a_form_scale": 32225.844918880593,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.00022684358053193243,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.844351435772605e-10,
+            "a_form_numerator_abs": 2.922668333960012e-05,
+            "a_form_scale": 42701.903334250615,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.0002644868416432078,
+            "distance_over_local_spacing": 0.5208288882286816,
+            "local_distance": 3.764363754765081e-05
+          },
+          {
+            "a_form_normalized": 2.151112687027364e-11,
+            "a_form_numerator_abs": 1.1859091226617998e-06,
+            "a_form_scale": 55130.032462437615,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00030514050234681234,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 58.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 9.75812029875335e-35
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 2.355364227857315e-05
+      },
+      {
+        "condition_number": 1860177.0077949034,
+        "degree": 640,
+        "dimensionless_omega": 14.085212463632738,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 2.0805289600195754e-05,
+          "reconstructed_maximum": 2.0805289600195754e-05
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 2.0805289600195754e-05,
+            "a_form_numerator": [
+              -0.00010326306816743624,
+              -5.770241442704905e-07
+            ],
+            "a_form_numerator_abs": 0.00010326468033270454,
+            "a_form_scale": 4.963385865666245,
+            "check_index": 3,
+            "identity_defect": 6.000594729260673e-09,
+            "regular_form_common": 2.0805289598643536e-05,
+            "regular_form_own_denominator": 1.2863345206424012e-08,
+            "regular_numerator": [
+              -0.00010326313133646181,
+              -5.656051742519708e-07
+            ],
+            "regular_numerator_abs": 0.0001032646803250003,
+            "regular_scale": 8027.824696287357
+          },
+          "common_denominator_maximum": {
+            "a_form": 2.0805289600195754e-05,
+            "a_form_check_index": 3,
+            "regular_form": 2.0805289598643536e-05,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.0021430449136989917,
+          "maximum_identity_defect_check_index": 52,
+          "maximum_identity_defect_common_denominator": 1.2484411111567654e-13
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.1505966301117443e-05,
+            "derivative_difference_residual_abs": 2.1771638602159873e-05,
+            "double": {
+              "a": [
+                0.9950944961385162,
+                -5.375663413756524e-05
+              ],
+              "a1": [
+                -426.3412243927768,
+                -4.649014531718286
+              ],
+              "a2": [
+                -171.5403846952305,
+                3998.745363294108
+              ]
+            },
+            "double_a_form_normalized": 1.366611205615094e-06,
+            "double_a_form_numerator_abs": 0.00041085954286625663,
+            "double_regular_residual_abs": 0.0004108595428726038,
+            "high_precision": {
+              "a": [
+                0.9950944961385161,
+                -5.37566341375651e-05
+              ],
+              "a1": [
+                -426.34122439284295,
+                -4.64901453171824
+              ],
+              "a2": [
+                -171.54036292368286,
+                3998.745363231639
+              ]
+            },
+            "high_precision_a_form_normalized": 1.2942061656460984e-06,
+            "high_precision_a_form_scale": 300.6411124282338,
+            "high_precision_regular_residual": [
+              -0.0003890418497378867,
+              -6.220758072460476e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00038909158135132205,
+            "high_precision_terms_abs": [
+              4002.4230880903287,
+              4003.6485236574495,
+              127.97006513915082
+            ],
+            "local_coordinate": 1.5059813609310514e-06,
+            "relative_differences": {
+              "a": 1.5560267001263624e-16,
+              "a1": 1.551441894729987e-13,
+              "a2": 5.4396141487915384e-09
+            },
+            "residual_difference_abs": 2.177163858204688e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.6023856132418857e-05,
+            "derivative_difference_residual_abs": 8.316491429129245e-06,
+            "double": {
+              "a": [
+                0.9931683125845409,
+                -7.471976887099075e-05
+              ],
+              "a1": [
+                -426.341903105098,
+                -4.630948384155435
+              ],
+              "a2": [
+                -126.49853860586886,
+                3998.7781651628466
+              ]
+            },
+            "double_a_form_normalized": 1.3108156022533203e-06,
+            "double_a_form_numerator_abs": 0.00027633533074645654,
+            "double_regular_residual_abs": 0.0002763353307289645,
+            "high_precision": {
+              "a": [
+                0.9931683125845409,
+                -7.471976887099075e-05
+              ],
+              "a1": [
+                -426.34190310509945,
+                -4.630948384155531
+              ],
+              "a2": [
+                -126.49853028938217,
+                3998.778165154871
+              ]
+            },
+            "high_precision_a_form_normalized": 1.2713687133862313e-06,
+            "high_precision_a_form_scale": 210.81174146084905,
+            "high_precision_regular_residual": [
+              -0.0002680021280635172,
+              -3.047339167521452e-06
+            ],
+            "high_precision_regular_residual_abs": 0.0002680194525077905,
+            "high_precision_terms_abs": [
+              4000.7785107757127,
+              4003.6711386791817,
+              83.14325371907654
+            ],
+            "local_coordinate": 6.023916371582572e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 3.3974227361707794e-15,
+              "a2": 2.078718052425981e-09
+            },
+            "residual_difference_abs": 8.316491419802146e-06
+          },
+          {
+            "check_index": 3,
+            "coordinate": 2.355364227857315e-05,
+            "derivative_difference_residual_abs": 6.103678019880299e-07,
+            "double": {
+              "a": [
+                0.9899580144577279,
+                -0.00010947680513541975
+              ],
+              "a1": [
+                -426.34247742201734,
+                -4.60083796993634
+              ],
+              "a2": [
+                -19.399050050882348,
+                3998.8198312786776
+              ]
+            },
+            "double_a_form_normalized": 2.0805289600195754e-05,
+            "double_a_form_numerator_abs": 0.00010326468033270454,
+            "double_regular_residual_abs": 0.0001032646803250003,
+            "high_precision": {
+              "a": [
+                0.9899580144577279,
+                -0.00010947680513542027
+              ],
+              "a1": [
+                -426.3424774219973,
+                -4.600837969936372
+              ],
+              "a2": [
+                -19.399050661045646,
+                3998.8198312942995
+              ]
+            },
+            "high_precision_a_form_normalized": 2.0928206052459167e-05,
+            "high_precision_a_form_scale": 4.963385255501505,
+            "high_precision_regular_residual": [
+              -0.00010387329434440613,
+              -5.497940528931548e-07
+            ],
+            "high_precision_regular_residual_abs": 0.00010387474934487318,
+            "high_precision_terms_abs": [
+              3998.8668852962737,
+              4003.7036178267263,
+              24.2542131826505
+            ],
+            "local_coordinate": 1.3553777816351313e-05,
+            "relative_differences": {
+              "a": 9.004846235102635e-18,
+              "a1": 4.706878234577045e-14,
+              "a2": 1.5263405135129638e-10
+            },
+            "residual_difference_abs": 6.103678299372341e-07
+          },
+          {
+            "check_index": 4,
+            "coordinate": 3.409527938080803e-05,
+            "derivative_difference_residual_abs": 1.3072084458163591e-06,
+            "double": {
+              "a": [
+                0.985463624409509,
+                -0.0001577554626926815
+              ],
+              "a1": [
+                -426.3416087480564,
+                -4.5586832924529475
+              ],
+              "a2": [
+                197.05507988017055,
+                3998.8391185498913
+              ]
+            },
+            "double_a_form_normalized": 5.319440585692892e-08,
+            "double_a_form_numerator_abs": 2.326076627487755e-05,
+            "double_regular_residual_abs": 2.3260766279565375e-05,
+            "high_precision": {
+              "a": [
+                0.985463624409509,
+                -0.0001577554626926815
+              ],
+              "a1": [
+                -426.3416087480523,
+                -4.558683292452865
+              ],
+              "a2": [
+                197.05507857296647,
+                3998.8391185529094
+              ]
+            },
+            "high_precision_a_form_normalized": 5.020526881612979e-08,
+            "high_precision_a_form_scale": 437.27842863596294,
+            "high_precision_regular_residual": [
+              2.1952153787972306e-05,
+              2.5895178868988515e-07
+            ],
+            "high_precision_regular_residual_abs": 2.1953681057163344e-05,
+            "high_precision_terms_abs": [
+              4003.691421683295,
+              4003.733416211093,
+              239.9081396223373
+            ],
+            "local_coordinate": 2.409552033601139e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 9.634293888708579e-15,
+              "a2": 3.265005824971839e-10
+            },
+            "residual_difference_abs": 1.3072084566469552e-06
+          },
+          {
+            "check_index": 5,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 8.765016301974909e-07,
+            "double": {
+              "a": [
+                0.97968520689196,
+                -0.0002191745604845517
+              ],
+              "a1": [
+                -426.3364331228831,
+                -4.504485120130695
+              ],
+              "a2": [
+                587.5054159274843,
+                3998.7692854221937
+              ]
+            },
+            "double_a_form_normalized": 3.622989074589151e-08,
+            "double_a_form_numerator_abs": 4.410686850569924e-05,
+            "double_regular_residual_abs": 4.410686831456155e-05,
+            "high_precision": {
+              "a": [
+                0.9796852068919601,
+                -0.00021917456048455085
+              ],
+              "a1": [
+                -426.3364331228806,
+                -4.504485120130676
+              ],
+              "a2": [
+                587.5054168039424,
+                3998.7692854134098
+              ]
+            },
+            "high_precision_a_form_normalized": 3.694979823051847e-08,
+            "high_precision_a_form_scale": 1217.4165483083893,
+            "high_precision_regular_residual": [
+              4.4983108111488226e-05,
+              1.2995262113332537e-07
+            ],
+            "high_precision_regular_residual_abs": 4.498329582248923e-05,
+            "high_precision_terms_abs": [
+              4041.6974667507766,
+              4003.7336748264606,
+              629.822564321572
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 1.0620057884259217e-16,
+              "a1": 5.8727245507273144e-15,
+              "a2": 2.1686484920458825e-10
+            },
+            "residual_difference_abs": 8.765016952802003e-07
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 8.851564023773968e-07,
+          "eps_perturbation_spike_numerator_change": 4.549517044936271e-06,
+          "evaluation_error_spike_numerator": 6.103678299372341e-07
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 2.0805289600195754e-05,
+            "a_form_numerator_abs": 0.00010326468033270454,
+            "a_form_scale": 4.963385865666245,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 2.355364227857315e-05,
+            "distance_over_local_spacing": 0.6250009412343062,
+            "local_distance": 7.529861444768741e-06
+          },
+          {
+            "a_form_normalized": 5.319440585692892e-08,
+            "a_form_numerator_abs": 2.326076627487755e-05,
+            "a_form_scale": 437.2784299431682,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 3.409527938080803e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 3.622989074589151e-08,
+            "a_form_numerator_abs": 4.410686850569924e-05,
+            "a_form_scale": 1217.4165474319293,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.5624997176139604,
+            "local_distance": 1.3553560091768402e-05
+          },
+          {
+            "a_form_normalized": 1.4957497645905583e-10,
+            "a_form_numerator_abs": 3.7481300318325785e-07,
+            "a_form_scale": 2505.8536665446704,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 6.421383430221805e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.416768301236114e-09,
+            "a_form_numerator_abs": 1.9828288440403758e-05,
+            "a_form_scale": 4489.320491377021,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 8.379057068952367e-05,
+            "distance_over_local_spacing": 0.5416653070500436,
+            "local_distance": 1.957693215662718e-05
+          },
+          {
+            "a_form_normalized": 4.3131657765136223e-10,
+            "a_form_numerator_abs": 3.180608694631116e-06,
+            "a_form_scale": 7374.186060620271,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00010637879517000348,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 1.1739045904246284e-09,
+            "a_form_numerator_abs": 1.3356658619875306e-05,
+            "a_form_scale": 11377.976309849759,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00013197837167394644,
+            "distance_over_local_spacing": 0.5312475997278312,
+            "local_distance": 2.559983250226798e-05
+          },
+          {
+            "a_form_normalized": 5.706682918130761e-11,
+            "a_form_numerator_abs": 9.5409733335235e-07,
+            "a_form_scale": 16718.947715161772,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.190017578507628e-10,
+            "a_form_numerator_abs": 1.9331554723447436e-05,
+            "a_form_scale": 23603.80125944736,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.00019221094577315245,
+            "distance_over_local_spacing": 0.5249965736754072,
+            "local_distance": 3.162211600293805e-05
+          },
+          {
+            "a_form_normalized": 9.752572341482921e-11,
+            "a_form_numerator_abs": 3.141678087227235e-06,
+            "a_form_scale": 32213.840382029186,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.00022684358053193243,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.893923503916949e-10,
+            "a_form_numerator_abs": 2.9430252533162877e-05,
+            "a_form_scale": 42690.13503912738,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.0002644868416432078,
+            "distance_over_local_spacing": 0.5208288882286816,
+            "local_distance": 3.764363754765081e-05
+          },
+          {
+            "a_form_normalized": 2.8546790254801103e-11,
+            "a_form_numerator_abs": 1.5734569929694225e-06,
+            "a_form_scale": 55118.525723037914,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00030514050234681234,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 59.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 5.005481109364018e-35
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 2.355364227857315e-05
+      },
+      {
+        "condition_number": 1865345.116592989,
+        "degree": 640,
+        "dimensionless_omega": 14.32394487827058,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 9.786119424096586e-06,
+          "reconstructed_maximum": 9.786119424096586e-06
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 9.786119424096586e-06,
+            "a_form_numerator": [
+              -0.00010240485974666313,
+              -5.851501054517909e-07
+            ],
+            "a_form_numerator_abs": 0.00010240653153182984,
+            "a_form_scale": 10.464467792991764,
+            "check_index": 3,
+            "identity_defect": 1.0736885373998772e-09,
+            "regular_form_common": 9.786119424722359e-06,
+            "regular_form_own_denominator": 1.2553518710653651e-08,
+            "regular_numerator": [
+              -0.00010240492491320197,
+              -5.736333692496487e-07
+            ],
+            "regular_numerator_abs": 0.00010240653153837821,
+            "regular_scale": 8157.595802320351
+          },
+          "common_denominator_maximum": {
+            "a_form": 9.786119424096586e-06,
+            "a_form_check_index": 3,
+            "regular_form": 9.786119424722359e-06,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.0006320109962909609,
+          "maximum_identity_defect_check_index": 44,
+          "maximum_identity_defect_common_denominator": 1.0507244251278791e-14
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.1505966301117443e-05,
+            "derivative_difference_residual_abs": 3.792226726324783e-05,
+            "double": {
+              "a": [
+                0.9950945660154331,
+                -5.4667767370391396e-05
+              ],
+              "a1": [
+                -426.3351945332698,
+                -4.727812053563418
+              ],
+              "a2": [
+                -179.0317285928317,
+                4066.4634566400423
+              ]
+            },
+            "double_a_form_normalized": 1.4646663447150686e-06,
+            "double_a_form_numerator_abs": 0.00046010848237026963,
+            "double_regular_residual_abs": 0.0004601084823612357,
+            "high_precision": {
+              "a": [
+                0.9950945660154331,
+                -5.4667767370391274e-05
+              ],
+              "a1": [
+                -426.33519453336515,
+                -4.727812053563397
+              ],
+              "a2": [
+                -179.03169067059315,
+                4066.4634565941415
+              ]
+            },
+            "high_precision_a_form_normalized": 1.3439628905702912e-06,
+            "high_precision_a_form_scale": 314.13873097244385,
+            "high_precision_regular_residual": [
+              -0.0004221433412881489,
+              -6.329961150895035e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00042219079691780873,
+            "high_precision_terms_abs": [
+              4070.402607860793,
+              4071.4576699646677,
+              133.96793914217412
+            ],
+            "local_coordinate": 1.5059813609310514e-06,
+            "relative_differences": {
+              "a": 4.517893670589736e-17,
+              "a1": 2.2351945300187174e-13,
+              "a2": 9.31658855553494e-09
+            },
+            "residual_difference_abs": 3.7922267234052955e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.6023856132418857e-05,
+            "derivative_difference_residual_abs": 1.5445696022232974e-05,
+            "double": {
+              "a": [
+                0.9931684096275749,
+                -7.59862130610716e-05
+              ],
+              "a1": [
+                -426.33590705160896,
+                -4.709439957750366
+              ],
+              "a2": [
+                -133.97244840487846,
+                4066.4972654389567
+              ]
+            },
+            "double_a_form_normalized": 1.327499611348151e-06,
+            "double_a_form_numerator_abs": 0.0002977359000239386,
+            "double_regular_residual_abs": 0.00029773590001974583,
+            "high_precision": {
+              "a": [
+                0.9931684096275749,
+                -7.59862130610716e-05
+              ],
+              "a1": [
+                -426.3359070515886,
+                -4.70943995775044
+              ],
+              "a2": [
+                -133.97243295918332,
+                4066.4972654365447
+              ]
+            },
+            "high_precision_a_form_normalized": 1.258636817750888e-06,
+            "high_precision_a_form_scale": 224.28321407749078,
+            "high_precision_regular_residual": [
+              -0.0002822740785054947,
+              -3.100945656524849e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00028229111084143423,
+            "high_precision_terms_abs": [
+              4068.7035555070734,
+              4071.4809266824914,
+              89.1259225544629
+            ],
+            "local_coordinate": 6.023916371582572e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 4.7708394021681133e-14,
+              "a2": 3.796220375142246e-09
+            },
+            "residual_difference_abs": 1.5445696005477602e-05
+          },
+          {
+            "check_index": 3,
+            "coordinate": 2.355364227857315e-05,
+            "derivative_difference_residual_abs": 1.010033436059218e-06,
+            "double": {
+              "a": [
+                0.9899581564386074,
+                -0.00011133236018843512
+              ],
+              "a1": [
+                -426.33653753668386,
+                -4.67881962240849
+              ],
+              "a2": [
+                -26.843916961667716,
+                4066.540386578246
+              ]
+            },
+            "double_a_form_normalized": 9.786119424096586e-06,
+            "double_a_form_numerator_abs": 0.00010240653153182984,
+            "double_regular_residual_abs": 0.00010240653153837821,
+            "high_precision": {
+              "a": [
+                0.9899581564386079,
+                -0.00011133236018843565
+              ],
+              "a1": [
+                -426.3365375366212,
+                -4.678819622408496
+              ],
+              "a2": [
+                -26.843917971603783,
+                4066.540386591676
+              ]
+            },
+            "high_precision_a_form_normalized": 9.882620603480552e-06,
+            "high_precision_a_form_scale": 10.464468802929359,
+            "high_precision_regular_residual": [
+              -0.0001034148609197303,
+              -5.596055129053783e-07
+            ],
+            "high_precision_regular_residual_abs": 0.00010341637499630914,
+            "high_precision_terms_abs": [
+              4066.628986238263,
+              4071.5143858734928,
+              18.452450227993335
+            ],
+            "local_coordinate": 1.3553777816351313e-05,
+            "relative_differences": {
+              "a": 3.9598946316659644e-16,
+              "a1": 1.4689832082003152e-13,
+              "a2": 2.483691931827262e-10
+            },
+            "residual_difference_abs": 1.0100334242172438e-06
+          },
+          {
+            "check_index": 4,
+            "coordinate": 3.409527938080803e-05,
+            "derivative_difference_residual_abs": 4.104027749856006e-06,
+            "double": {
+              "a": [
+                0.9854638285942162,
+                -0.00016042931738150174
+              ],
+              "a1": [
+                -426.3357471302734,
+                -4.63595104425108
+              ],
+              "a2": [
+                189.65087810717532,
+                4066.5610432451067
+              ]
+            },
+            "double_a_form_normalized": 7.09642173545125e-08,
+            "double_a_form_numerator_abs": 3.0082554574821305e-05,
+            "double_regular_residual_abs": 3.008255453067067e-05,
+            "high_precision": {
+              "a": [
+                0.9854638285942162,
+                -0.00016042931738150174
+              ],
+              "a1": [
+                -426.3357471302486,
+                -4.635951044251005
+              ],
+              "a2": [
+                189.6508740031483,
+                4066.561043245323
+              ]
+            },
+            "high_precision_a_form_normalized": 6.128332784555103e-08,
+            "high_precision_a_form_scale": 423.91159101072344,
+            "high_precision_regular_residual": [
+              2.5977377392853705e-05,
+              2.6342630101052655e-07
+            ],
+            "high_precision_regular_residual_abs": 2.5978713009439303e-05,
+            "high_precision_terms_abs": [
+              4070.980984044343,
+              4071.5452883802395,
+              233.97007847830943
+            ],
+            "local_coordinate": 2.409552033601139e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 5.816453298357114e-14,
+              "a2": 1.0081174628373218e-09
+            },
+            "residual_difference_abs": 4.104027732478371e-06
+          },
+          {
+            "check_index": 5,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 5.740747265700909e-07,
+            "double": {
+              "a": [
+                0.9796854898439857,
+                -0.00022288944804549547
+              ],
+              "a1": [
+                -426.3306715037729,
+                -4.580834995385428
+              ],
+              "a2": [
+                580.1535580921758,
+                4066.491356819497
+              ]
+            },
+            "double_a_form_normalized": 3.849209943004357e-08,
+            "double_a_form_numerator_abs": 4.6349428082860934e-05,
+            "double_regular_residual_abs": 4.634942823171569e-05,
+            "high_precision": {
+              "a": [
+                0.979685489843986,
+                -0.0002228894480454947
+              ],
+              "a1": [
+                -426.3306715037805,
+                -4.580834995385434
+              ],
+              "a2": [
+                580.1535575181664,
+                4066.4913568109127
+              ]
+            },
+            "high_precision_a_form_normalized": 3.8015379121822097e-08,
+            "high_precision_a_form_scale": 1204.1283470391818,
+            "high_precision_regular_residual": [
+              4.577520433870073e-05,
+              1.3233399573021025e-07
+            ],
+            "high_precision_regular_residual_abs": 4.577539562402746e-05,
+            "high_precision_terms_abs": [
+              4107.667234005067,
+              4071.546317672315,
+              623.9175316591078
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 2.7769776024410124e-16,
+              "a1": 1.770098375740334e-14,
+              "a2": 1.3975658065462025e-10
+            },
+            "residual_difference_abs": 5.740747295377397e-07
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 1.8027189475435621e-07,
+          "eps_perturbation_spike_numerator_change": 3.7163598831748826e-06,
+          "evaluation_error_spike_numerator": 1.0100334242172438e-06
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 9.786119424096586e-06,
+            "a_form_numerator_abs": 0.00010240653153182984,
+            "a_form_scale": 10.464467792991764,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 2.355364227857315e-05,
+            "distance_over_local_spacing": 0.6250009412343062,
+            "local_distance": 7.529861444768741e-06
+          },
+          {
+            "a_form_normalized": 7.09642173545125e-08,
+            "a_form_numerator_abs": 3.0082554574821305e-05,
+            "a_form_scale": 423.9115951147512,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 3.409527938080803e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 3.849209943004357e-08,
+            "a_form_numerator_abs": 4.6349428082860934e-05,
+            "a_form_scale": 1204.128347613189,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.5624997176139604,
+            "local_distance": 1.3553560091768402e-05
+          },
+          {
+            "a_form_normalized": 5.575898453234897e-10,
+            "a_form_numerator_abs": 1.3898829510569989e-06,
+            "a_form_scale": 2492.661878106206,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 6.421383430221805e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.6931240606930226e-09,
+            "a_form_numerator_abs": 2.1007564685469812e-05,
+            "a_form_scale": 4476.243204695441,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 8.379057068952367e-05,
+            "distance_over_local_spacing": 0.5416653070500436,
+            "local_distance": 1.957693215662718e-05
+          },
+          {
+            "a_form_normalized": 5.160789749016191e-10,
+            "a_form_numerator_abs": 3.7989821391344784e-06,
+            "a_form_scale": 7361.24183291653,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00010637879517000348,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 1.2207685221490162e-09,
+            "a_form_numerator_abs": 1.3874259315546144e-05,
+            "a_form_scale": 11365.184360358651,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00013197837167394644,
+            "distance_over_local_spacing": 0.5312475997278312,
+            "local_distance": 2.559983250226798e-05
+          },
+          {
+            "a_form_normalized": 9.172112836553588e-11,
+            "a_form_numerator_abs": 1.5323232687743195e-06,
+            "a_form_scale": 16706.328150124333,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.500966115586398e-10,
+            "a_form_numerator_abs": 2.0054948209292888e-05,
+            "a_form_scale": 23591.375305593127,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.00019221094577315245,
+            "distance_over_local_spacing": 0.5249965736754072,
+            "local_distance": 3.162211600293805e-05
+          },
+          {
+            "a_form_normalized": 9.913419243953017e-11,
+            "a_form_numerator_abs": 3.1922826455227497e-06,
+            "a_form_scale": 32201.63060762286,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.00022684358053193243,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.848715907439086e-10,
+            "a_form_numerator_abs": 2.9229063123581456e-05,
+            "a_form_scale": 42678.165540247915,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.0002644868416432078,
+            "distance_over_local_spacing": 0.5208288882286816,
+            "local_distance": 3.764363754765081e-05
+          },
+          {
+            "a_form_normalized": 2.639923261657935e-11,
+            "a_form_numerator_abs": 1.4547778192227114e-06,
+            "a_form_scale": 55106.82224562376,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00030514050234681234,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 60.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 2.4676384074317902e-34
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 2.355364227857315e-05
+      },
+      {
+        "condition_number": 1870844.6140811641,
+        "degree": 640,
+        "dimensionless_omega": 14.562677292908424,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 3.830116796733518e-06,
+          "reconstructed_maximum": 3.830116796733518e-06
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 3.830116796733518e-06,
+            "a_form_numerator": [
+              -9.237297227393526e-05,
+              -5.94596749067925e-07
+            ],
+            "a_form_numerator_abs": 9.237488593776565e-05,
+            "a_form_scale": 24.118033689350355,
+            "check_index": 3,
+            "identity_defect": 1.396505938374216e-08,
+            "regular_form_common": 3.830116796793105e-06,
+            "regular_form_own_denominator": 1.1146377083169868e-08,
+            "regular_numerator": [
+              -9.237303966358468e-05,
+              -5.840338950235946e-07
+            ],
+            "regular_numerator_abs": 9.237488593920278e-05,
+            "regular_scale": 8287.435930970021
+          },
+          "common_denominator_maximum": {
+            "a_form": 3.830116796733518e-06,
+            "a_form_check_index": 3,
+            "regular_form": 3.830116796793105e-06,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.0025408822978177487,
+          "maximum_identity_defect_check_index": 52,
+          "maximum_identity_defect_common_denominator": 5.3487808513051875e-14
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.1505966301117443e-05,
+            "derivative_difference_residual_abs": 2.808854724519351e-05,
+            "double": {
+              "a": [
+                0.9950946370673703,
+                -5.5578900796899457e-05
+              ],
+              "a1": [
+                -426.32906327823713,
+                -4.806609608963023
+              ],
+              "a2": [
+                -186.64885136390203,
+                4134.178662865946
+              ]
+            },
+            "double_a_form_normalized": 1.1676755767214309e-06,
+            "double_a_form_numerator_abs": 0.0003828377684479525,
+            "double_regular_residual_abs": 0.0003828377684460961,
+            "high_precision": {
+              "a": [
+                0.9950946370673704,
+                -5.557890079689932e-05
+              ],
+              "a1": [
+                -426.3290632782971,
+                -4.806609608962963
+              ],
+              "a2": [
+                -186.64882327542352,
+                4134.178662804125
+              ]
+            },
+            "high_precision_a_form_normalized": 1.0820205348066334e-06,
+            "high_precision_a_form_scale": 327.8631010889521,
+            "high_precision_regular_residual": [
+              -0.000354696346448482,
+              -6.4291291569655035e-06
+            ],
+            "high_precision_regular_residual_abs": 0.0003547546079836293,
+            "high_precision_terms_abs": [
+              4138.389904203688,
+              4139.264330106775,
+              140.06670953117882
+            ],
+            "local_coordinate": 1.5059813609310514e-06,
+            "relative_differences": {
+              "a": 1.0806427744840668e-16,
+              "a1": 1.4069442263931063e-13,
+              "a2": 6.787312742651971e-09
+            },
+            "residual_difference_abs": 2.8088547192892447e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.6023856132418857e-05,
+            "derivative_difference_residual_abs": 9.335724986253442e-06,
+            "double": {
+              "a": [
+                0.9931685083024449,
+                -7.725265762581948e-05
+              ],
+              "a1": [
+                -426.3298101703476,
+                -4.78793157789228
+              ],
+              "a2": [
+                -141.5719076935203,
+                4134.213501302278
+              ]
+            },
+            "double_a_form_normalized": 1.0726182779825136e-06,
+            "double_a_form_numerator_abs": 0.0002552628338669777,
+            "double_regular_residual_abs": 0.0002552628338559661,
+            "high_precision": {
+              "a": [
+                0.9931685083024449,
+                -7.725265762581948e-05
+              ],
+              "a1": [
+                -426.32981017032756,
+                -4.78793157789236
+              ],
+              "a2": [
+                -141.5718983577992,
+                4134.213501294476
+              ]
+            },
+            "high_precision_a_form_normalized": 1.0333929680247785e-06,
+            "high_precision_a_form_scale": 237.98104982271482,
+            "high_precision_regular_residual": [
+              -0.00024590777274792464,
+              -3.149706653263986e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00024592794340994793,
+            "high_precision_terms_abs": [
+              4136.636783268525,
+              4139.288241544483,
+              95.20973733798179
+            ],
+            "local_coordinate": 6.023916371582572e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 4.710910495781866e-14,
+              "a2": 2.2568392776401355e-09
+            },
+            "residual_difference_abs": 9.335724970793936e-06
+          },
+          {
+            "check_index": 3,
+            "coordinate": 2.355364227857315e-05,
+            "derivative_difference_residual_abs": 3.0112983779865264e-06,
+            "double": {
+              "a": [
+                0.9899583008069871,
+                -0.00011318791604745771
+              ],
+              "a1": [
+                -426.33049776735174,
+                -4.7568013428540965
+              ],
+              "a2": [
+                -34.413901154713436,
+                4134.2581151995855
+              ]
+            },
+            "double_a_form_normalized": 3.830116796733518e-06,
+            "double_a_form_numerator_abs": 9.237488593776565e-05,
+            "double_regular_residual_abs": 9.237488593920278e-05,
+            "high_precision": {
+              "a": [
+                0.989958300806987,
+                -0.00011318791604745818
+              ],
+              "a1": [
+                -426.3304977673186,
+                -4.756801342854114
+              ],
+              "a2": [
+                -34.41390416597217,
+                4134.2581152147495
+              ]
+            },
+            "high_precision_a_form_normalized": 3.95496506854287e-06,
+            "high_precision_a_form_scale": 24.118036700610652,
+            "high_precision_regular_residual": [
+              -9.538429823371245e-05,
+              -5.685495828243564e-07
+            ],
+            "high_precision_regular_residual_abs": 9.538599267275007e-05,
+            "high_precision_terms_abs": [
+              4134.401344816315,
+              4139.322702433281,
+              12.711903760230827
+            ],
+            "local_coordinate": 1.3553777816351313e-05,
+            "relative_differences": {
+              "a": 7.540597399050436e-17,
+              "a1": 7.769920698657356e-14,
+              "a2": 7.283513779446266e-10
+            },
+            "residual_difference_abs": 3.011298381112745e-06
+          },
+          {
+            "check_index": 4,
+            "coordinate": 3.409527938080803e-05,
+            "derivative_difference_residual_abs": 3.3568584895501666e-06,
+            "double": {
+              "a": [
+                0.9854640362124335,
+                -0.00016310317374897495
+              ],
+              "a1": [
+                -426.32978694399935,
+                -4.713218893543456
+              ],
+              "a2": [
+                182.12221979815524,
+                4134.280193823375
+              ]
+            },
+            "double_a_form_normalized": 6.001394220571773e-08,
+            "double_a_form_numerator_abs": 2.4624926137979976e-05,
+            "double_regular_residual_abs": 2.4624926116733554e-05,
+            "high_precision": {
+              "a": [
+                0.9854640362124335,
+                -0.00016310317374897495
+              ],
+              "a1": [
+                -426.3297869440085,
+                -4.713218893543366
+              ],
+              "a2": [
+                182.1222164412984,
+                4134.28019382574
+              ]
+            },
+            "high_precision_a_form_normalized": 5.1833491038214016e-08,
+            "high_precision_a_form_scale": 410.3200861578394,
+            "high_precision_regular_residual": [
+              2.1266639124365234e-05,
+              2.675867830413132e-07
+            ],
+            "high_precision_regular_residual_abs": 2.1268322508661572e-05,
+            "high_precision_terms_abs": [
+              4138.289649454385,
+              4139.3547392654,
+              227.9323595887948
+            ],
+            "local_coordinate": 2.409552033601139e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 2.146207021295091e-14,
+              "a2": 8.111703065837839e-10
+            },
+            "residual_difference_abs": 3.3568584890631566e-06
+          },
+          {
+            "check_index": 5,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 9.218175866204063e-07,
+            "double": {
+              "a": [
+                0.9796857775540713,
+                -0.0002266043388592288
+              ],
+              "a1": [
+                -426.3248129970362,
+                -4.657185005278318
+              ],
+              "a2": [
+                572.678126521027,
+                4134.210721182379
+              ]
+            },
+            "double_a_form_normalized": 3.4229907916361254e-08,
+            "double_a_form_numerator_abs": 4.075470345982362e-05,
+            "double_regular_residual_abs": 4.07547035611936e-05,
+            "high_precision": {
+              "a": [
+                0.979685777554071,
+                -0.00022660433885922807
+              ],
+              "a1": [
+                -426.32481299705995,
+                -4.657185005278297
+              ],
+              "a2": [
+                572.6781274427991,
+                4134.210721173438
+              ]
+            },
+            "high_precision_a_form_normalized": 3.50040744953545e-08,
+            "high_precision_a_form_scale": 1190.6168018610379,
+            "high_precision_regular_residual": [
+              4.167622187468823e-05,
+              1.3459924704651375e-07
+            ],
+            "high_precision_regular_residual_abs": 4.167643922776449e-05,
+            "high_precision_terms_abs": [
+              4173.686443028128,
+              4139.356577869042,
+              617.9132657223306
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 1.7284259969992467e-16,
+              "a1": 5.570275920261478e-14,
+              "a2": 2.208636020072076e-10
+            },
+            "residual_difference_abs": 9.218175324759394e-07
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 1.5581280572373208e-07,
+          "eps_perturbation_spike_numerator_change": 4.434745271991691e-06,
+          "evaluation_error_spike_numerator": 3.011298381112745e-06
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 3.830116796733518e-06,
+            "a_form_numerator_abs": 9.237488593776565e-05,
+            "a_form_scale": 24.118033689350355,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 2.355364227857315e-05,
+            "distance_over_local_spacing": 0.6250009412343062,
+            "local_distance": 7.529861444768741e-06
+          },
+          {
+            "a_form_normalized": 6.001394220571773e-08,
+            "a_form_numerator_abs": 2.4624926137979976e-05,
+            "a_form_scale": 410.32008951469743,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 3.409527938080803e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 3.4229907916361254e-08,
+            "a_form_numerator_abs": 4.075470345982362e-05,
+            "a_form_scale": 1190.616800939264,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.5624997176139604,
+            "local_distance": 1.3553560091768402e-05
+          },
+          {
+            "a_form_normalized": 9.230955732806218e-10,
+            "a_form_numerator_abs": 2.288583194765136e-06,
+            "a_form_scale": 2479.2483693011977,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 6.421383430221805e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.4318051959923235e-09,
+            "a_form_numerator_abs": 1.9778907806400974e-05,
+            "a_form_scale": 4462.946120530528,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 8.379057068952367e-05,
+            "distance_over_local_spacing": 0.5416653070500436,
+            "local_distance": 1.957693215662718e-05
+          },
+          {
+            "a_form_normalized": 5.980314828731582e-10,
+            "a_form_numerator_abs": 4.394383201473952e-06,
+            "a_form_scale": 7348.080038130694,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00010637879517000348,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 1.2132151747059023e-09,
+            "a_form_numerator_abs": 1.377263388609891e-05,
+            "a_form_scale": 11352.17739873519,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00013197837167394644,
+            "distance_over_local_spacing": 0.5312475997278312,
+            "local_distance": 2.559983250226798e-05
+          },
+          {
+            "a_form_normalized": 8.440097057912178e-11,
+            "a_form_numerator_abs": 1.4089473042142344e-06,
+            "a_form_scale": 16693.496467477413,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.312037954342207e-10,
+            "a_form_numerator_abs": 1.9598738582126124e-05,
+            "a_form_scale": 23578.740484320995,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.00019221094577315245,
+            "distance_over_local_spacing": 0.5249965736754072,
+            "local_distance": 3.162211600293805e-05
+          },
+          {
+            "a_form_normalized": 8.85442602714714e-11,
+            "a_form_numerator_abs": 2.8501702834763185e-06,
+            "a_form_scale": 32189.215593849527,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.00022684358053193243,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.831058871365074e-10,
+            "a_form_numerator_abs": 2.91453922524756e-05,
+            "a_form_scale": 42665.99483522146,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.0002644868416432078,
+            "distance_over_local_spacing": 0.5208288882286816,
+            "local_distance": 3.764363754765081e-05
+          },
+          {
+            "a_form_normalized": 2.6204353037830646e-11,
+            "a_form_numerator_abs": 1.4437267874322745e-06,
+            "a_form_scale": 55094.922028717825,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00030514050234681234,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 61.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 1.3105398466513737e-34
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 2.355364227857315e-05
+      },
+      {
+        "condition_number": 1876658.986781447,
+        "degree": 640,
+        "dimensionless_omega": 14.801409707546267,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 2.567968100312328e-06,
+          "reconstructed_maximum": 2.567968100312328e-06
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 2.567968100312328e-06,
+            "a_form_numerator": [
+              -9.757396537324325e-05,
+              -6.062544157865331e-07
+            ],
+            "a_form_numerator_abs": 9.75758487694344e-05,
+            "a_form_scale": 37.99729784710596,
+            "check_index": 3,
+            "identity_defect": 2.633007521246601e-09,
+            "regular_form_common": 2.5679681003700472e-06,
+            "regular_form_own_denominator": 1.1591687358726138e-08,
+            "regular_numerator": [
+              -9.757403516807983e-05,
+              -5.949155585938115e-07
+            ],
+            "regular_numerator_abs": 9.75758487716276e-05,
+            "regular_scale": 8417.743314839594
+          },
+          "common_denominator_maximum": {
+            "a_form": 2.567968100312328e-06,
+            "a_form_check_index": 3,
+            "regular_form": 2.5679681003700472e-06,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.0033574808945421573,
+          "maximum_identity_defect_check_index": 52,
+          "maximum_identity_defect_common_denominator": 6.7614793224437054e-15
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.1505966301117443e-05,
+            "derivative_difference_residual_abs": 1.2238172126241254e-05,
+            "double": {
+              "a": [
+                0.9950947092943611,
+                -5.6490034420319665e-05
+              ],
+              "a1": [
+                -426.32283062401973,
+                -4.885407198476622
+              ],
+              "a2": [
+                -194.3919690812537,
+                4201.890933735414
+              ]
+            },
+            "double_a_form_normalized": 1.1556920483860117e-06,
+            "double_a_form_numerator_abs": 0.00039503222010754696,
+            "double_regular_residual_abs": 0.0003950322201322253,
+            "high_precision": {
+              "a": [
+                0.9950947092943611,
+                -5.6490034420319516e-05
+              ],
+              "a1": [
+                -426.3228306240129,
+                -4.885407198476576
+              ],
+              "a2": [
+                -194.39195684325747,
+                4201.890933669649
+              ]
+            },
+            "high_precision_a_form_normalized": 1.1198972746676832e-06,
+            "high_precision_a_form_scale": 341.8144189153786,
+            "high_precision_regular_residual": [
+              -0.00038274119578937866,
+              -6.5381922640324865e-06
+            ],
+            "high_precision_regular_residual_abs": 0.0003827970361854503,
+            "high_precision_terms_abs": [
+              4206.3851049732175,
+              4207.068462614345,
+              146.26636914195305
+            ],
+            "local_coordinate": 1.5059813609310514e-06,
+            "relative_differences": {
+              "a": 5.3786434763238325e-18,
+              "a1": 1.5945012875295296e-14,
+              "a2": 2.9094276033145173e-09
+            },
+            "residual_difference_abs": 1.2238172109399498e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.6023856132418857e-05,
+            "derivative_difference_residual_abs": 2.353954208814819e-06,
+            "double": {
+              "a": [
+                0.9931686086091983,
+                -7.851910257148357e-05
+              ],
+              "a1": [
+                -426.3236124583891,
+                -4.866423245357659
+              ],
+              "a2": [
+                -149.29703253135096,
+                4201.926824940063
+              ]
+            },
+            "double_a_form_normalized": 1.051500954469199e-06,
+            "double_a_form_numerator_abs": 0.0002648787209953779,
+            "double_regular_residual_abs": 0.0002648787209724958,
+            "high_precision": {
+              "a": [
+                0.9931686086091983,
+                -7.851910257148357e-05
+              ],
+              "a1": [
+                -426.32361245835204,
+                -4.86642324535776
+              ],
+              "a2": [
+                -149.29703017740755,
+                4201.926824932905
+              ]
+            },
+            "high_precision_a_form_normalized": 1.0421574202361994e-06,
+            "high_precision_a_form_scale": 251.90535243395402,
+            "high_precision_regular_residual": [
+              -0.00026250549567119355,
+              -3.2027009024266598e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00026252503223626015,
+            "high_precision_terms_abs": [
+              4204.578295775988,
+              4207.093042019125,
+              101.39461709855085
+            ],
+            "local_coordinate": 6.023916371582572e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 8.692176185362513e-14,
+              "a2": 5.598550274187656e-10
+            },
+            "residual_difference_abs": 2.3539541759193595e-06
+          },
+          {
+            "check_index": 3,
+            "coordinate": 2.355364227857315e-05,
+            "derivative_difference_residual_abs": 3.249622337283011e-06,
+            "double": {
+              "a": [
+                0.9899584475629336,
+                -0.00011504347272593219
+              ],
+              "a1": [
+                -426.3243581115789,
+                -4.83478313240714
+              ],
+              "a2": [
+                -42.10902716801019,
+                4201.9729699922
+              ]
+            },
+            "double_a_form_normalized": 2.567968100312328e-06,
+            "double_a_form_numerator_abs": 9.75758487694344e-05,
+            "double_regular_residual_abs": 9.75758487716276e-05,
+            "high_precision": {
+              "a": [
+                0.9899584475629336,
+                -0.00011504347272593265
+              ],
+              "a1": [
+                -426.3243581115511,
+                -4.834783132407165
+              ],
+              "a2": [
+                -42.10903041758569,
+                4201.972970009419
+              ]
+            },
+            "high_precision_a_form_normalized": 2.6534848780103563e-06,
+            "high_precision_a_form_scale": 37.99730109668322,
+            "high_precision_regular_residual": [
+              -0.00010082361041817521,
+              -5.774216331059369e-07
+            ],
+            "high_precision_regular_residual_abs": 0.00010082526386525526,
+            "high_precision_terms_abs": [
+              4202.1839573170155,
+              4207.128526624954,
+              7.430850947031721
+            ],
+            "local_coordinate": 1.3553777816351313e-05,
+            "relative_differences": {
+              "a": 4.6064250513019237e-17,
+              "a1": 6.514543825870415e-14,
+              "a2": 7.733171979664374e-10
+            },
+            "residual_difference_abs": 3.249622338589737e-06
+          },
+          {
+            "check_index": 4,
+            "coordinate": 3.409527938080803e-05,
+            "derivative_difference_residual_abs": 2.0431504488557015e-06,
+            "double": {
+              "a": [
+                0.9854642472642553,
+                -0.0001657770318231033
+              ],
+              "a1": [
+                -426.32372818677504,
+                -4.790486841956426
+              ],
+              "a2": [
+                174.46912177279603,
+                4201.996524015747
+              ]
+            },
+            "double_a_form_normalized": 6.026592215829215e-08,
+            "double_a_form_numerator_abs": 2.3895674972815383e-05,
+            "double_regular_residual_abs": 2.3895674989922108e-05,
+            "high_precision": {
+              "a": [
+                0.9854642472642553,
+                -0.0001657770318231033
+              ],
+              "a1": [
+                -426.32372818677914,
+                -4.790486841956331
+              ],
+              "a2": [
+                174.46911972964784,
+                4201.996524018124
+              ]
+            },
+            "high_precision_a_form_normalized": 5.511344634707018e-08,
+            "high_precision_a_form_scale": 396.5039278237482,
+            "high_precision_regular_residual": [
+              2.1850995780439133e-05,
+              2.727475154060767e-07
+            ],
+            "high_precision_regular_residual_abs": 2.1852697952516732e-05,
+            "high_precision_terms_abs": [
+              4205.616989408288,
+              4207.161728488478,
+              221.79500219850905
+            ],
+            "local_coordinate": 2.409552033601139e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 9.549185803098232e-15,
+              "a2": 4.858144622815959e-10
+            },
+            "residual_difference_abs": 2.0431504572065853e-06
+          },
+          {
+            "check_index": 5,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 9.214757861267211e-07,
+            "double": {
+              "a": [
+                0.9796860700223456,
+                -0.00023031923298001328
+              ],
+              "a1": [
+                -426.318857599968,
+                -4.733535152055298
+              ],
+              "a2": [
+                565.0791358888381,
+                4201.927333350452
+              ]
+            },
+            "double_a_form_normalized": 3.590736966148183e-08,
+            "double_a_form_numerator_abs": 4.22587342194322e-05,
+            "double_regular_residual_abs": 4.2258734302663705e-05,
+            "high_precision": {
+              "a": [
+                0.9796860700223459,
+                -0.0002303192329800126
+              ],
+              "a1": [
+                -426.3188575999774,
+                -4.733535152055287
+              ],
+              "a2": [
+                565.0791368102538,
+                4201.927333339994
+              ]
+            },
+            "high_precision_a_form_normalized": 3.669026488220567e-08,
+            "high_precision_a_form_scale": 1176.881922873043,
+            "high_precision_regular_residual": [
+              4.3179892344243075e-05,
+              1.369390424199617e-07
+            ],
+            "high_precision_regular_residual_abs": 4.3180109485291496e-05,
+            "high_precision_terms_abs": [
+              4239.753264699253,
+              4207.164415680368,
+              611.8097675003646
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 2.0415630534594218e-16,
+              "a1": 2.201438331822513e-14,
+              "a2": 2.1734164851113107e-10
+            },
+            "residual_difference_abs": 9.214758124716077e-07
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 1.1566068938123855e-07,
+          "eps_perturbation_spike_numerator_change": 4.395384433878925e-06,
+          "evaluation_error_spike_numerator": 3.249622338589737e-06
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 2.567968100312328e-06,
+            "a_form_numerator_abs": 9.75758487694344e-05,
+            "a_form_scale": 37.99729784710596,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 2.355364227857315e-05,
+            "distance_over_local_spacing": 0.6250009412343062,
+            "local_distance": 7.529861444768741e-06
+          },
+          {
+            "a_form_normalized": 6.026592215829215e-08,
+            "a_form_numerator_abs": 2.3895674972815383e-05,
+            "a_form_scale": 396.5039298668977,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 3.409527938080803e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 3.590736966148183e-08,
+            "a_form_numerator_abs": 4.22587342194322e-05,
+            "a_form_scale": 1176.881921951625,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.5624997176139604,
+            "local_distance": 1.3553560091768402e-05
+          },
+          {
+            "a_form_normalized": 4.4902144607888e-10,
+            "a_form_numerator_abs": 1.1071131779615886e-06,
+            "a_form_scale": 2465.6131408188935,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 6.421383430221805e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.4193073653977e-09,
+            "a_form_numerator_abs": 1.966339538864599e-05,
+            "a_form_scale": 4449.429234681994,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 8.379057068952367e-05,
+            "distance_over_local_spacing": 0.5416653070500436,
+            "local_distance": 1.957693215662718e-05
+          },
+          {
+            "a_form_normalized": 5.812566244321545e-10,
+            "a_form_numerator_abs": 4.263343355401548e-06,
+            "a_form_scale": 7334.70067470891,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00010637879517000348,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 1.2349987902300151e-09,
+            "a_form_numerator_abs": 1.4003596232215123e-05,
+            "a_form_scale": 11338.955424893162,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00013197837167394644,
+            "distance_over_local_spacing": 0.5312475997278312,
+            "local_distance": 2.559983250226798e-05
+          },
+          {
+            "a_form_normalized": 6.774668965460351e-11,
+            "a_form_numerator_abs": 1.130045450023543e-06,
+            "a_form_scale": 16680.452665435205,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.344970747179018e-10,
+            "a_form_numerator_abs": 1.966567193642492e-05,
+            "a_form_scale": 23565.896792475654,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.00019221094577315245,
+            "distance_over_local_spacing": 0.5249965736754072,
+            "local_distance": 3.162211600293805e-05
+          },
+          {
+            "a_form_normalized": 9.533268187917203e-11,
+            "a_form_numerator_abs": 3.0674811273203666e-06,
+            "a_form_scale": 32176.595338083524,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.00022684358053193243,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.834857299094586e-10,
+            "a_form_numerator_abs": 2.9153142596245725e-05,
+            "a_form_scale": 42653.62292217519,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.0002644868416432078,
+            "distance_over_local_spacing": 0.5208288882286816,
+            "local_distance": 3.764363754765081e-05
+          },
+          {
+            "a_form_normalized": 2.925049951854283e-11,
+            "a_form_numerator_abs": 1.6112001481977905e-06,
+            "a_form_scale": 55082.82507026586,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00030514050234681234,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 62.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 2.965051173883827e-35
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 2.355364227857315e-05
+      },
+      {
+        "condition_number": 1932740.9457850389,
+        "degree": 640,
+        "dimensionless_omega": 16.71126902464901,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 6.219807328414746e-07,
+          "reconstructed_maximum": 6.219807328414746e-07
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 6.219807328414746e-07,
+            "a_form_numerator": [
+              -9.774558608910411e-05,
+              -6.860697614274175e-07
+            ],
+            "a_form_numerator_abs": 9.774799379844073e-05,
+            "a_form_scale": 157.1559835171839,
+            "check_index": 3,
+            "identity_defect": 1.0323414194189485e-08,
+            "regular_form_common": 6.219807329231208e-07,
+            "regular_form_own_denominator": 1.0242926234638202e-08,
+            "regular_numerator": [
+              -9.774567528353373e-05,
+              -6.73244008098095e-07
+            ],
+            "regular_numerator_abs": 9.774799381127194e-05,
+            "regular_scale": 9542.975471278942
+          },
+          "common_denominator_maximum": {
+            "a_form": 6.219807328414746e-07,
+            "a_form_check_index": 3,
+            "regular_form": 6.219807329231208e-07,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.0011081686731793361,
+          "maximum_identity_defect_check_index": 48,
+          "maximum_identity_defect_common_denominator": 6.420964725928056e-15
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.1505966301117443e-05,
+            "derivative_difference_residual_abs": 8.190951404243474e-05,
+            "double": {
+              "a": [
+                0.9950953294160804,
+                -6.377911088428868e-05
+              ],
+              "a1": [
+                -426.2693186980792,
+                -5.515789209870387
+              ],
+              "a2": [
+                -260.86951189606054,
+                4743.477648529478
+              ]
+            },
+            "double_a_form_normalized": 1.0584659602819797e-06,
+            "double_a_form_numerator_abs": 0.0004885789273602781,
+            "double_regular_residual_abs": 0.0004885789273531321,
+            "high_precision": {
+              "a": [
+                0.9950953294160807,
+                -6.377911088428853e-05
+              ],
+              "a1": [
+                -426.26931869829644,
+                -5.515789209870337
+              ],
+              "a2": [
+                -260.86942998657804,
+                4743.477648459453
+              ]
+            },
+            "high_precision_a_form_normalized": 8.810426851341777e-07,
+            "high_precision_a_form_scale": 461.59145309851573,
+            "high_precision_regular_residual": [
+              -0.0004066147366883868,
+              -7.383807976029107e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00040668177327290317,
+            "high_precision_terms_abs": [
+              4750.645541496013,
+              4749.405552348299,
+              199.49504225796895
+            ],
+            "local_coordinate": 1.5059813609310514e-06,
+            "relative_differences": {
+              "a": 3.1359437091991416e-16,
+              "a1": 5.096041965088345e-13,
+              "a2": 1.7241764665004588e-08
+            },
+            "residual_difference_abs": 8.19095140160526e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.6023856132418857e-05,
+            "derivative_difference_residual_abs": 3.074396972103974e-05,
+            "double": {
+              "a": [
+                0.9931694698163857,
+                -8.865067659989467e-05
+              ],
+              "a1": [
+                -426.2704005246924,
+                -5.494358381915752
+              ],
+              "a2": [
+                -215.62009053491056,
+                4743.522839544239
+              ]
+            },
+            "double_a_form_normalized": 8.221293040311251e-07,
+            "double_a_form_numerator_abs": 0.00030538042393671284,
+            "double_regular_residual_abs": 0.0003053804239089789,
+            "high_precision": {
+              "a": [
+                0.9931694698163857,
+                -8.865067659989467e-05
+              ],
+              "a1": [
+                -426.2704005246668,
+                -5.4943583819158555
+              ],
+              "a2": [
+                -215.6200597909427,
+                4743.522839537323
+              ]
+            },
+            "high_precision_a_form_normalized": 7.393687190229142e-07,
+            "high_precision_a_form_scale": 371.450570079221,
+            "high_precision_regular_residual": [
+              -0.0002746151044632856,
+              -3.6176607748940453e-06
+            ],
+            "high_precision_regular_residual_abs": 0.00027463893217980487,
+            "high_precision_terms_abs": [
+              4748.420889032109,
+              4749.435978309374,
+              154.50620469227258
+            ],
+            "local_coordinate": 6.023916371582572e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 5.998294273843861e-14,
+              "a2": 6.474566883510824e-09
+            },
+            "residual_difference_abs": 3.0743969730775e-05
+          },
+          {
+            "check_index": 3,
+            "coordinate": 2.355364227857315e-05,
+            "derivative_difference_residual_abs": 4.748971321038794e-06,
+            "double": {
+              "a": [
+                0.9899597075708232,
+                -0.00012988795726767807
+              ],
+              "a1": [
+                -426.2716446118379,
+                -5.458640072786143
+              ],
+              "a2": [
+                -108.17456747301416,
+                4743.5826911835475
+              ]
+            },
+            "double_a_form_normalized": 6.219807328414746e-07,
+            "double_a_form_numerator_abs": 9.774799379844073e-05,
+            "double_regular_residual_abs": 9.774799381127194e-05,
+            "high_precision": {
+              "a": [
+                0.9899597075708232,
+                -0.00012988795726767862
+              ],
+              "a1": [
+                -426.2716446117431,
+                -5.458640072786161
+              ],
+              "a2": [
+                -108.17457222194373,
+                4743.582691202451
+              ]
+            },
+            "high_precision_a_form_normalized": 6.521971433800492e-07,
+            "high_precision_a_form_scale": 157.15598826611583,
+            "high_precision_regular_residual": [
+              -0.00010249460466591082,
+              -6.532846731630535e-07
+            ],
+            "high_precision_regular_residual_abs": 0.00010249668661222926,
+            "high_precision_terms_abs": [
+              4744.815959165423,
+              4749.480488551051,
+              47.67904368847979
+            ],
+            "local_coordinate": 1.3553777816351313e-05,
+            "relative_differences": {
+              "a": 4.5196328522475667e-17,
+              "a1": 2.2235618466197439e-13,
+              "a2": 1.0008749001383809e-09
+            },
+            "residual_difference_abs": 4.748971325861585e-06
+          },
+          {
+            "check_index": 4,
+            "coordinate": 3.409527938080803e-05,
+            "derivative_difference_residual_abs": 8.69132924708035e-06,
+            "double": {
+              "a": [
+                0.9854660593000901,
+                -0.00018716796121649837
+              ],
+              "a1": [
+                -426.27170923179256,
+                -5.408634192793883
+              ],
+              "a2": [
+                108.76432890165596,
+                4743.6200773326855
+              ]
+            },
+            "double_a_form_normalized": 1.1911092858839451e-07,
+            "double_a_form_numerator_abs": 3.3099368615313636e-05,
+            "double_regular_residual_abs": 3.309936864147891e-05,
+            "high_precision": {
+              "a": [
+                0.9854660593000901,
+                -0.00018716796121649837
+              ],
+              "a1": [
+                -426.2717092317927,
+                -5.408634192793773
+              ],
+              "a2": [
+                108.7643202103283,
+                4743.620077335179
+              ]
+            },
+            "high_precision_a_form_normalized": 8.783634570542335e-08,
+            "high_precision_a_form_scale": 277.8869073757381,
+            "high_precision_regular_residual": [
+              2.4406637053689626e-05,
+              3.072129386923409e-07
+            ],
+            "high_precision_regular_residual_abs": 2.4408570463266286e-05,
+            "high_precision_terms_abs": [
+              4744.866817461605,
+              4749.524176453961,
+              169.1126827629081
+            ],
+            "local_coordinate": 2.409552033601139e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 4.721728553693603e-16,
+              "a2": 1.8317327666316746e-09
+            },
+            "residual_difference_abs": 8.691329242967659e-06
+          },
+          {
+            "check_index": 5,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 1.0432753198226333e-06,
+            "double": {
+              "a": [
+                0.9796885810794739,
+                -0.0002600385115124992
+              ],
+              "a1": [
+                -426.2677260323606,
+                -5.344341523660735
+              ],
+              "a2": [
+                499.8387858163266,
+                4743.555731609502
+              ]
+            },
+            "double_a_form_normalized": 4.137617032998537e-08,
+            "double_a_form_numerator_abs": 4.3815817374576e-05,
+            "double_regular_residual_abs": 4.381581733033138e-05,
+            "high_precision": {
+              "a": [
+                0.9796885810794738,
+                -0.00026003851151249835
+              ],
+              "a1": [
+                -426.26772603241074,
+                -5.344341523660715
+              ],
+              "a2": [
+                499.8387868595353,
+                4743.555731598251
+              ]
+            },
+            "high_precision_a_form_normalized": 4.236124641821659e-08,
+            "high_precision_a_form_scale": 1058.9626122547813,
+            "high_precision_regular_residual": [
+              4.4858709302576495e-05,
+              1.5473304477133847e-07
+            ],
+            "high_precision_regular_residual_abs": 4.4858976165403145e-05,
+            "high_precision_terms_abs": [
+              4769.817584732968,
+              4749.535143579669,
+              559.4095646408457
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 8.987888162107435e-17,
+              "a1": 1.1758294355688624e-13,
+              "a2": 2.1872310700169752e-10
+            },
+            "residual_difference_abs": 1.0432753298715692e-06
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 3.337846240900212e-08,
+          "eps_perturbation_spike_numerator_change": 5.788397058317294e-06,
+          "evaluation_error_spike_numerator": 4.748971325861585e-06
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 6.219807328414746e-07,
+            "a_form_numerator_abs": 9.774799379844073e-05,
+            "a_form_scale": 157.1559835171839,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 2.355364227857315e-05,
+            "distance_over_local_spacing": 0.6250009412343062,
+            "local_distance": 7.529861444768741e-06
+          },
+          {
+            "a_form_normalized": 1.1911092858839451e-07,
+            "a_form_numerator_abs": 3.3099368615313636e-05,
+            "a_form_scale": 277.8869160670673,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 3.409527938080803e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.137617032998537e-08,
+            "a_form_numerator_abs": 4.3815817374576e-05,
+            "a_form_scale": 1058.9626112115702,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.5624997176139604,
+            "local_distance": 1.3553560091768402e-05
+          },
+          {
+            "a_form_normalized": 1.7807073595460294e-09,
+            "a_form_numerator_abs": 4.182078935642491e-06,
+            "a_form_scale": 2348.549251073272,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 6.421383430221805e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.7248118937417266e-09,
+            "a_form_numerator_abs": 2.0474411224789942e-05,
+            "a_form_scale": 4333.381240406507,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 8.379057068952367e-05,
+            "distance_over_local_spacing": 0.5416653070500436,
+            "local_distance": 1.957693215662718e-05
+          },
+          {
+            "a_form_normalized": 7.547323916725739e-10,
+            "a_form_numerator_abs": 5.449041992198346e-06,
+            "a_form_scale": 7219.833218132643,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00010637879517000348,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 1.2438172996704785e-09,
+            "a_form_numerator_abs": 1.3962395287009188e-05,
+            "a_form_scale": 11225.439050179002,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00013197837167394644,
+            "distance_over_local_spacing": 0.5312475997278312,
+            "local_distance": 2.559983250226798e-05
+          },
+          {
+            "a_form_normalized": 1.3422605281030802e-10,
+            "a_form_numerator_abs": 2.2239197636284174e-06,
+            "a_form_scale": 16568.46578637996,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.443196439296139e-10,
+            "a_form_numerator_abs": 1.9804047273422063e-05,
+            "a_form_scale": 23455.627754022757,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.00019221094577315245,
+            "distance_over_local_spacing": 0.5249965736754072,
+            "local_distance": 3.162211600293805e-05
+          },
+          {
+            "a_form_normalized": 7.284763415289932e-11,
+            "a_form_numerator_abs": 2.3360957354534043e-06,
+            "a_form_scale": 32068.24439281297,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.00022684358053193243,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.808437396103307e-10,
+            "a_form_numerator_abs": 2.896813357811476e-05,
+            "a_form_scale": 42547.40389431234,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.0002644868416432078,
+            "distance_over_local_spacing": 0.5208288882286816,
+            "local_distance": 3.764363754765081e-05
+          },
+          {
+            "a_form_normalized": 2.1824462108852567e-11,
+            "a_form_numerator_abs": 1.1998863696813937e-06,
+            "a_form_scale": 54978.96643210688,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00030514050234681234,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 70.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 1.5321189461557184e-34
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 2.355364227857315e-05
+      },
+      {
+        "condition_number": 1098953.4728479204,
+        "degree": 512,
+        "dimensionless_omega": 14.32394487827058,
+        "identity_check": {
+          "exact_match": true,
+          "production_equation_residual": 2.0467611487967023e-07,
+          "reconstructed_maximum": 2.0467611487967023e-07
+        },
+        "interpretation": "polynomial-defect",
+        "measurement_1": {
+          "at_spike": {
+            "a_form_common": 2.0467611487967023e-07,
+            "a_form_numerator": [
+              -5.911417187576262e-05,
+              3.146048914702412e-07
+            ],
+            "a_form_numerator_abs": 5.9115009031505204e-05,
+            "a_form_scale": 288.82221585190393,
+            "check_index": 3,
+            "identity_defect": 9.852549922350393e-09,
+            "regular_form_common": 2.0467611495201738e-07,
+            "regular_form_own_denominator": 7.11594322343504e-09,
+            "regular_numerator": [
+              -5.9114124411507873e-05,
+              3.2340427669197425e-07
+            ],
+            "regular_numerator_abs": 5.9115009052400674e-05,
+            "regular_scale": 8307.403136342677
+          },
+          "common_denominator_maximum": {
+            "a_form": 2.0467611487967023e-07,
+            "a_form_check_index": 3,
+            "regular_form": 2.0467611495201738e-07,
+            "regular_form_check_index": 3
+          },
+          "maximum_identity_defect": 0.00011348978457502761,
+          "maximum_identity_defect_check_index": 36,
+          "maximum_identity_defect_common_denominator": 2.016581639764675e-15
+        },
+        "measurement_2": [
+          {
+            "check_index": 1,
+            "coordinate": 1.2353071680959449e-05,
+            "derivative_difference_residual_abs": 1.2864754860162519e-05,
+            "double": {
+              "a": [
+                0.9947334115035998,
+                -5.867130339414599e-05
+              ],
+              "a1": [
+                -426.33534312103194,
+                -4.724367293224395
+              ],
+              "a2": [
+                -171.68617578150977,
+                4066.4701574316596
+              ]
+            },
+            "double_a_form_normalized": 9.669724928042298e-07,
+            "double_a_form_numerator_abs": 0.00028960603622368934,
+            "double_regular_residual_abs": 0.0002896060362266915,
+            "high_precision": {
+              "a": [
+                0.9947334115036001,
+                -5.867130339414666e-05
+              ],
+              "a1": [
+                -426.3353431210698,
+                -4.724367293224527
+              ],
+              "a2": [
+                -171.6861629171459,
+                4066.470157532153
+              ]
+            },
+            "high_precision_a_form_normalized": 1.0099259637283839e-06,
+            "high_precision_a_form_scale": 299.4976857556181,
+            "high_precision_regular_residual": [
+              0.0003024703135262334,
+              3.257353981051681e-07
+            ],
+            "high_precision_regular_residual_abs": 0.0003024704889211632,
+            "high_precision_terms_abs": [
+              4070.0928344003146,
+              4071.462173152649,
+              126.66077479394441
+            ],
+            "local_coordinate": 2.3530952119115668e-06,
+            "relative_differences": {
+              "a": 2.2274115581571273e-16,
+              "a1": 8.877733059411607e-14,
+              "a2": 3.160801708161181e-09
+            },
+            "residual_difference_abs": 1.2864754856568888e-05
+          },
+          {
+            "check_index": 2,
+            "coordinate": 1.9412264575857652e-05,
+            "derivative_difference_residual_abs": 2.8947823394961764e-06,
+            "double": {
+              "a": [
+                0.9917237943040449,
+                -9.192053388290036e-05
+              ],
+              "a1": [
+                -426.33628998319,
+                -4.695660828439173
+              ],
+              "a2": [
+                -90.70003604516396,
+                4066.51902796462
+              ]
+            },
+            "double_a_form_normalized": 3.9777978683726885e-07,
+            "double_a_form_numerator_abs": 5.48681144613504e-05,
+            "double_regular_residual_abs": 5.4868114458722906e-05,
+            "high_precision": {
+              "a": [
+                0.9917237943040449,
+                -9.192053388290036e-05
+              ],
+              "a1": [
+                -426.33628998317664,
+                -4.695660828438944
+              ],
+              "a2": [
+                -90.70003315040948,
+                4066.5190279776853
+              ]
+            },
+            "high_precision_a_form_normalized": 4.187658600854057e-07,
+            "high_precision_a_form_scale": 137.9359010324056,
+            "high_precision_regular_residual": [
+              5.7759772850416883e-05,
+              5.958566493825699e-07
+            ],
+            "high_precision_regular_residual_abs": 5.776284623249073e-05,
+            "high_precision_terms_abs": [
+              4067.5303933613163,
+              4071.496928046711,
+              46.102793982292475
+            ],
+            "local_coordinate": 9.412358699444646e-06,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 3.127124359656329e-14,
+              "a2": 7.116809641396228e-10
+            },
+            "residual_difference_abs": 2.8947823019648695e-06
+          },
+          {
+            "check_index": 3,
+            "coordinate": 3.117751224079868e-05,
+            "derivative_difference_residual_abs": 1.991391327846123e-06,
+            "double": {
+              "a": [
+                0.9867077901766723,
+                -0.00014688524608726594
+              ],
+              "a1": [
+                -426.33620039920686,
+                -4.6478164419920835
+              ],
+              "a2": [
+                122.02125959362921,
+                4066.56088975594
+              ]
+            },
+            "double_a_form_normalized": 2.0467611487967023e-07,
+            "double_a_form_numerator_abs": 5.9115009031505204e-05,
+            "double_regular_residual_abs": 5.9115009052400674e-05,
+            "high_precision": {
+              "a": [
+                0.9867077901766725,
+                -0.00014688524608726396
+              ],
+              "a1": [
+                -426.3362003991977,
+                -4.647816441992016
+              ],
+              "a2": [
+                122.02125760240513,
+                4066.5608897300963
+              ]
+            },
+            "high_precision_a_form_normalized": 2.1156985580251902e-07,
+            "high_precision_a_form_scale": 288.8222138606831,
+            "high_precision_regular_residual": [
+              -6.110534920872255e-05,
+              2.9764873504338644e-07
+            ],
+            "high_precision_regular_residual_abs": 6.110607413906904e-05,
+            "high_precision_terms_abs": [
+              4068.3911632473723,
+              4071.53897003792,
+              166.4730229716418
+            ],
+            "local_coordinate": 2.117772401803886e-05,
+            "relative_differences": {
+              "a": 2.0038507442733354e-16,
+              "a1": 2.1515905083008594e-14,
+              "a2": 4.8947893683181e-10
+            },
+            "residual_difference_abs": 1.9913913580630505e-06
+          },
+          {
+            "check_index": 4,
+            "coordinate": 4.764870393697551e-05,
+            "derivative_difference_residual_abs": 4.6798064883691885e-07,
+            "double": {
+              "a": [
+                0.9796854898440015,
+                -0.00022288944804535325
+              ],
+              "a1": [
+                -426.3306715037488,
+                -4.580834995377398
+              ],
+              "a2": [
+                580.1534896295053,
+                4066.4913564246667
+              ]
+            },
+            "double_a_form_normalized": 1.8365981502934846e-08,
+            "double_a_form_numerator_abs": 2.2114997702039636e-05,
+            "double_regular_residual_abs": 2.2114997633006616e-05,
+            "high_precision": {
+              "a": [
+                0.9796854898440015,
+                -0.00022288944804535325
+              ],
+              "a1": [
+                -426.3306715037644,
+                -4.580834995377631
+              ],
+              "a2": [
+                580.1534891615609,
+                4066.4913564188155
+              ]
+            },
+            "high_precision_a_form_normalized": 1.87546279269379e-08,
+            "high_precision_a_form_scale": 1204.1282786826018,
+            "high_precision_regular_residual": [
+              -2.258148557934124e-05,
+              -2.5960987513820735e-07
+            ],
+            "high_precision_regular_residual_abs": 2.2582977842996386e-05,
+            "high_precision_terms_abs": [
+              4107.667223962437,
+              4071.546317672161,
+              623.9175316591177
+            ],
+            "local_coordinate": 3.764908042777979e-05,
+            "relative_differences": {
+              "a": 0.0,
+              "a1": 3.658379737237347e-14,
+              "a2": 1.1392865214745537e-10
+            },
+            "residual_difference_abs": 4.679806307130231e-07
+          },
+          {
+            "check_index": 5,
+            "coordinate": 6.882568463101313e-05,
+            "derivative_difference_residual_abs": 1.3824393026166871e-06,
+            "double": {
+              "a": [
+                0.9706571917227147,
+                -0.00031898683866212775
+              ],
+              "a1": [
+                -426.30984013232,
+                -4.494721753130209
+              ],
+              "a2": [
+                1436.5115923273065,
+                4066.0773147699133
+              ]
+            },
+            "double_a_form_normalized": 7.653016787096018e-09,
+            "double_a_form_numerator_abs": 2.231323065885241e-05,
+            "double_regular_residual_abs": 2.2313230888099893e-05,
+            "high_precision": {
+              "a": [
+                0.9706571917227141,
+                -0.000318986838662131
+              ],
+              "a1": [
+                -426.30984013232035,
+                -4.494721753130291
+              ],
+              "a2": [
+                1436.5115937096677,
+                4066.0773147844457
+              ]
+            },
+            "high_precision_a_form_normalized": 8.127009920128185e-09,
+            "high_precision_a_form_scale": 2915.612403602017,
+            "high_precision_regular_residual": [
+              2.3692722761196405e-05,
+              -3.4337887439858203e-07
+            ],
+            "high_precision_regular_residual_abs": 2.369521092732237e-05,
+            "high_precision_terms_abs": [
+              4312.371770692664,
+              4071.4248684352633,
+              1479.444396217057
+            ],
+            "local_coordinate": 5.8826272893742064e-05,
+            "relative_differences": {
+              "a": 6.022987706147378e-16,
+              "a1": 8.856111366955374e-16,
+              "a2": 3.2057478850317113e-10
+            },
+            "residual_difference_abs": 1.3824388850973779e-06
+          }
+        ],
+        "measurement_3": {
+          "draws": 8,
+          "eps_perturbation_max_change": 7.295012129816326e-09,
+          "eps_perturbation_spike_numerator_change": 2.1230055613447975e-06,
+          "evaluation_error_spike_numerator": 1.9913913580630505e-06
+        },
+        "measurement_4": [
+          {
+            "a_form_normalized": 2.0467611487967023e-07,
+            "a_form_numerator_abs": 5.9115009031505204e-05,
+            "a_form_scale": 288.82221585190393,
+            "check_index": 3,
+            "collocation_index": 1,
+            "coordinate": 3.117751224079868e-05,
+            "distance_over_local_spacing": 0.6250014706820307,
+            "local_distance": 1.1765365318594213e-05
+          },
+          {
+            "a_form_normalized": 1.8365981502934846e-08,
+            "a_form_numerator_abs": 2.2114997702039636e-05,
+            "a_form_scale": 1204.1282791505428,
+            "check_index": 4,
+            "collocation_index": 2,
+            "coordinate": 4.764870393697551e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 7.653016787096018e-09,
+            "a_form_numerator_abs": 2.231323065885241e-05,
+            "a_form_scale": 2915.6124022196605,
+            "check_index": 5,
+            "collocation_index": 2,
+            "coordinate": 6.882568463101313e-05,
+            "distance_over_local_spacing": 0.56249955875491,
+            "local_distance": 2.1177192465962273e-05
+          },
+          {
+            "a_form_normalized": 3.119896143964457e-10,
+            "a_form_numerator_abs": 1.8072368952169213e-06,
+            "a_form_scale": 5792.618766214641,
+            "check_index": 6,
+            "collocation_index": 3,
+            "coordinate": 9.470825499729996e-05,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 2.708330162156265e-09,
+            "a_form_numerator_abs": 2.7752976697964802e-05,
+            "a_form_scale": 10247.264933116197,
+            "check_index": 7,
+            "collocation_index": 3,
+            "coordinate": 0.0001252961714191536,
+            "distance_over_local_spacing": 0.5416645422216548,
+            "local_distance": 3.05882223040767e-05
+          },
+          {
+            "a_form_normalized": 1.5288585925768238e-11,
+            "a_form_numerator_abs": 2.5541613345458945e-07,
+            "a_form_scale": 16706.328151912126,
+            "check_index": 8,
+            "collocation_index": 4,
+            "coordinate": 0.00016058914599137442,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 8.875233434574048e-10,
+            "a_form_numerator_abs": 2.269919616790531e-05,
+            "a_form_scale": 25575.88635300466,
+            "check_index": 9,
+            "collocation_index": 4,
+            "coordinate": 0.00020058684652318748,
+            "distance_over_local_spacing": 0.5312462494751056,
+            "local_distance": 3.9998100512818194e-05
+          },
+          {
+            "a_form_normalized": 2.7003037957334977e-11,
+            "a_form_numerator_abs": 1.0045071030097482e-06,
+            "a_form_scale": 37199.78117265463,
+            "check_index": 10,
+            "collocation_index": 5,
+            "coordinate": 0.00024528889654096275,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 6.904438235922322e-10,
+            "a_form_numerator_abs": 3.5774957122988735e-05,
+            "a_form_scale": 51814.43573042517,
+            "check_index": 11,
+            "collocation_index": 5,
+            "coordinate": 0.0002946948752919343,
+            "distance_over_local_spacing": 0.5249946461787353,
+            "local_distance": 4.940647281569962e-05
+          },
+          {
+            "a_form_normalized": 1.870019342460009e-12,
+            "a_form_numerator_abs": 1.2997409456807635e-07,
+            "a_form_scale": 69504.14448499528,
+            "check_index": 12,
+            "collocation_index": 6,
+            "coordinate": 0.000348804317748197,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          },
+          {
+            "a_form_normalized": 4.440594601724881e-10,
+            "a_form_numerator_abs": 4.0037437754623596e-05,
+            "a_form_scale": 90162.33487981917,
+            "check_index": 13,
+            "collocation_index": 6,
+            "coordinate": 0.00040761671461114757,
+            "distance_over_local_spacing": 0.520826387536265,
+            "local_distance": 5.881298499280053e-05
+          },
+          {
+            "a_form_normalized": 2.3229132478887076e-12,
+            "a_form_numerator_abs": 2.6356952720813945e-07,
+            "a_form_scale": 113465.075567371,
+            "check_index": 14,
+            "collocation_index": 7,
+            "coordinate": 0.00047113151231609196,
+            "distance_over_local_spacing": 0.0,
+            "local_distance": 0.0
+          }
+        ],
+        "omega_over_temperature": 60.0,
+        "precision_cross_check": {
+          "digits": [
+            50,
+            70
+          ],
+          "max_relative_difference_at_spike": 1.6020619890812628e-34
+        },
+        "spike_check_index": 3,
+        "spike_coordinate": 3.117751224079868e-05
+      }
+    ]
+  },
+  "runtime": {
+    "byteorder": "little",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "18d02f5e87c32482488d28d09ebe2806a275bf7a",
+    "holoforge_git_src_modified": "false",
+    "holoforge_source_sha256": "b0d448db8846ce70d13d727f96ecb69a7507a41f36ef23e989dd1185e2ab05a4",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "74df72fa86c3331ba158d6acce2ff637844cdc1157eb6e3b5418bda2ee693888",
+    "numpy": "2.4.6",
+    "numpy_blas": "scipy-openblas 0.3.31.188.0",
+    "numpy_lapack": "scipy-openblas 0.3.31.188.0",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.16",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "scipy-openblas 0.3.30",
+    "scipy_lapack": "scipy-openblas 0.3.30"
+  },
+  "status": "ok",
+  "tool": "gate-calibration",
+  "wall_seconds": 93.76815550000174
+}

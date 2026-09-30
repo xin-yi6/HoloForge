@@ -174,6 +174,10 @@ subject to GitHub's artifact retention.
 
 The mechanism of the single-node value is not established.
 
+*Follow-up, 30 September 2026:* the
+[O-B diagnosis](optical-ob-diagnosis-report.md) addresses the open questions
+of this section. This section is otherwise unchanged.
+
 Adverse controls (saved; B1, with B3 agreeing to about `1e-10`):
 
 | Control | A-form maximum | Normalized regular form |

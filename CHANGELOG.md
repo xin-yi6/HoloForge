@@ -42,7 +42,11 @@ All notable changes to HoloForge are recorded here.
   backend. Even the passing builds sit near the limits: the OpenBLAS
   collocation residual is `9.96e-10` on the Mac and `9.85e-10` on Linux. The
   mechanism is not established, the gates are unchanged, and the benchmark
-  guides record the evidence and a reproduction recipe.
+  guides record the evidence and a reproduction recipe. For the optical
+  value, a later 50-digit diagnosis (`tools/gate_calibration.py optical-ob`,
+  `docs/numerics/optical-ob-diagnosis-report.md`) shows that it is a property
+  of the stored discrete solution near the UV end, not of residual
+  evaluation; its origin within the discrete system is not established.
 
 ### Changed
 
