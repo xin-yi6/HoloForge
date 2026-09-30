@@ -49,7 +49,8 @@ Reserved cases are `N in {60, 76, 92}` with `kappa in {0.5, 0.7, 2.0} GeV`,
 - `kappa = 0.5` and `kappa = 2.0` give **bit-identical** results to each
   other on every build, as the contract predicted: they are exact binary
   scalings. The pre-run addition of `kappa = 0.7` was therefore necessary. Its
-  cases pass on every build.
+  cases pass on every build. (See Clarification 2 for exactly what is
+  identical.)
 - R3 and R4 give identical values, although they use different NumPy/SciPy
   releases and bundled OpenBLAS versions. That is an observation; no cause is
   attributed.
@@ -67,8 +68,9 @@ On every build, the contract's Section 3 table is reproduced:
 ## 4. Limits of what this establishes
 
 - The analytic spectrum is the only accuracy reference. S-A adds no
-  independent numerical method, and its cross-degree stability condition is
-  implied by the per-mode bounds.
+  independent numerical method. Its cross-degree stability condition is
+  closely related to the per-mode bounds but is separately checked. (See
+  Clarification 1; the earlier wording "implied" was imprecise.)
 - `eps ||H||_2 kappa / |lambda|` is a first-order perturbation scale. Errors
   far below it are consistent with rounding dominance but do not prove it.
 - The confirmation covers 9 reserved cases on five builds of one benchmark.
@@ -99,3 +101,33 @@ If the owner approves, one PR would:
    families still fail; the synthetic swapped and non-finite cases fail;
    finite-difference output is byte-identical.
 5. **Validate:** the full suite, the smoke verifier and the telemetry.
+
+## Clarifications (30 September 2026, after Codex review of PR #50)
+
+These clarify wording only. The frozen contract (`07ef0a0`), the evaluator
+(`0ee440c`) and the evidence are unchanged, and no verdict changes.
+
+1. **Cross-degree stability is separately checked, not strictly implied.**
+   The per-mode errors are normalized by the analytic eigenvalue `L`, whereas
+   the stability check and the perturbation scales are normalized by the
+   computed `|lambda|`. The triangle inequality gives only
+   `|lambda_N - lambda_M| / |lambda_N| <= (L / |lambda_N|) (s_N + s_M)`, with a
+   factor `L / |lambda_N|` that is close to, but not exactly, one. For
+   example, `lambda_N = L(1 - e)`, `lambda_M = L(1 + e)` and `s_N = s_M = e`
+   satisfy both per-mode bounds but give `2e / (1 - e) > 2e`. Contract
+   Section 2 item 5 and this report's Section 4 therefore overstated the
+   redundancy. The evaluator checks stability explicitly, and that check and
+   its threshold are retained. The two checks are closely related, not
+   independent numerical evidence.
+2. **What "bit-identical" means under binary scaling.** Between
+   `kappa = 0.5` and `kappa = 2.0`, the dimensionless relative errors, the
+   normalized diagnostic ratios (`e/s`, matching and stability) and every
+   verdict are bit-identical. The absolute eigenvalues are not: at
+   `kappa = 2.0` they are exactly 16 times those at `kappa = 0.5`, as the
+   saved arrays show. The full records are therefore not bit-identical. These
+   dyadic cases are scale-covariance checks, not independent accuracy
+   samples. `kappa = 0.7` is an additional floating-point scaling probe.
+
+The 45 case-build pairs are numerical confirmations of one benchmark's
+acceptance rule. They are not 45 independent physical validations and do not
+establish a universal rounding law.
