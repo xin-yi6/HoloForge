@@ -31,7 +31,9 @@ sigma^{1/3} = 327 MeV.
 ```
 
 These printed parameters are rounded. HoloForge therefore separates the
-one-percent literature-table gate from its much tighter numerical gates.
+one-percent literature-table gate from its much tighter numerical gates. They
+are also EKSS-convention parameters, not QCD's quark mass and condensate; see
+the normalization caveat under Limitations.
 Source Table II used `m_pi`, `m_rho`, and `f_pi` as fit targets; only
 `m_a1`, `sqrt(F_rho)`, `sqrt(F_a1)`, and `g_rho_pi_pi` are source
 predictions. The generated artifacts preserve that distinction.
@@ -172,6 +174,22 @@ a source-figure reproduction.
   coupling, and IR boundary terms can affect decay constants.
 - Numerical agreement with the source calculation does not establish the
   effective model as a precision description of nature.
+- **Normalization caveat for `m_q` and `sigma`.**
+  - Like the source, HoloForge implicitly takes the chiral scalar's operator
+    normalization `a = 1`. The printed `m_q = 2.29 MeV` and
+    `sigma = (327 MeV)^3` are therefore model-convention parameters, not QCD's
+    quark mass and condensate.
+  - A. Cherman, T. D. Cohen and E. S. Werbos, "The chiral condensate in
+    holographic models of QCD," *Phys. Rev. C* 79, 045203 (2009),
+    [arXiv:0804.1096](https://arxiv.org/abs/0804.1096), match the scalar
+    two-point function to large-`N_c` QCD. They find
+    `a = sqrt(N_c)/(2 pi)`, which gives `m_q = 8.3 MeV` and
+    `sigma = (213 MeV)^3` from the same fit.
+  - The model fixes only `a m_q` and `sigma/a`. The GMOR product `m_q sigma`,
+    and every observable this benchmark checks, are therefore independent of
+    this choice.
+  - The authors also note that neither parameter carries QCD's
+    renormalization-scale dependence.
 
 The complete prospective contract and preserved UV stop are in
 [`hard-wall-chiral-contract.md`](hard-wall-chiral-contract.md).
