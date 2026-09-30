@@ -15,6 +15,13 @@ python -m unittest discover -s tests -v
 holoforge verify soft-wall-vector
 ```
 
+If a test or verifier behaves differently on your machine, run
+`python tools/environment_report.py`. It prints, as path-free JSON, the
+provenance recorded in verification records plus test-dependency
+availability, installed-package metadata and BLAS thread settings, and warns
+about stale installations or missing test dependencies. Include its output in
+a bug report. It installs and changes nothing.
+
 Contributors using Codex, Claude Code, or another coding agent should first
 follow the [agent quick-start guide](docs/agent-quickstart.md). The canonical
 repository context is `AGENTS.md`; `CLAUDE.md` imports the same instructions so

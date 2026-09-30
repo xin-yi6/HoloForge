@@ -4,6 +4,46 @@ All notable changes to HoloForge are recorded here.
 
 ## [Unreleased]
 
+### Added
+
+- Record an on-disk package source fingerprint, the Git commit and `src/`
+  modification state when running from a checkout (both recomputed per
+  record), NumPy/SciPy BLAS and LAPACK backend names, and `long double`
+  epsilon in every verification record's `software_versions`. No numerical
+  result, acceptance check or schema changes.
+- Add `tools/environment_report.py`, a read-only, path-free diagnostic of the
+  runtime provenance, test dependencies, installed-package metadata and BLAS
+  thread variables. It flags stale installations and missing test extras.
+- Add `tools/gate_margins.py` and a diagnostic, non-required **Gate
+  telemetry** workflow on Ubuntu and macOS. It records the Gubser--Nellore,
+  HHH optical and degree-64 spectral soft-wall gate values, verifier exit
+  codes and environment report as artifacts. Verdicts are recorded, not
+  enforced, and required CI is unchanged.
+
+### Fixed
+
+- The soft-wall human-readable summary now reports each acceptance gate
+  separately. A failed spectral refinement check is no longer shown as
+  `FAIL: max relative error` when the analytic-spectrum tolerance passes.
+  Default finite-difference output is unchanged, and so are the gates
+  themselves. The refinement check's known false failures at spectral degrees
+  of 56 or more are documented, not changed.
+
+### Known issues
+
+- On macOS arm64 with NumPy 2.4.6 and SciPy 1.17.1 wheels backed by Apple
+  Accelerate, `gubser-nellore-ed` fails its scaled collocation gate
+  (`1.716e-9` against `1e-9`). `holographic-superconductor-optical` fails its
+  aggregate response-numerics gate through the `omega/T = 60` equation
+  residual (`1.0011e-5` against `1e-5`). All other gates of both verifiers
+  pass, and Linux CI passes. A same-machine comparison with OpenBLAS-backed
+  wheels of the same versions passes both verifiers. That shows sensitivity
+  to the numerical build, chiefly but not provably only the BLAS/LAPACK
+  backend. Even the passing builds sit near the limits: the OpenBLAS
+  collocation residual is `9.96e-10` on the Mac and `9.85e-10` on Linux. The
+  mechanism is not established, the gates are unchanged, and the benchmark
+  guides record the evidence and a reproduction recipe.
+
 ### Changed
 
 - Separate prospectively authorized numerical development from confirmatory

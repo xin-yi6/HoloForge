@@ -10,7 +10,9 @@ from unittest.mock import patch
 
 from jsonschema import Draft202012Validator
 
+from holoforge.benchmarks.adapters.soft_wall_vector import _render_soft_wall
 from holoforge.cli import _emit_json, main
+from holoforge.core.registry import BenchmarkExecution
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -378,6 +380,37 @@ class CommandLineTests(unittest.TestCase):
             )
         self.assertEqual(status, 1)
         self.assertIn("FAIL", output.getvalue())
+
+    def test_soft_wall_summary_names_the_failed_gate(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            main(["verify", "soft-wall-vector", "--method", "spectral", "--json"])
+        payload = json.loads(output.getvalue())
+        for check in payload["acceptance_checks"]:
+            if check["id"] == "spectral-degree-refinement":
+                check["passed"] = False
+        payload["passed"] = False
+
+        lines = _render_soft_wall(BenchmarkExecution(payload=payload, passed=False))
+
+        self.assertIn(
+            "PASS: max relative error",
+            next(line for line in lines if "max relative error" in line),
+        )
+        self.assertTrue(
+            any(line.startswith("FAIL: spectral-degree-refinement") for line in lines)
+        )
+        self.assertIn("FAIL: all declared acceptance gates", lines)
+
+    def test_soft_wall_default_summary_is_unchanged(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            status = main(["verify", "soft-wall-vector", "--grid-points", "600"])
+
+        text = output.getvalue()
+        self.assertEqual(status, 0)
+        self.assertIn("PASS: max relative error = ", text)
+        self.assertNotIn("all declared acceptance gates", text)
 
     def test_soft_wall_spectral_json_contains_refinement_evidence(self) -> None:
         output = io.StringIO()

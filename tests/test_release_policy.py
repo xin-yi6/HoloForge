@@ -98,6 +98,30 @@ class Version05PolicyTests(unittest.TestCase):
         self.assertIn("holoforge audit bundle relocated/portability-bundle", workflow)
         self.assertNotIn("continue-on-error", workflow)
 
+    def test_gate_telemetry_is_diagnostic_and_separate_from_required_ci(self) -> None:
+        telemetry = (ROOT / ".github/workflows/gate-telemetry.yml").read_text()
+        for runner in ("ubuntu-latest", "macos-latest"):
+            self.assertIn(runner, telemetry)
+        for command in (
+            "record gubser-nellore-ed gubser-nellore-ed",
+            "record holographic-superconductor-optical",
+            "--spectral-degree 64",
+            "python tools/environment_report.py",
+            "python tools/gate_margins.py",
+            "exit-codes.txt",
+            "actions/upload-artifact@",
+        ):
+            self.assertIn(command, telemetry)
+        self.assertIn("|| status=$?", telemetry)
+        self.assertIn('if [ "${status}" -gt 1 ]; then', telemetry)
+        self.assertIn('if [ "${execution_errors}" -gt 0 ]; then', telemetry)
+        self.assertNotIn("continue-on-error", telemetry)
+        ci = (ROOT / ".github/workflows/ci.yml").read_text()
+        self.assertNotIn("gate_margins", ci)
+        policy = (ROOT / "docs/version-0.5-compatibility-policy.md").read_text()
+        self.assertIn("Gate telemetry", policy)
+        self.assertIn("recorded, not enforced", policy)
+
     def test_policy_documents_current_and_historical_ci_tiers(self) -> None:
         policy = (ROOT / "docs/version-0.5-compatibility-policy.md").read_text()
         self.assertIn("runs every current scientific verifier", policy)

@@ -75,7 +75,18 @@ holoforge verify soft-wall-vector --method spectral --json
 ```
 
 Machine-readable output records the complete numerical configuration, method,
-boundary conditions, convergence levels, and Python/NumPy/SciPy versions.
+boundary conditions, convergence levels, and runtime provenance.
+
+**Known issue: spectral degrees of 56 or more.** The spectral refinement
+check compares degrees `N-16`, `N-8` and `N` and requires strictly decreasing
+error. From `--spectral-degree 56` upward, all three errors are already at the
+rounding floor (about `1e-14`). Their order is then arbitrary, so the check can
+report FAIL even though the analytic-spectrum error passes by ten orders of
+magnitude. The human-readable summary names each gate separately, so this case
+reads `PASS: max relative error ...` followed by
+`FAIL: spectral-degree-refinement ...`. The default degree 40 is unaffected. A
+floor-aware refinement rule needs its own justification and adverse
+under-resolution tests; until then, the rule is unchanged.
 
 This checks the equation, scale restoration, discretization, and eigenvalue
 ordering. It does **not** test decay constants, experimental fits, chiral

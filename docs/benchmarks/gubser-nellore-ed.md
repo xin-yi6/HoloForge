@@ -152,6 +152,48 @@ quantities, not empirical QCD measurements or a predicted physical critical
 temperature. The complete machine record and curve CSV are under
 `docs/generated/gubser-nellore-ed/`.
 
+## Known platform issue: collocation gate on macOS arm64
+
+On macOS arm64 with NumPy 2.4.6 and SciPy 1.17.1 wheels that report Apple
+Accelerate as their BLAS/LAPACK backend, the default `anchor` profile fails
+exactly one gate. The maximum scaled collocation residual is
+`1.7161236e-9` against `1e-9`. Every other gate passes with the values listed
+above, including the independently oversampled equations and the DOP853
+comparison. Linux CI with the same NumPy and SciPy versions passes.
+
+A comparison on one macOS arm64 machine shows that the verdict depends on the
+numerical build. NumPy 2.4.6, SciPy 1.17.1, Python 3.11 and the HoloForge
+source are kept fixed, and only the wheel variants are swapped. The variants
+differ chiefly in their BLAS/LAPACK backend, but also in other build settings
+such as the minimum macOS target, so this does not fully isolate BLAS from
+other build differences:
+
+| Backend (wheel tags) | Threads | Collocation residual | Verdict |
+| --- | --- | ---: | --- |
+| Accelerate (`macosx_14_0_arm64`) | default or `VECLIB_MAXIMUM_THREADS=1` | `1.7161236e-9` | FAIL |
+| OpenBLAS (`macosx_11_0` NumPy, `macosx_12_0` SciPy) | default or `OPENBLAS_NUM_THREADS=1` | `9.9608137e-10` | PASS |
+
+The passing backend is also within 0.4% of the `1e-9` limit. The physical
+checks barely move: the oversampled equation residual is `9.42e-8` against
+`9.37e-8`, and the DOP853 difference `9.76e-10` against `1.10e-9`. Linux CI
+(x86_64, OpenBLAS) records `9.854e-10`, 98.5% of the limit. This is
+consistent with a gate close to the floating-point rounding floor of the
+dense solve rather than one resolving a physical discrepancy. That mechanism
+is not yet established, and it needs calibration before it could justify
+changing the gate.
+
+The frozen gate is unchanged: on an Accelerate platform the verifier's FAIL is
+the recorded result and must not be read as a pass. Any amendment needs its
+own prospective calibration and adverse controls. The diagnostic
+gate-telemetry workflow records the gate values and backend on Linux and
+macOS. To reproduce the OpenBLAS side on Apple silicon, install the
+OpenBLAS-backed wheels of the same versions into a separate environment:
+
+```bash
+python -m pip download --only-binary=:all: --no-deps --platform macosx_11_0_arm64 --python-version 3.11 -d wheels numpy==2.4.6
+python -m pip download --only-binary=:all: --no-deps --platform macosx_12_0_arm64 --python-version 3.11 -d wheels scipy==1.17.1
+```
+
 ## Review and limitations
 
 The implementation, derived-anchor records, model card, and reproduced claim

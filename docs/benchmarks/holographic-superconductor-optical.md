@@ -161,6 +161,44 @@ holoforge verify holographic-superconductor-optical \
 Plotting requires `holoforge[plot]`. The diagnostic contains no source artwork
 or digitized source curve and is labelled as not being a Figure 2 reproduction.
 
+## Known platform issue: high-frequency equation gate on macOS arm64
+
+On macOS arm64 with NumPy 2.4.6 and SciPy 1.17.1 wheels that report Apple
+Accelerate as their BLAS/LAPACK backend, the aggregate
+`optical-response-numerics` gate fails with a normalized ratio of `1.0011`.
+Its largest term is the independent spectral equation residual at
+`omega/T = 60`, `1.0011431e-5` against its `1e-5` ceiling. At that frequency
+the resolution change of the conductivity is about `1.2e-12`. The maximum
+spectral-versus-Riccati conductivity difference is `1.46e-6` against `5e-4`,
+and all other gates pass. Linux CI with the same NumPy and SciPy versions
+passes.
+
+The same wheel-variant comparison used for the
+[Gubser--Nellore guide](gubser-nellore-ed.md#known-platform-issue-collocation-gate-on-macos-arm64)
+runs on one macOS arm64 machine with identical NumPy and SciPy versions.
+The variants differ chiefly, but not only, in their BLAS/LAPACK backend:
+
+| Wheel backend | Threads | Aggregate numerics ratio | Spectral-vs-Riccati difference | Verdict |
+| --- | --- | ---: | ---: | --- |
+| Accelerate | default or 1 | `1.0011431` | `1.4623232e-6` | FAIL |
+| OpenBLAS | default | `0.9786119` | `1.4619025e-6` | PASS |
+| OpenBLAS | 1 | `0.9397609` | `1.4619026e-6` | PASS |
+
+The numerical build decides the verdict, and even the OpenBLAS thread count
+moves the ratio by several percent. Linux CI (x86_64, OpenBLAS) records
+`0.9958`, 99.6% of the limit. Meanwhile the independent conductivity
+comparison agrees to four significant digits across all runs. This is
+consistent with arithmetic sensitivity of the `omega/T = 60` equation
+residual near its ceiling rather than a change in the physical response. The
+mechanism is not established. In particular, it is not yet known whether
+discretization, differentiation or normalization makes that residual
+sensitive to arithmetic.
+
+The equation check is retained unchanged. On an Accelerate platform the
+verifier's FAIL is the recorded result, and any amendment needs its own
+prospective calibration and adverse controls. The diagnostic gate-telemetry
+workflow records the values and backend on Linux and macOS.
+
 ## Interpretation limits
 
 - The calculation is in the probe limit and is not a controlled

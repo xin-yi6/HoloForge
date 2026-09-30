@@ -63,6 +63,27 @@ evidence-bundle/
   and
 - a deterministic digest of the scientific payload.
 
+### Runtime provenance fields
+
+Every verification record's `software_versions` also identifies the executed
+source and numerical backend:
+
+| Field | Meaning |
+| --- | --- |
+| `holoforge_source_sha256` | Fingerprint of the package's `.py` sources and bundled JSON data as they are on disk when the record is created, keyed by package-relative path. Identical files give the same digest from a checkout, sdist, or wheel. It is recomputed for every record, but cannot show which bytes an already running interpreter imported before a file changed |
+| `holoforge_git_commit` | Checkout commit when HoloForge runs from a Git checkout that tracks `src/holoforge`; otherwise `unknown` |
+| `holoforge_git_src_modified` | `true` when `src/` differs from that commit, including untracked files; `false`; or `unknown` |
+| `numpy_blas`, `numpy_lapack`, `scipy_blas`, `scipy_lapack` | Library name, and version when reported, from each package's build report, for example `accelerate` or `scipy-openblas 0.3.29`; `unknown` for builds without a structured report |
+| `longdouble_epsilon` | Machine epsilon of `numpy.longdouble`; it equals double precision on some platforms, including Apple silicon |
+
+The package version alone does not distinguish commits made after a release,
+and numerical results can depend on the math backend. These fields record
+both without exposing filesystem paths. An installed wheel reports its source
+digest and an `unknown` commit rather than guessing one. Because
+`software_versions` is part of the scientific payload, bundles produced from
+different source bytes, commits or backends receive different bundle
+identifiers.
+
 Execution timestamps are retained separately and do not change the scientific
 payload identity. Changing a declared record or artifact does change its file
 digest and causes the audit to fail with the affected path.
