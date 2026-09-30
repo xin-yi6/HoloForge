@@ -62,10 +62,22 @@ first few modes.
 The default verification requires the first four eigenvalues to agree with the
 analytic result within a maximum relative error of `2e-4`. Finite-difference
 tests require the expected approximately second-order convergence. The
-spectral route records degrees 24, 32, and 40 and requires the maximum analytic
-error to decrease at every level and finish below `1e-8`. At degree 40 the
-development result is about `2.7e-13`; this is numerical verification of the
-finite-domain eigenproblem, not phenomenological precision.
+spectral route records degrees `N-16`, `N-8` and `N` (24, 32 and 40 by
+default). Its refinement check, rule `soft-wall-spectral-refinement-v2`,
+requires the final maximum analytic error to be below `1e-8` and, in addition,
+one of two branches:
+
+- **convergence:** the maximum error decreases strictly across the three
+  degrees (the version 1 rule, unchanged); or
+- **plateau:** for every requested mode at the two finest degrees, the
+  analytic error and the eigenvector-solve mismatch lie within the mode's
+  first-order perturbation scale `eps ||H||_2 kappa / |lambda|`, and the two
+  degrees agree within the sum of their scales.
+
+The record states which branch passed and keeps every per-mode quantity for
+audit. At degree 40 the development result is about `2.7e-13`; this is
+numerical verification of the finite-domain eigenproblem, not
+phenomenological precision.
 
 Run either route with:
 
@@ -77,16 +89,20 @@ holoforge verify soft-wall-vector --method spectral --json
 Machine-readable output records the complete numerical configuration, method,
 boundary conditions, convergence levels, and runtime provenance.
 
-**Known issue: spectral degrees of 56 or more.** The spectral refinement
-check compares degrees `N-16`, `N-8` and `N` and requires strictly decreasing
-error. From `--spectral-degree 56` upward, all three errors are already at the
-rounding floor (about `1e-14`). Their order is then arbitrary, so the check can
-report FAIL even though the analytic-spectrum error passes by ten orders of
-magnitude. The human-readable summary names each gate separately, so this case
-reads `PASS: max relative error ...` followed by
-`FAIL: spectral-degree-refinement ...`. The default degree 40 is unaffected. A
-floor-aware refinement rule needs its own justification and adverse
-under-resolution tests; until then, the rule is unchanged.
+**Why version 2.** From `--spectral-degree 56` upward, all three errors are
+already at the rounding level (about `1e-14`), so their order is arbitrary.
+The version 1 rule could then report FAIL although the analytic-spectrum error
+passes by ten orders of magnitude.
+
+The plateau branch was calibrated on seen data and frozen before
+confirmation. It was then confirmed on nine reserved cases across five builds,
+covering macOS arm64 and x86_64, Linux, Accelerate and OpenBLAS, and an older
+NumPy/SciPy release:
+[contract](../numerics/soft-wall-refinement-sa-contract.md),
+[confirmation](../numerics/soft-wall-refinement-sa-confirmation.md).
+Under-resolved degrees and truncated domains still fail. The perturbation
+scale is not a proved error floor, and the analytic spectrum remains the only
+accuracy reference.
 
 This checks the equation, scale restoration, discretization, and eigenvalue
 ordering. It does **not** test decay constants, experimental fits, chiral
