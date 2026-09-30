@@ -12,11 +12,14 @@ Subcommands (each prints JSON):
     python tools/gate_calibration.py gn
     python tools/gate_calibration.py optical
     python tools/gate_calibration.py optical-ob
+    python tools/gate_calibration.py optical-oc --build-label B1
 
 ``optical-ob`` implements the separate O-B plan,
 ``docs/numerics/optical-ob-diagnosis-plan.md``: a 50-digit evaluation of
 the stored optical solution's polynomial at the single-node spike. It has
-no adverse controls or confirmation cases.
+no adverse controls or confirmation cases. ``optical-oc`` implements
+``docs/numerics/optical-oc-diagnosis-plan.md`` and writes its large arrays
+to the Git-ignored ``output/optical-oc-artifacts/``.
 
 ``--adverse`` adds the plan's adverse controls. ``--case-set confirmation``
 selects the reserved confirmation cases, which Batch 2a must not run.
@@ -1480,6 +1483,776 @@ def optical_ob_run(case_set: str, adverse: bool) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# Optical discrete-system diagnosis (O-C)
+# ---------------------------------------------------------------------------
+#
+# Implements ``docs/numerics/optical-oc-diagnosis-plan.md``. Complex vectors
+# of Decimals are (real list, imaginary list) pairs; single complex Decimals
+# are (real, imaginary) tuples, as in O-B.
+
+OPTICAL_OC_PLAN = Path("docs/numerics/optical-oc-diagnosis-plan.md")
+OPTICAL_OC_CASES = {
+    "B1": ((60.0, 640), (59.0, 640), (50.0, 640), (70.0, 640), (60.0, 512)),
+    "B3": ((60.0, 640), (59.0, 640), (60.0, 512)),
+}
+OPTICAL_OC_CROSS_CHECK = ("B1", 60.0, 640)
+OPTICAL_OC_CROSS_CHECK_DIGITS = 70
+OPTICAL_OC_FIXTURE_CASE = (40.0, 64)
+OPTICAL_OC_CHAIN = ("exact", "D", "D2", "coef", "asm", "eq")
+OPTICAL_OC_STEPS = ("D-construction", "D@D-product", "coefficients", "assembly", "equilibration")
+OPTICAL_OC_MAX_ITERATIONS = 10
+# Correction 1 to F4 (reported): with a single update the "last change" is
+# the whole correction, not a bound on the remaining error, so at least two
+# updates are made.
+OPTICAL_OC_MIN_ITERATIONS = 2
+OPTICAL_OC_BACKWARD_LIMIT = 1.0e-28
+OPTICAL_OC_UNCERTAINTY_LIMIT = 0.01
+OPTICAL_OC_HP_FLOOR = 1.0e-40
+OPTICAL_OC_ARTIFACT_DIR = Path("output/optical-oc-artifacts")
+OPTICAL_OC_SPIKE_INDEX = 3
+OPTICAL_OC_CONTEXT_INDICES = (1, 2, 3, 4, 5)
+
+
+def _cv_from_array(values) -> Tuple[List[Decimal], List[Decimal]]:
+    array = np.asarray(values, dtype=complex)
+    return [Decimal(float(v)) for v in array.real], [Decimal(float(v)) for v in array.imag]
+
+
+def _cv_to_array(vector) -> np.ndarray:
+    return np.array([complex(float(r), float(i)) for r, i in zip(*vector)])
+
+
+def _cv_pairs(vector, count=None):
+    re, im = vector
+    count = len(re) if count is None else count
+    return [(re[k], im[k]) for k in range(count)]
+
+
+def _dot(row, vector) -> Decimal:
+    return sum(map(Decimal.__mul__, row, vector), Decimal(0))
+
+
+def _real_matvec(matrix, vector) -> Tuple[List[Decimal], List[Decimal]]:
+    """Real Decimal matrix (list of rows) times a complex Decimal vector."""
+
+    re, im = vector
+    return [_dot(row, re) for row in matrix], [_dot(row, im) for row in matrix]
+
+
+def _complex_matvec(matrix_re, matrix_im, vector):
+    xr, xi = vector
+    rr = [_dot(a, xr) - _dot(b, xi) for a, b in zip(matrix_re, matrix_im)]
+    ri = [_dot(a, xi) + _dot(b, xr) for a, b in zip(matrix_re, matrix_im)]
+    return rr, ri
+
+
+def _decimal_matrix(array) -> List[List[Decimal]]:
+    return [[Decimal(float(v)) for v in row] for row in np.asarray(array, dtype=float)]
+
+
+def decimal_differentiation_matrices(nodes: Sequence[Decimal]):
+    """Exact first and second differentiation matrices of the interpolant.
+
+    ``D1_ij = (w_j/w_i)/(x_i - x_j)`` and
+    ``D2_ij = 2 D1_ij (D1_ii - 1/(x_i - x_j))`` off the diagonal, with each
+    diagonal the negative row sum; evaluated in the active Decimal context.
+    """
+
+    weights = decimal_barycentric_weights(nodes)
+    size = len(nodes)
+    first, second = [], []
+    for i in range(size):
+        inverses = [None] * size
+        row1 = [Decimal(0)] * size
+        diagonal = Decimal(0)
+        for j in range(size):
+            if j != i:
+                inverse = 1 / (nodes[i] - nodes[j])
+                inverses[j] = inverse
+                entry = weights[j] / weights[i] * inverse
+                row1[j] = entry
+                diagonal -= entry
+        row1[i] = diagonal
+        row2 = [Decimal(0)] * size
+        second_diagonal = Decimal(0)
+        for j in range(size):
+            if j != i:
+                entry = 2 * row1[j] * (diagonal - inverses[j])
+                row2[j] = entry
+                second_diagonal -= entry
+        row2[i] = second_diagonal
+        first.append(row1)
+        second.append(row2)
+    return first, second, weights
+
+
+def decimal_equation_coefficients(u, frequency, scalar):
+    """50-digit ``c1`` and ``V`` of the regular-factor equation at one node."""
+
+    one = Decimal(1)
+    one_minus = one - u
+    blackening = one - u ** 3
+    blackening_prime = -3 * u * u
+    third = frequency / 3
+    exponent = (Decimal(0), -third)
+    exponent_product = _cmul(exponent, (Decimal(-1), -third))
+    potential = (frequency * frequency / (blackening * blackening)
+                 - 2 * scalar * scalar / (u * u * blackening))
+    first = _cadd((blackening_prime / blackening, Decimal(0)),
+                  _cscale(exponent, Decimal(-2) / one_minus))
+    regular = _cadd(
+        _csub(_cscale(exponent_product, 1 / (one_minus * one_minus)),
+              _cscale(exponent, blackening_prime / (one_minus * blackening))),
+        (potential, Decimal(0)),
+    )
+    return first, regular
+
+
+def _double_coefficient_scales(u, frequency, scalar):
+    """Term-magnitude sums ``C1`` and ``W`` of the F3 coefficient bound."""
+
+    u = np.asarray(u, dtype=float)
+    blackening = 1.0 - u ** 3
+    prime = -3.0 * u ** 2
+    one_minus = 1.0 - u
+    s = abs(frequency) / 3.0
+    first = np.abs(prime / blackening) + 2.0 * s / one_minus
+    potential = (s * math.hypot(1.0, s) / one_minus ** 2 + s * np.abs(prime) / (one_minus * blackening)
+                 + frequency ** 2 / blackening ** 2 + 2.0 * np.asarray(scalar) ** 2 / (u ** 2 * blackening))
+    return first, potential
+
+
+def optical_oc_capture(frequency_over_temperature: float, degree: int, background):
+    """Run the production solve unmodified, capturing its inputs and solve."""
+
+    from holoforge.benchmarks import holographic_superconductor_optical as optical
+
+    captured: Dict[str, Any] = {"solves": []}
+    original_residual = optical._independent_element_equation_residual
+    original_solve = optical.solve
+
+    def residual_spy(*args, **kwargs):
+        captured["residual_args"] = args
+        return original_residual(*args, **kwargs)
+
+    def solve_spy(a, b, **kwargs):
+        result = original_solve(a, b, **kwargs)
+        captured["solves"].append((np.array(a, copy=True), np.array(b, copy=True),
+                                   np.array(result, copy=True)))
+        return result
+
+    with patch.object(optical, "_independent_element_equation_residual", residual_spy), \
+            patch.object(optical, "solve", solve_spy):
+        response = optical.solve_series_transferred_spectral_response(
+            frequency_over_temperature,
+            background.scalar_profile,
+            scalar_response=background.scalar_response,
+            horizon_scalar=background.horizon_scalar,
+            degree=degree,
+            series_order=4,
+        )
+    return response, captured
+
+
+def optical_oc_reconstruct(frequency: float, degree: int, background) -> Dict[str, Any]:
+    """Rebuild the production operator in production's operation order."""
+
+    from holoforge.benchmarks import holographic_superconductor_optical as optical
+
+    transfer = optical.uv_series_transfer_coefficients(
+        frequency, float(background.scalar_response), optical.ENDPOINT_SPLIT_COORDINATE,
+        series_order=4,
+    )
+    grid = chebyshev_lobatto_grid(degree, transfer.coordinate, 1.0)
+    scalar = np.asarray(background.scalar_profile(grid.nodes), dtype=float)
+    exponent = optical.ingoing_exponent(frequency)
+    current_index = grid.size
+    total_size = grid.size + 1
+    operator = np.zeros((total_size, total_size), dtype=complex)
+    interior = np.arange(1, grid.size - 1)
+    coordinate = grid.nodes[interior]
+    blackening = 1.0 - coordinate**3
+    blackening_prime = -3.0 * coordinate**2
+    one_minus = 1.0 - coordinate
+    first_coefficient = blackening_prime / blackening - 2.0 * exponent / one_minus
+    potential = (
+        exponent * (exponent - 1.0) / one_minus**2
+        - exponent * blackening_prime / (one_minus * blackening)
+        + frequency**2 / blackening**2
+        - 2.0 * scalar[interior] ** 2 / (coordinate**2 * blackening)
+    )
+    operator[interior, : grid.size] = (
+        grid.second_derivative[interior, :]
+        + first_coefficient[:, np.newaxis] * grid.first_derivative[interior, :]
+    )
+    operator[interior, interior] += potential
+    operator[0, 0] = 1.0
+    operator[0, current_index] = -transfer.field_current
+    horizon = optical.horizon_frobenius_coefficient(frequency, background.horizon_scalar)
+    operator[grid.size - 1, : grid.size] = grid.first_derivative[-1, :]
+    operator[grid.size - 1, grid.size - 1] += horizon
+    operator[total_size - 1, : grid.size] = grid.first_derivative[0, :]
+    operator[total_size - 1, current_index] = -transfer.derivative_current
+    rhs = np.zeros(total_size, dtype=complex)
+    rhs[0] = transfer.field_source
+    rhs[total_size - 1] = transfer.derivative_source
+    row_norms = np.max(np.abs(operator), axis=1)
+    return {
+        "grid": grid, "transfer": transfer, "scalar": scalar, "horizon": complex(horizon),
+        "first_coefficient": first_coefficient, "potential": potential,
+        "operator": operator, "rhs": rhs, "row_norms": row_norms,
+        "equilibrated": operator / row_norms[:, np.newaxis], "equilibrated_rhs": rhs / row_norms,
+    }
+
+
+def _array_sha256(array) -> Dict[str, Any]:
+    import hashlib
+
+    contiguous = np.ascontiguousarray(array)
+    return {"sha256": hashlib.sha256(contiguous.tobytes()).hexdigest(),
+            "dtype": str(contiguous.dtype), "shape": list(contiguous.shape)}
+
+
+class _OCSystem:
+    """The complete discrete system of one case, with its operator chain."""
+
+    def __init__(self, rebuilt, frequency, stored, matrix_cache):
+        grid = rebuilt["grid"]
+        self.size = grid.size
+        self.frequency = float(frequency)
+        self.stored = np.asarray(stored, dtype=complex)
+        nodes = [Decimal(float(u)) for u in grid.nodes]
+        key = (HIGH_PRECISION_DIGITS, grid.nodes.tobytes())
+        if key not in matrix_cache:
+            matrix_cache[key] = decimal_differentiation_matrices(nodes)
+        self.first_exact, self.second_exact, self.weights = matrix_cache[key]
+        self.nodes = nodes
+        self.first_double = _decimal_matrix(grid.first_derivative)
+        self.second_double = _decimal_matrix(grid.second_derivative)
+        omega = Decimal(self.frequency)
+        self.exact_coefficients = [
+            decimal_equation_coefficients(nodes[i], omega, Decimal(float(rebuilt["scalar"][i])))
+            for i in range(1, self.size - 1)
+        ]
+        self.double_coefficients = [
+            (_dc(c1), _dc(v)) for c1, v in zip(rebuilt["first_coefficient"], rebuilt["potential"])
+        ]
+        transfer = rebuilt["transfer"]
+        self.field_current = _dc(-transfer.field_current)
+        self.derivative_current = _dc(-transfer.derivative_current)
+        self.horizon = _dc(rebuilt["horizon"])
+        self.rhs = _cv_from_array(rebuilt["rhs"])
+        self.row_norms = [Decimal(float(n)) for n in rebuilt["row_norms"]]
+        self.assembled = (_decimal_matrix(rebuilt["operator"].real), _decimal_matrix(rebuilt["operator"].imag))
+        self.equilibrated = (_decimal_matrix(rebuilt["equilibrated"].real),
+                             _decimal_matrix(rebuilt["equilibrated"].imag))
+        self.equilibrated_rhs = _cv_from_array(rebuilt["equilibrated_rhs"])
+        self.abs_assembled = np.abs(rebuilt["operator"])
+        self.abs_rhs = np.abs(rebuilt["rhs"])
+
+    def apply(self, variant: str, x):
+        """Return ``T x - b`` for one operator of the chain, in 50 digits."""
+
+        n = self.size
+        if variant in ("asm", "eq"):
+            if variant == "asm":
+                product = _complex_matvec(*self.assembled, x)
+                return ([p - b for p, b in zip(product[0], self.rhs[0])],
+                        [p - b for p, b in zip(product[1], self.rhs[1])])
+            product = _complex_matvec(*self.equilibrated, x)
+            return ([w * (p - b) for w, p, b in zip(self.row_norms, product[0], self.equilibrated_rhs[0])],
+                    [w * (p - b) for w, p, b in zip(self.row_norms, product[1], self.equilibrated_rhs[1])])
+        f = (x[0][:n], x[1][:n])
+        current = (x[0][n], x[1][n])
+        first_matrix = self.first_exact if variant == "exact" else self.first_double
+        first = _real_matvec(first_matrix, f)
+        if variant == "exact":
+            second = _real_matvec(self.second_exact, f)
+        elif variant == "D":
+            second = _real_matvec(self.first_double, first)
+        else:
+            second = _real_matvec(self.second_double, f)
+        coefficients = self.double_coefficients if variant == "coef" else self.exact_coefficients
+        out = [None] * (n + 1)
+        out[0] = _cadd((f[0][0], f[1][0]), _cmul(self.field_current, current))
+        for position, i in enumerate(range(1, n - 1)):
+            c1, v = coefficients[position]
+            term = _cadd((second[0][i], second[1][i]), _cmul(c1, (first[0][i], first[1][i])))
+            out[i] = _cadd(term, _cmul(v, (f[0][i], f[1][i])))
+        out[n - 1] = _cadd((first[0][n - 1], first[1][n - 1]), _cmul(self.horizon, (f[0][n - 1], f[1][n - 1])))
+        out[n] = _cadd((first[0][0], first[1][0]), _cmul(self.derivative_current, current))
+        re = [value[0] for value in out]
+        im = [value[1] for value in out]
+        return ([r - b for r, b in zip(re, self.rhs[0])], [r - b for r, b in zip(im, self.rhs[1])])
+
+    def row_scale(self, x) -> np.ndarray:
+        return self.abs_assembled @ np.abs(_cv_to_array(x)) + self.abs_rhs
+
+
+def optical_oc_spike(system: "_OCSystem", check, x, index: int, digits: int = HIGH_PRECISION_DIGITS,
+                     weight_cache=None) -> Tuple[Decimal, Decimal]:
+    """Physical-node spike residual ``R`` of the regular part of ``x``."""
+
+    with localcontext() as context:
+        context.prec = digits
+        if digits == HIGH_PRECISION_DIGITS:
+            nodes, weights = system.nodes, system.weights
+        else:
+            key = ("oc", digits, tuple(system.nodes))
+            if weight_cache is None or key not in weight_cache:
+                nodes = [Decimal(float(u)) for u in system.nodes]
+                weights = decimal_barycentric_weights(nodes)
+                if weight_cache is not None:
+                    weight_cache[key] = (nodes, weights)
+            else:
+                nodes, weights = weight_cache[key]
+        values = _cv_pairs(x, system.size)
+        point = Decimal(float(check["coordinate"][index]))
+        a, a1, a2 = decimal_interpolant_derivatives(nodes, weights, values, point)
+        evaluation = decimal_regular_residual(
+            point, Decimal(1), Decimal(system.frequency), Decimal(float(check["scalar"][index])), a, a1, a2,
+        )
+        return evaluation["residual"]
+
+
+def optical_oc_refine(system, variant, x0, lu, spike, *, target=None,
+                      max_iterations: int = OPTICAL_OC_MAX_ITERATIONS) -> Dict[str, Any]:
+    """High-precision approximation of the exact solution of one operator.
+
+    ``target(x)`` returns ``T x - b``; by default the chain operator
+    ``variant``. The correction uses the production LU in double.
+    """
+
+    from scipy.linalg import lu_solve
+
+    residual_of = target or (lambda vector: system.apply(variant, vector))
+    x = (list(x0[0]), list(x0[1]))
+    history, changes = [], []
+    previous = spike(x)
+    with localcontext() as context:
+        context.prec = HIGH_PRECISION_DIGITS
+        for iteration in range(max_iterations + 1):
+            residual = residual_of(x)
+            scale = system.row_scale(x)
+            magnitudes = np.array([float(_cabs((r, i))) for r, i in zip(*residual)])
+            beta = float(np.max(magnitudes / scale))
+            history.append(beta)
+            converged = beta <= OPTICAL_OC_BACKWARD_LIMIT and iteration >= OPTICAL_OC_MIN_ITERATIONS
+            if converged or iteration == max_iterations:
+                break
+            correction_rhs = np.array([complex(float(-r / n), float(-i / n))
+                                       for r, i, n in zip(*residual, system.row_norms)])
+            delta = lu_solve(lu, correction_rhs)
+            x = ([value + Decimal(float(d.real)) for value, d in zip(x[0], delta)],
+                 [value + Decimal(float(d.imag)) for value, d in zip(x[1], delta)])
+            current = spike(x)
+            changes.append(float(_cabs(_csub(current, previous))))
+            previous = current
+    return {
+        "x": x, "spike": previous, "backward_errors": history, "iterations": len(changes),
+        "last_spike_change": changes[-1] if changes else 0.0,
+        "converged": bool(history[-1] <= OPTICAL_OC_BACKWARD_LIMIT
+                          and len(changes) >= OPTICAL_OC_MIN_ITERATIONS),
+    }
+
+
+def optical_oc_classification(stored: float, solve: float, operator: float, discretization: float,
+                              qualified: bool) -> str:
+    """Apply the plan's ordered, mutually exclusive rules (Section 8)."""
+
+    for magnitude in (stored, solve, operator, discretization):
+        if (isinstance(magnitude, (bool, np.bool_))
+                or not isinstance(magnitude, (int, float, np.integer, np.floating))
+                or not math.isfinite(float(magnitude)) or float(magnitude) < 0.0):
+            raise ValueError(f"invalid residual magnitude {magnitude!r}")
+    if stored == 0.0:
+        return "zero-residual"
+    if not qualified:
+        return "technical-stop"
+    shares = {"solve": solve / stored, "operator-rounding": operator / stored,
+              "discretization": discretization / stored}
+    if sum(shares.values()) > 1.5:
+        return "cancellation"
+    for name, share in shares.items():
+        others = [value for key, value in shares.items() if key != name]
+        if share >= 0.8 and all(value <= 0.25 for value in others):
+            return f"{name}-dominated"
+    return "mixed"
+
+
+def optical_oc_named_step(steps: Mapping[str, float], operator: float, qualified: bool) -> str:
+    """Name the operator-rounding step only under the plan's conditions."""
+
+    if operator <= 0.0 or not qualified:
+        return "not named"
+    if sum(steps.values()) > 1.5 * operator:
+        return "cancellation among steps"
+    name, largest = max(steps.items(), key=lambda item: item[1])
+    return name if largest >= 0.8 * operator else "several steps"
+
+
+def _oc_bounds(system: "_OCSystem", rebuilt, x) -> Dict[str, np.ndarray]:
+    """Loose a-priori rounding bounds of Section 9 (F3), per row, in double."""
+
+    n = system.size
+    grid = rebuilt["grid"]
+    xd = np.abs(_cv_to_array(x))
+    f = xd[:n]
+    abs_first = np.abs(grid.first_derivative)
+    abs_second = np.abs(grid.second_derivative)
+    first_f = np.abs(grid.first_derivative @ _cv_to_array(x)[:n])
+    interior = np.arange(1, n - 1)
+    c1_scale, v_scale = _double_coefficient_scales(grid.nodes[interior], system.frequency,
+                                                   rebuilt["scalar"][interior])
+    zeros = np.zeros(n + 1)
+    assembly = zeros.copy()
+    assembly[interior] = ((abs_second[interior] + np.abs(rebuilt["first_coefficient"])[:, None]
+                           * abs_first[interior]) @ f + np.abs(rebuilt["potential"]) * f[interior])
+    assembly[0] = f[0] + abs(rebuilt["transfer"].field_current) * xd[n]
+    assembly[n - 1] = abs_first[-1] @ f + abs(rebuilt["horizon"]) * f[n - 1]
+    assembly[n] = abs_first[0] @ f + abs(rebuilt["transfer"].derivative_current) * xd[n]
+    coefficient = zeros.copy()
+    # Correction 1 to F3 (reported): rounding of F = 1 - u^3 is amplified by
+    # 1/F near the horizon, which the frozen bound omitted.
+    conditioning = 1.0 + 1.0 / (1.0 - grid.nodes[interior] ** 3)
+    coefficient[interior] = conditioning * (c1_scale * first_f[interior] + v_scale * f[interior])
+    product = zeros.copy()
+    product[interior] = (abs_first @ (abs_first @ f))[interior]
+    scale = system.row_scale(x)
+    floor = OPTICAL_OC_HP_FLOOR * scale
+    return {
+        "equilibration": 4.0 * EPS * scale + floor,
+        "assembly": 8.0 * EPS * assembly + floor,
+        "coefficients": 64.0 * EPS * coefficient + floor,
+        "D@D-product": rounding_gamma(n) * product + floor,
+    }
+
+
+def optical_oc_decomposition(system: "_OCSystem", rebuilt, x) -> Dict[str, Any]:
+    """Measurement 1 and the F3 consistency checks for one solution vector."""
+
+    with localcontext() as context:
+        context.prec = HIGH_PRECISION_DIGITS
+        residuals = {variant: system.apply(variant, x) for variant in OPTICAL_OC_CHAIN}
+        contributions = {}
+        for step, (left, right) in zip(OPTICAL_OC_STEPS, zip(OPTICAL_OC_CHAIN, OPTICAL_OC_CHAIN[1:])):
+            contributions[step] = ([a - b for a, b in zip(residuals[left][0], residuals[right][0])],
+                                   [a - b for a, b in zip(residuals[left][1], residuals[right][1])])
+        contributions["solve"] = residuals["eq"]
+        total = residuals["exact"]
+        summed_re = [sum(values) for values in zip(*(c[0] for c in contributions.values()))]
+        summed_im = [sum(values) for values in zip(*(c[1] for c in contributions.values()))]
+        scale = system.row_scale(x)
+        identity = max(float(_cabs((a - b, c - d))) / s
+                       for a, b, c, d, s in zip(total[0], summed_re, total[1], summed_im, scale))
+        magnitudes = {name: np.array([float(_cabs((r, i))) for r, i in zip(*vector)])
+                      for name, vector in contributions.items()}
+        total_abs = np.array([float(_cabs((r, i))) for r, i in zip(*total)])
+    bounds = _oc_bounds(system, rebuilt, x)
+    checks = {step: bool(np.all(magnitudes[step] <= bounds[step])) for step in bounds}
+    worst = {step: float(np.max(magnitudes[step] / bounds[step])) for step in bounds}
+    n = system.size
+    rows = [0, 1, 2, 3, n - 1, n]
+    report_rows = []
+    for row in rows:
+        report_rows.append({
+            "row": int(row),
+            "row_scale": float(scale[row]),
+            "total": _cfloat((total[0][row], total[1][row])),
+            "contributions": {name: _cfloat((vector[0][row], vector[1][row]))
+                              for name, vector in contributions.items()},
+        })
+    maxima = {name: {"max_over_row_scale": float(np.max(values / scale)),
+                     "row": int(np.argmax(values / scale))} for name, values in magnitudes.items()}
+    maxima["total"] = {"max_over_row_scale": float(np.max(total_abs / scale)),
+                       "row": int(np.argmax(total_abs / scale))}
+    return {
+        "rows": report_rows,
+        "maxima": maxima,
+        "sum_identity_max_relative": identity,
+        "bound_checks": {"passed": all(checks.values()) and identity <= 1.0e-40,
+                         "per_step": checks, "worst_ratio_to_bound": worst},
+    }
+
+
+def optical_oc_case(frequency_over_temperature: float, degree: int, background, matrix_cache,
+                    *, label: str, artifact_dir: Optional[Path], cross_check: bool = False) -> Dict[str, Any]:
+    from scipy.linalg import lu_factor
+
+    response, captured = optical_oc_capture(frequency_over_temperature, degree, background)
+    args = captured["residual_args"]
+    frequency = float(args[3])
+    rebuilt = optical_oc_reconstruct(frequency, degree, background)
+    solves = captured["solves"]
+    record: Dict[str, Any] = {
+        "omega_over_temperature": float(frequency_over_temperature),
+        "degree": int(degree),
+        "dimensionless_omega": frequency,
+    }
+    if len(solves) != 1:
+        record.update({"identity_check": {"exact_match": False, "solve_calls": len(solves)},
+                       "classification": "technical-stop",
+                       "stopped": "expected exactly one production solve"})
+        return record
+    a, b, solution = solves[0]
+    stored_regular = np.asarray(args[1], dtype=complex)
+    identity = {
+        "equilibrated_operator": rebuilt["equilibrated"].tobytes() == a.tobytes(),
+        "equilibrated_rhs": rebuilt["equilibrated_rhs"].tobytes() == b.tobytes(),
+        "stored_regular": solution[: degree + 1].tobytes() == stored_regular.tobytes(),
+        "nodes": rebuilt["grid"].nodes.tobytes() == np.asarray(args[0], dtype=float).tobytes(),
+    }
+    identity["exact_match"] = all(identity.values())
+    record["identity_check"] = identity
+    if not identity["exact_match"]:
+        record.update({"classification": "technical-stop",
+                       "stopped": "production operator not reconstructed bit for bit"})
+        return record
+
+    wide = optical_residual_profiles(*args, first_index=1)
+    check = {"coordinate": wide["check_coordinate"],
+             "scalar": np.concatenate([[np.nan], wide["scalar"]])}
+    arrays = {
+        "stored_solution": solution, "nodes": rebuilt["grid"].nodes, "local_nodes": wide["local_nodes"],
+        "scalar_nodes": rebuilt["scalar"], "check_coordinate": wide["check_coordinate"],
+        "check_scalar": wide["scalar"], "first_coefficient": rebuilt["first_coefficient"],
+        "potential": rebuilt["potential"],
+        "fixed_inputs": np.array([rebuilt["transfer"].field_source, rebuilt["transfer"].field_current,
+                                  rebuilt["transfer"].derivative_source,
+                                  rebuilt["transfer"].derivative_current, rebuilt["horizon"]]),
+        "rhs": rebuilt["rhs"], "row_norms": rebuilt["row_norms"], "equilibrated_rhs": b,
+        "first_derivative": rebuilt["grid"].first_derivative,
+        "second_derivative": rebuilt["grid"].second_derivative,
+        "assembled_operator": rebuilt["operator"], "equilibrated_operator": a,
+    }
+    record["array_sha256"] = {name: _array_sha256(value) for name, value in arrays.items()}
+    if artifact_dir is not None:
+        artifact_dir.mkdir(parents=True, exist_ok=True)
+        name = f"{label}-omega{frequency_over_temperature:g}-degree{degree}.npz"
+        path = artifact_dir / name
+        np.savez_compressed(path, **arrays)
+        record["artifact"] = {"relative_path": (OPTICAL_OC_ARTIFACT_DIR / name).as_posix(),
+                              "bytes": path.stat().st_size, "sha256": _file_sha256(path)}
+
+    with localcontext() as context:
+        context.prec = HIGH_PRECISION_DIGITS
+        system = _OCSystem(rebuilt, frequency, solution, matrix_cache)
+        stored = _cv_from_array(solution)
+        record["row_decomposition"] = optical_oc_decomposition(system, rebuilt, stored)
+
+        def spike(vector):
+            return optical_oc_spike(system, check, vector, OPTICAL_OC_SPIKE_INDEX)
+
+        stored_spike = spike(stored)
+        lu = lu_factor(a)
+        approximations = {}
+        for variant in OPTICAL_OC_CHAIN:
+            approximations[variant] = optical_oc_refine(system, variant, stored, lu, spike)
+        stored_abs = float(_cabs(stored_spike))
+        for item in approximations.values():
+            item["qualified"] = bool(item["converged"] and
+                                     item["last_spike_change"] <= OPTICAL_OC_UNCERTAINTY_LIMIT * stored_abs)
+        eq, exact = approximations["eq"], approximations["exact"]
+        solve_part = _csub(stored_spike, eq["spike"])
+        operator_part = _csub(eq["spike"], exact["spike"])
+        qualified = bool(eq["qualified"] and exact["qualified"]
+                         and record["row_decomposition"]["bound_checks"]["passed"])
+        magnitudes = (stored_abs, float(_cabs(solve_part)), float(_cabs(operator_part)),
+                      float(_cabs(exact["spike"])))
+        classification = optical_oc_classification(*magnitudes, qualified)
+        all_qualified = all(item["qualified"] for item in approximations.values())
+        # Step k between chain[k] (closer to exact) and chain[k+1] contributes
+        # R(x~_chain[k+1]) - R(x~_chain[k]); the steps sum to Delta_op.
+        step_values = {step: _csub(approximations[right]["spike"], approximations[left]["spike"])
+                       for step, (left, right) in zip(OPTICAL_OC_STEPS,
+                                                       zip(OPTICAL_OC_CHAIN, OPTICAL_OC_CHAIN[1:]))}
+        step_magnitudes = {step: float(_cabs(value)) for step, value in step_values.items()}
+        named = optical_oc_named_step(step_magnitudes, magnitudes[2], all_qualified)
+        context_values = {}
+        for index in OPTICAL_OC_CONTEXT_INDICES:
+            context_values[str(index)] = {
+                "coordinate": float(check["coordinate"][index]),
+                "stored": _cfloat(optical_oc_spike(system, check, stored, index)),
+                "eq": _cfloat(optical_oc_spike(system, check, eq["x"], index)),
+                "exact": _cfloat(optical_oc_spike(system, check, exact["x"], index)),
+            }
+        ob_local = _decimal_node_evaluation(wide, solution[: degree + 1], frequency, OPTICAL_OC_SPIKE_INDEX,
+                                            HIGH_PRECISION_DIGITS, {})
+        width = Decimal(float(wide["width"]))
+        ob_physical = _cscale(ob_local["residual"], 1 / (width * width))
+        convention = float(_cabs(_csub(ob_physical, stored_spike)) / _cabs(stored_spike))
+        cross = None
+        if cross_check:
+            cache: Dict[Any, Any] = {}
+            high_stored = optical_oc_spike(system, check, stored, OPTICAL_OC_SPIKE_INDEX,
+                                           OPTICAL_OC_CROSS_CHECK_DIGITS, cache)
+            high_exact = optical_oc_spike(system, check, exact["x"], OPTICAL_OC_SPIKE_INDEX,
+                                          OPTICAL_OC_CROSS_CHECK_DIGITS, cache)
+            with localcontext() as wider:
+                wider.prec = OPTICAL_OC_CROSS_CHECK_DIGITS
+                cross = {
+                    "digits": OPTICAL_OC_CROSS_CHECK_DIGITS,
+                    "stored_relative_difference": float(_cabs(_csub(high_stored, stored_spike))
+                                                        / _cabs(high_stored)),
+                    "exact_relative_difference": float(_cabs(_csub(high_exact, exact["spike"]))
+                                                       / _cabs(high_exact)),
+                }
+        sum_check = _csub(stored_spike, _cadd(_cadd(solve_part, operator_part), exact["spike"]))
+    record.update({
+        "spike_check_index": OPTICAL_OC_SPIKE_INDEX,
+        "spike_coordinate": float(check["coordinate"][OPTICAL_OC_SPIKE_INDEX]),
+        "production_equation_residual": float(response.equation_residual),
+        "condition_number": float(response.condition_number),
+        "approximations": {
+            variant: {key: value for key, value in item.items() if key not in ("x",)}
+            | {"spike": _cfloat(item["spike"])}
+            for variant, item in approximations.items()
+        },
+        "spike_attribution": {
+            "stored": _cfloat(stored_spike),
+            "stored_abs": stored_abs,
+            "solve": _cfloat(solve_part),
+            "operator_rounding": _cfloat(operator_part),
+            "discretization": _cfloat(exact["spike"]),
+            "shares": {"solve": magnitudes[1] / stored_abs, "operator_rounding": magnitudes[2] / stored_abs,
+                       "discretization": magnitudes[3] / stored_abs},
+            "uncertainty_share": (eq["last_spike_change"] + exact["last_spike_change"]) / stored_abs,
+            "sum_identity_abs": float(_cabs(sum_check)),
+            "steps": {step: _cfloat(value) for step, value in step_values.items()},
+            "step_shares_of_operator": ({step: value / magnitudes[2] for step, value in step_magnitudes.items()}
+                                        if magnitudes[2] > 0 else None),
+        },
+        "classification": classification,
+        "named_step": named,
+        "context_nodes": context_values,
+        "ob_convention_relative_difference": convention,
+        "cross_check": cross,
+    })
+    return record
+
+
+def optical_oc_identity_fixture(matrix_cache) -> Dict[str, Any]:
+    """F1-F5 of the plan (Section 9), before any production case."""
+
+    from holoforge.benchmarks import holographic_superconductor_optical as optical
+    from scipy.linalg import lu_factor
+
+    checks: Dict[str, Any] = {}
+    with localcontext() as context:
+        context.prec = HIGH_PRECISION_DIGITS
+        grid = chebyshev_lobatto_grid(640, optical.ENDPOINT_SPLIT_COORDINATE, 1.0)
+        nodes = [Decimal(float(u)) for u in grid.nodes]
+        key = (HIGH_PRECISION_DIGITS, grid.nodes.tobytes())
+        if key not in matrix_cache:
+            matrix_cache[key] = decimal_differentiation_matrices(nodes)
+        first, second, weights = matrix_cache[key]
+        coefficients = [(Decimal(c), Decimal(d)) for c, d in
+                        ((1, 0), (2, -1), (-3, 0.5), (0.25, 4), (5, 0), (0, -2), (1.5, 1))]
+
+        def polynomial(x):
+            powers = [Decimal(1)]
+            for _ in coefficients[1:]:
+                powers.append(powers[-1] * x)
+            value = d1 = d2 = (Decimal(0), Decimal(0))
+            for power, coefficient in enumerate(coefficients):
+                value = _cadd(value, _cscale(coefficient, powers[power]))
+                if power >= 1:
+                    d1 = _cadd(d1, _cscale(coefficient, power * powers[power - 1]))
+                if power >= 2:
+                    d2 = _cadd(d2, _cscale(coefficient, power * (power - 1) * powers[power - 2]))
+            return value, d1, d2
+
+        exact = [polynomial(u) for u in nodes]
+        values = ([e[0][0] for e in exact], [e[0][1] for e in exact])
+        got1 = _real_matvec(first, values)
+        got2 = _real_matvec(second, values)
+        worst = Decimal(0)
+        for order, got in ((1, got1), (2, got2)):
+            want = [e[order] for e in exact]
+            largest = max(_cabs(w) for w in want)
+            error = max(_cabs(_csub((got[0][k], got[1][k]), want[k])) for k in range(len(want)))
+            worst = max(worst, error / largest)
+        point = Decimal(float(chebyshev_lobatto_grid(1280, optical.ENDPOINT_SPLIT_COORDINATE, 1.0).nodes[3]))
+        evaluated = decimal_interpolant_derivatives(nodes, weights, [e[0] for e in exact], point)
+        for got, want in zip(evaluated, polynomial(point)):
+            worst = max(worst, _cabs(_csub(got, want)) / _cabs(want))
+    checks["F1_exact_polynomial_degree_640"] = {"max_relative_error": float(worst), "limit": 1.0e-30,
+                                                "passed": bool(worst <= Decimal("1e-30"))}
+
+    background = type("NormalState", (), {"scalar_profile": staticmethod(optical.zero_scalar_profile),
+                                          "scalar_response": 0.0, "horizon_scalar": 0.0})
+    frequency_over_temperature, degree = OPTICAL_OC_FIXTURE_CASE
+    record = optical_oc_case(frequency_over_temperature, degree, background, matrix_cache,
+                             label="fixture", artifact_dir=None)
+    checks["F2_reconstruction"] = {"passed": bool(record["identity_check"]["exact_match"]),
+                                   "detail": record["identity_check"]}
+    if record["identity_check"]["exact_match"]:
+        bound = record["row_decomposition"]["bound_checks"]
+        checks["F3_rounding_bounds"] = {"passed": bool(bound["passed"]),
+                                        "worst_ratio_to_bound": bound["worst_ratio_to_bound"],
+                                        "sum_identity": record["row_decomposition"]["sum_identity_max_relative"]}
+        checks["F4_refinement"] = {
+            "passed": all(item["qualified"] for item in record["approximations"].values()),
+            "iterations": {k: v["iterations"] for k, v in record["approximations"].items()},
+            "final_backward_error": {k: v["backward_errors"][-1] for k, v in record["approximations"].items()},
+        }
+        _, captured = optical_oc_capture(frequency_over_temperature, degree, background)
+        rebuilt = optical_oc_reconstruct(float(captured["residual_args"][3]), degree, background)
+        solution = captured["solves"][0][2]
+        with localcontext() as context:
+            context.prec = HIGH_PRECISION_DIGITS
+            system = _OCSystem(rebuilt, float(captured["residual_args"][3]), solution, matrix_cache)
+            known = _cv_from_array(solution)
+            product = system.apply("coef", known)
+            rhs = ([p for p in product[0]], [p for p in product[1]])  # T x - b, so b' - b = T x - b
+
+            def target(vector):
+                residual = system.apply("coef", vector)
+                return ([r - c for r, c in zip(residual[0], rhs[0])],
+                        [r - c for r, c in zip(residual[1], rhs[1])])
+
+            rng = np.random.default_rng(20260930)
+            noise = 1.0 + 1.0e-8 * (rng.standard_normal(solution.size) + 1j * rng.standard_normal(solution.size))
+            start = _cv_from_array(solution * noise)
+            refined = optical_oc_refine(system, "coef", start, lu_factor(captured["solves"][0][0]),
+                                        lambda vector: (Decimal(0), Decimal(0)), target=target)
+            difference = max(float(_cabs((a - b, c - d)))
+                             for a, b, c, d in zip(refined["x"][0], known[0], refined["x"][1], known[1]))
+            relative = difference / float(np.max(np.abs(solution)))
+        checks["F5_known_solution"] = {"normwise_relative_error": relative, "limit": 1.0e-25,
+                                       "iterations": refined["iterations"], "passed": bool(relative <= 1.0e-25)}
+    return {"checks": checks, "passed": all(item["passed"] for item in checks.values())}
+
+
+def optical_oc_run(case_set: str, adverse: bool, *, build_label: Optional[str] = None,
+                   artifact_dir: Optional[Path] = None) -> Dict[str, Any]:
+    if case_set != "calibration":
+        return {"stopped": "O-C uses only previously examined cases; reserved cases stay unused"}
+    if adverse:
+        return {"stopped": "the O-C plan defines no adverse controls"}
+    if build_label not in OPTICAL_OC_CASES:
+        return {"stopped": f"--build-label must be one of {sorted(OPTICAL_OC_CASES)}"}
+    matrix_cache: Dict[Any, Any] = {}
+    started = time.perf_counter()
+    fixture = optical_oc_identity_fixture(matrix_cache)
+    fixture["wall_seconds"] = time.perf_counter() - started
+    if not fixture["passed"]:
+        return {"identity_fixture": fixture, "stopped": "identity fixture failed"}
+    background = optical_background()
+    directory = artifact_dir or Path(__file__).resolve().parents[1] / OPTICAL_OC_ARTIFACT_DIR
+    records = []
+    for frequency, degree in OPTICAL_OC_CASES[build_label]:
+        case_started = time.perf_counter()
+        record = optical_oc_case(
+            frequency, degree, background, matrix_cache, label=build_label, artifact_dir=directory,
+            cross_check=(build_label, frequency, degree) == OPTICAL_OC_CROSS_CHECK,
+        )
+        record["wall_seconds"] = time.perf_counter() - case_started
+        records.append(record)
+    return {"identity_fixture": fixture, "build_label": build_label, "records": records}
+
+
+# ---------------------------------------------------------------------------
 # Command line
 # ---------------------------------------------------------------------------
 
@@ -1489,6 +2262,7 @@ RUNNERS: Dict[str, Callable[[str, bool], Dict[str, Any]]] = {
     "gn": gn_run,
     "optical": optical_run,
     "optical-ob": optical_ob_run,
+    "optical-oc": optical_oc_run,
 }
 
 
@@ -1515,6 +2289,8 @@ def _jsonable(value: Any) -> Any:
         return _jsonable(float(value))
     if isinstance(value, np.complexfloating):
         return _jsonable(complex(value))
+    if isinstance(value, Decimal):
+        return _jsonable(float(value))
     if isinstance(value, complex):
         return [_jsonable(value.real), _jsonable(value.imag)]
     if isinstance(value, float) and not math.isfinite(value):
@@ -1523,7 +2299,7 @@ def _jsonable(value: Any) -> Any:
 
 
 PLAN = Path("docs/numerics/gate-calibration-2026-09-plan.md")
-GATE_PLANS = {"optical-ob": OPTICAL_OB_PLAN}
+GATE_PLANS = {"optical-ob": OPTICAL_OB_PLAN, "optical-oc": OPTICAL_OC_PLAN}
 THREAD_VARIABLES = (
     "OMP_NUM_THREADS",
     "OPENBLAS_NUM_THREADS",
@@ -1627,9 +2403,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("gate", choices=sorted(RUNNERS))
     parser.add_argument("--case-set", choices=("calibration", "confirmation"), default="calibration")
     parser.add_argument("--adverse", action="store_true", help="Also run adverse controls.")
+    parser.add_argument("--build-label", help="optical-oc only: B1 or B3 (selects cases).")
+    parser.add_argument("--artifact-dir", type=Path,
+                        help="optical-oc only: where local arrays go (default output/optical-oc-artifacts).")
     args = parser.parse_args(argv)
     started = time.perf_counter()
-    result = RUNNERS[args.gate](args.case_set, args.adverse)
+    runner = RUNNERS[args.gate]
+    if args.gate == "optical-oc":
+        result = runner(args.case_set, args.adverse, build_label=args.build_label,
+                        artifact_dir=args.artifact_dir)
+    else:
+        result = runner(args.case_set, args.adverse)
     errors = diagnostic_errors(result)
     plan = GATE_PLANS.get(args.gate, PLAN)
     payload = {

@@ -46,7 +46,10 @@ All notable changes to HoloForge are recorded here.
   value, a later 50-digit diagnosis (`tools/gate_calibration.py optical-ob`,
   `docs/numerics/optical-ob-diagnosis-report.md`) shows that it is a property
   of the stored discrete solution near the UV end, not of residual
-  evaluation; its origin within the discrete system is not established.
+  evaluation. A further diagnosis (`optical-oc`,
+  `docs/numerics/optical-oc-diagnosis-report.md`) attributes about 59% of it
+  to differentiation-matrix construction rounding, about 40% to the exact
+  discrete system and at most 3% to the solve. No repair has been adopted.
 
 ### Changed
 
