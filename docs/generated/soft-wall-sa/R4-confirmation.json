@@ -1,0 +1,1562 @@
+{
+ "adverse": false,
+ "case_set": "confirmation",
+ "diagnostic_errors": [],
+ "execution": {
+  "installed_wheel_tags": {
+   "numpy": [
+    "cp311-cp311-manylinux_2_27_x86_64",
+    "cp311-cp311-manylinux_2_28_x86_64"
+   ],
+   "scipy": [
+    "cp311-cp311-manylinux_2_27_x86_64",
+    "cp311-cp311-manylinux_2_28_x86_64"
+   ]
+  },
+  "plan_sha256": "3d20c42a36373e9a9035ce354acb81d921b928d02d336625215871cb786b0fb3",
+  "thread_environment": {},
+  "tool_sha256": "9366cee7e49049cd49f9d11abf00b3a928e70f88aa3d4283f7855bd972992d27"
+ },
+ "gate": "soft-wall-sa",
+ "identity_scope": "maximum value of each reconstructed residual, not every node",
+ "plan": "docs/numerics/gate-calibration-2026-09-plan.md",
+ "result": {
+  "contract_sha256": "75e921ea062413149ea1a65631c531944d3d911b69bb1e2b4ec2987e1892f0d4",
+  "records": [
+   {
+    "N": 60,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      9.769962616701378e-15,
+      3.297362383136715e-14,
+      1.3100631690576847e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 0.5,
+    "levels": [
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.0153429003580934,
+       1.0314609221706497,
+       1.0383011036098695,
+       1.0414604277821269
+      ],
+      "degree": 44,
+      "eigenvalues": [
+       1.000000000000006,
+       2.0000000000000195,
+       2.999999999999997,
+       4.000000000000036
+      ],
+      "matched_with_vectors": [
+       [
+        1.000000000000006,
+        0.0
+       ],
+       [
+        2.0000000000000195,
+        0.0
+       ],
+       [
+        2.999999999999997,
+        0.0
+       ],
+       [
+        4.000000000000036,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 2902.08855128601
+     },
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.0153429010001216,
+       1.0314609235787182,
+       1.0383011058423999,
+       1.0414604308725308
+      ],
+      "degree": 52,
+      "eigenvalues": [
+       0.999999999999967,
+       1.9999999999999811,
+       2.9999999999999862,
+       3.999999999999992
+      ],
+      "matched_with_vectors": [
+       [
+        0.999999999999967,
+        0.0
+       ],
+       [
+        1.9999999999999811,
+        0.0
+       ],
+       [
+        2.9999999999999862,
+        0.0
+       ],
+       [
+        3.999999999999992,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 5658.799116112439
+     },
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.0153429011830626,
+       1.031460923979835,
+       1.0383011064782235,
+       1.0414604317524692
+      ],
+      "degree": 60,
+      "eigenvalues": [
+       1.0000000000000102,
+       2.000000000000026,
+       2.9999999999999862,
+       4.000000000000018
+      ],
+      "matched_with_vectors": [
+       [
+        1.0000000000000102,
+        0.0
+       ],
+       [
+        2.000000000000026,
+        0.0
+       ],
+       [
+        2.9999999999999862,
+        0.0
+       ],
+       [
+        4.000000000000018,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 10027.608386425869
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      9.769962616701378e-15,
+      3.297362383136715e-14,
+      1.3100631690576847e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 52,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.02584576789867839,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      },
+      {
+       "degree": 60,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.011408587107008296,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.012546418368602518
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 76,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      1.3100631690576847e-14,
+      3.0753177782116836e-14,
+      1.9984014443252818e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 0.5,
+    "levels": [
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.0153429011830626,
+       1.031460923979835,
+       1.0383011064782235,
+       1.0414604317524692
+      ],
+      "degree": 60,
+      "eigenvalues": [
+       1.0000000000000102,
+       2.000000000000026,
+       2.9999999999999862,
+       4.000000000000018
+      ],
+      "matched_with_vectors": [
+       [
+        1.0000000000000102,
+        0.0
+       ],
+       [
+        2.000000000000026,
+        0.0
+       ],
+       [
+        2.9999999999999862,
+        0.0
+       ],
+       [
+        4.000000000000018,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 10027.608386425869
+     },
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.0153429012450217,
+       1.0314609241156705,
+       1.038301106693519,
+       1.0414604320503948
+      ],
+      "degree": 68,
+      "eigenvalues": [
+       0.9999999999999692,
+       1.999999999999992,
+       3.0000000000000266,
+       4.000000000000025
+      ],
+      "matched_with_vectors": [
+       [
+        0.9999999999999692,
+        0.0
+       ],
+       [
+        1.999999999999992,
+        0.0
+       ],
+       [
+        3.0000000000000266,
+        0.0
+       ],
+       [
+        4.000000000000025,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 16540.507216159625
+     },
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.015342901268935,
+       1.0314609241680923,
+       1.038301106776598,
+       1.0414604321653507
+      ],
+      "degree": 76,
+      "eigenvalues": [
+       0.99999999999998,
+       1.9999999999999831,
+       2.9999999999999893,
+       3.999999999999993
+      ],
+      "matched_with_vectors": [
+       [
+        0.99999999999998,
+        0.0
+       ],
+       [
+        1.9999999999999831,
+        0.0
+       ],
+       [
+        2.9999999999999893,
+        0.0
+       ],
+       [
+        3.999999999999993,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 25805.485168410956
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      1.3100631690576847e-14,
+      3.0753177782116836e-14,
+      1.9984014443252818e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 68,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.00824685224345049,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      },
+      {
+       "degree": 76,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.003434928836795215,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.0038209701921011704
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 92,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      1.9984014443252818e-14,
+      2.808864252301646e-14,
+      2.9753977059954195e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 0.5,
+    "levels": [
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.015342901268935,
+       1.0314609241680923,
+       1.038301106776598,
+       1.0414604321653507
+      ],
+      "degree": 76,
+      "eigenvalues": [
+       0.99999999999998,
+       1.9999999999999831,
+       2.9999999999999893,
+       3.999999999999993
+      ],
+      "matched_with_vectors": [
+       [
+        0.99999999999998,
+        0.0
+       ],
+       [
+        1.9999999999999831,
+        0.0
+       ],
+       [
+        2.9999999999999893,
+        0.0
+       ],
+       [
+        3.999999999999993,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 25805.485168410956
+     },
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.0153429012791513,
+       1.031460924190494,
+       1.0383011068121062,
+       1.041460432214481
+      ],
+      "degree": 84,
+      "eigenvalues": [
+       0.9999999999999719,
+       2.0000000000000098,
+       2.9999999999999956,
+       3.999999999999984
+      ],
+      "matched_with_vectors": [
+       [
+        0.9999999999999957,
+        0.0
+       ],
+       [
+        2.0000000000000018,
+        0.0
+       ],
+       [
+        2.9999999999999916,
+        0.0
+       ],
+       [
+        3.9999999999999996,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 38506.5305072127
+     },
+     {
+      "analytic": [
+       1.0,
+       2.0,
+       3.0,
+       4.0
+      ],
+      "condition_numbers": [
+       1.0153429012839015,
+       1.0314609242009005,
+       1.038301106828588,
+       1.0414604322372831
+      ],
+      "degree": 92,
+      "eigenvalues": [
+       1.0000000000000298,
+       2.0000000000000164,
+       2.99999999999997,
+       3.9999999999999787
+      ],
+      "matched_with_vectors": [
+       [
+        1.0000000000000284,
+        0.0
+       ],
+       [
+        2.0000000000000098,
+        0.0
+       ],
+       [
+        2.9999999999999885,
+        0.0
+       ],
+       [
+        3.999999999999983,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 55403.630194853766
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      1.9984014443252818e-14,
+      2.808864252301646e-14,
+      2.9753977059954195e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 84,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.0032355148605748905,
+       "max_match_to_scale": 0.0027367596053875336,
+       "plateau": true
+      },
+      {
+       "degree": 92,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.002382066271045185,
+       "max_match_to_scale": 0.0014602181668797675,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.002732010770163084
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 60,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      3.3533266866229223e-14,
+      2.2091172428765874e-14,
+      3.7271772969558834e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 0.7,
+    "levels": [
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.0153429003580936,
+       1.0314609221706494,
+       1.0383011036098702,
+       1.0414604277821289
+      ],
+      "degree": 44,
+      "eigenvalues": [
+       1.9600000000000655,
+       3.9200000000000217,
+       5.880000000000011,
+       7.840000000000036
+      ],
+      "matched_with_vectors": [
+       [
+        1.9600000000000655,
+        0.0
+       ],
+       [
+        3.9200000000000217,
+        0.0
+       ],
+       [
+        5.880000000000011,
+        0.0
+       ],
+       [
+        7.840000000000036,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 5688.09356052058
+     },
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.0153429010001216,
+       1.0314609235787193,
+       1.0383011058424017,
+       1.0414604308725324
+      ],
+      "degree": 52,
+      "eigenvalues": [
+       1.9599999999999564,
+       3.9199999999999786,
+       5.87999999999997,
+       7.8399999999999554
+      ],
+      "matched_with_vectors": [
+       [
+        1.9599999999999564,
+        0.0
+       ],
+       [
+        3.9199999999999786,
+        0.0
+       ],
+       [
+        5.87999999999997,
+        0.0
+       ],
+       [
+        7.8399999999999554,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 11091.246267579882
+     },
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.015342901183063,
+       1.031460923979835,
+       1.038301106478224,
+       1.0414604317524718
+      ],
+      "degree": 60,
+      "eigenvalues": [
+       1.9600000000000728,
+       3.9199999999999755,
+       5.879999999999983,
+       7.840000000000012
+      ],
+      "matched_with_vectors": [
+       [
+        1.9600000000000728,
+        0.0
+       ],
+       [
+        3.9199999999999755,
+        0.0
+       ],
+       [
+        5.879999999999983,
+        0.0
+       ],
+       [
+        7.840000000000012,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 19654.112437394302
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      3.3533266866229223e-14,
+      2.2091172428765874e-14,
+      3.7271772969558834e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 52,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.017315758744734996,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      },
+      {
+       "degree": 60,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.016486547756310296,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.016785681793664544
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 76,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      3.7271772969558834e-14,
+      4.304946422015914e-14,
+      9.822075126020518e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 0.7,
+    "levels": [
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.015342901183063,
+       1.031460923979835,
+       1.038301106478224,
+       1.0414604317524718
+      ],
+      "degree": 60,
+      "eigenvalues": [
+       1.9600000000000728,
+       3.9199999999999755,
+       5.879999999999983,
+       7.840000000000012
+      ],
+      "matched_with_vectors": [
+       [
+        1.9600000000000728,
+        0.0
+       ],
+       [
+        3.9199999999999755,
+        0.0
+       ],
+       [
+        5.879999999999983,
+        0.0
+       ],
+       [
+        7.840000000000012,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 19654.112437394302
+     },
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.0153429012450212,
+       1.0314609241156703,
+       1.0383011066935213,
+       1.0414604320503946
+      ],
+      "degree": 68,
+      "eigenvalues": [
+       1.9600000000000841,
+       3.9200000000000808,
+       5.880000000000034,
+       7.840000000000021
+      ],
+      "matched_with_vectors": [
+       [
+        1.9600000000000841,
+        0.0
+       ],
+       [
+        3.9200000000000808,
+        0.0
+       ],
+       [
+        5.880000000000034,
+        0.0
+       ],
+       [
+        7.840000000000021,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 32419.39414367246
+     },
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.0153429012689326,
+       1.0314609241680868,
+       1.0383011067765942,
+       1.0414604321653476
+      ],
+      "degree": 76,
+      "eigenvalues": [
+       1.9599999999998072,
+       3.920000000000022,
+       5.880000000000004,
+       7.840000000000013
+      ],
+      "matched_with_vectors": [
+       [
+        1.9599999999998072,
+        0.0
+       ],
+       [
+        3.920000000000022,
+        0.0
+       ],
+       [
+        5.880000000000004,
+        0.0
+       ],
+       [
+        7.840000000000013,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 50578.75093007981
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      3.7271772969558834e-14,
+      4.304946422015914e-14,
+      9.822075126020518e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 68,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.01154425643745472,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      },
+      {
+       "degree": 76,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.016882558398534912,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.014797397155740948
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 92,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      9.822075126020518e-14,
+      7.578971464022753e-14,
+      3.092764140027222e-14
+     ],
+     "production_refinement_pass": true
+    },
+    "kappa_gev": 0.7,
+    "levels": [
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.0153429012689326,
+       1.0314609241680868,
+       1.0383011067765942,
+       1.0414604321653476
+      ],
+      "degree": 76,
+      "eigenvalues": [
+       1.9599999999998072,
+       3.920000000000022,
+       5.880000000000004,
+       7.840000000000013
+      ],
+      "matched_with_vectors": [
+       [
+        1.9599999999998072,
+        0.0
+       ],
+       [
+        3.920000000000022,
+        0.0
+       ],
+       [
+        5.880000000000004,
+        0.0
+       ],
+       [
+        7.840000000000013,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 50578.75093007981
+     },
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.015342901279157,
+       1.0314609241904993,
+       1.0383011068121073,
+       1.0414604322144823
+      ],
+      "degree": 84,
+      "eigenvalues": [
+       1.9600000000001483,
+       3.9200000000000297,
+       5.880000000000017,
+       7.840000000000008
+      ],
+      "matched_with_vectors": [
+       [
+        1.9600000000001148,
+        0.0
+       ],
+       [
+        3.9200000000000195,
+        0.0
+       ],
+       [
+        5.879999999999989,
+        0.0
+       ],
+       [
+        7.840000000000019,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 75472.79979414865
+     },
+     {
+      "analytic": [
+       1.9599999999999997,
+       3.9199999999999995,
+       5.879999999999999,
+       7.839999999999999
+      ],
+      "condition_numbers": [
+       1.0153429012839013,
+       1.0314609242008987,
+       1.038301106828587,
+       1.0414604322372845
+      ],
+      "degree": 92,
+      "eigenvalues": [
+       1.9599999999999391,
+       3.9200000000000434,
+       5.88000000000003,
+       7.840000000000061
+      ],
+      "matched_with_vectors": [
+       [
+        1.9599999999998723,
+        0.0
+       ],
+       [
+        3.920000000000045,
+        0.0
+       ],
+       [
+        5.880000000000008,
+        0.0
+       ],
+       [
+        7.840000000000026,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 108591.11518190573
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": true,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": true,
+     "max_errors": [
+      9.822075126020518e-14,
+      7.578971464022753e-14,
+      3.092764140027222e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 84,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.00873017440398676,
+       "max_match_to_scale": 0.0019704877952195824,
+       "plateau": true
+      },
+      {
+       "degree": 92,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.0024760283734211927,
+       "max_match_to_scale": 0.0027299800014644765,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.005040452319898421
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 60,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      9.769962616701378e-15,
+      3.297362383136715e-14,
+      1.3100631690576847e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 2.0,
+    "levels": [
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.0153429003580934,
+       1.0314609221706497,
+       1.0383011036098695,
+       1.0414604277821269
+      ],
+      "degree": 44,
+      "eigenvalues": [
+       16.000000000000096,
+       32.00000000000031,
+       47.99999999999995,
+       64.00000000000058
+      ],
+      "matched_with_vectors": [
+       [
+        16.000000000000096,
+        0.0
+       ],
+       [
+        32.00000000000031,
+        0.0
+       ],
+       [
+        47.99999999999995,
+        0.0
+       ],
+       [
+        64.00000000000058,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 46433.41682057616
+     },
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.0153429010001216,
+       1.0314609235787182,
+       1.0383011058423999,
+       1.0414604308725308
+      ],
+      "degree": 52,
+      "eigenvalues": [
+       15.999999999999472,
+       31.999999999999698,
+       47.99999999999978,
+       63.99999999999987
+      ],
+      "matched_with_vectors": [
+       [
+        15.999999999999472,
+        0.0
+       ],
+       [
+        31.999999999999698,
+        0.0
+       ],
+       [
+        47.99999999999978,
+        0.0
+       ],
+       [
+        63.99999999999987,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 90540.78585779903
+     },
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.0153429011830626,
+       1.031460923979835,
+       1.0383011064782235,
+       1.0414604317524692
+      ],
+      "degree": 60,
+      "eigenvalues": [
+       16.000000000000163,
+       32.00000000000042,
+       47.99999999999978,
+       64.00000000000028
+      ],
+      "matched_with_vectors": [
+       [
+        16.000000000000163,
+        0.0
+       ],
+       [
+        32.00000000000042,
+        0.0
+       ],
+       [
+        47.99999999999978,
+        0.0
+       ],
+       [
+        64.00000000000028,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 160441.7341828139
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      9.769962616701378e-15,
+      3.297362383136715e-14,
+      1.3100631690576847e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 52,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.02584576789867839,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      },
+      {
+       "degree": 60,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.011408587107008296,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.012546418368602518
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 76,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      1.3100631690576847e-14,
+      3.0753177782116836e-14,
+      1.9984014443252818e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 2.0,
+    "levels": [
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.0153429011830626,
+       1.031460923979835,
+       1.0383011064782235,
+       1.0414604317524692
+      ],
+      "degree": 60,
+      "eigenvalues": [
+       16.000000000000163,
+       32.00000000000042,
+       47.99999999999978,
+       64.00000000000028
+      ],
+      "matched_with_vectors": [
+       [
+        16.000000000000163,
+        0.0
+       ],
+       [
+        32.00000000000042,
+        0.0
+       ],
+       [
+        47.99999999999978,
+        0.0
+       ],
+       [
+        64.00000000000028,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 160441.7341828139
+     },
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.0153429012450217,
+       1.0314609241156705,
+       1.038301106693519,
+       1.0414604320503948
+      ],
+      "degree": 68,
+      "eigenvalues": [
+       15.999999999999508,
+       31.999999999999872,
+       48.000000000000426,
+       64.0000000000004
+      ],
+      "matched_with_vectors": [
+       [
+        15.999999999999508,
+        0.0
+       ],
+       [
+        31.999999999999872,
+        0.0
+       ],
+       [
+        48.000000000000426,
+        0.0
+       ],
+       [
+        64.0000000000004,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 264648.115458554
+     },
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.015342901268935,
+       1.0314609241680923,
+       1.038301106776598,
+       1.0414604321653507
+      ],
+      "degree": 76,
+      "eigenvalues": [
+       15.99999999999968,
+       31.99999999999973,
+       47.99999999999983,
+       63.999999999999886
+      ],
+      "matched_with_vectors": [
+       [
+        15.99999999999968,
+        0.0
+       ],
+       [
+        31.99999999999973,
+        0.0
+       ],
+       [
+        47.99999999999983,
+        0.0
+       ],
+       [
+        63.999999999999886,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 412887.7626945753
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      1.3100631690576847e-14,
+      3.0753177782116836e-14,
+      1.9984014443252818e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 68,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.00824685224345049,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      },
+      {
+       "degree": 76,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.003434928836795215,
+       "max_match_to_scale": 0.0,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.0038209701921011704
+    },
+    "z_max_factor": null
+   },
+   {
+    "N": 92,
+    "identity_check": {
+     "exact_match": true,
+     "production_refinement_errors": [
+      1.9984014443252818e-14,
+      2.808864252301646e-14,
+      2.9753977059954195e-14
+     ],
+     "production_refinement_pass": false
+    },
+    "kappa_gev": 2.0,
+    "levels": [
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.015342901268935,
+       1.0314609241680923,
+       1.038301106776598,
+       1.0414604321653507
+      ],
+      "degree": 76,
+      "eigenvalues": [
+       15.99999999999968,
+       31.99999999999973,
+       47.99999999999983,
+       63.999999999999886
+      ],
+      "matched_with_vectors": [
+       [
+        15.99999999999968,
+        0.0
+       ],
+       [
+        31.99999999999973,
+        0.0
+       ],
+       [
+        47.99999999999983,
+        0.0
+       ],
+       [
+        63.999999999999886,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 412887.7626945753
+     },
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.0153429012791513,
+       1.031460924190494,
+       1.0383011068121062,
+       1.041460432214481
+      ],
+      "degree": 84,
+      "eigenvalues": [
+       15.99999999999955,
+       32.000000000000156,
+       47.99999999999993,
+       63.999999999999744
+      ],
+      "matched_with_vectors": [
+       [
+        15.99999999999993,
+        0.0
+       ],
+       [
+        32.00000000000003,
+        0.0
+       ],
+       [
+        47.999999999999865,
+        0.0
+       ],
+       [
+        63.99999999999999,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 616104.4881154032
+     },
+     {
+      "analytic": [
+       16.0,
+       32.0,
+       48.0,
+       64.0
+      ],
+      "condition_numbers": [
+       1.0153429012839015,
+       1.0314609242009005,
+       1.038301106828588,
+       1.0414604322372831
+      ],
+      "degree": 92,
+      "eigenvalues": [
+       16.000000000000476,
+       32.00000000000026,
+       47.99999999999952,
+       63.99999999999966
+      ],
+      "matched_with_vectors": [
+       [
+        16.000000000000455,
+        0.0
+       ],
+       [
+        32.000000000000156,
+        0.0
+       ],
+       [
+        47.999999999999815,
+        0.0
+       ],
+       [
+        63.99999999999973,
+        0.0
+       ]
+      ],
+      "operator_two_norm": 886458.0831176603
+     }
+    ],
+    "verdict": {
+     "branch_a_strict_decrease": false,
+     "branch_b_accuracy": true,
+     "branch_p_plateau": true,
+     "current_rule_pass": false,
+     "max_errors": [
+      1.9984014443252818e-14,
+      2.808864252301646e-14,
+      2.9753977059954195e-14
+     ],
+     "plateau_levels": [
+      {
+       "degree": 84,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.0032355148605748905,
+       "max_match_to_scale": 0.0027367596053875336,
+       "plateau": true
+      },
+      {
+       "degree": 92,
+       "finite": true,
+       "match": true,
+       "max_error_to_scale": 0.002382066271045185,
+       "max_match_to_scale": 0.0014602181668797675,
+       "plateau": true
+      }
+     ],
+     "sa_pass": true,
+     "spectrum_tolerance_pass": true,
+     "stability_to_allowed": 0.002732010770163084
+    },
+    "z_max_factor": null
+   }
+  ]
+ },
+ "runtime": {
+  "byteorder": "little",
+  "holoforge": "0.7.0",
+  "holoforge_git_commit": "40c99bcd7c4fd98f147993f63f0a7f289e7ddc37",
+  "holoforge_git_src_modified": "false",
+  "holoforge_source_sha256": "fe719a6499a7d9939f091cb8d90c1d61e4a03ab9f099db190677d4f66c3e8aa8",
+  "longdouble_epsilon": "1.0842021724855044e-19",
+  "numerical_build_sha256": "ba230451533ccaae30dc717c1f16c9d5c4b85ab0e2466525fbd6520350b76e6a",
+  "numpy": "2.4.6",
+  "numpy_blas": "scipy-openblas 0.3.31.188.0",
+  "numpy_lapack": "scipy-openblas 0.3.31.188.0",
+  "platform_machine": "x86_64",
+  "platform_system": "Linux",
+  "python": "3.11.16",
+  "python_implementation": "CPython",
+  "scipy": "1.17.1",
+  "scipy_blas": "scipy-openblas 0.3.30",
+  "scipy_lapack": "scipy-openblas 0.3.30"
+ },
+ "status": "ok",
+ "tool": "gate-calibration",
+ "wall_seconds": 0.3840702649999983
+}
