@@ -27,6 +27,11 @@ on:
         type: boolean
         required: false
         default: false
+      soft_wall_sa:
+        description: Run only the soft-wall S-A confirmation job (docs/numerics/soft-wall-refinement-sa-contract.md)
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -34,6 +39,7 @@ permissions:
 jobs:
   telemetry:
     name: Gate telemetry (${{ matrix.os }})
+    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.soft_wall_sa) }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -122,4 +128,63 @@ jobs:
         with:
           name: gate-telemetry-${{ matrix.os }}
           path: gate-telemetry/
+          if-no-files-found: error
+
+  soft-wall-sa-confirmation:
+    # Manual dispatch with soft_wall_sa only. Runs the seen regression controls
+    # and the frozen reserved confirmation cases of the S-A contract on its CI
+    # builds. It evaluates a candidate rule beside the production rule and
+    # changes or enforces no production gate.
+    name: S-A confirmation (${{ matrix.label }})
+    if: github.event_name == 'workflow_dispatch' && inputs.soft_wall_sa
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: R3-linux-numpy-2.3.5-scipy-1.16.3
+            os: ubuntu-latest
+            pins: "numpy==2.3.5 scipy==1.16.3"
+          - label: R4-linux-default
+            os: ubuntu-latest
+            pins: ""
+          - label: R5-macos-x86_64
+            os: macos-15-intel
+            pins: ""
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install HoloForge and the build's dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+          if [ -n "${{ matrix.pins }}" ]; then
+            python -m pip install ${{ matrix.pins }}
+          fi
+
+      - name: Run regression controls and reserved confirmation cases
+        run: |
+          mkdir -p sa-confirmation
+          python tools/environment_report.py > sa-confirmation/environment.json
+          python tools/gate_calibration.py soft-wall-sa --adverse > sa-confirmation/regression.json
+          python tools/gate_calibration.py soft-wall-sa --case-set confirmation > sa-confirmation/confirmation.json
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: sa-confirmation-${{ matrix.label }}
+          path: sa-confirmation/
           if-no-files-found: error

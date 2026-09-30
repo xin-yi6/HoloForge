@@ -120,7 +120,12 @@ class Version05PolicyTests(unittest.TestCase):
             "if: github.event_name == 'workflow_dispatch' && inputs.calibration",
             telemetry,
         )
-        self.assertNotIn("--case-set confirmation", telemetry)
+        # Reserved confirmation cases run only in the S-A job, on manual
+        # dispatch with its explicit input, never in routine telemetry.
+        self.assertEqual(telemetry.count("--case-set confirmation"), 1)
+        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.soft_wall_sa", telemetry)
+        self.assertIn("soft-wall-sa --case-set confirmation", telemetry)
+        self.assertIn("numpy==2.3.5 scipy==1.16.3", telemetry)
         ci = (ROOT / ".github/workflows/ci.yml").read_text()
         self.assertNotIn("gate_margins", ci)
         policy = (ROOT / "docs/version-0.5-compatibility-policy.md").read_text()

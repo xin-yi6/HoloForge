@@ -148,6 +148,60 @@ class DiagnosticStatusTests(unittest.TestCase):
         self.assertIn("maximum value", payload["identity_scope"])
 
 
+class SoftWallSATests(unittest.TestCase):
+    """The candidate rule's verdict logic, on synthetic level data."""
+
+    @staticmethod
+    def _level(degree, errors, scale=1.0e-12):
+        analytic = [4.0, 8.0, 12.0, 16.0]
+        eigenvalues = [a * (1.0 + e) for a, e in zip(analytic, errors)]
+        norm = scale / np.finfo(float).eps * min(eigenvalues)
+        return {
+            "degree": degree,
+            "eigenvalues": eigenvalues,
+            "analytic": analytic,
+            "matched_with_vectors": [[value, 0.0] for value in eigenvalues],
+            "condition_numbers": [1.0] * 4,
+            "operator_two_norm": norm,
+        }
+
+    def test_strict_convergence_passes_both_rules(self) -> None:
+        levels = [self._level(d, [e] * 4) for d, e in ((40, 1e-9), (48, 1e-11), (56, 1e-13))]
+        verdict = calibration.sa_verdict(levels)
+        self.assertTrue(verdict["current_rule_pass"])
+        self.assertTrue(verdict["sa_pass"])
+
+    def test_rounding_plateau_passes_only_the_candidate(self) -> None:
+        levels = [self._level(d, [e] * 4) for d, e in ((48, 2e-14), (56, 4e-14), (64, 1e-14))]
+        verdict = calibration.sa_verdict(levels)
+        self.assertFalse(verdict["current_rule_pass"])
+        self.assertTrue(verdict["branch_p_plateau"])
+        self.assertTrue(verdict["sa_pass"])
+
+    def test_plateau_above_the_perturbation_scale_fails(self) -> None:
+        levels = [self._level(d, [4e-9] * 4) for d in (48, 56, 64)]
+        verdict = calibration.sa_verdict(levels)
+        self.assertFalse(verdict["branch_p_plateau"])
+        self.assertFalse(verdict["sa_pass"])
+
+    def test_accuracy_requirement_is_unchanged(self) -> None:
+        levels = [self._level(d, [e] * 4, scale=1.0) for d, e in ((40, 1e-5), (48, 1e-6), (56, 1e-7))]
+        verdict = calibration.sa_verdict(levels)
+        self.assertFalse(verdict["current_rule_pass"])
+        self.assertFalse(verdict["sa_pass"])
+
+    def test_non_finite_eigenvalue_fails_without_raising(self) -> None:
+        levels = [self._level(d, [e] * 4) for d, e in ((48, 2e-14), (56, 4e-14), (64, 1e-14))]
+        levels[2]["eigenvalues"][1] = float("nan")
+        verdict = calibration.sa_verdict(levels)
+        self.assertFalse(verdict["sa_pass"])
+        self.assertFalse(verdict["current_rule_pass"])
+
+    def test_reconstruction_matches_the_production_rule(self) -> None:
+        record = calibration.soft_wall_sa_case(40, 1.0, None)
+        self.assertTrue(record["identity_check"]["exact_match"], record["identity_check"])
+
+
 class RoundingConstantTests(unittest.TestCase):
     def test_gamma_is_close_to_count_times_epsilon(self) -> None:
         epsilon = np.finfo(float).eps
