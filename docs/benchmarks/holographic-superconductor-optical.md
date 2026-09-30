@@ -216,8 +216,15 @@ the exact interpolating polynomial of the stored solution at that node in
   discrete system would have none, and larger at degree 640 than at 512.
   Two degrees do not rule out under-resolution.
 
-Its origin within the discrete system is not yet established; the report
-lists the candidate mechanisms.
+The follow-up [O-C diagnosis](../numerics/optical-oc-diagnosis-report.md)
+split the degree-640 spike in the sampled cases:
+- about 59% from the double-precision construction of the differentiation
+  matrix;
+- about 40% from the exact discrete system itself;
+- at most 3.1% from the linear solve.
+
+The origin of the discrete-system part is not established, and no repair
+has been adopted.
 
 The equation check is retained unchanged. On an Accelerate platform the
 verifier's FAIL is the recorded result, and any amendment needs its own

@@ -199,6 +199,121 @@ class OpticalOBTests(unittest.TestCase):
             self.assertIn("stopped", payload["result"])
 
 
+class OpticalOCTests(unittest.TestCase):
+    """O-C machinery on a small normal-state case (not the O-C findings)."""
+
+    background = type(
+        "NormalState", (), {
+            "scalar_profile": staticmethod(optical.zero_scalar_profile),
+            "scalar_response": 0.0,
+            "horizon_scalar": 0.0,
+        },
+    )
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.record = calibration.optical_oc_case(40.0, 16, cls.background, {}, label="test",
+                                                 artifact_dir=None)
+
+    def test_production_system_is_reconstructed_bit_for_bit(self) -> None:
+        self.assertTrue(self.record["identity_check"]["exact_match"], self.record["identity_check"])
+        self.assertIn("assembled_operator", self.record["array_sha256"])
+
+    def test_rounding_steps_lie_within_their_bounds(self) -> None:
+        checks = self.record["row_decomposition"]["bound_checks"]
+        self.assertTrue(checks["passed"], checks)
+        self.assertLess(self.record["row_decomposition"]["sum_identity_max_relative"], 1.0e-40)
+
+    def test_every_approximation_qualifies_and_attribution_sums(self) -> None:
+        for variant, item in self.record["approximations"].items():
+            self.assertTrue(item["qualified"], (variant, item))
+        attribution = self.record["spike_attribution"]
+        self.assertLess(attribution["sum_identity_abs"], 1.0e-40 * attribution["stored_abs"] + 1.0e-60)
+        self.assertIn(self.record["classification"], {
+            "zero-residual", "technical-stop", "cancellation", "solve-dominated",
+            "operator-rounding-dominated", "discretization-dominated", "mixed"})
+
+    def test_exact_differentiation_matrices_reproduce_a_polynomial(self) -> None:
+        from decimal import Decimal, localcontext
+
+        with localcontext() as context:
+            context.prec = calibration.HIGH_PRECISION_DIGITS
+            nodes = [Decimal(float(x)) for x in np.linspace(0.1, 0.9, 7)]
+            first, second, _ = calibration.decimal_differentiation_matrices(nodes)
+            values = ([x ** 3 for x in nodes], [-x for x in nodes])
+            got1 = calibration._real_matvec(first, values)
+            got2 = calibration._real_matvec(second, values)
+            for k, x in enumerate(nodes):
+                self.assertLess(abs(got1[0][k] - 3 * x * x) + abs(got1[1][k] + 1), Decimal("1e-40"))
+                self.assertLess(abs(got2[0][k] - 6 * x) + abs(got2[1][k]), Decimal("1e-40"))
+
+    def test_classification_is_ordered_and_exclusive(self) -> None:
+        rule = calibration.optical_oc_classification
+        self.assertEqual(rule(0.0, 0.0, 0.0, 0.0, False), "zero-residual")
+        self.assertEqual(rule(1.0, 0.9, 0.1, 0.0, False), "technical-stop")
+        self.assertEqual(rule(1.0, 2.0, 2.0, 0.1, True), "cancellation")
+        self.assertEqual(rule(1.0, 0.95, 0.05, 0.05, True), "solve-dominated")
+        self.assertEqual(rule(1.0, 0.05, 0.9, 0.1, True), "operator-rounding-dominated")
+        self.assertEqual(rule(1.0, 0.1, 0.1, 0.85, True), "discretization-dominated")
+        self.assertEqual(rule(1.0, 0.5, 0.5, 0.1, True), "mixed")
+        self.assertEqual(rule(1.0, 0.8, 0.3, 0.0, True), "mixed")
+        for bad in (float("nan"), -1.0, None):
+            with self.assertRaises(ValueError):
+                rule(1.0, bad, 0.0, 0.0, True)
+
+    def test_step_naming(self) -> None:
+        name = calibration.optical_oc_named_step
+        steps = {"D-construction": 0.9, "D@D-product": 0.05, "coefficients": 0.0,
+                 "assembly": 0.0, "equilibration": 0.05}
+        self.assertEqual(name(steps, 1.0, True), "D-construction")
+        self.assertEqual(name(steps, 1.0, False), "not named")
+        self.assertEqual(name(steps, 0.0, True), "not named")
+        self.assertEqual(name({**steps, "assembly": 0.9}, 1.0, True), "cancellation among steps")
+        self.assertEqual(name({**steps, "D-construction": 0.5, "assembly": 0.4}, 1.0, True), "several steps")
+
+    def test_existing_artifact_is_never_overwritten(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            existing = folder / "test-omega40-degree16.npz"
+            existing.write_bytes(b"preserved evidence")
+            record = calibration.optical_oc_case(40.0, 16, self.background, {}, label="test",
+                                                 artifact_dir=folder)
+            self.assertEqual(existing.read_bytes(), b"preserved evidence")
+            self.assertIn("refusing to overwrite", record["stopped"])
+            self.assertEqual(record["classification"], "technical-stop")
+            self.assertNotIn("artifact", record)
+            self.assertTrue(calibration.diagnostic_errors({"records": [record]}))
+
+    def test_new_artifact_is_written_and_hashed(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            record = calibration.optical_oc_case(40.0, 16, self.background, {}, label="test",
+                                                 artifact_dir=folder)
+            path = folder / "test-omega40-degree16.npz"
+            self.assertEqual(record["artifact"]["sha256"], calibration._file_sha256(path))
+            with np.load(path) as saved:
+                self.assertEqual(
+                    calibration._array_sha256(saved["assembled_operator"]),
+                    record["array_sha256"]["assembled_operator"],
+                )
+
+    def test_command_refuses_unplanned_runs(self) -> None:
+        for arguments in (["optical-oc", "--case-set", "confirmation", "--build-label", "B1"],
+                          ["optical-oc", "--adverse", "--build-label", "B1"],
+                          ["optical-oc", "--build-label", "B9"]):
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(io.StringIO()):
+                status = calibration.main(arguments)
+            payload = json.loads(output.getvalue())
+            self.assertEqual(status, 2)
+            self.assertEqual(payload["plan"], "docs/numerics/optical-oc-diagnosis-plan.md")
+            self.assertIn("stopped", payload["result"])
+
+
 class SoftWallDiagnosticTests(unittest.TestCase):
     def test_condition_numbers_and_floors_are_well_formed(self) -> None:
         record = calibration.soft_wall_degree_record(48)
