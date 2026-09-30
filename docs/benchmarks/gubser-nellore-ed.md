@@ -176,11 +176,17 @@ other build differences:
 The passing backend is also within 0.4% of the `1e-9` limit. The physical
 checks barely move: the oversampled equation residual is `9.42e-8` against
 `9.37e-8`, and the DOP853 difference `9.76e-10` against `1.10e-9`. Linux CI
-(x86_64, OpenBLAS) records `9.854e-10`, 98.5% of the limit. This is
-consistent with a gate close to the floating-point rounding floor of the
-dense solve rather than one resolving a physical discrepancy. That mechanism
-is not yet established, and it needs calibration before it could justify
-changing the gate.
+(x86_64, OpenBLAS) records `9.854e-10`, 98.5% of the limit.
+
+The [Batch 2a calibration](../numerics/gate-calibration-2026-09-report.md)
+shows that the value is set by where the nonlinear solve stops, not by
+evaluation rounding. A 50-digit re-evaluation gives `1.36e-9` for the stored
+Accelerate solution, and rounding contributes at most `3.6e-10`. The
+finite-difference root path differs between builds, and which profile needs
+the least-squares polish differs with it. On Accelerate the polish stops on
+its step criterion at `1.7e-9`. The same `1e-9` constant triggers that polish
+and sets the acceptance limit. Any amendment returns separately for owner
+approval.
 
 The frozen gate is unchanged: on an Accelerate platform the verifier's FAIL is
 the recorded result and must not be read as a pass. Any amendment needs its
