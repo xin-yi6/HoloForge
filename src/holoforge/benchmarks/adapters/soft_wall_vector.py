@@ -28,7 +28,7 @@ SOFT_WALL_MODEL_CARD = ModelCardReference(
     identifier="qcd.soft-wall-vector.kkss",
     schema_version="0.1",
     repository_path="domains/qcd/soft_wall_vector/model-card.json",
-    sha256="75f35fca90157e2416737db8ceaf4428baf64646c24bf21e24c5cf4671e92df6",
+    sha256="feac63ac24daa4f8fefaf5ddfffaeb161911a3b999966000e132a59c8d84426e",
 )
 
 

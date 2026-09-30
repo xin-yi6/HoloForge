@@ -14,11 +14,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 from numbers import Real
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
-from scipy.linalg import eigvals, eigvalsh_tridiagonal
+from scipy.linalg import eig, eigvals, eigvalsh_tridiagonal
 
 from holoforge.core import (
     AcceptanceCheck,
@@ -44,6 +44,14 @@ EIGENSOLVER = "scipy.linalg.eigvalsh_tridiagonal"
 DISCRETIZATION = "second-order centered finite difference"
 SPECTRAL_EIGENSOLVER = "scipy.linalg.eigvals"
 SPECTRAL_DISCRETIZATION = "Chebyshev--Gauss--Lobatto pseudospectral collocation"
+# Version 2 of the spectral refinement acceptance rule (candidate S-A,
+# confirmed in docs/numerics/soft-wall-refinement-sa-confirmation.md).
+# Version 1 accepted only strictly decreasing errors.
+SPECTRAL_REFINEMENT_RULE = "soft-wall-spectral-refinement-v2"
+SPECTRAL_REFINEMENT_CONTRACT = "docs/numerics/soft-wall-refinement-sa-contract.md"
+SPECTRAL_PLATEAU_FACTOR = 1.0
+SPECTRAL_MATCH_FACTOR = 1.0
+MACHINE_EPSILON = float(np.finfo(float).eps)
 
 
 SOFT_WALL_DEFINITION = BenchmarkDefinition(
@@ -157,6 +165,22 @@ class SoftWallConfig:
 
 
 @dataclass(frozen=True)
+class SpectralLevelDiagnostics:
+    """Perturbation data for the requested modes at one refinement degree.
+
+    ``eigenvalues`` are the production eigenvalues. ``matched_eigenvalues``
+    come from a separate left/right eigenvector solve and are used only to
+    estimate each mode's condition number and to check the match.
+    """
+
+    degree: int
+    eigenvalues: Tuple[float, ...]
+    matched_eigenvalues: Tuple[complex, ...]
+    condition_numbers: Tuple[float, ...]
+    operator_two_norm: float
+
+
+@dataclass(frozen=True)
 class SpectrumResult:
     """Numerical spectrum together with its exact benchmark values."""
 
@@ -170,6 +194,7 @@ class SpectrumResult:
     spectral_degree: Optional[int] = None
     spectral_refinement_degrees: Tuple[int, ...] = ()
     spectral_refinement_errors: Tuple[float, ...] = ()
+    spectral_plateau_diagnostics: Tuple[SpectralLevelDiagnostics, ...] = ()
 
     @property
     def max_relative_error(self) -> float:
@@ -216,30 +241,34 @@ class SpectrumResult:
             criterion=f"value <= {float(tolerance):.16g}",
             passed=self.max_relative_error <= tolerance,
         )]
+        verdict: Optional[Dict[str, Any]] = None
         if self.method == "spectral":
-            refinement_improves = bool(
-                len(self.spectral_refinement_errors) >= 3
-                and np.all(np.diff(self.spectral_refinement_errors) < 0.0)
-            )
-            refinement_passed = bool(
-                refinement_improves
-                and self.spectral_refinement_errors[-1]
-                <= DEFAULT_SPECTRAL_CONVERGENCE_TOLERANCE
+            verdict = spectral_refinement_verdict(
+                self.spectral_refinement_errors,
+                self.analytic_mass_squared_gev2,
+                self.spectral_plateau_diagnostics,
             )
             checks.append(
                 AcceptanceCheck(
                     identifier="spectral-degree-refinement",
                     description=(
-                        "The analytic spectrum error decreases across three "
-                        "polynomial degrees and the final error is below the "
-                        "declared spectral convergence tolerance."
+                        "The final analytic error is below the declared "
+                        "spectral convergence tolerance, and either the error "
+                        "decreases across three polynomial degrees or the two "
+                        "finest degrees sit within their first-order "
+                        f"perturbation scales ({SPECTRAL_REFINEMENT_RULE}; "
+                        f"branch: {verdict['branch']})."
                     ),
                     value=float(self.spectral_refinement_errors[-1]),
                     criterion=(
-                        "strictly decreasing across three degrees and value <= "
-                        f"{DEFAULT_SPECTRAL_CONVERGENCE_TOLERANCE:.16g}"
+                        f"{SPECTRAL_REFINEMENT_RULE}: value <= "
+                        f"{DEFAULT_SPECTRAL_CONVERGENCE_TOLERANCE:.16g} and "
+                        "(strictly decreasing across three degrees, or every "
+                        "requested mode at the two finest degrees has error and "
+                        "eigenvector-solve mismatch <= eps ||H||_2 kappa / "
+                        "|lambda| with cross-degree stability)"
                     ),
-                    passed=refinement_passed,
+                    passed=bool(verdict["passed"]),
                 )
             )
 
@@ -278,6 +307,9 @@ class SpectrumResult:
                 "spectral_convergence_tolerance": (
                     DEFAULT_SPECTRAL_CONVERGENCE_TOLERANCE
                 ),
+                "refinement_rule": SPECTRAL_REFINEMENT_RULE,
+                "refinement_contract": SPECTRAL_REFINEMENT_CONTRACT,
+                "conditioning_solver": "scipy.linalg.eig (left and right eigenvectors)",
             }
 
         extra: Dict[str, Any] = {
@@ -299,6 +331,10 @@ class SpectrumResult:
                 "improves_at_every_level": bool(
                     np.all(np.diff(self.spectral_refinement_errors) < 0.0)
                 ),
+                "rule": SPECTRAL_REFINEMENT_RULE,
+                "branch": verdict["branch"],
+                "plateau_levels": verdict["plateau_levels"],
+                "stability_ratios": verdict["stability_ratios"],
             }
 
         record = VerificationRecord(
@@ -360,6 +396,7 @@ def solve_spectrum(
     if num_modes > config.grid_points and method == "finite-difference":
         raise ValueError("num_modes cannot exceed grid_points")
 
+    plateau_diagnostics: Tuple[SpectralLevelDiagnostics, ...] = ()
     if method == "finite-difference":
         numerical, spacing = _finite_difference_spectrum(config, num_modes)
         refinement_degrees: Tuple[int, ...] = ()
@@ -391,6 +428,12 @@ def solve_spectrum(
         numerical = refinement_values[-1]
         spacing = refinement_solutions[-1][1]
         spectral_degree = config.spectral_degree
+        # Perturbation data for the plateau branch at the two finest degrees.
+        # The eigenvalues above are not recomputed or changed.
+        plateau_diagnostics = tuple(
+            _spectral_level_diagnostics(config, degree, values)
+            for degree, values in zip(refinement_degrees[1:], refinement_values[1:])
+        )
     else:
         raise ValueError("method must be 'finite-difference' or 'spectral'")
 
@@ -408,6 +451,144 @@ def solve_spectrum(
         spectral_degree=spectral_degree,
         spectral_refinement_degrees=refinement_degrees,
         spectral_refinement_errors=refinement_errors,
+        spectral_plateau_diagnostics=plateau_diagnostics,
+    )
+
+
+def spectral_refinement_verdict(
+    maximum_errors: Sequence[float],
+    analytic: Sequence[float],
+    plateau_levels: Sequence[SpectralLevelDiagnostics],
+    accuracy: float = DEFAULT_SPECTRAL_CONVERGENCE_TOLERANCE,
+) -> Dict[str, Any]:
+    """Evaluate spectral refinement rule version 2 from recorded data.
+
+    Passes when the final maximum analytic error is at most ``accuracy`` and
+    either the maximum errors strictly decrease across the three degrees
+    (branch ``convergence``, the version 1 rule) or the two finest degrees
+    satisfy the plateau conditions (branch ``plateau``). The plateau
+    conditions hold for **every requested mode**:
+
+    - all values are finite;
+    - the eigenvector-solve eigenvalue matches the production eigenvalue
+      within the mode's perturbation scale
+      ``s = eps ||H||_2 kappa / |lambda|``;
+    - the analytic relative error is at most ``s``;
+    - the two finest degrees agree within the sum of their scales.
+
+    ``s`` is a first-order perturbation scale for a simple eigenvalue, not a
+    proved error floor. The function performs no eigensolve.
+    """
+
+    maxima = [float(value) for value in maximum_errors]
+    exact = np.asarray(analytic, dtype=float)
+    finite = len(maxima) == 3 and all(math.isfinite(value) for value in maxima)
+    convergence = finite and maxima[0] > maxima[1] > maxima[2]
+    accurate = finite and maxima[-1] <= accuracy
+
+    levels_evidence: List[Dict[str, Any]] = []
+    plateau = finite and len(plateau_levels) == 2
+    scales_by_level = []
+    for level in plateau_levels:
+        values = np.asarray(level.eigenvalues, dtype=float)
+        matched = np.asarray(level.matched_eigenvalues, dtype=complex)
+        conditions = np.asarray(level.condition_numbers, dtype=float)
+        shapes_ok = values.shape == exact.shape == matched.shape == conditions.shape
+        with np.errstate(divide="ignore", invalid="ignore"):
+            errors = np.abs(values - exact) / exact if shapes_ok else np.array([np.nan])
+            scales = (
+                MACHINE_EPSILON * level.operator_two_norm * conditions / np.abs(values)
+                if shapes_ok else np.array([np.nan])
+            )
+            mismatch = np.abs(matched - values) / np.abs(values) if shapes_ok else np.array([np.nan])
+        level_finite = bool(
+            shapes_ok
+            and math.isfinite(level.operator_two_norm)
+            and np.all(np.isfinite(values))
+            and np.all(np.isfinite(errors))
+            and np.all(np.isfinite(scales))
+            and np.all(np.isfinite(mismatch))
+        )
+        matched_ok = level_finite and bool(np.all(mismatch <= SPECTRAL_MATCH_FACTOR * scales))
+        plateau_ok = level_finite and bool(np.all(errors <= SPECTRAL_PLATEAU_FACTOR * scales))
+        plateau = plateau and level_finite and matched_ok and plateau_ok
+        scales_by_level.append(scales)
+        levels_evidence.append({
+            "degree": int(level.degree),
+            "relative_errors": _finite_list(errors) if shapes_ok else [],
+            "perturbation_scales": _finite_list(scales) if shapes_ok else [],
+            "condition_numbers": _finite_list(conditions),
+            "eigenvector_solve_mismatch": _finite_list(mismatch) if shapes_ok else [],
+            "operator_two_norm": _finite_list([level.operator_two_norm])[0],
+            "finite": level_finite,
+            "matched": matched_ok,
+            "within_scale": plateau_ok,
+        })
+
+    stability: List[float] = []
+    if plateau:
+        middle, fine = plateau_levels
+        fine_values = np.asarray(fine.eigenvalues, dtype=float)
+        middle_values = np.asarray(middle.eigenvalues, dtype=float)
+        allowed = scales_by_level[0] + scales_by_level[1]
+        ratios = np.abs(fine_values - middle_values) / np.abs(fine_values) / allowed
+        stability = _finite_list(ratios)
+        plateau = bool(np.all(np.isfinite(ratios)) and np.all(ratios <= 1.0))
+
+    passed = bool(accurate and (convergence or plateau))
+    if not passed:
+        branch = "none"
+    elif convergence:
+        branch = "convergence"
+    else:
+        branch = "plateau"
+    return {
+        "passed": passed,
+        "branch": branch,
+        "convergence": bool(convergence),
+        "plateau": bool(plateau),
+        "accuracy": bool(accurate),
+        "plateau_levels": levels_evidence,
+        "stability_ratios": stability,
+    }
+
+
+def _finite_list(values: Any) -> List[Optional[float]]:
+    """Return floats for JSON evidence, with non-finite entries as ``None``."""
+
+    return [
+        float(value) if math.isfinite(float(value)) else None
+        for value in np.ravel(np.asarray(values, dtype=float))
+    ]
+
+
+def _spectral_level_diagnostics(
+    config: SoftWallConfig, degree: int, eigenvalues: NDArray[np.float64]
+) -> SpectralLevelDiagnostics:
+    """Condition numbers of the given production eigenvalues at one degree."""
+
+    grid = chebyshev_lobatto_grid(degree, 0.0, config.resolved_z_max_gev_inverse)
+    interior = slice(1, -1)
+    operator = -grid.second_derivative[interior, interior] + np.diag(
+        schrodinger_potential(grid.nodes[interior], config.kappa_gev)
+    )
+    values, left, right = eig(operator, left=True, right=True, check_finite=True)
+    matched: List[complex] = []
+    conditions: List[float] = []
+    for target in np.asarray(eigenvalues, dtype=float):
+        index = int(np.argmin(np.abs(values - target)))
+        x, y = right[:, index], left[:, index]
+        overlap = abs(np.vdot(y, x))
+        conditions.append(
+            float(np.linalg.norm(x) * np.linalg.norm(y) / overlap) if overlap > 0.0 else math.inf
+        )
+        matched.append(complex(values[index]))
+    return SpectralLevelDiagnostics(
+        degree=int(degree),
+        eigenvalues=tuple(float(value) for value in eigenvalues),
+        matched_eigenvalues=tuple(matched),
+        condition_numbers=tuple(conditions),
+        operator_two_norm=float(np.linalg.norm(operator, 2)),
     )
 
 

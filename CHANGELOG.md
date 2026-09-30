@@ -25,9 +25,9 @@ All notable changes to HoloForge are recorded here.
 - The soft-wall human-readable summary now reports each acceptance gate
   separately. A failed spectral refinement check is no longer shown as
   `FAIL: max relative error` when the analytic-spectrum tolerance passes.
-  Default finite-difference output is unchanged, and so are the gates
-  themselves. The refinement check's known false failures at spectral degrees
-  of 56 or more are documented, not changed.
+  Default finite-difference output is unchanged. (The refinement check's
+  false failures at spectral degrees of 56 or more are addressed by rule
+  version 2 under Changed.)
 
 ### Known issues
 
@@ -46,6 +46,19 @@ All notable changes to HoloForge are recorded here.
 
 ### Changed
 
+- Soft-wall spectral refinement check, rule version 2
+  (`soft-wall-spectral-refinement-v2`). The check keeps the final `1e-8`
+  accuracy requirement and still accepts strictly decreasing errors. It now
+  also accepts a rounding plateau, when every requested mode at the two finest
+  degrees lies within its first-order perturbation scale
+  `eps ||H||_2 kappa / |lambda|` with consistent eigenvector matching and
+  cross-degree stability. Eigenvalues, the analytic-spectrum tolerance and
+  the default finite-difference route are unchanged. Spectral degrees of 56
+  or more no longer fail spuriously, while under-resolved and truncated-domain
+  cases still fail. The rule was frozen and confirmed first
+  (`docs/numerics/soft-wall-refinement-sa-*.md`). Records declare the rule
+  version and keep per-mode evidence. The model card and its pinned hash are
+  updated.
 - Separate prospectively authorized numerical development from confirmatory
   qualification within one research milestone. Retain failed attempts,
   cumulative budgets, exact qualified revisions and historical stop rules.

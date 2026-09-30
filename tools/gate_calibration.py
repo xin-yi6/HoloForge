@@ -301,9 +301,13 @@ def soft_wall_sa_case(n: int, kappa: float, z_max_factor: Optional[float]) -> Di
         check["passed"] for check in record["acceptance_checks"]
         if check["id"] == "spectral-degree-refinement"
     )
+    # Production declares its rule version. Version 1 (no declaration) is the
+    # strictly-decreasing rule; version 2 is S-A, which production now uses.
+    production_rule = record["numerical_method"].get("refinement_rule", "version-1")
+    expected = verdict["sa_pass"] if production_rule.endswith("-v2") else verdict["current_rule_pass"]
     identity = (
         list(production.spectral_refinement_errors) == verdict["max_errors"]
-        and production_refinement == verdict["current_rule_pass"]
+        and production_refinement == expected
     )
     return {
         "N": int(n), "kappa_gev": float(kappa),
@@ -313,6 +317,7 @@ def soft_wall_sa_case(n: int, kappa: float, z_max_factor: Optional[float]) -> Di
         "identity_check": {
             "production_refinement_errors": list(production.spectral_refinement_errors),
             "production_refinement_pass": bool(production_refinement),
+            "production_refinement_rule": production_rule,
             "exact_match": bool(identity),
         },
     }

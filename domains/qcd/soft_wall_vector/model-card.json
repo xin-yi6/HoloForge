@@ -79,7 +79,7 @@
     "acceptance_criteria": [
       "The first four numerical eigenvalues have maximum relative error below 2e-4 at the documented default resolution.",
       "Refining the uniform grid reduces the maximum error for the first four modes with observed order between 1.8 and 2.2.",
-      "For the spectral route, the maximum analytic error decreases at polynomial degrees 24, 32, and 40 and finishes below 1e-8."
+      "For the spectral route (refinement rule soft-wall-spectral-refinement-v2), the final maximum analytic error is below 1e-8 and either the maximum error decreases strictly across degrees N-16, N-8 and N, or every requested mode at the two finest degrees lies within its first-order perturbation scale eps ||H||_2 kappa / |lambda| with consistent eigenvector matching and cross-degree stability."
     ],
     "tests": [
       {
@@ -100,11 +100,11 @@
         "id": "spectral-degree-refinement",
         "kind": "convergence",
         "command": "python3 -m unittest tests.test_chebyshev tests.test_soft_wall_vector -v",
-        "expected": "The first four spectral eigenvalues converge across degrees 24, 32, and 40, with the final maximum relative error below 1e-8.",
+        "expected": "The spectral eigenvalues converge across degrees 24, 32, and 40 with final maximum relative error below 1e-8; at higher degrees the rounding-plateau branch of rule v2 accepts accurate, stable results while under-resolved and truncated-domain controls still fail.",
         "status": "pass"
       }
     ],
-    "last_verified": "2026-08-16"
+    "last_verified": "2026-09-30"
   },
   "claims": [
     {
@@ -126,7 +126,7 @@
       "reviewed_on": "2026-08-02"
     },
     {
-      "statement": "The opt-in HoloForge Chebyshev pseudospectral route reproduces the first four exact eigenvalues and passes its three-degree convergence gate.",
+      "statement": "The opt-in HoloForge Chebyshev pseudospectral route reproduces the first four exact eigenvalues and passes its versioned three-degree refinement gate (rule v2).",
       "support_level": "reproduced",
       "evidence": "Analytic polynomial tests and spectral eigenvalue/refinement tests in tests/test_chebyshev.py and tests/test_soft_wall_vector.py.",
       "generated_by_ai": true,
@@ -137,7 +137,8 @@
     "This benchmark treats only transverse vector modes in a fixed quadratic soft-wall background.",
     "It does not fit experimental data or validate the soft-wall model as a complete description of QCD.",
     "The finite UV and IR numerical boundaries introduce discretization and truncation errors.",
-    "The dense spectral operator is intended for smooth low-mode verification and is not a sparse large-spectrum solver."
+    "The dense spectral operator is intended for smooth low-mode verification and is not a sparse large-spectrum solver.",
+    "The rule-v2 plateau branch compares errors with a first-order perturbation scale, not a proved error floor; it was confirmed on nine reserved cases across five builds (docs/numerics/soft-wall-refinement-sa-confirmation.md)."
   ],
   "provenance": {
     "created_on": "2026-08-02",
