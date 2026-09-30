@@ -49,7 +49,7 @@ All notable changes to HoloForge are recorded here.
   evaluation. A further diagnosis (`optical-oc`,
   `docs/numerics/optical-oc-diagnosis-report.md`) attributes about 59% of it
   to differentiation-matrix construction rounding, about 40% to the exact
-  discrete system and at most 3% to the solve. No repair has been adopted.
+  discrete system and at most 3.1% to the solve. No repair has been adopted.
 
 ### Changed
 

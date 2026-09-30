@@ -221,7 +221,7 @@ split the degree-640 spike in the sampled cases:
 - about 59% from the double-precision construction of the differentiation
   matrix;
 - about 40% from the exact discrete system itself;
-- at most 3% from the linear solve.
+- at most 3.1% from the linear solve.
 
 The origin of the discrete-system part is not established, and no repair
 has been adopted.

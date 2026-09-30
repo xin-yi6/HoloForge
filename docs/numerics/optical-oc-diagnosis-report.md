@@ -2,7 +2,7 @@
 
 - **Status:** completed under the [frozen plan](optical-oc-diagnosis-plan.md)
   (commit `ffcaedb`, SHA-256 `243428fc…6b7b`). AI-assisted (Claude);
-  awaiting Codex review. **Diagnosis only.** No production solver, gate,
+  revised after Codex review (Section 7). **Diagnosis only.** No production solver, gate,
   threshold, record or verdict changed. On Accelerate the optical verifier's
   FAIL remains the recorded result.
 - **Evidence:** [`B1-optical-oc.json`](../generated/optical-oc/B1-optical-oc.json)
@@ -10,8 +10,9 @@
   (OpenBLAS wheels), from `python tools/gate_calibration.py optical-oc
   --build-label B1|B3`.
   - Both runs record plan commit `ffcaedb` with `src/` unmodified, the plan
-    hash above, and tool SHA-256 `d93ea131…`. That is the committed tool in
-    this change.
+    hash above, and tool SHA-256 `d93ea131…`. That is the tool committed in
+    `e301700`. A later post-review tool correction (Section 7) postdates the
+    evidence, which is preserved unchanged.
 - **Local arrays (outside Git).** Eight `.npz` files, 131 MB in total, are in
   `output/optical-oc-artifacts/` in the checkout, which Git ignores. They were
   neither uploaded nor deleted.
@@ -26,16 +27,18 @@
 
 ## Answer
 
-At degree 640 the spike residual is **`mixed`** under the plan's rules, on
-all four sampled frequencies and both builds. Its three parts are:
+At degree 640 the spike residual is **`mixed`** under the plan's rules, in
+every sampled case. Those are four frequencies on B1 (ω/T = 50, 59, 60, 70)
+and two on B3 (ω/T = 59, 60). Its three parts are:
 
 | Part | Share of the spike residual |
 | --- | --- |
-| **Operator rounding** | **57.5–59.4%**. The named step is **differentiation-matrix construction**. |
+| **Operator rounding** | **57.5–59.5%**. The named step is **differentiation-matrix construction**. |
 | **Discretization** (high-precision solution of the exact discrete system) | 38.9–40.5% |
-| **Linear solve** | 0.07–3.0% |
+| **Linear solve** | 0.06–3.1% |
 
-At degree 512 the spike is **`discretization-dominated`** (95.6–97.1%).
+At degree 512 (ω/T = 60 on both builds) the spike is
+**`discretization-dominated`** (95.5–97.1%).
 
 **Established:**
 - The collocation-node defects found by O-B come from the double-precision
@@ -56,19 +59,20 @@ and 2). The rerun and the B3 run passed every fixture:
 
 | Fixture | Result |
 | --- | --- |
-| F1 | exact-polynomial derivatives at degree 640 to `9.8e-40` |
+| F1 | exact-polynomial derivatives at degree 640 to at most `9.9e-40` |
 | F2 | bit-for-bit reconstruction |
-| F3 | worst ratio to bound `0.048`; sum identity `2e-66` |
+| F3 | worst ratio to bound at most `0.048`; sum identity at most `3.7e-66` |
 | F4 | all six approximations qualified in 2 iterations |
-| F5 | known solution recovered to `1.7e-35` |
+| F5 | known solution recovered to at most `1.7e-35` |
 
 **Every production case:**
 - The reconstructed equilibrated operator, right-hand side, stored solution
   and nodes equal production's bit for bit.
-- The F3 rounding bounds hold, with a worst ratio of `0.055`.
+- The F3 rounding bounds hold, with a worst ratio of at most `0.056`.
 - All six high-precision approximations qualify within 2 iterations:
-  backward error at most `4e-34`, and attribution uncertainty at most
-  `4.9e-12` of `|R_s|`.
+  - backward error at most `4.4e-34`;
+  - an empirical attribution-uncertainty estimate (Section 7) of at most
+    `4.9e-12` of `|R_s|`.
 
 **Diagnostic execution** (ceiling 30 min):
 
@@ -108,7 +112,7 @@ and 2). The rerun and the B3 run passed every fixture:
 **Within the operator rounding at degree 640** (fractions of the operator
 part):
 - D-construction: `1.04`–`1.09`;
-- `D @ D` product: `0.066`–`0.080`;
+- `D @ D` product: `0.065`–`0.081`;
 - assembly: `0.006`–`0.020`;
 - equilibration: `0.0004`–`0.015`;
 - coefficients: below `1e-4`.
@@ -120,26 +124,28 @@ degree 512 the steps largely cancel, and no step is named.
 operator share is below `0.8`, and the discretization share exceeds `0.25`.
 
 **Discretization component at the spike** (the exact discrete system's
-residual): `4.1250e-5`–`4.1254e-5` at every degree-640 case on both builds,
-and `5.9300e-5` at degree 512.
+residual): `4.1250e-5`–`4.1255e-5` in every degree-640 case, and `5.9300e-5`
+at degree 512.
 - On collocation nodes the same solution's residual is below `2e-26`, as it
   must be.
-- Between nodes, at check indices 1, 3 and 5, it is `1.169e-4`, `4.125e-5`
-  and `2.604e-5`, again at every frequency.
+- Between nodes it is, in every degree-640 case:
+  - `1.1685e-4`–`1.1687e-4` at check index 1;
+  - `4.1250e-5`–`4.1255e-5` at check index 3;
+  - `2.6039e-5`–`2.6042e-5` at check index 5.
 
 **Conventions and precision.**
 - The O-B local-node value differs from the physical-node `R_s` by
-  `9e-5`–`1.6e-4` relative, confirming O-B's caveat that the difference is
+  `9.0e-5`–`1.6e-4` relative, confirming O-B's caveat that the difference is
   negligible.
-- The 70-digit repetition (60/640, B1) changes `R_s` by `9e-37` and the
-  discretization residual by `1e-34` relative.
+- The 70-digit repetition (60/640, B1) changes `R_s` by at most `9.5e-37`
+  and the discretization residual by at most `1e-34` relative.
 
 ## 3. Collocation-row decomposition (supporting evidence)
 
 The stored solution's 50-digit residual in row 1 (collocation node 1) is
 `2.68e-4`–`2.91e-4` at degree 640 on both builds, and in row 2 it is
 `2.18e-5`–`2.60e-5`.
-- **D-construction** accounts for `0.98`–`1.06` of row 1 and `0.95`–`1.13`
+- **D-construction** accounts for `0.97`–`1.06` of row 1 and `0.95`–`1.14`
   of row 2 (complex parts).
 - **The solve residual** is at most `1.2e-5` in those rows.
 
@@ -148,14 +154,14 @@ The O-B collocation-node defects are therefore D-construction rounding.
 Over all rows, normalized by the row scale:
 - D-construction reaches `1.5e-12`–`2.0e-12` at degree 640 (`7.8e-13` at
   512);
-- the solve reaches `1.4e-16`–`2.5e-16` (backward-stable);
+- the solve reaches `1.4e-16`–`2.6e-16` (backward-stable);
 - the total reaches at most `2.2e-12`.
 
 ## 4. Findings
 
 **Established in the sampled cases:**
 1. **The solve is not the cause.** Refining to the exact solution of the
-   production system removes at most 3% of the spike residual. A solver
+   production system removes at most 3.1% of the spike residual. A solver
    improvement alone would not address it.
 2. **Differentiation-matrix construction is the largest single cause at
    degree 640.** It gives about 59% of the spike and essentially all of the
@@ -165,13 +171,14 @@ Over all rows, normalized by the row scale:
 3. **About 40% remains for the exact discrete system at degree 640.** At
    degree 512 it is almost all of the spike, so the operator-rounding
    component is small there.
-4. **Build independence.** The shares agree between Accelerate and OpenBLAS
-   within about 2 percentage points. The discretization residual agrees to
-   five digits.
+4. **Build independence.** In the three cases run on both builds, the
+   shares agree between Accelerate and OpenBLAS within 3 percentage points.
+   The largest difference is the solve share at ω/T = 59. The discretization
+   residual agrees to five digits.
 
 **Unresolved:**
 - **Origin of the discretization part.** It is the same at ω/T = 50, 59,
-  60 and 70 to `1e-4` relative. This suggests a frequency-independent source,
+  60 and 70 (B1) and at 59 and 60 (B3) to `1e-4` relative. This suggests a frequency-independent source,
   such as the C¹ `solve_bvp` spline background entering `2 psi^2/(u^2 F)`,
   rather than under-resolution of the frequency-dependent field. O-C does not
   test this.
@@ -196,8 +203,10 @@ Over all rows, normalized by the row scale:
    - With a single refinement update, the "last change" `e_T` is the whole
      correction, not a bound on the remaining error. Three approximations had
      converged in one update and so failed the uncertainty criterion.
-   - At least two updates are now made, so that `e_T` bounds the remaining
-     error as the plan intends. This leaves the thresholds unchanged.
+   - At least two updates are now made, so that `e_T` is the change made by
+     a correction after the first. The thresholds are unchanged.
+   - `e_T` is an empirical estimate of the remaining error, not a proved
+     bound (Section 7).
 3. **Step sign convention.** Step `k` contributes `R(x̃_chain[k+1]) -
    R(x̃_chain[k])`, so that the steps sum to `Δ_op = R(x̃_eq) - R(x̃_exact)`.
 4. **Exit status not captured for B1 run 1.** A shell error lost it, and its
@@ -231,9 +240,35 @@ justified for adoption by this evidence alone:**
   A change would need its own prospective plan, with regression and gate
   evidence across all of them.
 - **Not justified:**
-  - a solver improvement as the remedy, since it addresses at most 3%;
+  - a solver improvement as the remedy, since it addresses at most 3.1%;
   - widening the threshold;
   - excluding nodes.
 
 Any repair, and any follow-up on the discretization part, needs a new owner
 decision.
+
+## 7. Post-review clarifications (30 September 2026)
+
+After Codex's review of `e301700`, the following clarifications and one tool
+correction were made. The frozen plan, the evidence JSON and the eight local
+artifact files are unchanged; their SHA-256 hashes were re-verified.
+- **Uncertainty is an empirical estimate.**
+  - The plan and Section 1 use the last refinement change `e_T` as the
+    attribution uncertainty. It is an empirical estimate of the remaining
+    error in the spike residual, not a proved bound. Requiring two updates
+    does not by itself establish a bound.
+  - The saved estimates are at most `4.9e-12` of `|R_s|`. The nearest
+    classification thresholds are further away than that: the operator share
+    `0.575`–`0.595` against `0.8`, and the discretization share
+    `0.389`–`0.405` against `0.25`. That comparison uses the estimate, not a
+    bound.
+- **Coverage.** Degree 640 has four sampled frequencies on B1 but only two
+  on B3. Statements about "every case" refer to these six case-builds.
+- **Rounding.** Claimed upper limits are now rounded outward. For example,
+  the largest saved backward error is `4.343e-34`, so the limit is stated as
+  `4.4e-34`.
+- **Artifact overwrite (tool change after the evidence).** The tool now
+  refuses an existing artifact destination, using exclusive creation, and
+  stops that case with a diagnostic error. Previously it would have replaced
+  the file. The existing files were never overwritten. A regression test
+  covers this.

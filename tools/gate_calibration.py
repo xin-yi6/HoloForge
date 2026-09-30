@@ -1502,8 +1502,8 @@ OPTICAL_OC_CHAIN = ("exact", "D", "D2", "coef", "asm", "eq")
 OPTICAL_OC_STEPS = ("D-construction", "D@D-product", "coefficients", "assembly", "equilibration")
 OPTICAL_OC_MAX_ITERATIONS = 10
 # Correction 1 to F4 (reported): with a single update the "last change" is
-# the whole correction, not a bound on the remaining error, so at least two
-# updates are made.
+# the whole correction, so at least two updates are made. The last change is
+# then an empirical estimate of the remaining error, not a proved bound.
 OPTICAL_OC_MIN_ITERATIONS = 2
 OPTICAL_OC_BACKWARD_LIMIT = 1.0e-28
 OPTICAL_OC_UNCERTAINTY_LIMIT = 0.01
@@ -2030,7 +2030,15 @@ def optical_oc_case(frequency_over_temperature: float, degree: int, background, 
         artifact_dir.mkdir(parents=True, exist_ok=True)
         name = f"{label}-omega{frequency_over_temperature:g}-degree{degree}.npz"
         path = artifact_dir / name
-        np.savez_compressed(path, **arrays)
+        # Preserved evidence is never replaced: exclusive creation refuses an
+        # existing destination without opening it for writing.
+        try:
+            with open(path, "xb") as handle:
+                np.savez_compressed(handle, **arrays)
+        except FileExistsError:
+            record.update({"classification": "technical-stop",
+                           "stopped": f"artifact {name} already exists; refusing to overwrite it"})
+            return record
         record["artifact"] = {"relative_path": (OPTICAL_OC_ARTIFACT_DIR / name).as_posix(),
                               "bytes": path.stat().st_size, "sha256": _file_sha256(path)}
 

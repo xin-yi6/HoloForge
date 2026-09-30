@@ -271,6 +271,36 @@ class OpticalOCTests(unittest.TestCase):
         self.assertEqual(name({**steps, "assembly": 0.9}, 1.0, True), "cancellation among steps")
         self.assertEqual(name({**steps, "D-construction": 0.5, "assembly": 0.4}, 1.0, True), "several steps")
 
+    def test_existing_artifact_is_never_overwritten(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            existing = folder / "test-omega40-degree16.npz"
+            existing.write_bytes(b"preserved evidence")
+            record = calibration.optical_oc_case(40.0, 16, self.background, {}, label="test",
+                                                 artifact_dir=folder)
+            self.assertEqual(existing.read_bytes(), b"preserved evidence")
+            self.assertIn("refusing to overwrite", record["stopped"])
+            self.assertEqual(record["classification"], "technical-stop")
+            self.assertNotIn("artifact", record)
+            self.assertTrue(calibration.diagnostic_errors({"records": [record]}))
+
+    def test_new_artifact_is_written_and_hashed(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            record = calibration.optical_oc_case(40.0, 16, self.background, {}, label="test",
+                                                 artifact_dir=folder)
+            path = folder / "test-omega40-degree16.npz"
+            self.assertEqual(record["artifact"]["sha256"], calibration._file_sha256(path))
+            with np.load(path) as saved:
+                self.assertEqual(
+                    calibration._array_sha256(saved["assembled_operator"]),
+                    record["array_sha256"]["assembled_operator"],
+                )
+
     def test_command_refuses_unplanned_runs(self) -> None:
         for arguments in (["optical-oc", "--case-set", "confirmation", "--build-label", "B1"],
                           ["optical-oc", "--adverse", "--build-label", "B1"],
