@@ -1,12 +1,13 @@
-# Chebyshev repair: proposed qualification amendment 1 (post-observation)
+# Chebyshev repair: qualification amendment 1 (post-observation), frozen
 
-- **Status: PROPOSED. Not adopted, not applied.** AI-assisted (Claude),
-  prepared at Codex's request after its review of PR #55 (item R55-3).
-  Continuation is a separate owner decision.
-- **Revised once, after Codex's re-review of `d5eb95a` (item R55-F1).** The
-  first version's C-S1 entry model was wrong at first order. Section 3 now
-  derives it from the implemented operations, and Section 3.1 states what
-  remains unresolved. The rule in Section 2 is unchanged.
+- **Status: ADOPTED for one bounded continuation, and FROZEN before any
+  continuation run.** AI-assisted (Claude).
+  - Codex reviewed the proposal at `335331c` and recommended a bounded
+    continuation under five conditions. The owner approved them on
+    1 October 2026.
+  - This document was revised to those conditions and then frozen. The
+    commit that carries this status line is the freeze. Every continuation
+    evidence file records this file's SHA-256.
 - **Post-observation.** This amendment was written after the S0 results were
   seen: every metric at 84 grids on two builds, and every qualification
   failure. It is not a prospective rule for those grids, and it must never be
@@ -14,7 +15,14 @@
 - **The original result stands.** Under the
   [frozen plan](chebyshev-construction-repair-plan.md) (`0cd24dd`), S1
   stopped with "no candidate qualifies". That stays the recorded outcome of
-  the frozen rule, whatever happens to this amendment.
+  the frozen rule, whatever this amendment yields.
+- **Label.** A candidate that passes here is "qualified under
+  post-observation amendment 1". It is never reported as passing the frozen
+  rule.
+- **History.** Prepared at Codex's request after its first review of PR #55
+  (item R55-3). Its C-S1 entry model was corrected after the re-review of
+  `d5eb95a` (item R55-F1). The changes made at the freeze are listed in
+  Section 9.
 
 ## 1. What is unchanged
 
@@ -28,7 +36,7 @@
 - **Later stages:** A1, A2, the control routes, the API checks, every
   benchmark gate and threshold, and the reserved cases.
 
-## 2. What would change
+## 2. What changes
 
 Only the rule for **metric (b)**, the row-scaled action error
 `e_i = |((R - D) v̂)_i| / S_i`, against the stored-node reference.
@@ -36,14 +44,26 @@ Only the rule for **metric (b)**, the row-scaled action error
 | | A component (one matrix, one test vector, one row set) fails when |
 | --- | --- |
 | **Rule 1 (frozen)** | its value exceeds 2× the current construction's |
-| **Rule 2 (proposed)** | its value exceeds 2× the current construction's **and** its bound ratio exceeds 1 |
+| **Rule 2 (C-S1 only)** | its value exceeds 2× the current construction's **and** its bound ratio exceeds 1 |
 
-The **bound ratio** is `max_i e_i / B_i` over the rows of the set. `B_i` is
-the first-order a-priori rounding bound of the candidate's own declared
-construction (Section 3), in the same row scaling.
+- **The bound ratio** is `max_i e_i / B_i` over the rows of the set. `B_i` is
+  the first-order rounding bound of C-S1's own declared construction
+  (Section 3), in the same row scaling.
+- **Rule 2 applies to C-S1 only.** C-T1, C-T2 and C-T3 keep rule 1 for
+  every component. No bound of theirs is verified, and none could cover
+  their node-set difference from the stored-node reference.
+- **A component of C-S1 with no finite recorded bound ratio keeps rule 1.**
 
-A component with no defined bound keeps rule 1. That applies to C-T1's
-second derivative, which is formed by `D @ D`.
+**Entry requirement (C-S1 only, added at the freeze).** Every entry of
+C-S1's D1 and D2 must lie inside the same first-order bound, on every grid
+of both sets and on both builds:
+- **Check.** `|R_ij - D_ij| / B_ij <= 1` for every `i, j`, with `B_ij` the
+  entry bound of Section 3. This is the action bound applied to every
+  coordinate vector. It uses the same reference matrices as the metrics.
+- **Kept.** For each matrix and grid, the error, the bound and their ratio
+  at the worst entry are recorded, not only a verdict.
+- **A violation, or an undefined quantity, is a stop.** It is never
+  permission to change the model.
 
 **Why this, and why not a floor.**
 - **The measured values are real.** Metric (b) is measured against a
@@ -94,8 +114,11 @@ gave C-S1 a uniform entry error of `5u`. That was wrong at first order.
 
 1. **Differences.** `d_ik = fl(u_i - u_k) = (u_i - u_k)(1 + delta_ik)` with
    `|delta_ik| <= u`.
-   - `delta_ik` is known exactly from an error-free transformation of the
-     subtraction. It is zero when the subtraction is exact.
+   - An error-free transformation gives the exact difference as a pair of
+     doubles. `delta_ik` is evaluated from that pair by one rounded sum and
+     one rounded division, so its computed value has a relative error of
+     about `2u`. That matters only beyond first order.
+   - It is zero when the subtraction is exact.
    - `delta_ki = delta_ik`, because `d_ki = -d_ik` exactly.
 2. **Weight products.** `P_i = prod_{k != i} d_ik`, accumulated in
    double-double arithmetic. The accumulation adds only second-order error,
@@ -125,25 +148,13 @@ E_ij = 4u + A_i + A_j - |delta_ij|,        A_i = sum_{k != i} |delta_ik|.
   `delta_ik` of the stored nodes.
 - **Worst case:** `(2N + 3) u` at degree `N`, when no subtraction is exact.
 
-**C-T1, C-T2 and C-T3** (closed-form weights, trigonometric differences)
-keep a uniform model, because their weights are exact and no product of
-differences occurs:
+**C-T1, C-T2 and C-T3 have no bound here.** An earlier version of this
+section gave them a uniform operation count that assumed a library sine
+accurate to one ulp. It was not verified, and it bounded rounding against
+the ideal nodes only. It is withdrawn from use and removed from the
+evaluator. These candidates keep rule 1.
 
-| Quantity | Units of `u` | Operations counted (one `u` each unless stated) |
-| --- | ---: | --- |
-| off-diagonal D1 entry, `E_ij` | 12 | two sines, each `2.4u` for forming its argument plus `2u` for a library sine assumed accurate to one ulp; their product; the multiplication by the width; the final division. The total is `11.8u`, rounded up |
-| node difference | 11 | the same without the final division (`10.8u`, rounded up) |
-
-- **Assumption.** The library sine is accurate to one ulp. This is assumed
-  and not verified here. Unlike the C-S1 model, the C-T model is not checked
-  against exact arithmetic.
-- **Scope.** It bounds only rounding against the *ideal* nodes. The C-T
-  matrices differ from the stored-node reference by the node-set difference,
-  which is not rounding. That difference is deliberately not covered, so C-T
-  is expected to fail honestly.
-
-**Computed node difference.** Its relative error `E^d_ij` is `|delta_ij|`
-for C-S1 and `11u` for the C-T family.
+**Computed node difference.** Its relative error `E^d_ij` is `|delta_ij|`.
 
 **Diagonals.** Each is the negative row sum of the rounded off-diagonal
 entries, taken in compensated arithmetic and rounded once (`u`).
@@ -180,9 +191,14 @@ same `S_i`, so the bound ratio does not depend on the row scaling.
   relative `1e-16`.
 
 **What the bound is not.**
-- It is a first-order bound for a correct implementation of the declared
-  algorithm. It is not a statement about accuracy for any consumer, and it
-  is not a bound on the node-set difference.
+- **It is a first-order bound, not an exact numerical certificate.** It is
+  not rounded outward, it omits the terms listed above, and it assumes the
+  arithmetic conditions stated above. It is checked against every entry on
+  the grids of this continuation (Section 2); that is a test, not a proof.
+- It is a bound for a correct implementation of the declared algorithm. It
+  is not a statement about accuracy for any consumer, not an equation
+  residual or a physical uncertainty, and not a bound on the node-set
+  difference.
 - It bounds absolute values. The signed terms can cancel, so the actual
   error can be much smaller than the bound.
 
@@ -221,9 +237,9 @@ confirmation set, and no candidate matrix was evaluated on them:
   exceeds twice the current value whenever it stays inside a bound of that
   size. Whether that is an acceptable regression rule at the larger degrees
   is **not established**.
-- **Not measured.** Whether C-S1's actual errors grow in the same way is not
-  known. Measuring it needs a pass over the S0 grids, which this correction
-  step does not include.
+- **Not measured before the freeze.** Whether C-S1's actual errors grow in
+  the same way was not known when this was frozen. The continuation records
+  it (the entry requirement of Section 2).
 - **Not tuned.** The bound was not tightened or loosened to reach an
   outcome.
 
@@ -237,8 +253,29 @@ confirmation set, and no candidate matrix was evaluated on them:
 
 ## 4. Adverse controls
 
-Run as tests on a grid outside the S0 node set (degree 21 on `[1e-3, 1]`),
-with C-S1 as the candidate:
+**Definitions** (fixed; they do not depend on the grid):
+
+| Control | Damage to C-S1's matrices |
+| --- | --- |
+| `one_D1_entry` | D1 entry `(1, 2)` scaled by `1 + 1e-11` |
+| `all_D1_entries` | every off-diagonal D1 entry scaled by `1 + 1e-12 g`, `g` standard normal from NumPy's `default_rng(3)`; diagonal recomputed |
+| `shifted_nodes` | both matrices built for nodes whose interior values are scaled by `1 + 1e-10`, returned with the original nodes (a stored-node regression) |
+| `one_D2_entry` | D2 entry `(2, 3)` scaled by `1 + 1e-10` |
+
+**In the continuation, at the largest grid** (degree 1280 on `[1e-5, 1]`,
+both builds, sharing that grid's references):
+- **Combined checks.** A control is rejected if any of these fails for it:
+  polynomial exactness, the metric (a) rule, the metric (b) rule 2, or the
+  entry requirement. The rule and the checks are those applied to C-S1.
+- **Each of the four controls must be rejected.** If one is not, the
+  continuation stops and reports which checks did not reject it. The damage
+  is never enlarged after the result is seen.
+- **Recorded.** For each control: the checks that rejected it, the largest
+  bound ratio, and the largest entry ratio. The undamaged matrices are
+  evaluated in the same way, for comparison.
+
+**Before the freeze, as tests** on a grid outside both sets (degree 21 on
+`[1e-3, 1]`), with C-S1 as the candidate:
 
 | Operator | Qualifies under rule 2 | D1 bound ratio | D2 bound ratio | Worst (a) / current |
 | --- | --- | ---: | ---: | ---: |
@@ -273,26 +310,36 @@ confirmation set (degrees 7, 11, 13, 21 and 30, on `[-0.5, 1.5]` and
   tested. They are not a proof, and they say nothing about the larger
   degrees (Section 3.1).
 
-## 5. Retrospective replay versus new confirmation
+## 5. The two sets and the qualification requirement
 
-- **Rule 2 cannot be evaluated from the saved evidence.** The saved S0 files
-  hold the metric values but not the per-row bounds. Evaluating rule 2 needs
-  a new pass over the references.
-- **Retrospective set.** The 84 S0 grids with vectors `v1`–`v3`. These were
-  observed before this amendment, so a pass there is a retrospective replay,
-  not a confirmation.
-- **Confirmation set.** Defined here and not yet computed:
+- **Rule 2 cannot be evaluated from the saved evidence alone.** The saved S0
+  files hold the metric values but not the bounds.
+- **Retrospective set.** The 84 S0 grids with vectors `v1`–`v3`.
+  - These were observed before this amendment, so a pass there is a
+    retrospective replay, not a confirmation.
+  - The metric values are those of the saved S0 evidence. The continuation
+    adds C-S1's bound ratios and entry check. It binds them to that evidence:
+    the reconstructed C-S1 matrices must hash to the recorded ones, or the
+    stage stops.
+- **Confirmation set.** Not computed before the freeze:
   - degrees 5, 9, 12, 25, 33, 48, 100, 200, 448 and 800;
   - intervals `[0.3, 0.9]` and `[1e-4, 1]`;
   - vectors `w1 = cos(5 xi - 0.7)`, `w2 = 1/(2 + xi)` and
     `w3 = xi exp(-2 xi)`.
 
-  No grid or vector of this set was used in S0 or in the tests of Section 4.
-- **Requirement.** A candidate qualifies under amendment 1 only if it
-  satisfies rule 2, the unchanged metric (a) rule and polynomial exactness on
-  **both** sets, on both builds.
-- **Label.** Any pass is reported as "qualified under post-observation
-  amendment 1". It is never reported as passing the frozen rule.
+  Every metric is measured for every construction on these 20 grids. No
+  candidate matrix was evaluated on any of them before the freeze.
+- **Requirement.** A candidate qualifies under amendment 1 only if, on
+  **both** sets and on **both** builds, it satisfies:
+  - polynomial exactness (unchanged);
+  - the metric (a) rule (unchanged);
+  - the metric (b) rule: rule 2 for C-S1, rule 1 for the others;
+  - for C-S1, the entry requirement of Section 2.
+- **Selection** is unchanged: at least 10× improvement on metric (c), from
+  the saved S0 evidence, and the tie-break.
+- **Evidence admission.** The selector requires both builds' complete S0 and
+  continuation outputs, from one tool version and this document's hash, with
+  every recorded quantity finite.
 
 ## 6. Facts from the saved evidence (no new computation)
 
@@ -309,39 +356,67 @@ confirmation set (degrees 7, 11, 13, 21 and 30, on `[-0.5, 1.5]` and
   1 (degree 2 on `[1e-5, 1]`, D2 action, `3.8e-16` against `3.3e-16`). A
   constant chosen that way would be chosen for the result.
 
-**Whether C-S1 would qualify under rule 2 on either set is not known.** It
-has not been computed. The entry model of Section 3 comes from the
-implemented operations and the stored nodes, not from the S0 metric values.
+**Whether C-S1 qualifies under this amendment on either set was not known
+at the freeze.** It had not been computed. The entry model of Section 3
+comes from the implemented operations and the stored nodes, not from the S0
+metric values.
 
 ## 7. Budget
 
-Reconciled from the existing logs (report Sections 1, 7 and 8):
-- **Charged so far:** about 21.7 of 60 minutes of local execution. That
-  includes the 458 s full test suite omitted from the first table, a
-  conservative 60 s for short untimed runs, and 30 s for the correction
-  step after the re-review.
-- **Remaining:** at most about 38.3 minutes.
-- **Estimated need for a continuation:**
+- **Local execution.** The owner raised the cumulative ceiling from 60 to
+  90 minutes. That includes the roughly 21.7 minutes already charged. It is
+  not 90 more minutes, and nothing is reset.
+- **Active work.** The original cumulative ceiling of 6 hours is unchanged.
+  About 1.5 hours were used before the continuation.
+- **Estimate** (not a promise): 36–50 minutes of execution for the
+  continuation, of which R0 and S2 are the least certain.
+- **If a ceiling is reached,** the work returns incomplete. No case is
+  removed and no ceiling is extended.
 
-  | Step | Estimate |
-  | --- | --- |
-  | One S0 pass with bounds on B1 | about 4 min |
-  | B3 (inherits where matrices are bit-identical) | 1–4 min |
-  | Confirmation set | about 1–2 min |
-  | R0 and S2 | not yet measured; estimated 20–30 min |
-  | S3 | about 2 min |
-  | Full suite | about 8 min |
-  | **Total** | **about 36–50 min** |
+## 8. Continuation stages and stops
 
-- **Consequence.** The remaining budget may not cover a continuation. A
-  continuation approval should state the execution budget explicitly. It is
-  not reset or extended here.
+1. **C0 — freeze.** This document, the evaluator and its tests are committed
+   before any continuation run.
+2. **C1 — measurements, on B1 and B3.** The oracle fixtures first. Then the
+   retrospective set, the confirmation set and the adverse controls
+   (Sections 4 and 5). C1 draws no verdict.
+3. **C2 — qualification and selection** under this amendment (Section 5),
+   from the saved S0 evidence and the two C1 outputs.
+4. **Only if C2 selects a candidate,** the original plan continues in its
+   declared order and unchanged: the implementation freeze, R0, S2 (with A1,
+   A2, A3 and bit-identical controls) and S3.
+   - R0 values and allowances are committed before any candidate verifier
+     run.
+   - No gate that passes at baseline may fail afterwards.
 
-## 8. If the owner approves a continuation
+**Stops.** Each returns to the owner, with no automatic repair, no tuning
+and no added candidate:
+- a fixture failure, or an undefined required quantity;
+- a C-S1 matrix that is not the one in the S0 evidence;
+- a bound violation;
+- an adverse control that is not rejected;
+- no candidate qualifying, or none reaching 10×;
+- every stop of the original plan: A1, A2 or a control failing, a
+  post-freeze code correction, or an exhausted budget.
 
-1. Freeze this amendment in its own commit, with any changes from review.
-2. Run the retrospective set and the confirmation set, and apply rule 2.
-3. If a candidate qualifies and meets the unchanged 10× requirement,
-   continue with the original plan's implementation freeze, R0, S2 and S3,
-   all unchanged.
-4. If none qualifies, stop again and report.
+**Closed throughout:** gates, thresholds, tolerances and model physics;
+the candidate set and the candidate implementations; reserved optical
+cases; merge, release and branch deletion; installations and paid compute;
+extra scientific CI dispatches; cleanup; private research and the BTZ pin.
+
+## 9. Changes made at the freeze
+
+From the version Codex reviewed at `335331c`, following its review and the
+owner's approval:
+- **Rule 2 is restricted to C-S1** (Section 2). The closed-form-weight
+  candidates keep rule 1, and their operation-count model is withdrawn
+  (Section 3).
+- **The entry requirement is added** for C-S1 (Section 2).
+- **The adverse controls are defined in the evaluator** and repeated at
+  degree 1280 on `[1e-5, 1]`, with the combined checks stated (Section 4).
+- **The bound is described as first order,** not as an exact certificate,
+  and the evaluation of `delta` is no longer called exact (Section 3).
+- **The budget and the stages** are stated (Sections 7 and 8).
+
+Unchanged by the freeze: the C-S1 bound itself, the confirmation set, the
+candidate implementations, and everything listed in Section 1.

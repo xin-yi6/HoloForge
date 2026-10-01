@@ -119,6 +119,8 @@ def synthetic_payload(build, candidate_value=2.0e-15, current_value=1.0e-15, met
                 "sha256": {key: (name + key).encode().hex().ljust(64, "0")[:64] for key in ("nodes", "D1", "D2")}}
         if bound_ratio is not None and name != "current":
             item["bound_ratio"] = {key: bound_ratio for key in repair.B_KEYS if "_stored" in key}
+            item["entry_check"] = {matrix: {"ratio": bound_ratio, "error": 1.0e-16, "bound": 1.0e-16 / bound_ratio,
+                                            "row": 0, "column": 1, "entries": 4} for matrix in ("D1", "D2")}
         return item
 
     grids = {}
@@ -364,91 +366,280 @@ class PreflightCoverageTests(unittest.TestCase):
         self.assertEqual(set(leaves["control|charged|primary|mu_BH"]["estimators"]), {"route_difference"})
 
 
-class ProposedAmendmentTests(unittest.TestCase):
-    """Proposed amendment 1 (not adopted): bound validity and adverse controls."""
+class AmendmentRuleTests(unittest.TestCase):
+    """Post-observation amendment 1: bound validity and adverse controls."""
 
     degree, lower, upper = 21, 1.0e-3, 1.0
 
-    def _metrics(self, damaged=None):
+    def _metrics(self, control=None):
         matrices = {name: repair.construct(name, self.degree, self.lower, self.upper) for name in repair.CONSTRUCTIONS}
-        if damaged is not None:
-            matrices["C-S1"] = damaged(*matrices["C-S1"])
+        if control is not None:
+            matrices["C-S1"] = repair.adverse_control(control, *matrices["C-S1"])
         return repair.grid_metrics(self.degree, self.lower, self.upper, repair.CONSTRUCTIONS, matrices)
 
     def _qualifies(self, metrics):
-        return repair.qualification_v2({"grids": {"test": metrics}})["C-S1"]
+        return repair.qualification_amended({"grids": {"test": metrics}})["C-S1"]
 
     def test_bound_holds_for_the_stored_node_candidate_off_the_s0_grid(self) -> None:
         self.assertNotIn(self.degree, repair.DEGREES)
+        self.assertNotIn(self.degree, repair.CONFIRMATION_DEGREES)
         metrics = self._metrics()
         self.assertLess(max(metrics["C-S1"]["bound_ratio"].values()), 1.0)
-        self.assertNotIn("bound_ratio", metrics["current"])
+        self.assertLess(max(item["ratio"] for item in metrics["C-S1"]["entry_check"].values()), 1.0)
+        for name in ("current", "C-T1", "C-T2", "C-T3"):
+            self.assertNotIn("bound_ratio", metrics[name])
+            self.assertNotIn("entry_check", metrics[name])
         self.assertTrue(self._qualifies(metrics)["qualified"])
 
     def test_a_single_damaged_entry_is_rejected(self) -> None:
-        def damage(nodes, first, second):
-            first = first.copy()
-            first[1, 2] *= 1.0 + 1.0e-11
-            return nodes, first, second
-
-        report = self._qualifies(self._metrics(damage))
+        report = self._qualifies(self._metrics("one_D1_entry"))
         self.assertFalse(report["qualified"])
         self.assertTrue(any(item["metric"].startswith("b:D1") and item["bound_ratio"] > 1.0 for item in report["failures"]))
+        self.assertIn("entry", report["discriminators"])
 
     def test_entries_perturbed_beyond_rounding_are_rejected(self) -> None:
-        def damage(nodes, first, second):
-            rng = np.random.default_rng(3)
-            size = nodes.size
-            off = ~np.eye(size, dtype=bool)
-            first = np.where(off, first * (1.0 + 1.0e-12 * rng.standard_normal((size, size))), 0.0)
-            first[np.arange(size), np.arange(size)] = -repair.compensated_row_sum(first)
-            return nodes, first, second
-
-        self.assertFalse(self._qualifies(self._metrics(damage))["qualified"])
+        self.assertFalse(self._qualifies(self._metrics("all_D1_entries"))["qualified"])
 
     def test_a_matrix_for_shifted_nodes_is_rejected(self) -> None:
-        def damage(nodes, first, second):
-            shifted = nodes.copy()
-            shifted[1:-1] *= 1.0 + 1.0e-10
-            _, wrong_first, wrong_second = _matrices_for(shifted)
-            return nodes, wrong_first, wrong_second
-
-        def _matrices_for(nodes):
-            differences = nodes[:, None] - nodes[None, :]
-            rows = np.arange(nodes.size)
-            first, diagonal, safe = repair._first_from_differences(differences, repair._stored_node_weights(differences), rows)
-            second = repair._explicit_second(first, diagonal, safe, rows)
-            first[rows, rows] = diagonal
-            return nodes, first, second
-
-        report = self._qualifies(self._metrics(damage))
+        report = self._qualifies(self._metrics("shifted_nodes"))
         self.assertFalse(report["qualified"])
         self.assertTrue(any(item["metric"].startswith("a:") for item in report["failures"]))
 
     def test_a_damaged_second_derivative_is_rejected(self) -> None:
-        def damage(nodes, first, second):
-            second = second.copy()
-            second[2, 3] *= 1.0 + 1.0e-10
-            return nodes, first, second
-
-        report = self._qualifies(self._metrics(damage))
+        report = self._qualifies(self._metrics("one_D2_entry"))
         self.assertFalse(report["qualified"])
         self.assertTrue(any("D2" in item["metric"] for item in report["failures"]))
 
+    def test_control_definitions_are_fixed(self) -> None:
+        nodes, first, second = repair.construct("C-S1", self.degree, self.lower, self.upper)
+        _, damaged, same = repair.adverse_control("one_D1_entry", nodes, first, second)
+        self.assertEqual(damaged[1, 2], first[1, 2] * (1.0 + 1.0e-11))
+        self.assertEqual(int(np.sum(damaged != first)), 1)
+        self.assertIs(same, second)
+        _, same, damaged = repair.adverse_control("one_D2_entry", nodes, first, second)
+        self.assertEqual(damaged[2, 3], second[2, 3] * (1.0 + 1.0e-10))
+        self.assertEqual(int(np.sum(damaged != second)), 1)
+        shifted = nodes.copy()
+        shifted[1:-1] *= 1.0 + 1.0e-10
+        returned, wrong_first, _ = repair.adverse_control("shifted_nodes", nodes, first, second)
+        self.assertIs(returned, nodes)
+        self.assertTrue(np.array_equal(wrong_first, repair.stored_node_matrices(shifted)[0]))
+        self.assertTrue(np.array_equal(repair.stored_node_matrices(nodes)[0], first))
+        with self.assertRaises(ValueError):
+            repair.adverse_control("other", nodes, first, second)
+
     def test_the_amendment_does_not_relax_the_entrywise_or_exactness_rules(self) -> None:
         payload = synthetic_payload("B1", candidate_value=3.0e-15, current_value=1.0e-15, bound_ratio=0.5)
-        report = repair.qualification_v2(payload["result"])["C-S1"]
+        report = repair.qualification_amended(payload["result"])["C-S1"]
         self.assertFalse(report["qualified"])
         self.assertTrue(all(item["metric"].startswith("a:") for item in report["failures"]))
         self.assertGreater(report["excused_within_bound"], 0)
         payload = synthetic_payload("B1", candidate_value=1.0e-15, exactness=1.0e-9, bound_ratio=0.5)
-        self.assertFalse(repair.qualification_v2(payload["result"])["C-S1"]["qualified"])
+        self.assertFalse(repair.qualification_amended(payload["result"])["C-S1"]["qualified"])
         payload = synthetic_payload("B1", candidate_value=3.0e-15, current_value=1.0e-15, bound_ratio=1.5)
-        failures = repair.qualification_v2(payload["result"])["C-S1"]["failures"]
+        failures = repair.qualification_amended(payload["result"])["C-S1"]["failures"]
         self.assertTrue(any(item["metric"].startswith("b:") for item in failures))
         payload = synthetic_payload("B1", candidate_value=3.0e-15, current_value=1.0e-15)
-        failures = repair.qualification_v2(payload["result"])["C-S1"]["failures"]
+        failures = repair.qualification_amended(payload["result"])["C-S1"]["failures"]
         self.assertTrue(any(item["metric"].startswith("b:") for item in failures))
+
+    def test_the_exemption_is_restricted_to_the_stored_node_candidate(self) -> None:
+        payload = synthetic_payload("B1", candidate_value=1.0e-15, current_value=1.0e-15, bound_ratio=0.5)
+        for grid in payload["result"]["grids"].values():
+            for name in repair.CANDIDATES:
+                grid[name]["b"] = {key: 3.0e-15 for key in grid[name]["b"]}
+        report = repair.qualification_amended(payload["result"])
+        self.assertTrue(report["C-S1"]["qualified"])
+        self.assertEqual(report["C-S1"]["rule"], "amended")
+        for name in ("C-T1", "C-T2", "C-T3"):
+            self.assertEqual(report[name]["rule"], "frozen")
+            self.assertFalse(report[name]["qualified"])
+            self.assertEqual(report[name]["excused_within_bound"], 0)
+            self.assertEqual(report[name]["failure_count"], repair.qualification(payload["result"])[name]["failure_count"])
+
+    def test_an_entry_outside_the_bound_or_a_missing_check_fails(self) -> None:
+        payload = synthetic_payload("B1", candidate_value=1.0e-15, current_value=1.0e-15, bound_ratio=0.5)
+        self.assertTrue(repair.qualification_amended(payload["result"])["C-S1"]["qualified"])
+        label = repair.expected_grid_labels()[5]
+        payload["result"]["grids"][label]["C-S1"]["entry_check"]["D2"]["ratio"] = 1.01
+        report = repair.qualification_amended(payload["result"])["C-S1"]
+        self.assertEqual([item["metric"] for item in report["failures"]], ["entry:D2"])
+        del payload["result"]["grids"][label]["C-S1"]["entry_check"]
+        report = repair.qualification_amended(payload["result"])["C-S1"]
+        self.assertEqual(sorted(item["metric"] for item in report["failures"]), ["entry:D1", "entry:D2"])
+
+    def test_confirmation_vectors_and_grids(self) -> None:
+        from decimal import Decimal, localcontext
+
+        nodes = repair.half_angle_nodes(7, 0.2, 0.8)  # not a grid of the confirmation set
+        with localcontext() as context:
+            context.prec = repair.DIGITS
+            vectors = repair.confirmation_vectors([Decimal(float(u)) for u in nodes], 0.2, 0.8)
+        xi = (2.0 * nodes - 1.0) / 0.6
+        self.assertTrue(np.allclose(vectors["w1"], np.cos(5.0 * xi - 0.7), rtol=0.0, atol=1.0e-14))
+        self.assertTrue(np.allclose(vectors["w2"], 1.0 / (2.0 + xi), rtol=1.0e-14))
+        self.assertTrue(np.allclose(vectors["w3"], xi * np.exp(-2.0 * xi), rtol=0.0, atol=1.0e-14))
+        self.assertEqual(len(repair.confirmation_grid_labels()), 20)
+        self.assertFalse(set(repair.CONFIRMATION_DEGREES) & set(repair.DEGREES))
+        self.assertFalse(set(repair.CONFIRMATION_INTERVALS) & set(repair.INTERVALS))
+
+
+def synthetic_run(build, s0_payload, ratio=0.5, control_value=1.0e-9):
+    """A complete, admissible synthetic C1 output matching a synthetic S0 payload."""
+
+    def check(value):
+        return {matrix: {"ratio": value, "error": 1.0e-16, "bound": 1.0e-16 / value, "row": 0, "column": 1, "entries": 4}
+                for matrix in ("D1", "D2")}
+
+    stored_keys = [key for key in repair.B_KEYS if "_stored" in key]
+    grids = s0_payload["result"]["grids"]
+    retrospective = {label: {"bound_ratio": {key: ratio for key in stored_keys}, "entry_check": check(ratio),
+                             "sha256": dict(grids[label]["C-S1"]["sha256"])} for label in grids}
+
+    def entry(value, bounded):
+        item = {"a": {key: value for key in repair.A_KEYS},
+                "b": {key.replace("_v", "_w"): value for key in repair.B_KEYS},
+                "exactness": {"D1": 1.0e-14, "D2": 1.0e-14}, "sha256": {key: "e" * 64 for key in ("nodes", "D1", "D2")}}
+        if bounded:
+            item["bound_ratio"] = {key.replace("_v", "_w"): ratio for key in stored_keys}
+            item["entry_check"] = check(ratio)
+        return item
+
+    confirmation = {label: dict({"current": entry(1.0e-15, False)},
+                                **{name: entry(3.0e-15, name == "C-S1") for name in repair.CANDIDATES})
+                    for label in repair.confirmation_grid_labels()}
+    for grid in confirmation.values():
+        grid["C-S1"]["a"] = {key: 1.0e-15 for key in grid["C-S1"]["a"]}
+
+    def control(value):
+        item = {"a": {key: value for key in repair.A_KEYS}, "b": {key: value for key in repair.B_KEYS},
+                "exactness": {"D1": 1.0e-14, "D2": 1.0e-14}, "sha256": {key: "f" * 64 for key in ("nodes", "D1", "D2")},
+                "bound_ratio": {key: 100.0 for key in stored_keys}, "entry_check": check(100.0)}
+        return {"current": {"a": {key: 1.0e-15 for key in repair.A_KEYS}, "b": {key: 1.0e-15 for key in repair.B_KEYS},
+                            "exactness": {"D1": 1.0e-14, "D2": 1.0e-14}}, "C-S1": item}
+
+    controls = {name: control(control_value) for name in repair.CONTROL_NAMES}
+    controls["undamaged"] = control(1.0e-15)
+    controls["undamaged"]["C-S1"].update(bound_ratio={key: ratio for key in stored_keys}, entry_check=check(ratio))
+    return {"tool": "chebyshev-repair", "stage": "c1", "status": "ok",
+            "plan_sha256": repair._file_sha256(repair.ROOT / repair.PLAN),
+            "amendment_sha256": repair._file_sha256(repair.ROOT / repair.AMENDMENT), "tool_sha256": "b" * 64,
+            "result": {"build_label": build, "passed": True, "complete": True,
+                       "fixtures": {"F1_oracle_arithmetic": {"passed": True}}, "retrospective": retrospective,
+                       "confirmation": confirmation, "controls": controls,
+                       "control_grid": repair.grid_label(*repair.CONTROL_GRID)}}
+
+
+class ContinuationStageTests(unittest.TestCase):
+    """Stages C1 and C2 of the continuation under amendment 1."""
+
+    AGREEMENT = {"tool": "chebyshev-repair", "stage": "build-agreement", "status": "ok",
+                 "result": dict({name: {"differing_grids": 0, "max_relative_difference": 0.0, "seconds": 0.01}
+                                 for name in repair.CONSTRUCTIONS},
+                                verified={"other_label": "B3", "local_label": "B1", "files": 0,
+                                          "saved_bytes_match_s0_hashes": True, "local_matrices_match_s0_hashes": True})}
+
+    def _evidence(self, **options):
+        # The frozen rule fails every candidate here (3e-15 against 1e-15 on (b)) but not on (a).
+        payloads = synthetic_pair(candidate_value=3.0e-15, current_value=1.0e-15)
+        for payload in payloads:
+            for grid in payload["result"]["grids"].values():
+                grid["C-S1"]["a"] = {key: 1.0e-15 for key in grid["C-S1"]["a"]}
+        runs = [synthetic_run(payload["result"]["build_label"], payload, **options) for payload in payloads]
+        return payloads, runs
+
+    def test_the_stored_node_candidate_is_selected_with_its_label(self) -> None:
+        payloads, runs = self._evidence()
+        self.assertEqual(repair.selection(payloads, self.AGREEMENT)["stopped"], "no candidate qualifies")
+        outcome = repair.amended_selection(payloads, runs, self.AGREEMENT)
+        self.assertTrue(outcome["passed"], outcome.get("stopped"))
+        self.assertEqual(outcome["qualified"], ["C-S1"])
+        self.assertEqual(outcome["selected_label"], "C-S1 qualified under post-observation amendment 1")
+        self.assertEqual(outcome["frozen_rule_result"], "no candidate qualifies (unchanged)")
+        for build in ("B1", "B3"):
+            self.assertTrue(outcome["adverse_controls"][build]["undamaged"]["rejected"] is False)
+            for name in repair.CONTROL_NAMES:
+                self.assertTrue(outcome["adverse_controls"][build][name]["rejected"])
+
+    def test_a_bound_violation_on_either_set_or_build_disqualifies(self) -> None:
+        for part, label in (("retrospective", repair.expected_grid_labels()[7]),
+                            ("confirmation", repair.confirmation_grid_labels()[3])):
+            payloads, runs = self._evidence()
+            target = runs[1]["result"][part][label]
+            (target if part == "retrospective" else target["C-S1"])["entry_check"]["D1"]["ratio"] = 1.2
+            outcome = repair.amended_selection(payloads, runs, self.AGREEMENT)
+            self.assertEqual(outcome["stopped"], "no candidate qualifies under amendment 1")
+            failures = outcome["qualification"]["B3"][part]["C-S1"]["failures"]
+            self.assertEqual([item["metric"] for item in failures], ["entry:D1"])
+
+    def test_an_accepted_adverse_control_stops_the_selection(self) -> None:
+        payloads, runs = self._evidence()
+        accepted = runs[0]["result"]["controls"]["one_D1_entry"]["C-S1"]
+        accepted.update(a={key: 1.0e-15 for key in accepted["a"]}, b={key: 1.0e-15 for key in accepted["b"]},
+                        bound_ratio={key: 0.5 for key in accepted["bound_ratio"]})
+        for item in accepted["entry_check"].values():
+            item["ratio"] = 0.5
+        outcome = repair.amended_selection(payloads, runs, self.AGREEMENT)
+        self.assertEqual(outcome["stopped"], "an adverse control was not rejected")
+        self.assertEqual(outcome["controls_not_rejected"], ["B1:one_D1_entry"])
+
+    def test_incomplete_or_unbound_continuation_evidence_is_rejected(self) -> None:
+        def stopped(mutate):
+            payloads, runs = self._evidence()
+            mutate(runs)
+            outcome = repair.amended_selection(payloads, runs, self.AGREEMENT)
+            self.assertEqual(outcome["stopped"], "invalid continuation evidence")
+            return " ".join(outcome["evidence_errors"])
+
+        self.assertIn("confirmation grids", stopped(lambda runs: runs[0]["result"]["confirmation"].popitem()))
+        self.assertIn("retrospective grids", stopped(lambda runs: runs[1]["result"]["retrospective"].popitem()))
+        label = repair.expected_grid_labels()[0]
+        self.assertIn("not the one in the S0 evidence", stopped(
+            lambda runs: runs[0]["result"]["retrospective"][label]["sha256"].update(D1="0" * 64)))
+        self.assertIn("exactly one each", stopped(lambda runs: runs.pop()))
+        self.assertIn("amendment hash", stopped(lambda runs: [run.update(amendment_sha256="1" * 64) for run in runs]))
+        self.assertIn("adverse controls", stopped(lambda runs: runs[0]["result"]["controls"].pop("shifted_nodes")))
+        self.assertIn("not finite", stopped(lambda runs: runs[0]["result"]["retrospective"][label]["bound_ratio"].update(
+            {"D1_stored_v1_all": float("nan")})))
+        self.assertIn("not a complete", stopped(lambda runs: runs[0]["result"].update(complete=False)))
+        payloads, runs = self._evidence()
+        self.assertEqual(repair.amended_selection(payloads, runs, None)["passed"], True)
+        unverified = {"stage": "build-agreement", "status": "ok",
+                      "result": {key: value for key, value in self.AGREEMENT["result"].items() if key != "verified"}}
+        self.assertEqual(repair.amended_selection(payloads, runs, unverified)["stopped"], "invalid continuation evidence")
+
+    def test_the_measurement_stage_on_a_small_configuration(self) -> None:
+        from unittest.mock import patch
+
+        degree, lower, upper = 16, 0.0, 1.0
+        label = repair.grid_label(degree, lower, upper)
+        s0 = {"status": "ok", "tool_sha256": "a" * 64, "result": {"build_label": "B1", "grids": {label: {
+            name: {"sha256": repair._matrix_hashes(*repair.construct(name, degree, lower, upper))}
+            for name in ("current", "C-S1")}}}}
+        options = dict(degrees=(degree,), intervals=((lower, upper),), confirmation_degrees=(7,),
+                       confirmation_intervals=((0.2, 0.8),), control_grid=(degree, lower, upper))
+        with patch.object(repair, "s0_fixtures", return_value={"F": {"passed": True}}):
+            result = repair.amendment_run("B1", s0, **options)
+            self.assertTrue(result["passed"])
+            self.assertFalse(result["complete"])
+            self.assertEqual(sorted(result["controls"]), sorted(("undamaged",) + repair.CONTROL_NAMES))
+            retrospective = result["retrospective"][label]
+            undamaged = result["controls"]["undamaged"]["C-S1"]
+            self.assertEqual(retrospective["bound_ratio"], undamaged["bound_ratio"])
+            self.assertEqual(retrospective["entry_check"], undamaged["entry_check"])
+            self.assertLess(max(retrospective["bound_ratio"].values()), 1.0)
+            for name in repair.CONTROL_NAMES:
+                verdict = repair.qualification_amended({"grids": {label: result["controls"][name]}}, ("C-S1",))["C-S1"]
+                self.assertFalse(verdict["qualified"], name)
+            confirmation = result["confirmation"][repair.grid_label(7, 0.2, 0.8)]
+            self.assertEqual(sorted(confirmation), sorted(repair.CONSTRUCTIONS))
+            self.assertTrue(all("_w" in key for key in confirmation["C-S1"]["b"]))
+            self.assertTrue(repair.qualification_amended({"grids": {"c": confirmation}})["C-S1"]["qualified"])
+            s0["result"]["grids"][label]["C-S1"]["sha256"]["D2"] = "0" * 64
+            self.assertIn("not the matrix recorded", repair.amendment_run("B1", s0, **options)["stopped"])
+            with patch.object(repair, "s0_fixtures", return_value={"F": {"passed": False}}):
+                self.assertEqual(repair.amendment_run("B1", s0, **options)["stopped"], "a fixture failed")
+        self.assertIn("not a successful B3 output", repair.amendment_run("B3", s0)["stopped"])
 
 
 class CorrectedBoundTests(unittest.TestCase):
@@ -494,8 +685,9 @@ class CorrectedBoundTests(unittest.TestCase):
         exact = self._exact_entry(i, j)
         error = abs(Fraction(float(self.first[i, j])) - exact) / abs(exact)
         units = float(error / self.unit)
+        # The value depends on the platform's sine through the stored nodes
+        # (14.17 and 14.03 were both observed), so only the claim is tested.
         self.assertGreater(units, 5.0)  # the withdrawn k = 5 entry model
-        self.assertAlmostEqual(units, 14.172087803131994, places=6)
         self.assertLessEqual(units, self.entry_bound[i, j] / repair.UNIT_ROUNDOFF)
         vector = np.zeros(self.size)
         vector[j] = 1.0
@@ -553,13 +745,28 @@ class CorrectedBoundTests(unittest.TestCase):
         self.assertLessEqual(worst[0], 1.0)
         self.assertLessEqual(worst[1], 1.0)
 
-    def test_closed_form_weight_candidates_keep_a_uniform_model(self) -> None:
-        entry, difference = repair.entry_error_model("C-T2", self.nodes)
-        off = ~np.eye(self.size, dtype=bool)
-        self.assertTrue(np.all(entry[off] == repair.TRIG_ENTRY_ERROR_UNITS * repair.UNIT_ROUNDOFF))
-        self.assertTrue(np.all(difference[off] == repair.TRIG_DIFFERENCE_ERROR_UNITS * repair.UNIT_ROUNDOFF))
-        with self.assertRaises(ValueError):
-            repair.entry_error_model("current", self.nodes)
+    def test_the_entry_check_is_the_action_bound_on_coordinate_vectors(self) -> None:
+        reference = self._reference()
+        errors = [reference.error(0, self.first), reference.error(1, self.second)]
+        check = repair.entry_bound_check(reference, self.nodes, errors)
+        for order, label in ((0, "D1"), (1, "D2")):
+            worst = 0.0
+            for j in range(self.size):
+                vector = np.zeros(self.size)
+                vector[j] = 1.0
+                bound = repair.apriori_action_bounds(reference, self.nodes, vector, self.entry_bound, self.relative)[order]
+                worst = max(worst, float(np.max(np.abs(errors[order][:, j]) / bound)))
+            self.assertAlmostEqual(check[label]["ratio"], worst, delta=1.0e-12 * worst)
+            item = check[label]
+            self.assertEqual(item["entries"], self.size * self.size)
+            self.assertAlmostEqual(item["ratio"], item["error"] / item["bound"], delta=1.0e-15)
+            self.assertEqual(item["error"], abs(errors[order][item["row"], item["column"]]))
+
+    def test_only_the_stored_node_candidate_has_an_error_model(self) -> None:
+        self.assertEqual(repair.BOUNDED_CONSTRUCTIONS, ("C-S1",))
+        for name in ("current", "C-T1", "C-T2", "C-T3"):
+            with self.assertRaises(ValueError):
+                repair.entry_error_model(name, self.nodes)
 
 
 class DuplicateSourceRowTests(unittest.TestCase):

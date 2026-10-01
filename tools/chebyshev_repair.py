@@ -13,8 +13,9 @@ prints JSON; exit 2 means the diagnostic itself failed):
 ``p0`` and ``p0-revalidate`` are static checks: they read source, committed
 records and synthetic records only, and run no verifier. ``select`` admits
 only complete, successful evidence of both builds and then applies the
-frozen rule. ``qualification_v2`` is a proposed amendment and is not used
-by any stage. Nothing here changes a gate, threshold or record.
+frozen rule, whose result stands. Stages ``c1`` and ``c2`` evaluate the
+post-observation amendment 1 (``qualification_amended``) for the approved
+continuation. Nothing here changes a gate, threshold or record.
 """
 
 from __future__ import annotations
@@ -1047,6 +1048,25 @@ def sample_vectors(nodes: Sequence[Decimal], lower: float, upper: float) -> Dict
     return {name: np.array(values) for name, values in vectors.items()}
 
 
+def confirmation_vectors(nodes: Sequence[Decimal], lower: float, upper: float) -> Dict[str, np.ndarray]:
+    """``w1, w2, w3`` of amendment 1, in 50 digits at ``nodes``, rounded to double.
+
+    ``w1 = cos(5 xi - 0.7)``, ``w2 = 1/(2 + xi)``, ``w3 = xi exp(-2 xi)``.
+    """
+
+    low, high = Decimal(lower), Decimal(upper)
+    vectors = {"w1": [], "w2": [], "w3": []}
+    two_pi = 2 * dec_pi()
+    for node in nodes:
+        xi = _xi(node, low, high)
+        angle = 5 * xi - Decimal("0.7")
+        angle -= two_pi * (angle / two_pi).to_integral_value()
+        vectors["w1"].append(float(dec_sin_cos(angle)[1]))
+        vectors["w2"].append(float(1 / (2 + xi)))
+        vectors["w3"].append(float(xi * (-2 * xi).exp()))
+    return {name: np.array(values) for name, values in vectors.items()}
+
+
 def polynomial(nodes: Sequence[Decimal], lower: float, upper: float, degree: int):
     """``P_d`` and its first two ``u``-derivatives at ``nodes`` (50 digits).
 
@@ -1098,23 +1118,34 @@ class RequiredMetricUndefined(RuntimeError):
 
 def grid_metrics(degree: int, lower: float, upper: float, names: Sequence[str],
                  matrices: Mapping[str, Tuple[np.ndarray, np.ndarray, np.ndarray]],
-                 keep: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-    """Metrics (a), (b) and polynomial exactness for constructions on one grid."""
+                 keep: Optional[Dict[str, Any]] = None, vectors_for: Optional[Callable[..., Dict[str, np.ndarray]]] = None,
+                 cache: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Metrics (a), (b) and polynomial exactness for constructions on one grid.
+
+    ``vectors_for`` selects the test vectors (default: ``v1``-``v3``).
+    ``cache`` is a dictionary owned by the caller for ONE grid and ONE vector
+    set; it lets several calls share the 50-digit references.
+    """
 
     sets = row_sets(degree)
+    vectors_for = vectors_for or sample_vectors
+    cache = {} if cache is None else cache
     with localcontext() as context:
         context.prec = DIGITS
-        ideal = ideal_nodes(degree, lower, upper)
-        ideal_reference = Reference(ideal)
-        ideal_vectors = sample_vectors(ideal, lower, upper)
-        scales = {}
-        for order in (0, 1):
-            for name, vector in ideal_vectors.items():
-                scale = np.abs(ideal_reference.hi[order]) @ np.abs(vector)
-                if not np.all(scale > 0.0):
-                    raise RequiredMetricUndefined(f"zero common denominator at degree {degree}")
-                scales[(order, name)] = scale
-        references: Dict[bytes, Tuple[Reference, Dict[str, np.ndarray], Any]] = {}
+        if "ideal" not in cache:
+            ideal = ideal_nodes(degree, lower, upper)
+            ideal_reference = Reference(ideal)
+            ideal_vectors = vectors_for(ideal, lower, upper)
+            scales = {}
+            for order in (0, 1):
+                for name, vector in ideal_vectors.items():
+                    scale = np.abs(ideal_reference.hi[order]) @ np.abs(vector)
+                    if not np.all(scale > 0.0):
+                        raise RequiredMetricUndefined(f"zero common denominator at degree {degree}")
+                    scales[(order, name)] = scale
+            cache["ideal"] = (ideal_reference, scales)
+        ideal_reference, scales = cache["ideal"]
+        references: Dict[bytes, Tuple[Reference, Dict[str, np.ndarray], Any]] = cache.setdefault("stored", {})
         results: Dict[str, Any] = {}
         for name in names:
             nodes, first, second = matrices[name]
@@ -1131,7 +1162,7 @@ def grid_metrics(degree: int, lower: float, upper: float, names: Sequence[str],
                         complex(float(product[0] - exact[0]), float(product[1] - exact[1]))
                         for product, exact in zip(reference.products["p"][order], analytic)
                     ]))
-                references[key] = (reference, sample_vectors(exact_nodes, lower, upper), (rounded, oracle))
+                references[key] = (reference, vectors_for(exact_nodes, lower, upper), (rounded, oracle))
             reference, vectors, (rounded, oracle) = references[key]
             entry: Dict[str, Any] = {"a": {}, "b": {}, "exactness": {}}
             stored_errors: List[np.ndarray] = []
@@ -1159,8 +1190,9 @@ def grid_metrics(degree: int, lower: float, upper: float, names: Sequence[str],
                 if keep is not None:
                     keep[(name, degree, lower, upper, order)] = stored_error
             if name in BOUNDED_CONSTRUCTIONS:
-                # Recorded for proposed amendment 1; not used by the frozen rule.
+                # Amendment 1 (post-observation); not used by the frozen rule.
                 entry["bound_ratio"] = bound_ratios(reference, scales, nodes, vectors, stored_errors, name, degree)
+                entry["entry_check"] = entry_bound_check(reference, nodes, stored_errors)
             entry["sha256"] = {
                 "nodes": hashlib.sha256(nodes.tobytes()).hexdigest(),
                 "D1": hashlib.sha256(first.tobytes()).hexdigest(),
@@ -1467,23 +1499,22 @@ def _parse_grid(stem: str, name: str) -> Tuple[int, float, float]:
 # above stays the rule of record until the owner approves an amendment.
 
 UNIT_ROUNDOFF = EPS / 2.0  # u = 2^-53, round to nearest
-# C-T family (closed-form weights): uniform first-order relative error of one
-# off-diagonal D1 entry and of one trigonometric node difference, in units
-# of u (amendment Section 3). C-S1 has no uniform constant: its entry error
-# is the matrix returned by ``stored_node_entry_errors``.
-TRIG_ENTRY_ERROR_UNITS = 12.0
-TRIG_DIFFERENCE_ERROR_UNITS = 11.0
-BOUNDED_CONSTRUCTIONS = ("C-T1", "C-T2", "C-T3", "C-S1")
-EXPLICIT_SECOND = ("C-T2", "C-T3", "C-S1")
+# Only the stored-node candidate has a bound. The closed-form-weight
+# candidates keep the frozen rule: no bound of theirs is verified, and none
+# could cover their node-set difference from the stored-node reference.
+BOUNDED_CONSTRUCTIONS = ("C-S1",)
+EXPLICIT_SECOND = ("C-S1",)
 STORED_ENTRY_ROUNDINGS = 4.0  # quotient, two correction additions, final division
 
 
 def stored_difference_errors(nodes: np.ndarray) -> np.ndarray:
-    """``|delta_ij|``: the exact relative rounding error of ``fl(u_i - u_j)``.
+    """``|delta_ij|``: the relative rounding error of ``fl(u_i - u_j)``.
 
     An error-free transformation gives ``u_i - u_j = s + e`` exactly, with
-    ``s`` the rounded difference, so ``|delta_ij| = |e| / |s + e|``. It is
-    zero when the subtraction is exact and at most ``u`` otherwise. The
+    ``s`` the rounded difference, so ``|delta_ij| = |e| / |s + e|``. The
+    pair is exact; the final sum and division are rounded, which changes the
+    returned value by a relative ``2u`` (beyond first order in the bound). It
+    is zero when the subtraction is exact and at most ``u`` otherwise. The
     diagonal is zero.
     """
 
@@ -1522,26 +1553,22 @@ def stored_node_entry_errors(nodes: np.ndarray) -> Tuple[np.ndarray, np.ndarray]
 def entry_error_model(name: str, nodes: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """Per-entry D1 error bound and per-difference error bound of a construction."""
 
-    size = nodes.size
     if name == "C-S1":
         return stored_node_entry_errors(nodes)
-    if name in ("C-T1", "C-T2", "C-T3"):
-        off = ~np.eye(size, dtype=bool)
-        return (np.where(off, TRIG_ENTRY_ERROR_UNITS * UNIT_ROUNDOFF, 0.0),
-                np.where(off, TRIG_DIFFERENCE_ERROR_UNITS * UNIT_ROUNDOFF, 0.0))
     raise ValueError(f"no a-priori error model for {name!r}")
 
 
-def apriori_action_bounds(reference: "Reference", nodes: np.ndarray, vector: np.ndarray,
-                          entry_error: np.ndarray, difference_error: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    """First-order a-priori bounds on ``|((R - D) v)_i|`` for D1 and explicit D2.
+def entry_bound_matrices(reference: "Reference", nodes: np.ndarray, entry_error: np.ndarray,
+                         difference_error: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """First-order bounds on ``|R - D|`` for the off-diagonal entries and the diagonals.
 
-    ``entry_error[i, j]`` bounds the relative error of the off-diagonal entry
-    ``D1_ij`` and ``difference_error[i, j]`` that of the computed difference
-    ``d_ij`` (amendment Section 3). Diagonals are negative row sums rounded
-    once; ``D2_ij = 2 D1_ij (D1_ii - 1/d_ij)``. Second-order terms are
-    neglected, including the accumulation error of the compensated sums and
-    products.
+    Returns ``(off1, diag1, off2, diag2)``: off-diagonal entry bounds (zero
+    on the diagonal) and diagonal bounds for D1 and for the explicit D2.
+    ``entry_error[i, j]`` bounds the relative error of ``D1_ij`` and
+    ``difference_error[i, j]`` that of the computed difference ``d_ij``
+    (amendment Section 3). Diagonals are negative row sums rounded once;
+    ``D2_ij = 2 D1_ij (D1_ii - 1/d_ij)``. Second-order terms are neglected,
+    including the accumulation error of the compensated sums and products.
     """
 
     u = UNIT_ROUNDOFF
@@ -1549,18 +1576,59 @@ def apriori_action_bounds(reference: "Reference", nodes: np.ndarray, vector: np.
     second = np.abs(reference.hi[1])
     size = nodes.size
     off = ~np.eye(size, dtype=bool)
-    spread = np.abs(vector[None, :] - vector[:, None])
-    magnitude = np.abs(vector)
     first_off = np.where(off, first, 0.0)
     weighted = entry_error * first_off
-    bound_first = np.sum(weighted * spread, axis=1) + u * np.diag(first) * magnitude
     diagonal_error = np.sum(weighted, axis=1) + u * np.diag(first)
     inverse = np.zeros((size, size))
     inverse[off] = 1.0 / np.abs(nodes[:, None] - nodes[None, :])[off]
     second_entry = 2.0 * first_off * (diagonal_error[:, None] + (difference_error + u) * inverse) \
         + (entry_error + 2.0 * u) * np.where(off, second, 0.0)
-    bound_second = np.sum(second_entry * spread, axis=1) + u * np.diag(second) * magnitude
+    second_diagonal = np.sum(second_entry, axis=1) + u * np.diag(second)
+    return weighted, diagonal_error, second_entry, second_diagonal
+
+
+def apriori_action_bounds(reference: "Reference", nodes: np.ndarray, vector: np.ndarray,
+                          entry_error: np.ndarray, difference_error: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """First-order a-priori bounds on ``|((R - D) v)_i|`` for D1 and explicit D2.
+
+    Because each diagonal is the negative row sum, the off-diagonal entry
+    errors act on differences of the vector; the single rounding of the
+    diagonal acts on ``v_i``.
+    """
+
+    u = UNIT_ROUNDOFF
+    weighted, _, second_entry, _ = entry_bound_matrices(reference, nodes, entry_error, difference_error)
+    spread = np.abs(vector[None, :] - vector[:, None])
+    magnitude = np.abs(vector)
+    bound_first = np.sum(weighted * spread, axis=1) + u * np.diag(np.abs(reference.hi[0])) * magnitude
+    bound_second = np.sum(second_entry * spread, axis=1) + u * np.diag(np.abs(reference.hi[1])) * magnitude
     return bound_first, bound_second
+
+
+def entry_bound_check(reference: "Reference", nodes: np.ndarray, errors: Sequence[np.ndarray]) -> Dict[str, Any]:
+    """Every entry of D1 and D2 against the first-order bound (C-S1 only).
+
+    Equivalent to the action bound applied to every coordinate vector. For
+    each matrix the worst entry is kept with its error, bound and ratio. A
+    zero or non-finite bound, or a non-finite error, is an undefined
+    required quantity.
+    """
+
+    off1, diag1, off2, diag2 = entry_bound_matrices(reference, nodes, *stored_node_entry_errors(nodes))
+    size = nodes.size
+    index = np.arange(size)
+    report: Dict[str, Any] = {}
+    for label, error, off_bound, diagonal in (("D1", errors[0], off1, diag1), ("D2", errors[1], off2, diag2)):
+        bound = off_bound.copy()
+        bound[index, index] = diagonal
+        measured = np.abs(error)
+        if not (np.all(np.isfinite(bound)) and np.all(bound > 0.0) and np.all(np.isfinite(measured))):
+            raise RequiredMetricUndefined(f"entry bound check undefined for {label} at degree {size - 1}")
+        ratio = measured / bound
+        i, j = (int(value) for value in np.unravel_index(int(np.argmax(ratio)), ratio.shape))
+        report[label] = {"ratio": float(ratio[i, j]), "error": float(measured[i, j]), "bound": float(bound[i, j]),
+                         "row": i, "column": j, "entries": int(ratio.size)}
+    return report
 
 
 def bound_ratios(reference: "Reference", ideal_scales: Mapping[Tuple[int, str], np.ndarray], nodes: np.ndarray,
@@ -1569,8 +1637,9 @@ def bound_ratios(reference: "Reference", ideal_scales: Mapping[Tuple[int, str], 
 
     sets = row_sets(degree)
     ratios: Dict[str, float] = {}
+    model = entry_error_model(name, nodes)
     for vector_name, vector in vectors.items():
-        bounds = apriori_action_bounds(reference, nodes, vector, *entry_error_model(name, nodes))
+        bounds = apriori_action_bounds(reference, nodes, vector, *model)
         for order, label in ((0, "D1"), (1, "D2")):
             if order == 1 and name not in EXPLICIT_SECOND:
                 continue
@@ -1583,22 +1652,28 @@ def bound_ratios(reference: "Reference", ideal_scales: Mapping[Tuple[int, str], 
     return ratios
 
 
-def qualification_v2(result: Mapping[str, Any]) -> Dict[str, Any]:
-    """PROPOSED amendment 1; not the rule of record.
+def qualification_amended(result: Mapping[str, Any], names: Sequence[str] = CANDIDATES) -> Dict[str, Any]:
+    """Qualification under post-observation amendment 1.
 
-    Metric (a) and polynomial exactness keep the frozen rule. A metric (b)
-    component is a regression only if it exceeds twice the current value
-    AND the candidate's own a-priori rounding bound (``bound_ratio > 1``).
-    A component with no recorded bound ratio keeps the frozen rule.
+    Metric (a) and polynomial exactness keep the frozen rule for every
+    candidate. Only for C-S1, a metric (b) component is a regression only if
+    it exceeds twice the current value AND its first-order rounding bound
+    (``bound_ratio > 1``); a component with no recorded finite bound ratio
+    keeps the frozen rule. C-S1 must also have every D1 and D2 entry inside
+    the bound (``entry_check`` ratio at most 1). The closed-form-weight
+    candidates keep the frozen rule unchanged.
     """
 
     report: Dict[str, Any] = {}
-    for name in CANDIDATES:
+    for name in names:
+        bounded = name in BOUNDED_CONSTRUCTIONS
         failures: List[Dict[str, Any]] = []
         excused = 0
+        worst_bound_ratio = 0.0
+        worst_entry = {"D1": 0.0, "D2": 0.0}
         for label, grid in result["grids"].items():
             candidate, current = grid[name], grid["current"]
-            ratios = candidate.get("bound_ratio", {})
+            ratios = candidate.get("bound_ratio", {}) if bounded else {}
             for matrix, value in candidate["exactness"].items():
                 if not value <= EXACTNESS_LIMIT:
                     failures.append({"grid": label, "metric": f"exactness:{matrix}", "candidate": value})
@@ -1606,17 +1681,291 @@ def qualification_v2(result: Mapping[str, Any]) -> Dict[str, Any]:
                 if "_stored" in key and not value <= WORSENING_FACTOR * current["a"][key]:
                     failures.append({"grid": label, "metric": f"a:{key}", "candidate": value, "current": current["a"][key]})
             for key, value in candidate["b"].items():
-                if "_stored" not in key or value <= WORSENING_FACTOR * current["b"][key]:
+                if "_stored" not in key:
                     continue
                 ratio = ratios.get(key)
-                if ratio is not None and _valid_metric(ratio) and ratio <= 1.0:
+                if _valid_metric(ratio):
+                    worst_bound_ratio = max(worst_bound_ratio, ratio)
+                if value <= WORSENING_FACTOR * current["b"][key]:
+                    continue
+                if _valid_metric(ratio) and ratio <= 1.0:
                     excused += 1
                     continue
                 failures.append({"grid": label, "metric": f"b:{key}", "candidate": value, "current": current["b"][key],
                                  "bound_ratio": ratio})
-        report[name] = {"qualified": not failures, "failure_count": len(failures), "excused_within_bound": excused,
-                        "failures": failures[:40]}
+            if bounded:
+                check = candidate.get("entry_check")
+                for matrix in ("D1", "D2"):
+                    item = check.get(matrix) if isinstance(check, Mapping) else None
+                    ratio = item.get("ratio") if isinstance(item, Mapping) else None
+                    if _valid_metric(ratio):
+                        worst_entry[matrix] = max(worst_entry[matrix], ratio)
+                    if not (_valid_metric(ratio) and ratio <= 1.0):
+                        failures.append({"grid": label, "metric": f"entry:{matrix}", "ratio": ratio,
+                                         "error": item.get("error") if isinstance(item, Mapping) else None,
+                                         "bound": item.get("bound") if isinstance(item, Mapping) else None})
+        report[name] = {"qualified": not failures, "failure_count": len(failures), "rule": "amended" if bounded else "frozen",
+                        "excused_within_bound": excused, "failures": failures[:40],
+                        "discriminators": sorted({item["metric"].split(":")[0] for item in failures})}
+        if bounded:
+            report[name]["worst_bound_ratio"] = worst_bound_ratio
+            report[name]["worst_entry_ratio"] = worst_entry
     return report
+
+
+# -- continuation under amendment 1: sets, adverse controls and stages -----------
+
+AMENDMENT = Path("docs/numerics/chebyshev-construction-repair-amendment-1.md")
+CONFIRMATION_DEGREES = (5, 9, 12, 25, 33, 48, 100, 200, 448, 800)
+CONFIRMATION_INTERVALS = ((0.3, 0.9), (1.0e-4, 1.0))
+CONTROL_GRID = (1280, 1.0e-5, 1.0)
+CONTROL_NAMES = ("one_D1_entry", "all_D1_entries", "shifted_nodes", "one_D2_entry")
+
+
+def grid_label(degree: int, lower: float, upper: float) -> str:
+    return f"{degree}|{lower!r}|{upper!r}"
+
+
+def confirmation_grid_labels() -> List[str]:
+    return [grid_label(degree, lower, upper) for degree in CONFIRMATION_DEGREES for lower, upper in CONFIRMATION_INTERVALS]
+
+
+def stored_node_matrices(nodes: np.ndarray):
+    """C-S1's matrices for an arbitrary node vector (used by a control)."""
+
+    differences = nodes[:, None] - nodes[None, :]
+    rows = np.arange(nodes.size)
+    first, diagonal, safe = _first_from_differences(differences, _stored_node_weights(differences), rows)
+    second = _explicit_second(first, diagonal, safe, rows)
+    first[rows, rows] = diagonal
+    return first, second
+
+
+def adverse_control(name: str, nodes: np.ndarray, first: np.ndarray, second: np.ndarray):
+    """A deliberately damaged copy of C-S1's matrices (amendment Section 4).
+
+    The definitions and amplitudes are fixed; they do not depend on the grid.
+    """
+
+    size = nodes.size
+    if name == "one_D1_entry":
+        first = first.copy()
+        first[1, 2] *= 1.0 + 1.0e-11
+    elif name == "all_D1_entries":
+        rng = np.random.default_rng(3)
+        off = ~np.eye(size, dtype=bool)
+        first = np.where(off, first * (1.0 + 1.0e-12 * rng.standard_normal((size, size))), 0.0)
+        first[np.arange(size), np.arange(size)] = -compensated_row_sum(first)
+    elif name == "shifted_nodes":
+        shifted = nodes.copy()
+        shifted[1:-1] *= 1.0 + 1.0e-10
+        first, second = stored_node_matrices(shifted)
+    elif name == "one_D2_entry":
+        second = second.copy()
+        second[2, 3] *= 1.0 + 1.0e-10
+    else:
+        raise ValueError(f"unknown adverse control {name!r}")
+    return nodes, first, second
+
+
+def _bound_only(degree: int, lower: float, upper: float, matrices, cache: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Bound ratios (``v1``-``v3``) and the entry check for C-S1 on one grid.
+
+    Needs only the stored-node reference. Reuses it from ``cache`` (the
+    cache of a ``grid_metrics`` call on the same grid and vectors) if there.
+    """
+
+    nodes, first, second = matrices
+    stored = (cache or {}).get("stored", {}).get(nodes.tobytes())
+    with localcontext() as context:
+        context.prec = DIGITS
+        if stored is None:
+            exact_nodes = [Decimal(float(u)) for u in nodes]
+            reference, vectors = Reference(exact_nodes), sample_vectors(exact_nodes, lower, upper)
+        else:
+            reference, vectors = stored[0], stored[1]
+        errors = [reference.error(0, first), reference.error(1, second)]
+        return {"bound_ratio": bound_ratios(reference, {}, nodes, vectors, errors, "C-S1", degree),
+                "entry_check": entry_bound_check(reference, nodes, errors), "sha256": _matrix_hashes(nodes, first, second)}
+
+
+def amendment_run(build_label: str, s0_payload: Mapping[str, Any], degrees: Sequence[int] = DEGREES,
+                  intervals=INTERVALS, confirmation_degrees: Sequence[int] = CONFIRMATION_DEGREES,
+                  confirmation_intervals=CONFIRMATION_INTERVALS, control_grid=CONTROL_GRID) -> Dict[str, Any]:
+    """Stage C1 of the continuation: measurements only, no verdict.
+
+    - retrospective set: C-S1's bound ratios and entry check on the S0
+      grids, bound to the S0 evidence by matrix hash;
+    - confirmation set: every metric for every construction, with ``w1``-``w3``;
+    - adverse controls at ``control_grid``, sharing its references.
+    """
+
+    s0 = s0_payload.get("result") if isinstance(s0_payload, Mapping) else None
+    if not isinstance(s0, Mapping) or s0_payload.get("status") != "ok" or s0.get("build_label") != build_label:
+        return {"passed": False, "stopped": f"the S0 evidence is not a successful {build_label} output"}
+    fixtures = s0_fixtures(build_label)
+    if not all(item["passed"] for item in fixtures.values()):
+        return {"fixtures": fixtures, "passed": False, "stopped": "a fixture failed"}
+    retrospective: Dict[str, Any] = {}
+    controls: Dict[str, Any] = {}
+    started = time.perf_counter()
+    for degree in degrees:
+        for lower, upper in intervals:
+            label = grid_label(degree, lower, upper)
+            candidate = construct("C-S1", degree, lower, upper)
+            if _matrix_hashes(*candidate) != s0["grids"][label]["C-S1"]["sha256"]:
+                return {"passed": False, "stopped": f"C-S1 at {label} is not the matrix recorded in the S0 evidence"}
+            cache: Dict[str, Any] = {}
+            if (degree, lower, upper) == tuple(control_grid):
+                current = construct("current", degree, lower, upper)
+                if _matrix_hashes(*current) != s0["grids"][label]["current"]["sha256"]:
+                    return {"passed": False, "stopped": f"current at {label} is not the matrix recorded in the S0 evidence"}
+                for name in ("undamaged",) + CONTROL_NAMES:
+                    damaged = candidate if name == "undamaged" else adverse_control(name, *candidate)
+                    controls[name] = grid_metrics(degree, lower, upper, ("current", "C-S1"),
+                                                  {"current": current, "C-S1": damaged}, cache=cache)
+            retrospective[label] = _bound_only(degree, lower, upper, candidate, cache)
+    seconds_retrospective = time.perf_counter() - started
+    started = time.perf_counter()
+    confirmation: Dict[str, Any] = {}
+    for degree in confirmation_degrees:
+        for lower, upper in confirmation_intervals:
+            matrices = {name: construct(name, degree, lower, upper) for name in CONSTRUCTIONS}
+            confirmation[grid_label(degree, lower, upper)] = grid_metrics(
+                degree, lower, upper, CONSTRUCTIONS, matrices, vectors_for=confirmation_vectors)
+    complete = (tuple(degrees) == DEGREES and tuple(intervals) == INTERVALS
+                and tuple(confirmation_degrees) == CONFIRMATION_DEGREES
+                and tuple(confirmation_intervals) == CONFIRMATION_INTERVALS and tuple(control_grid) == CONTROL_GRID)
+    return {"build_label": build_label, "fixtures": fixtures, "retrospective": retrospective,
+            "confirmation": confirmation, "controls": controls, "control_grid": grid_label(*control_grid),
+            "complete": complete, "passed": True, "s0_tool_sha256": s0_payload.get("tool_sha256"),
+            "seconds_retrospective_and_controls": seconds_retrospective,
+            "seconds_confirmation": time.perf_counter() - started}
+
+
+def _finite_tree(node: Any) -> bool:
+    if isinstance(node, Mapping):
+        return all(_finite_tree(value) for value in node.values())
+    if isinstance(node, (list, tuple)):
+        return all(_finite_tree(value) for value in node)
+    if isinstance(node, bool) or isinstance(node, str) or node is None:
+        return True
+    return isinstance(node, (int, float)) and math.isfinite(node)
+
+
+def validate_amendment_runs(runs: Sequence[Mapping[str, Any]], s0_results: Sequence[Mapping[str, Any]]) -> List[str]:
+    """Admission of the two C1 outputs before any verdict is drawn from them."""
+
+    errors: List[str] = []
+    labels = [run.get("result", {}).get("build_label") if isinstance(run, Mapping) else None for run in runs]
+    if sorted(str(label) for label in labels) != sorted(REQUIRED_BUILDS):
+        return [f"C1 outputs are for builds {labels}; exactly one each of {list(REQUIRED_BUILDS)} is required"]
+    if len({run.get("tool_sha256") for run in runs}) != 1 or len({run.get("amendment_sha256") for run in runs}) != 1:
+        errors.append("C1 outputs come from different tool or amendment versions")
+    s0_by_label = {result["build_label"]: result for result in s0_results}
+    for run in runs:
+        result = run["result"]
+        build = result["build_label"]
+        if run.get("stage") != "c1" or run.get("status") != "ok" or result.get("passed") is not True \
+                or result.get("complete") is not True:
+            errors.append(f"{build}: not a complete successful C1 output")
+            continue
+        if run.get("plan_sha256") != _file_sha256(ROOT / PLAN) or run.get("amendment_sha256") != _file_sha256(ROOT / AMENDMENT):
+            errors.append(f"{build}: plan or amendment hash differs from the committed files")
+        if not all(isinstance(item, Mapping) and item.get("passed") is True for item in result.get("fixtures", {}).values()) \
+                or not result.get("fixtures"):
+            errors.append(f"{build}: fixtures missing or failed")
+        if sorted(result.get("retrospective", {})) != sorted(expected_grid_labels()):
+            errors.append(f"{build}: retrospective grids are not the plan's 84")
+        elif any(result["retrospective"][label].get("sha256") != s0_by_label[build]["grids"][label]["C-S1"]["sha256"]
+                 for label in expected_grid_labels()):
+            errors.append(f"{build}: a retrospective C-S1 matrix is not the one in the S0 evidence")
+        if sorted(result.get("confirmation", {})) != sorted(confirmation_grid_labels()):
+            errors.append(f"{build}: confirmation grids are not the amendment's 20")
+        elif any(sorted(grid) != sorted(CONSTRUCTIONS) for grid in result["confirmation"].values()):
+            errors.append(f"{build}: a confirmation grid lacks a construction")
+        if sorted(result.get("controls", {})) != sorted(("undamaged",) + CONTROL_NAMES) \
+                or result.get("control_grid") != grid_label(*CONTROL_GRID):
+            errors.append(f"{build}: adverse controls missing or on another grid")
+        if not _finite_tree({key: result.get(key) for key in ("retrospective", "confirmation", "controls")}):
+            errors.append(f"{build}: a recorded quantity is not finite")
+    return errors
+
+
+def amended_selection(s0_payloads: Sequence[Mapping[str, Any]], runs: Sequence[Mapping[str, Any]],
+                      agreement: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+    """Stage C2: qualification and selection under post-observation amendment 1.
+
+    The frozen result (no candidate qualifies) is not changed by this stage.
+    """
+
+    errors = validate_evidence(s0_payloads)
+    if errors:
+        return {"passed": False, "stopped": "invalid evidence", "evidence_errors": errors[:200]}
+    s0_results = sorted((payload["result"] for payload in s0_payloads), key=lambda item: item["build_label"])
+    errors = validate_agreement(agreement, s0_results) + validate_amendment_runs(runs, s0_results)
+    if errors:
+        return {"passed": False, "stopped": "invalid continuation evidence", "evidence_errors": errors}
+    by_build = {run["result"]["build_label"]: run["result"] for run in runs}
+    per_build: Dict[str, Any] = {}
+    control_report: Dict[str, Any] = {}
+    for s0 in s0_results:
+        build = s0["build_label"]
+        run = by_build[build]
+        merged = {label: dict(grid, **{"C-S1": dict(grid["C-S1"], bound_ratio=run["retrospective"][label]["bound_ratio"],
+                                                   entry_check=run["retrospective"][label]["entry_check"])})
+                  for label, grid in s0["grids"].items()}
+        per_build[build] = {"retrospective": qualification_amended({"grids": merged}),
+                            "confirmation": qualification_amended({"grids": run["confirmation"]})}
+        control_report[build] = {}
+        for name, metrics in run["controls"].items():
+            verdict = qualification_amended({"grids": {run["control_grid"]: metrics}}, ("C-S1",))["C-S1"]
+            control_report[build][name] = {"rejected": not verdict["qualified"], "discriminators": verdict["discriminators"],
+                                           "failure_count": verdict["failure_count"],
+                                           "worst_bound_ratio": verdict["worst_bound_ratio"],
+                                           "worst_entry_ratio": verdict["worst_entry_ratio"]}
+    accepted = [f"{build}:{name}" for build, report in control_report.items()
+                for name in CONTROL_NAMES if not report[name]["rejected"]]
+    qualified = [name for name in CANDIDATES
+                 if all(report[part][name]["qualified"] for report in per_build.values()
+                        for part in ("retrospective", "confirmation"))]
+    metric: Dict[str, Any] = {}
+    for name in CONSTRUCTIONS:
+        metric[name] = {key: max(result["metric_c"][name][key] for result in s0_results)
+                        for key in ("worst_rows_1_3_scaled", "worst_rows_1_3_abs")}
+    baseline = metric["current"]["worst_rows_1_3_scaled"]
+    outcome: Dict[str, Any] = {"label": "post-observation amendment 1", "qualification": per_build,
+                               "adverse_controls": control_report, "qualified": qualified, "metric_c": metric,
+                               "frozen_rule_result": "no candidate qualifies (unchanged)"}
+    if not baseline > 0.0:
+        outcome.update({"passed": False, "selected": None,
+                        "stopped": "required metric undefined: baseline metric (c) is not positive"})
+        return outcome
+    for name in CANDIDATES:
+        value = metric[name]["worst_rows_1_3_scaled"]
+        metric[name]["improvement"] = baseline / value if value > 0.0 else math.inf
+    if accepted:
+        outcome.update({"passed": False, "selected": None, "controls_not_rejected": accepted,
+                        "stopped": "an adverse control was not rejected"})
+        return outcome
+    eligible = [name for name in qualified if metric[name]["improvement"] >= IMPROVEMENT_FACTOR]
+    if not eligible:
+        outcome.update({"passed": False, "selected": None,
+                        "stopped": "no qualified candidate reaches the required improvement"
+                        if qualified else "no candidate qualifies under amendment 1"})
+        return outcome
+    best = min(metric[name]["worst_rows_1_3_scaled"] for name in eligible)
+    tied = [name for name in eligible if metric[name]["worst_rows_1_3_scaled"] <= TIE_FACTOR * best]
+    if len(tied) > 1:
+        if agreement is None:
+            outcome.update({"passed": False, "selected": None, "tied": tied,
+                            "stopped": "a tie needs build-agreement evidence"})
+            return outcome
+        tied.sort(key=lambda name: (agreement["result"][name]["max_relative_difference"],
+                                    agreement["result"][name]["seconds"]))
+    outcome.update({"passed": True, "selected": tied[0], "tied": tied,
+                    "selected_label": f"{tied[0]} qualified under post-observation amendment 1"})
+    return outcome
 
 
 # -- S1: qualification and selection (plan Section 5) ---------------------------------
@@ -1935,6 +2284,7 @@ def emit(stage: str, result: Mapping[str, Any], started: float, compact: bool = 
         "stage": stage,
         "plan": PLAN.as_posix(),
         "plan_sha256": _file_sha256(ROOT / PLAN),
+        "amendment_sha256": _file_sha256(ROOT / AMENDMENT),
         "tool_sha256": _file_sha256(Path(__file__).resolve()),
         "status": "ok" if result.get("passed", True) and "stopped" not in result else "stopped",
         "runtime": runtime_versions(),
@@ -1963,6 +2313,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     select = commands.add_parser("select")
     select.add_argument("s0", nargs="+", type=Path, help="S0 outputs of every build")
     select.add_argument("--build-agreement", type=Path)
+    c1 = commands.add_parser("c1", help="continuation measurements under amendment 1")
+    c1.add_argument("--build-label", required=True, choices=REQUIRED_BUILDS)
+    c1.add_argument("--s0", type=Path, required=True, help="this build's S0 output")
+    c2 = commands.add_parser("c2", help="qualification and selection under amendment 1")
+    c2.add_argument("--s0", nargs=2, type=Path, required=True)
+    c2.add_argument("--c1", nargs=2, type=Path, required=True)
+    c2.add_argument("--build-agreement", type=Path, required=True)
     args = parser.parse_args(argv)
     started = time.perf_counter()
     if args.stage == "p0":
@@ -1986,6 +2343,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         payloads = [_read_json(path) for path in args.s0]
         agreement = _read_json(args.build_agreement) if args.build_agreement else None
         return emit("select", selection(payloads, agreement), started)
+    if args.stage == "c1":
+        try:
+            result = amendment_run(args.build_label, _read_json(args.s0))
+        except RequiredMetricUndefined as error:
+            result = {"passed": False, "stopped": f"required metric undefined: {error}"}
+        return emit("c1", result, started, compact=True)
+    if args.stage == "c2":
+        return emit("c2", amended_selection([_read_json(path) for path in args.s0],
+                                            [_read_json(path) for path in args.c1],
+                                            _read_json(args.build_agreement)), started)
     raise SystemExit(f"unknown stage {args.stage}")
 
 
