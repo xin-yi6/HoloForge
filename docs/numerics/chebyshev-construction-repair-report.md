@@ -946,7 +946,7 @@ strong.
 
 | Run | Wall time |
 | --- | ---: |
-| Focused tests (four short runs) | about `45 s` |
+| Focused tests (three short runs) | `34 s` |
 | Four Gubser--Rocha recovery runs | `29 s` |
 | Diagnosis and saved-data replay | under `1 s` |
 | **Charged** (conservative) | **`90 s`** |
