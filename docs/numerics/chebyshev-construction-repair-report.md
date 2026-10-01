@@ -4,7 +4,8 @@
   rule no candidate qualifies, so the
   [frozen plan](chebyshev-construction-repair-plan.md) (freeze commit
   `0cd24dd`, SHA-256 `7d26e662…`) requires that no production change is made.
-  AI-assisted (Claude); awaiting Codex review and an owner decision.
+  AI-assisted (Claude); revised after Codex's review of `f01da66`
+  (Section 7); awaiting targeted review and an owner decision.
 - **Completed:** P0, and S0 on B1 and B3.
 - **Not run (incomplete):**
   - the implementation freeze;
@@ -29,14 +30,15 @@
 - **No candidate passes the frozen qualification rule.**
   - The rule requires every operator-agreement component to be within 2× of
     the current construction's value. It has no rounding floor.
-  - Many of the compared values are below one machine epsilon. There, the
-    current construction's value is itself rounding noise, and a ratio of
-    two such values says nothing.
+  - Many of the compared values are below one machine epsilon. They are
+    measured against 50-digit references, so they are real construction
+    rounding, not measurement noise. The rule compares the rounding of two
+    different constructions and counts any factor of 2 as a regression.
   - **C-S1 (stored-node candidate):** 26 of 1,680 comparisons fail per
     build. Every failing value is below 8 epsilons, and 20 are below one.
-  - **C-T family:** the same kind of failures, plus 10–11 above 64 epsilons
-    that are real. They come from the difference between the stored nodes
-    and the ideal nodes.
+  - **C-T family:** the same kind of failures, plus 10–11 at 64 epsilons or
+    more. Those come from the difference between the stored nodes and the
+    ideal nodes.
 - **The stop is correct under the plan.** Adding a floor after seeing the
   results would weaken a frozen criterion, so it was not done. Whether to
   amend the rule is an owner decision (Section 6).
@@ -51,20 +53,37 @@ temporary environments no longer existed.
   `macosx_12_0` wheels of the same versions (OpenBLAS), Python 3.11.15. The
   owner approved this installation on 1 October 2026.
 
-**Local diagnostic execution** (ceiling 60 min):
+**Local execution** (ceiling 60 min), reconciled from the existing logs.
+The first version of this table omitted the full test suite and the untimed
+runs (Section 7, R55-4).
 
-| Run | Wall time |
-| --- | ---: |
-| P0 static check; tool tests; selection | about `2 s` |
-| S0 development subset (degrees 2, 3, 16, 17), B1 | `5 s` |
-| S0 full, B1, development run 1 | `236 s` |
-| S0 development subset (2, 3, 16, 17, 64, 256), B1 | `11 s` |
-| S0 full, B1, final implementations | `241 s` |
-| S0 full, B3, final implementations | `242 s` |
-| Build agreement | `1 s` |
-| **Total** | **about `738 s` (12.3 min)** |
+| Run | Wall time | Source |
+| --- | ---: | --- |
+| P0 static check | `0.15 s` | tool record |
+| S0 development subset (degrees 2, 3, 16, 17), B1 | `5 s` | log |
+| S0 full, B1, development run 1 | `236 s` | log |
+| S0 development subset (2, 3, 16, 17, 64, 256), B1 | `11 s` | log |
+| S0 full, B1, final implementations | `241 s` | log |
+| S0 full, B3, final implementations | `242 s` | log |
+| Build agreement | `1 s` | log |
+| Selection | `0.07 s` | tool record |
+| Full unit suite (integration validation), B1 | `458 s` | log |
+| Short runs that were not timed | `60 s` | conservative allowance |
+| Amendment-preparation step | `15 s` | log gives `8 s`; charged conservatively |
+| **Total charged** | **about `1,269 s` (21.2 min)** | |
 
-- **Active work:** about 35 minutes of the 6-hour ceiling when S1 stopped.
+- **Untimed runs** covered by the allowance: three tool-test runs, the
+  soft-wall verifier, the reproduction of eight schema tests on `main`, and
+  two helper checks. Each took a few seconds at most.
+- **Remaining:** at most about 38.8 of the 60 minutes. Nothing was reset or
+  extended.
+- **Not charged:**
+  - recreating the two environments (an installation the owner approved,
+    not timed);
+  - Codex's own review runs.
+- **Active work**, reported separately: about 45 minutes up to the S1
+  handoff, and about 20 more for the amendment-preparation step, of the
+  6-hour ceiling.
 - **Not used:** paid compute, CI-dispatched scientific runs, reserved cases.
 - **Provenance.** Each evidence file records plan SHA-256 `7d26e662…`, tool
   SHA-256 `6d0eff7c…` (the committed tool), commit `474a6c2` with `src/`
@@ -72,11 +91,37 @@ temporary environments no longer existed.
 
 ## 2. P0: structural preflight
 
-Passed for all eight consumers (`p0-preflight.json`):
-- the call sites equal the table's;
-- no control route reaches the routine through the call graph;
-- every record key exists in the source;
-- every pointer resolves against the committed records.
+**Original P0** (`p0-preflight.json`) passed for all eight consumers. It
+checked less than this report first claimed (Section 7, R55-2). What it did
+check:
+- the call-site names against the table;
+- control routes by a module-local call graph, which is not a cross-module
+  proof;
+- that each record key occurs as a string somewhere in the module, without
+  its parent path;
+- only the separately listed pointers, against the three committed records,
+  and without cardinality.
+
+**Revalidation** (`p0-revalidation.json`, appended; the original is kept)
+passes for all eight and adds:
+- strict resolution of every table pointer, counting wildcard elements that
+  lack the path;
+- the extraction itself, with unique stable keys, matched states and the
+  estimator conversions.
+
+Its record sources differ, and the output says which:
+- **Committed verifier records:** hard-wall chiral, Gubser--Nellore and DGR
+  neutral. Here the conversions are checked against the data. For example,
+  the DGR per-position difference between degrees 150 and 120 reproduces the
+  recorded `maximum_final_change` exactly (`5.55e-11`).
+- **Synthetic records:** the other five. These are hand-built from a manual
+  source audit and are not verifier output. They validate the extraction
+  code against the audited structure only. The real records are first seen
+  at R0, where a mismatch is a stop.
+
+Manual source review, not executable: the five structures and their
+normalizations, and whether a control route depends on spectral outputs
+through its data.
 
 ## 3. S0: fixtures and measurements
 
@@ -171,13 +216,16 @@ candidates but is not reached in the rule's order.
   - These are real and small. They arise because C-T targets the ideal
     nodes, not the stored ones.
 
-**Why a 2× rule without a floor cannot be met.**
+**Why the frozen rule is hard to meet.**
 - The row-scaled action error is dominated by rounding in the negative-sum
-  diagonal. That is of order one epsilon times the row's absolute sum, and it
-  depends on summation order.
-- Near the floor, the ratio of two constructions' values is therefore
-  noise. With 1,680 comparisons per build, some ratios above 2 are expected
-  for any construction that is not bit-identical to the current one.
+  diagonal. That is of order one unit roundoff times the row's absolute sum,
+  and it depends on summation order.
+- These values are real construction rounding. Two correct constructions
+  can differ by more than a factor of 2 at that level. With 1,680 comparisons
+  per build, some ratios above 2 are therefore expected for a construction
+  that is not bit-identical to the current one.
+- This is an expectation from the mechanism, not a proof that the rule
+  cannot be met.
 
 ## 5. Development history and deviations
 
@@ -227,19 +275,24 @@ threshold or rule was changed):
 
 Nothing below is decided or done.
 
-- **A. Amend the qualification rule and continue.**
-  - The amendment would have to be labelled as made after the S0 results.
-  - A principled form: a component counts as a regression only if it exceeds
-    both 2× the current value and the standard a-priori rounding constant for
-    one row, `gamma_(N+1) = (N+1) eps / (1 - (N+1) eps)`. This is the
-    constant already used for the O-C rounding bounds.
-  - On the saved evidence, C-S1 would then qualify on both builds: none of
-    its 26 failing values exceeds `gamma`. Its largest is `1.55e-15` at
-    degree 1024, where `gamma` is `2.3e-13`.
-  - Each C-T candidate would still fail 7 comparisons, on entrywise errors
-    of up to `3.6e-11`.
-  - The remaining budget (about 47 minutes of execution) would have to cover
-    R0, S2 and S3, which is tight.
+- **A. Adopt a qualification amendment and continue.**
+  - The exact proposal is
+    [amendment 1](chebyshev-construction-repair-amendment-1.md). It is
+    labelled post-observation.
+  - It changes only the action-metric rule: a component fails only if it
+    exceeds both 2× the current value and the candidate's own first-order
+    a-priori rounding bound. The entrywise rule, polynomial exactness and the
+    10× requirement are unchanged.
+  - It requires a pass on the 84 observed grids and on a fresh confirmation
+    set.
+  - Whether any candidate would qualify under it is not known. It cannot be
+    evaluated from the saved evidence.
+  - **Withdrawn:** the blanket `gamma_(N+1)` floor first suggested here. It
+    is not a bound for these metrics, and its outcome depends on the
+    convention: 0 C-S1 failures with `eps`, 1 with `u = eps/2`.
+  - **Budget:** at most about 38.8 minutes of execution remain, against an
+    estimated 36–50 for a continuation. A continuation approval should state
+    the budget explicitly.
 - **B. Accept the stop.** No repair is made. The optical gate and every
   record stay as they are.
 - **C. Decide later.** The evidence and tool are preserved either way.
@@ -247,3 +300,47 @@ Nothing below is decided or done.
 **Cost.** C-S1 costs about `25 ms` per grid at degree 640, against `4 ms`
 now. Several benchmarks build many grids, so their run time would rise. That
 would be measured in S2 if the work continues.
+
+## 7. Post-review corrections (1 October 2026)
+
+After Codex's review of `f01da66`, the following was corrected in one
+bounded step. The frozen plan, the S1 stop and every original evidence file
+are unchanged. Only focused tests, synthetic controls and replay of saved
+data were run.
+
+- **R55-1: the selector now rejects inadmissible evidence.**
+  - Before applying the rule it requires:
+    - one complete, successful S0 output for each of B1 and B3;
+    - no duplicate build;
+    - the frozen plan's hash, and a single tool version;
+    - every required fixture passed;
+    - production equal to the legacy construction;
+    - the plan's 84 grids and the full metric sets;
+    - every metric finite and non-negative.
+  - Unreadable or partial inputs are rejected with exit status 2.
+  - Build agreement is derived from the matrix hashes in the evidence. The
+    build-agreement stage stops if the saved matrices do not match the grids
+    whose hashes differ. Equality is never inferred from an empty folder.
+  - Regression tests cover Codex's three reproductions and the other cases.
+  - **Replay.** The corrected selector admits the committed evidence and
+    reproduces the stop with the same counts
+    (`s1-selection-revalidated.json`, `build-agreement-revalidated.json`).
+- **R55-2: P0 coverage corrected** (Section 2). The original artifact is
+  kept, and `p0-revalidation.json` is appended. Tests cover a missing row
+  under a wildcard and a wrong estimator pointer, both of which the original
+  check missed.
+- **R55-3: interpretation corrected and an amendment prepared.**
+  - Values below machine epsilon are described as real construction
+    rounding, not as noise.
+  - The blanket floor is withdrawn.
+  - [Amendment 1](chebyshev-construction-repair-amendment-1.md) gives the
+    exact proposed rule, its roundoff convention and operation counts, and
+    its adverse controls.
+  - The proposed rule is implemented as `qualification_v2`. No stage uses
+    it.
+- **R55-4: execution time reconciled** (Section 1). The earlier statement
+  that about 47 minutes remained was not supported; the reconciled figure is
+  at most about 38.8.
+- **Also recorded.** The 97× and 135× figures are operator-action
+  diagnostics on saved vectors. They are not achieved improvements in a
+  physical observable, in the optical residual, or in production.

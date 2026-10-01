@@ -5,15 +5,16 @@ Implements the frozen plan in
 prints JSON; exit 2 means the diagnostic itself failed):
 
     python tools/chebyshev_repair.py p0
+    python tools/chebyshev_repair.py p0-revalidate
     python tools/chebyshev_repair.py s0 --build-label B1
-    python tools/chebyshev_repair.py select B1.json B3.json
-    python tools/chebyshev_repair.py extract RUN_DIR
-    python tools/chebyshev_repair.py limits B1-extract.json B3-extract.json
-    python tools/chebyshev_repair.py compare BASELINE.json CANDIDATE.json LIMITS.json
-    python tools/chebyshev_repair.py s3 --build-label B1
+    python tools/chebyshev_repair.py build-agreement --arrays DIR --other-label B3 --s0 B1.json B3.json
+    python tools/chebyshev_repair.py select B1.json B3.json --build-agreement AGREEMENT.json
 
-``p0`` is a static check: it reads source and committed records only and
-runs no verifier. Nothing here changes a gate, threshold or record.
+``p0`` and ``p0-revalidate`` are static checks: they read source, committed
+records and synthetic records only, and run no verifier. ``select`` admits
+only complete, successful evidence of both builds and then applies the
+frozen rule. ``qualification_v2`` is a proposed amendment and is not used
+by any stage. Nothing here changes a gate, threshold or record.
 """
 
 from __future__ import annotations
@@ -164,6 +165,477 @@ def p0_check() -> Dict[str, Any]:
                         "passed": all(item["passed"] for item in checks.values())})
     return {"table_sha256": _file_sha256(ROOT / TABLE), "consumers": results,
             "passed": all(item["passed"] for item in results)}
+
+
+# ---------------------------------------------------------------------------
+# Regression-table extraction (plan Section 8.2) and P0 revalidation
+# ---------------------------------------------------------------------------
+#
+# Each extractor returns ``{"leaves", "controls", "report_only"}``. A leaf is
+# ``{"value", "estimators": {name: absolute value}}``; complex values are
+# Python complex numbers. Missing fields, duplicate keys and unmatched states
+# raise ``ExtractionError``: nothing is skipped silently.
+
+SYNTHETIC_RECORDS = Path("docs/generated/chebyshev-repair/synthetic-records")
+CHIRAL_OBSERVABLES = ("m_pi_MeV", "m_rho_MeV", "m_a1_MeV", "f_pi_MeV", "sqrt_F_rho_MeV", "sqrt_F_a1_MeV", "g_rho_pi_pi")
+GR_NAME_MAP = {"mu_bh": "mu_bh", "energy_density": "hat_epsilon", "entropy_density": "hat_s",
+               "charge_density": "hat_rho", "temperature": "temperature", "chemical_potential": "Omega"}
+DGR_FIELDS = ("temperature_BH", "entropy_BH", "susceptibility_integral", "chi_2_over_T2_BH")
+DGR_POINT_FIELDS = ("temperature_BH", "mu_BH", "entropy_BH", "rho_canonical_BH")
+DGR_CRITICAL_FIELDS = ("phi_H", "eta", "T_BH", "mu_BH", "rho_canonical_BH")
+SOFT_WALL_TABLE = ("spectral-40", "spectral-56", "spectral-64", "spectral-100", "spectral-64-modes-6")
+SOFT_WALL_VERDICT = ("spectral-64-zmax-4", "spectral-64-zmax-6")
+
+
+class ExtractionError(RuntimeError):
+    pass
+
+
+def expand_pointer(pointer: str) -> List[str]:
+    """Expand ``{a,b}`` alternatives in a pointer."""
+
+    start = pointer.find("{")
+    if start < 0:
+        return [pointer]
+    end = pointer.index("}", start)
+    expanded: List[str] = []
+    for choice in pointer[start + 1:end].split(","):
+        expanded.extend(expand_pointer(pointer[:start] + choice.strip() + pointer[end + 1:]))
+    return expanded
+
+
+def resolve_strict(node: Any, pointer: str) -> Tuple[List[Any], int]:
+    """Resolve a pointer and count the wildcard elements that lack the path.
+
+    Unlike ``resolve_pointer``, an element under ``*`` that does not contain
+    the remaining path is counted as missing, and an empty container under
+    ``*`` counts as one missing element.
+    """
+
+    missing = 0
+
+    def walk(current: Any, parts: Sequence[str]) -> List[Any]:
+        nonlocal missing
+        if not parts:
+            return [current]
+        head, rest = parts[0], parts[1:]
+        if head == "*":
+            items = list(current.values()) if isinstance(current, dict) else current if isinstance(current, list) else None
+            if not items:
+                missing += 1
+                return []
+            found: List[Any] = []
+            for item in items:
+                found.extend(walk(item, rest))
+            return found
+        if isinstance(current, dict) and head in current:
+            return walk(current[head], rest)
+        if isinstance(current, list) and head.lstrip("-").isdigit() and -len(current) <= int(head) < len(current):
+            return walk(current[int(head)], rest)
+        missing += 1
+        return []
+
+    values = walk(node, [part for part in pointer.split("/") if part])
+    return values, missing
+
+
+def _number(value: Any, what: str) -> float:
+    if not _is_number(value) or not math.isfinite(float(value)):
+        raise ExtractionError(f"{what} is not a finite number")
+    return float(value)
+
+
+def _get(node: Any, *path: Any) -> Any:
+    current = node
+    for part in path:
+        try:
+            current = current[part]
+        except (KeyError, IndexError, TypeError):
+            raise ExtractionError(f"missing {'/'.join(str(item) for item in path)}") from None
+    return current
+
+
+def _add(target: Dict[str, Any], key: str, value: Any) -> None:
+    if key in target:
+        raise ExtractionError(f"duplicate key {key}")
+    target[key] = value
+
+
+def _leaf(value: Any, estimators: Mapping[str, float]) -> Dict[str, Any]:
+    cleaned = {name: _number(item, f"estimator {name}") for name, item in estimators.items()}
+    if not cleaned:
+        raise ExtractionError("a table leaf has no estimator")
+    if any(item < 0.0 for item in cleaned.values()):
+        raise ExtractionError("an estimator is negative")
+    return {"value": value, "estimators": cleaned}
+
+
+def _complex(record: Any, what: str) -> complex:
+    return complex(_number(_get(record, "real"), what), _number(_get(record, "imag"), what))
+
+
+def extract_soft_wall(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    for command in SOFT_WALL_TABLE:
+        record = _get(records, command)
+        if _get(record, "numerical_method", "route") != "spectral":
+            raise ExtractionError(f"{command} is not a spectral record")
+        for row in _get(record, "results"):
+            value = _number(_get(row, "numerical_mass_squared_gev2"), "eigenvalue")
+            analytic = _number(_get(row, "analytic_mass_squared_gev2"), "analytic eigenvalue")
+            relative = _number(_get(row, "relative_error"), "relative error")
+            if abs(abs(value - analytic) / analytic - relative) > 1.0e-9 * max(relative, EPS):
+                raise ExtractionError(f"{command}: relative_error is not abs(numerical - analytic)/analytic")
+            _add(out["leaves"], f"{command}|n={_get(row, 'n')}", _leaf(value, {"analytic_error": relative * analytic}))
+        for level in _get(record, "spectral_convergence", "levels"):
+            _add(out["report_only"], f"{command}|level={_get(level, 'degree')}",
+                 _number(_get(level, "max_relative_error"), "level error"))
+    for command in SOFT_WALL_VERDICT:
+        record = _get(records, command)
+        _add(out["controls"], f"{command}|verdicts",
+             tuple((check["id"], bool(check["passed"])) for check in _get(record, "acceptance_checks")))
+        for row in _get(record, "results"):
+            _add(out["report_only"], f"{command}|n={_get(row, 'n')}",
+                 _number(_get(row, "numerical_mass_squared_gev2"), "eigenvalue"))
+    for row in _get(records, "finite-difference", "results"):
+        _add(out["controls"], f"finite-difference|n={_get(row, 'n')}",
+             _number(_get(row, "numerical_mass_squared_gev2"), "eigenvalue"))
+    return out
+
+
+def extract_hard_wall_vector(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    spectral = _get(records, "spectral")
+    final = _number(_get(spectral, "spectral_convergence", "successive_max_relative_differences")[-1], "difference")
+    shooting = {(_get(row, "n")): row for row in _get(records, "shooting", "results")}
+    for row in _get(spectral, "results"):
+        n = _get(row, "n")
+        if n not in shooting:
+            raise ExtractionError(f"mode {n} has no shooting counterpart")
+        mass = _number(_get(row, "numerical_m_z_m"), "mass")
+        ratio = _number(_get(row, "numerical_ratio"), "ratio")
+        _add(out["leaves"], f"spectral|m|n={n}", _leaf(mass, {
+            "refinement": final * abs(mass),
+            "shooting_difference": abs(mass - _number(_get(shooting[n], "numerical_m_z_m"), "mass"))}))
+        if n == min(shooting):
+            _add(out["controls"], f"spectral|ratio|n={n}", ratio)
+        else:
+            _add(out["leaves"], f"spectral|ratio|n={n}", _leaf(ratio, {
+                "refinement": 2.0 * final * abs(ratio),
+                "shooting_difference": abs(ratio - _number(_get(shooting[n], "numerical_ratio"), "ratio"))}))
+    for route in ("shooting", "collocation"):
+        for row in _get(records, route, "results"):
+            _add(out["controls"], f"{route}|m|n={_get(row, 'n')}", _number(_get(row, "numerical_m_z_m"), "mass"))
+    return out
+
+
+def extract_hard_wall_chiral(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    results = _get(records, "default", "results")
+    levels = {int(_get(level, "degree")): _get(level, "observables") for level in _get(results, "levels")}
+    if sorted(levels) != [64, 80, 96]:
+        raise ExtractionError(f"levels are {sorted(levels)}, not 64, 80, 96")
+    independent = _get(results, "independent")
+    table = {_get(row, "observable"): row for row in _get(results, "table")}
+    if sorted(table) != sorted(CHIRAL_OBSERVABLES):
+        raise ExtractionError("table rows are not the seven observables")
+    for name in CHIRAL_OBSERVABLES:
+        fine = _number(_get(levels[96], name), name)
+        middle = _number(_get(levels[80], name), name)
+        coarse = _number(_get(levels[64], name), name)
+        last = _number(_get(results, "refinement", name, "N80_to_N96"), "refinement") * abs(middle)
+        first = _number(_get(results, "refinement", name, "N64_to_N80"), "refinement") * abs(coarse)
+        for converted, direct, what in ((last, abs(fine - middle), "N80_to_N96"), (first, abs(middle - coarse), "N64_to_N80")):
+            if abs(converted - direct) > 1.0e-6 * max(direct, EPS * abs(fine)):
+                raise ExtractionError(f"{name}: {what} conversion does not reproduce the level difference")
+        extra: Dict[str, float] = {}
+        if name in _get(results, "cutoff_changes"):
+            extra["cutoff"] = _number(results["cutoff_changes"][name], "cutoff") * abs(_number(_get(independent[-2], name), name))
+            extra["cross_route"] = _number(_get(results, "cross_route_differences", name), "cross route") * abs(fine)
+        if name == "f_pi_MeV":
+            extra["f_pi_route"] = max(
+                _number(_get(item, "f_pi_route_relative_difference"), "route") * abs(_number(_get(item, "f_pi_dop853_MeV"), "f_pi"))
+                for item in independent)
+        _add(out["leaves"], f"level=96|{name}", _leaf(fine, dict(extra, refinement=last)))
+        _add(out["leaves"], f"level=80|{name}", _leaf(middle, dict(extra, refinement=first)))
+        _add(out["leaves"], f"level=64|{name}", _leaf(coarse, dict(extra, refinement=first)))
+        _add(out["leaves"], f"table|{name}", _leaf(_number(_get(table[name], "computed"), name), dict(extra, refinement=last)))
+    for item in independent:
+        epsilon = _get(item, "epsilon")
+        for key in ("m_pi_MeV", "m_a1_MeV", "sqrt_F_a1_MeV", "g_rho_pi_pi", "f_pi_bvp_MeV", "f_pi_dop853_MeV"):
+            _add(out["controls"], f"independent|epsilon={epsilon!r}|{key}", _number(_get(item, key), key))
+    for row in _get(results, "gmor"):
+        for key in ("m_pi_MeV", "f_pi_MeV", "R_GMOR"):
+            _add(out["report_only"], f"gmor|factor={_get(row, 'm_q_factor')!r}|{key}", _number(_get(row, key), key))
+    return out
+
+
+def extract_gubser_nellore(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    presets = _get(records, "default", "results", "presets")
+    if not isinstance(presets, dict) or sorted(presets) != ["cosh-calibration", "qcd-like"]:
+        raise ExtractionError("presets is not the mapping of the two presets")
+    for preset, result in presets.items():
+        change = _number(_get(result, "refinement", "maximum_final_change"), "refinement")
+        derivative = _number(_get(result, "maximum_derivative_disagreement"), "derivative disagreement")
+        for position, point in enumerate(_get(result, "curve")):
+            coordinate = _number(_get(point, "x_h"), "x_h")
+            temperature = _number(_get(point, "temperature_L"), "temperature")
+            sound = _number(_get(point, "sound_speed_squared"), "sound speed")
+            entry = _leaf(temperature, {"refinement": change * abs(temperature)})
+            entry["key_coordinate"] = coordinate
+            _add(out["leaves"], f"{preset}|{position}|temperature_L", entry)
+            entry = _leaf(sound, {"refinement": change * abs(sound), "derivative_disagreement": derivative})
+            entry["key_coordinate"] = coordinate
+            _add(out["leaves"], f"{preset}|{position}|sound_speed_squared", entry)
+            _add(out["report_only"], f"{preset}|{position}|phi_h", _number(_get(point, "phi_h"), "phi_h"))
+        for item in _get(result, "independent_comparisons"):
+            target = _get(item, "target_phi_h")
+            for key in ("temperature_relative_error", "entropy_relative_error", "sound_speed_relative_error"):
+                _add(out["report_only"], f"{preset}|target_phi_h={target!r}|{key}", _number(_get(item, key), key))
+        _add(out["report_only"], f"{preset}|maximum_collocation_residual",
+             _number(_get(result, "maximum_collocation_residual"), "collocation residual"))
+    return out
+
+
+def extract_gubser_rocha(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    results = _get(records, "default", "results")
+    refinement = {_get(row, "xi"): _get(row, "observables") for row in _get(results, "refinement", "cases")}
+    cases = _get(results, "cases")
+    if sorted(refinement) != sorted(_get(case, "xi") for case in cases) or len(refinement) != len(cases):
+        raise ExtractionError("refinement cases do not match the thermodynamic cases by xi")
+    for case in cases:
+        xi = _get(case, "xi")
+        for name, field in GR_NAME_MAP.items():
+            value = _number(_get(case, "thermodynamics", field), field)
+            exact = _number(_get(case, "source_exact_thermodynamics", field), field)
+            change = _number(_get(refinement[xi], name, "middle_to_fine"), "refinement")
+            _add(out["leaves"], f"xi={xi!r}|{field}", _leaf(value, {
+                "refinement": change * max(1.0, abs(value)), "closed_form": abs(value - exact)}))
+        _add(out["report_only"], f"xi={xi!r}|maxwell_flux", _number(_get(case, "thermodynamics", "maxwell_flux"), "flux"))
+    return out
+
+
+def extract_dgr_neutral(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    record = _get(records, "default")
+    results = _get(record, "results")
+    targets = _get(record, "configuration", "physical_phi_h_targets")
+    branches = _get(results, "degree_branches")
+    if not isinstance(branches, dict) or sorted(branches, key=int) != ["80", "120", "150"]:
+        raise ExtractionError("degree_branches is not the mapping of degrees 80, 120, 150")
+    points = {degree: _get(branch, "points") for degree, branch in branches.items()}
+    curve = _get(results, "curve")
+    quadrature = _get(results, "quadrature_refinement", "records")
+    if not (len(curve) == len(targets) == len(quadrature) and all(len(item) == len(targets) for item in points.values())):
+        raise ExtractionError("curve, branches and quadrature records do not match the configured targets by position")
+    largest = 0.0
+    for position in range(len(targets)):
+        if abs(_number(_get(quadrature[position], "phi_h"), "phi_h") - _number(_get(curve[position], "phi_h"), "phi_h")) \
+                > 1.0e-9 * abs(curve[position]["phi_h"]):
+            raise ExtractionError("quadrature record does not match the curve point at its position")
+        quadrature_change = _number(_get(quadrature[position], "middle_to_fine_change"), "quadrature change")
+        for field in DGR_FIELDS:
+            fine = _number(_get(points["150"][position], field), field)
+            middle = _number(_get(points["120"][position], field), field)
+            coarse = _number(_get(points["80"][position], field), field)
+            if field != "chi_2_over_T2_BH":
+                largest = max(largest, abs(fine - middle) / max(abs(fine), abs(middle), 1.0e-300))
+            high = {"refinement": abs(fine - middle)}
+            low = {"refinement": abs(middle - coarse)}
+            if field in ("susceptibility_integral", "chi_2_over_T2_BH"):
+                high["quadrature"] = quadrature_change * abs(fine)
+            _add(out["leaves"], f"curve|{position}|{field}", _leaf(_number(_get(curve[position], field), field), high))
+            _add(out["leaves"], f"degree=150|{position}|{field}", _leaf(fine, high))
+            _add(out["leaves"], f"degree=120|{position}|{field}", _leaf(middle, low))
+            _add(out["leaves"], f"degree=80|{position}|{field}", _leaf(coarse, low))
+        for field in ("phi_h", "x_h", "temperature_MeV", "s_over_T3_plot", "chi_2_over_T2_plot"):
+            _add(out["report_only"], f"curve|{position}|{field}", _number(_get(curve[position], field), field))
+    recorded = _number(_get(results, "refinement", "maximum_final_change"), "refinement")
+    if largest > recorded * (1.0 + 1.0e-6):
+        raise ExtractionError("per-position refinement differences exceed the recorded maximum_final_change")
+    _add(out["report_only"], "refinement|maximum_final_change", recorded)
+    out["consistency"] = {"largest_150_to_120_relative_change_in_three_fields": largest, "recorded_maximum_final_change": recorded}
+    return out
+
+
+def extract_dgr_critical(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    results = _get(records, "default", "results")
+    states = {int(_get(state, "degree")): state for state in _get(results, "refinement", "states")}
+    if len(states) != len(_get(results, "refinement", "states")):
+        raise ExtractionError("refinement states are not unique by degree")
+    changes: Dict[int, Tuple[int, Mapping[str, Any]]] = {}
+    for item in _get(results, "refinement", "changes"):
+        changes[int(_get(item, "fine_degree"))] = (int(_get(item, "coarse_degree")), _get(item, "changes"))
+    ordered = sorted(states)
+    for degree in ordered:
+        for field in DGR_POINT_FIELDS:
+            primary = _number(_get(states[degree], "primary", "point", field), field)
+            explicit = _number(_get(states[degree], "explicit", "point", field), field)
+            estimators = {"route_difference": abs(primary - explicit)}
+            fine_degree = degree if degree in changes else ordered[1]
+            coarse_degree, change = changes[fine_degree]
+            fine_value = _number(_get(states[fine_degree], "primary", "point", field), field)
+            coarse_value = _number(_get(states[coarse_degree], "primary", "point", field), field)
+            scale = max(1.0, abs(coarse_value), abs(fine_value))
+            converted = _number(_get(change, field), "change") * scale
+            if abs(converted - abs(fine_value - coarse_value)) > 1.0e-6 * max(abs(fine_value - coarse_value), EPS * scale):
+                raise ExtractionError(f"{field}: scaled change does not reproduce the state difference")
+            estimators["refinement"] = converted
+            _add(out["leaves"], f"state|degree={degree}|primary|{field}", _leaf(primary, estimators))
+            _add(out["leaves"], f"state|degree={degree}|explicit|{field}", _leaf(explicit, estimators))
+    labels = [_get(item, "label") for item in _get(results, "controls")]
+    if len(labels) != len(set(labels)):
+        raise ExtractionError("control states are not unique by label")
+    for item in results["controls"]:
+        for field in DGR_POINT_FIELDS:
+            primary = _number(_get(item, "primary", "point", field), field)
+            explicit = _number(_get(item, "explicit", "point", field), field)
+            estimators = {"route_difference": abs(primary - explicit)}
+            _add(out["leaves"], f"control|{item['label']}|primary|{field}", _leaf(primary, estimators))
+            _add(out["leaves"], f"control|{item['label']}|explicit|{field}", _leaf(explicit, estimators))
+    roots = _get(results, "critical", "step_roots")
+    step = _get(results, "critical", "scaled_step_changes")[-1]
+    for field in DGR_CRITICAL_FIELDS:
+        final = _number(_get(roots[-1], field), field)
+        previous = _number(_get(roots[-2], field), field)
+        _add(out["leaves"], f"critical|{field}", _leaf(final, {
+            "step_change": _number(_get(step, field), "step change") * max(1.0, abs(previous), abs(final))}))
+    return out
+
+
+def _optical_response(out: Dict[str, Dict[str, Any]], key: str, response: Mapping[str, Any]) -> None:
+    spectral = _complex(_get(response, "spectral_conductivity"), "conductivity")
+    independent = _complex(_get(response, "independent_conductivity"), "conductivity")
+    scale = 1.0 + abs(spectral)
+    estimators = {
+        "resolution": _number(_get(response, "resolution_change"), "resolution") * scale,
+        "series_truncation": _number(_get(response, "series_truncation_change"), "truncation") * scale,
+        "route": _number(_get(response, "route_relative_difference"), "route") * (1.0 + abs(independent)),
+    }
+    if "background_cutoff_change" in response:
+        estimators["background_cutoff"] = _number(response["background_cutoff_change"], "cutoff") * scale
+    _add(out["leaves"], f"{key}|spectral_conductivity", _leaf(spectral, estimators))
+    _add(out["controls"], f"{key}|independent_conductivity", independent)
+    for gate in ("equation_residual", "numerical_gate_ratio"):
+        _add(out["report_only"], f"{key}|{gate}", _number(_get(response, gate), gate))
+
+
+def extract_optical(records: Mapping[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
+    results = _get(records, "default", "results")
+    for response in _get(results, "normal_responses"):
+        _optical_response(out, f"normal|omega={_get(response, 'omega_over_temperature')!r}", response)
+    for response in _get(results, "figure_2_provenance", "responses"):
+        _optical_response(out, f"figure_2|omega={_get(response, 'omega_over_temperature')!r}", response)
+    for position, point in enumerate(_get(results, "near_critical_pole", "points")):
+        for response in _get(point, "responses"):
+            _optical_response(out, f"pole|{position}|omega={_get(response, 'omega_over_temperature')!r}", response)
+        intercept = _number(_get(point, "pole_intercept"), "pole intercept")
+        density = _number(_get(point, "static_london", "superfluid_density_over_tc"), "superfluid density")
+        _add(out["leaves"], f"pole|{position}|pole_intercept", _leaf(intercept, {
+            "intercept_stability": _number(_get(point, "intercept_stability"), "stability") * abs(intercept),
+            "static_pole": _number(_get(point, "static_pole_relative_difference"), "static pole") * abs(density)}))
+        _add(out["controls"], f"pole|{position}|static_london", density)
+        _add(out["report_only"], f"pole|{position}|temperature_over_tc", _number(_get(point, "temperature_over_tc"), "T/Tc"))
+    return out
+
+
+EXTRACTORS: Dict[str, Callable[[Mapping[str, Any]], Dict[str, Any]]] = {
+    "soft-wall-vector": extract_soft_wall,
+    "hard-wall-vector": extract_hard_wall_vector,
+    "hard-wall-chiral": extract_hard_wall_chiral,
+    "gubser-nellore-ed": extract_gubser_nellore,
+    "gubser-rocha-emd": extract_gubser_rocha,
+    "dewolfe-gubser-rosen-emd": extract_dgr_neutral,
+    "dewolfe-gubser-rosen-emd-finite-density": extract_dgr_critical,
+    "holographic-superconductor-optical": extract_optical,
+}
+
+
+def records_for(consumer: Mapping[str, Any]) -> Tuple[str, Dict[str, Any]]:
+    """Return the record source and the records used to validate a consumer."""
+
+    if consumer.get("committed_record"):
+        return "committed verifier record", {"default": json.loads((ROOT / consumer["committed_record"]).read_text())}
+    path = ROOT / SYNTHETIC_RECORDS / f"{consumer['id']}.json"
+    records = {key: value for key, value in json.loads(path.read_text()).items() if not key.startswith("_")}
+    return "synthetic record (hand-built from a manual source audit; not a verifier output)", records
+
+
+def p0_revalidation() -> Dict[str, Any]:
+    """Corrected structural preflight (appended to the original P0 evidence).
+
+    Executable checks: call sites, a module-local call graph, source-key
+    presence, strict resolution of every table pointer, and the extraction
+    with its cardinality, matching and conversion checks. Where no verifier
+    record is committed, the record is synthetic, so those checks validate
+    the extraction code against a manually audited structure, not against
+    verifier output.
+    """
+
+    table = load_table()
+    original = {item["consumer"]: item for item in p0_check()["consumers"]}
+    consumers = []
+    for consumer in table["consumers"]:
+        source, records = records_for(consumer)
+        first_record = records.get("default") or records[next(iter(records))]
+        pointers: Dict[str, Any] = {}
+        prose: List[str] = []
+        listed = [item["pointer"] for item in consumer.get("leaves", [])] \
+            + [item["pointer"] for item in consumer.get("estimators", [])] \
+            + list(consumer.get("report_only", [])) + list(consumer.get("gates_reported", [])) \
+            + [item["pointer"] for item in consumer.get("key_checks", [])] \
+            + [item for item in consumer.get("controls", []) if isinstance(item, str)]
+        for pointer in listed:
+            if not pointer.startswith("/") or " " in pointer:
+                prose.append(pointer)
+                continue
+            for concrete in expand_pointer(pointer):
+                values, missing = resolve_strict(first_record, concrete)
+                usable = [value for value in values if _is_number(value) or (isinstance(value, dict) and value)]
+                pointers[concrete] = {"leaves": len(values), "usable": len(usable), "missing": missing,
+                                      "passed": bool(values) and missing == 0 and len(usable) == len(values)}
+        try:
+            extracted = EXTRACTORS[consumer["id"]](records)
+            extraction = {"passed": True, "table_leaves": len(extracted["leaves"]), "controls": len(extracted["controls"]),
+                          "report_only": len(extracted["report_only"]),
+                          "leaves_without_estimator": sum(1 for leaf in extracted["leaves"].values() if not leaf["estimators"])}
+            if "consistency" in extracted:
+                extraction["consistency"] = extracted["consistency"]
+        except ExtractionError as error:
+            extraction = {"passed": False, "error": str(error)}
+        checks = {
+            "original_p0": {"passed": original[consumer["id"]]["passed"]},
+            "table_pointers_strict": {"detail": pointers, "passed": all(item["passed"] for item in pointers.values())},
+            "extraction": extraction,
+        }
+        consumers.append({
+            "consumer": consumer["id"], "record_source": source, "checks": checks,
+            "derived_estimators_checked_by_extraction_only": prose,
+            "passed": all(item["passed"] for item in checks.values()),
+        })
+    return {
+        "table_sha256": _file_sha256(ROOT / TABLE),
+        "consumers": consumers,
+        "executable_checks": [
+            "call sites by AST (innermost enclosing function)",
+            "control routes by a module-local AST call graph (not a cross-module proof)",
+            "presence of record-key strings in the module source (presence only; no parent path)",
+            "strict resolution of every table pointer, with wildcard cardinality",
+            "extraction with unique stable keys, matched states and estimator conversions",
+        ],
+        "manual_source_review": [
+            "record structure and estimator normalization of the five consumers without a committed record",
+            "data dependence of control routes on spectral outputs (the call graph shows call dependence only)",
+            "the preset-level and record-level meaning of the GN and DGR refinement maxima",
+        ],
+        "committed_record_consumers": [item["consumer"] for item in consumers if item["record_source"].startswith("committed")],
+        "synthetic_record_consumers": [item["consumer"] for item in consumers if item["record_source"].startswith("synthetic")],
+        "passed": all(item["passed"] for item in consumers),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -646,8 +1118,10 @@ def grid_metrics(degree: int, lower: float, upper: float, names: Sequence[str],
                 references[key] = (reference, sample_vectors(exact_nodes, lower, upper), (rounded, oracle))
             reference, vectors, (rounded, oracle) = references[key]
             entry: Dict[str, Any] = {"a": {}, "b": {}, "exactness": {}}
+            stored_errors: List[np.ndarray] = []
             for order, matrix, label in ((0, first, "D1"), (1, second, "D2")):
                 stored_error = reference.error(order, matrix)
+                stored_errors.append(stored_error)
                 ideal_error = ideal_reference.error(order, matrix)
                 for target, error, hi in (("stored", stored_error, reference.hi[order]),
                                           ("ideal", ideal_error, ideal_reference.hi[order])):
@@ -668,6 +1142,9 @@ def grid_metrics(degree: int, lower: float, upper: float, names: Sequence[str],
                 entry["exactness"][label] = _required(float(np.max(np.abs(defect) / denominator)), "exactness")
                 if keep is not None:
                     keep[(name, degree, lower, upper, order)] = stored_error
+            if name in ENTRY_ERROR_UNITS:
+                # Recorded for proposed amendment 1; not used by the frozen rule.
+                entry["bound_ratio"] = bound_ratios(reference, scales, nodes, vectors, stored_errors, name, degree)
             entry["sha256"] = {
                 "nodes": hashlib.sha256(nodes.tobytes()).hexdigest(),
                 "D1": hashlib.sha256(first.tobytes()).hexdigest(),
@@ -872,6 +1349,7 @@ def s0_run(build_label: str, degrees: Sequence[int] = DEGREES, intervals=INTERVA
         "build_label": build_label, "fixtures": fixtures, "grids": grids, "metric_c": metric_c,
         "production_equals_current_construction": production_matches["current"],
         "inherited_entries": inherited, "measured_entries": measured,
+        "complete": tuple(degrees) == DEGREES and tuple(intervals) == INTERVALS,
         "seconds_by_grid_max": max(timings.values()), "seconds_total_grids": sum(timings.values()),
     }
     if metric_c is not None:
@@ -882,16 +1360,31 @@ def s0_run(build_label: str, degrees: Sequence[int] = DEGREES, intervals=INTERVA
     return result
 
 
-def build_agreement(arrays: Path, other_label: str) -> Dict[str, Any]:
+def build_agreement(arrays: Path, other_label: str, payloads: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     """Metric (d): entrywise agreement of each construction between two builds.
 
-    ``arrays`` holds the matrices the other build's S0 saved because their
-    hashes differed from this build's. Constructions with no saved file are
-    bit-identical across the builds. Also times each construction.
+    The grids at which a construction differs between the builds come from
+    the matrix hashes in the two S0 outputs. ``arrays`` must hold the other
+    build's matrices for exactly those grids; a missing or unexpected file
+    is a stop. Equality is never inferred from an empty folder. Also times
+    each construction.
     """
 
-    report: Dict[str, Any] = {name: {"differing_grids": 0, "max_relative_difference": 0.0} for name in CONSTRUCTIONS}
-    for path in sorted(arrays.glob(f"{other_label}-*.npz")):
+    errors = validate_evidence(payloads)
+    if errors:
+        return {"passed": False, "stopped": "invalid evidence", "evidence_errors": errors[:200]}
+    results = sorted((payload["result"] for payload in payloads), key=lambda item: item["build_label"])
+    differing = hash_agreement(results)
+    expected = {f"{other_label}-{name}-{label.replace('|', '-')}.npz"
+                for name, labels in differing.items() for label in labels}
+    found = {path.name for path in arrays.glob(f"{other_label}-*.npz")} if arrays.is_dir() else set()
+    if found != expected:
+        return {"passed": False, "stopped": "saved matrices do not match the grids whose hashes differ",
+                "missing": sorted(expected - found)[:20], "unexpected": sorted(found - expected)[:20]}
+    report: Dict[str, Any] = {name: {"differing_grids": len(differing[name]), "max_relative_difference": 0.0}
+                              for name in CONSTRUCTIONS}
+    for file_name in sorted(found):
+        path = arrays / file_name
         rest = path.stem.split("-", 1)[1]
         name = next(candidate for candidate in CONSTRUCTIONS if rest.startswith(candidate + "-"))
         with np.load(path) as saved:
@@ -904,7 +1397,6 @@ def build_agreement(arrays: Path, other_label: str) -> Dict[str, Any]:
         for a, b in zip(mine[1:], other[1:]):
             row_max = np.max(np.abs(a), axis=1)
             worst = max(worst, float(np.max(np.max(np.abs(a - b), axis=1) / row_max)))
-        report[name]["differing_grids"] += 1
         report[name]["max_relative_difference"] = max(report[name]["max_relative_difference"], worst)
     for name in CONSTRUCTIONS:
         started = time.perf_counter()
@@ -926,6 +1418,105 @@ def _parse_grid(stem: str, name: str) -> Tuple[int, float, float]:
             except ValueError:
                 continue
     raise ValueError(f"cannot parse grid from {stem!r}")
+
+
+# -- proposed amendment 1 (post-observation; NOT adopted) ---------------------------------
+#
+# docs/numerics/chebyshev-construction-repair-amendment-1.md. The frozen rule
+# above stays the rule of record until the owner approves an amendment.
+
+UNIT_ROUNDOFF = EPS / 2.0  # u = 2^-53, round to nearest
+# First-order relative error of one off-diagonal D1 entry, in units of u, from
+# the operation count of each declared construction (amendment Section 3).
+ENTRY_ERROR_UNITS = {"C-S1": 5.0, "C-T1": 12.0, "C-T2": 12.0, "C-T3": 12.0}
+# First-order relative error of one computed node difference, in units of u.
+DIFFERENCE_ERROR_UNITS = {"C-S1": 1.0, "C-T1": 11.0, "C-T2": 11.0, "C-T3": 11.0}
+EXPLICIT_SECOND = ("C-T2", "C-T3", "C-S1")
+
+
+def apriori_action_bounds(reference: "Reference", nodes: np.ndarray, vector: np.ndarray,
+                          entry_units: float, difference_units: float) -> Tuple[np.ndarray, np.ndarray]:
+    """First-order a-priori bounds on ``|((R - D) v)_i|`` for D1 and explicit D2.
+
+    Assumptions (amendment Section 3): off-diagonal D1 entries have relative
+    error at most ``entry_units * u``; computed node differences at most
+    ``difference_units * u``; diagonals are negative row sums rounded once;
+    ``D2_ij = 2 D1_ij (D1_ii - 1/d_ij)``. Second-order terms are neglected.
+    """
+
+    u = UNIT_ROUNDOFF
+    first = np.abs(reference.hi[0])
+    second = np.abs(reference.hi[1])
+    size = nodes.size
+    off = ~np.eye(size, dtype=bool)
+    spread = np.abs(vector[None, :] - vector[:, None])
+    magnitude = np.abs(vector)
+    entry = entry_units * u
+    first_off = np.where(off, first, 0.0)
+    bound_first = entry * np.sum(first_off * spread, axis=1) + u * np.diag(first) * magnitude
+    diagonal_error = entry * np.sum(first_off, axis=1) + u * np.diag(first)
+    inverse = np.zeros((size, size))
+    inverse[off] = 1.0 / np.abs(nodes[:, None] - nodes[None, :])[off]
+    second_entry = 2.0 * first_off * (diagonal_error[:, None] + (difference_units + 1.0) * u * inverse) \
+        + (entry + 2.0 * u) * np.where(off, second, 0.0)
+    bound_second = np.sum(second_entry * spread, axis=1) + u * np.diag(second) * magnitude
+    return bound_first, bound_second
+
+
+def bound_ratios(reference: "Reference", ideal_scales: Mapping[Tuple[int, str], np.ndarray], nodes: np.ndarray,
+                 vectors: Mapping[str, np.ndarray], errors: Sequence[np.ndarray], name: str, degree: int) -> Dict[str, float]:
+    """``max_i e_i / B_i`` per matrix, vector and row set for one construction."""
+
+    sets = row_sets(degree)
+    ratios: Dict[str, float] = {}
+    for vector_name, vector in vectors.items():
+        bounds = apriori_action_bounds(reference, nodes, vector, ENTRY_ERROR_UNITS[name], DIFFERENCE_ERROR_UNITS[name])
+        for order, label in ((0, "D1"), (1, "D2")):
+            if order == 1 and name not in EXPLICIT_SECOND:
+                continue
+            action = np.abs(errors[order] @ vector)
+            bound = bounds[order]
+            if not np.all(bound > 0.0):
+                raise RequiredMetricUndefined(f"a-priori bound is zero at degree {degree}")
+            for set_name, rows in sets.items():
+                ratios[f"{label}_stored_{vector_name}_{set_name}"] = float(np.max(action[rows] / bound[rows]))
+    return ratios
+
+
+def qualification_v2(result: Mapping[str, Any]) -> Dict[str, Any]:
+    """PROPOSED amendment 1; not the rule of record.
+
+    Metric (a) and polynomial exactness keep the frozen rule. A metric (b)
+    component is a regression only if it exceeds twice the current value
+    AND the candidate's own a-priori rounding bound (``bound_ratio > 1``).
+    A component with no recorded bound ratio keeps the frozen rule.
+    """
+
+    report: Dict[str, Any] = {}
+    for name in CANDIDATES:
+        failures: List[Dict[str, Any]] = []
+        excused = 0
+        for label, grid in result["grids"].items():
+            candidate, current = grid[name], grid["current"]
+            ratios = candidate.get("bound_ratio", {})
+            for matrix, value in candidate["exactness"].items():
+                if not value <= EXACTNESS_LIMIT:
+                    failures.append({"grid": label, "metric": f"exactness:{matrix}", "candidate": value})
+            for key, value in candidate["a"].items():
+                if "_stored" in key and not value <= WORSENING_FACTOR * current["a"][key]:
+                    failures.append({"grid": label, "metric": f"a:{key}", "candidate": value, "current": current["a"][key]})
+            for key, value in candidate["b"].items():
+                if "_stored" not in key or value <= WORSENING_FACTOR * current["b"][key]:
+                    continue
+                ratio = ratios.get(key)
+                if ratio is not None and _valid_metric(ratio) and ratio <= 1.0:
+                    excused += 1
+                    continue
+                failures.append({"grid": label, "metric": f"b:{key}", "candidate": value, "current": current["b"][key],
+                                 "bound_ratio": ratio})
+        report[name] = {"qualified": not failures, "failure_count": len(failures), "excused_within_bound": excused,
+                        "failures": failures[:40]}
+    return report
 
 
 # -- S1: qualification and selection (plan Section 5) ---------------------------------
@@ -982,8 +1573,182 @@ def qualification(result: Mapping[str, Any]) -> Dict[str, Any]:
     return report
 
 
-def selection(results: Sequence[Mapping[str, Any]], build_agreement: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
-    """Apply the frozen selection rule to the S0 results of all builds."""
+REQUIRED_BUILDS = ("B1", "B3")
+REQUIRED_FIXTURES = ("F1_oracle_arithmetic", "F2_recurrence_independence", "F3_oracle_polynomial_exactness",
+                     "F4_artifacts_and_continuity", "F5_candidate_api")
+A_KEYS = frozenset(f"{matrix}_{target}" for matrix in ("D1", "D2") for target in ("stored", "ideal"))
+B_KEYS = frozenset(f"{matrix}_{target}_{vector}_{rows}" for matrix in ("D1", "D2") for target in ("stored", "ideal")
+                   for vector in ("v1", "v2", "v3") for rows in ("all", "uv", "ir"))
+METRIC_C_KEYS = ("worst_rows_1_3_scaled", "worst_rows_1_3_abs", "worst_all_rows_scaled")
+ARTIFACT_COUNT = 8
+
+
+def expected_grid_labels() -> List[str]:
+    return [f"{degree}|{lower!r}|{upper!r}" for degree in DEGREES for lower, upper in INTERVALS]
+
+
+def _valid_metric(value: Any) -> bool:
+    return (isinstance(value, (int, float)) and not isinstance(value, bool)
+            and math.isfinite(float(value)) and float(value) >= 0.0)
+
+
+def _is_sha256(value: Any) -> bool:
+    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+
+
+def validate_evidence(payloads: Sequence[Mapping[str, Any]]) -> List[str]:
+    """Return every reason the S0 evidence cannot be admitted to selection.
+
+    Admission requires one complete, successful S0 output for each required
+    build, produced under the frozen plan by one tool version: all fixtures
+    passed, production equal to the legacy construction, the full grid and
+    metric sets present, and every metric finite and non-negative.
+    """
+
+    errors: List[str] = []
+    labels: List[str] = []
+    for index, payload in enumerate(payloads):
+        where = f"input {index}"
+        if not isinstance(payload, Mapping) or not isinstance(payload.get("result"), Mapping):
+            errors.append(f"{where}: not an S0 output")
+            continue
+        result = payload["result"]
+        label = result.get("build_label")
+        where = f"input {index} ({label})"
+        labels.append(label)
+        if payload.get("tool") != "chebyshev-repair" or payload.get("stage") != "s0":
+            errors.append(f"{where}: not a chebyshev-repair s0 output")
+        if payload.get("status") != "ok":
+            errors.append(f"{where}: status is {payload.get('status')!r}")
+        if payload.get("plan_sha256") != _file_sha256(ROOT / PLAN):
+            errors.append(f"{where}: plan hash does not match the frozen plan")
+        if not _is_sha256(payload.get("tool_sha256")):
+            errors.append(f"{where}: tool hash missing")
+        if result.get("passed") is not True or "stopped" in result:
+            errors.append(f"{where}: S0 did not pass")
+        fixtures = result.get("fixtures")
+        for name in REQUIRED_FIXTURES:
+            if not isinstance(fixtures, Mapping) or not isinstance(fixtures.get(name), Mapping) \
+                    or fixtures[name].get("passed") is not True:
+                errors.append(f"{where}: fixture {name} missing or not passed")
+        if result.get("production_equals_current_construction") is not True:
+            errors.append(f"{where}: production was not the legacy construction")
+        grids = result.get("grids")
+        expected = expected_grid_labels()
+        if not isinstance(grids, Mapping) or sorted(grids) != sorted(expected):
+            count = len(grids) if isinstance(grids, Mapping) else 0
+            errors.append(f"{where}: grid set is not the plan's {len(expected)} grids (found {count})")
+        else:
+            for grid_label, grid in grids.items():
+                if not isinstance(grid, Mapping) or sorted(grid) != sorted(CONSTRUCTIONS):
+                    errors.append(f"{where}: {grid_label}: construction set incomplete")
+                    continue
+                for name, entry in grid.items():
+                    place = f"{where}: {grid_label}: {name}"
+                    if not isinstance(entry, Mapping):
+                        errors.append(f"{place}: entry missing")
+                        continue
+                    for group, keys in (("a", A_KEYS), ("b", B_KEYS), ("exactness", frozenset(("D1", "D2")))):
+                        values = entry.get(group)
+                        if not isinstance(values, Mapping) or frozenset(values) != keys:
+                            errors.append(f"{place}: metric group {group} incomplete")
+                        elif not all(_valid_metric(value) for value in values.values()):
+                            errors.append(f"{place}: metric group {group} has a non-finite or negative value")
+                    hashes = entry.get("sha256")
+                    if not isinstance(hashes, Mapping) or sorted(hashes) != ["D1", "D2", "nodes"] \
+                            or not all(_is_sha256(value) for value in hashes.values()):
+                        errors.append(f"{place}: matrix hashes missing")
+        metric = result.get("metric_c")
+        if not isinstance(metric, Mapping) or sorted(metric) != sorted(CONSTRUCTIONS):
+            errors.append(f"{where}: metric (c) incomplete")
+        else:
+            for name, item in metric.items():
+                if not isinstance(item, Mapping) or not all(_valid_metric(item.get(key)) for key in METRIC_C_KEYS):
+                    errors.append(f"{where}: metric (c) of {name} has a missing, non-finite or negative value")
+                artifacts = item.get("artifacts") if isinstance(item, Mapping) else None
+                names = [entry.get("artifact") for entry in artifacts] if isinstance(artifacts, list) else []
+                if len(names) != ARTIFACT_COUNT or len(set(names)) != ARTIFACT_COUNT:
+                    errors.append(f"{where}: metric (c) of {name} does not cover the {ARTIFACT_COUNT} artifacts")
+            current = metric.get("current", {})
+            if isinstance(current, Mapping) and _valid_metric(current.get("worst_rows_1_3_scaled")) \
+                    and not current["worst_rows_1_3_scaled"] > 0.0:
+                errors.append(f"{where}: baseline metric (c) is not positive")
+    if len(labels) != len(set(labels)):
+        errors.append(f"duplicate build labels: {labels}")
+    if sorted(str(label) for label in labels) != sorted(REQUIRED_BUILDS):
+        errors.append(f"builds {labels} are not exactly {list(REQUIRED_BUILDS)}")
+    tools = {payload.get("tool_sha256") for payload in payloads if isinstance(payload, Mapping)}
+    if len(tools) > 1:
+        errors.append("inputs were produced by different tool versions")
+    return errors
+
+
+def hash_agreement(results: Sequence[Mapping[str, Any]]) -> Dict[str, List[str]]:
+    """Grids at which each construction's matrices differ between the two builds."""
+
+    first, second = results
+    differing: Dict[str, List[str]] = {name: [] for name in CONSTRUCTIONS}
+    for label in expected_grid_labels():
+        for name in CONSTRUCTIONS:
+            if first["grids"][label][name]["sha256"] != second["grids"][label][name]["sha256"]:
+                differing[name].append(label)
+    return differing
+
+
+def validate_agreement(payload: Optional[Mapping[str, Any]], results: Sequence[Mapping[str, Any]]) -> List[str]:
+    """Check that build-agreement evidence is consistent with the matrix hashes.
+
+    Equality between builds is established by the hashes in the S0 evidence,
+    never by the absence of a saved matrix file.
+    """
+
+    differing = hash_agreement(results)
+    if payload is None:
+        return []
+    errors: List[str] = []
+    result = payload.get("result") if isinstance(payload, Mapping) else None
+    if not isinstance(result, Mapping) or payload.get("stage") != "build-agreement" or payload.get("status") != "ok":
+        return ["build-agreement input is not a successful build-agreement output"]
+    for name in CONSTRUCTIONS:
+        item = result.get(name)
+        if not isinstance(item, Mapping):
+            errors.append(f"build agreement: {name} missing")
+            continue
+        if item.get("differing_grids") != len(differing[name]):
+            errors.append(f"build agreement: {name} reports {item.get('differing_grids')} differing grids; "
+                          f"the hashes give {len(differing[name])}")
+        value = item.get("max_relative_difference")
+        if not _valid_metric(value) or (len(differing[name]) > 0) != (value > 0.0):
+            errors.append(f"build agreement: {name} difference is inconsistent with the hashes")
+        if not _valid_metric(item.get("seconds")):
+            errors.append(f"build agreement: {name} timing missing")
+    return errors
+
+
+def selection(payloads: Sequence[Mapping[str, Any]], agreement: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+    """Admit the evidence, then apply the frozen selection rule.
+
+    ``payloads`` are complete S0 outputs (not bare results). Invalid,
+    incomplete, duplicate or partial evidence is rejected, never selected
+    from.
+    """
+
+    errors = validate_evidence(payloads)
+    if errors:
+        return {"passed": False, "stopped": "invalid evidence", "evidence_errors": errors[:200],
+                "evidence_error_count": len(errors)}
+    results = sorted((payload["result"] for payload in payloads), key=lambda item: item["build_label"])
+    errors = validate_agreement(agreement, results)
+    if errors:
+        return {"passed": False, "stopped": "invalid build-agreement evidence", "evidence_errors": errors}
+    outcome = selection_rule(results, agreement["result"] if agreement is not None else None)
+    outcome["evidence"] = {"plan_sha256": payloads[0]["plan_sha256"], "tool_sha256": payloads[0]["tool_sha256"],
+                           "differing_grids": {name: len(labels) for name, labels in hash_agreement(results).items()}}
+    return outcome
+
+
+def selection_rule(results: Sequence[Mapping[str, Any]], build_agreement: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+    """The frozen selection rule (plan Section 5) on already admitted results."""
 
     per_build = {result["build_label"]: qualification(result) for result in results}
     qualified = [name for name in CANDIDATES if all(report[name]["qualified"] for report in per_build.values())]
@@ -1010,11 +1775,13 @@ def selection(results: Sequence[Mapping[str, Any]], build_agreement: Optional[Ma
         return outcome
     best = min(metric[name]["worst_rows_1_3_scaled"] for name in eligible)
     tied = [name for name in eligible if metric[name]["worst_rows_1_3_scaled"] <= TIE_FACTOR * best]
-    if len(tied) > 1 and build_agreement is not None:
-        tied.sort(key=lambda name: (build_agreement.get(name, {}).get("max_relative_difference", math.inf),
-                                    build_agreement.get(name, {}).get("seconds", math.inf)))
-    else:
-        tied.sort(key=lambda name: metric[name]["worst_rows_1_3_scaled"])
+    if len(tied) > 1:
+        if build_agreement is None:
+            outcome.update({"passed": False, "selected": None, "tied": tied,
+                            "stopped": "a tie needs build-agreement evidence"})
+            return outcome
+        tied.sort(key=lambda name: (build_agreement[name]["max_relative_difference"],
+                                    build_agreement[name]["seconds"]))
     outcome.update({"passed": True, "selected": tied[0], "tied": tied})
     return outcome
 
@@ -1047,6 +1814,15 @@ def _jsonable(value: Any) -> Any:
     return value
 
 
+def _read_json(path: Path) -> Any:
+    """Read an evidence file; an unreadable file becomes an inadmissible input."""
+
+    try:
+        return json.loads(Path(path).read_text())
+    except (OSError, ValueError) as error:
+        return {"unreadable": f"{Path(path).name}: {type(error).__name__}"}
+
+
 def emit(stage: str, result: Mapping[str, Any], started: float, compact: bool = False) -> int:
     payload = {
         "tool": "chebyshev-repair",
@@ -1068,6 +1844,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     commands = parser.add_subparsers(dest="stage", required=True)
     commands.add_parser("p0")
+    commands.add_parser("p0-revalidate")
     s0 = commands.add_parser("s0")
     s0.add_argument("--build-label", required=True, choices=("B1", "B3"))
     s0.add_argument("--degrees", help="comma-separated subset, for development only")
@@ -1076,6 +1853,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     agreement = commands.add_parser("build-agreement")
     agreement.add_argument("--arrays", type=Path, required=True, help="matrices saved by the other build's S0")
     agreement.add_argument("--other-label", required=True)
+    agreement.add_argument("--s0", nargs=2, type=Path, required=True, help="S0 outputs of both builds")
     select = commands.add_parser("select")
     select.add_argument("s0", nargs="+", type=Path, help="S0 outputs of every build")
     select.add_argument("--build-agreement", type=Path)
@@ -1083,6 +1861,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     started = time.perf_counter()
     if args.stage == "p0":
         return emit("p0", p0_check(), started)
+    if args.stage == "p0-revalidate":
+        return emit("p0-revalidate", p0_revalidation(), started)
     if args.stage == "s0":
         degrees = DEGREES if not args.degrees else tuple(int(value) for value in args.degrees.split(","))
         reference = json.loads(args.reference.read_text())["result"] if args.reference else None
@@ -1094,11 +1874,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             result = {"passed": False, "stopped": f"required metric undefined: {error}"}
         return emit("s0", result, started, compact=True)
     if args.stage == "build-agreement":
-        return emit("build-agreement", build_agreement(args.arrays, args.other_label), started)
+        payloads = [_read_json(path) for path in args.s0]
+        return emit("build-agreement", build_agreement(args.arrays, args.other_label, payloads), started)
     if args.stage == "select":
-        results = [json.loads(path.read_text())["result"] for path in args.s0]
-        agreement = json.loads(args.build_agreement.read_text())["result"] if args.build_agreement else None
-        return emit("select", selection(results, agreement), started)
+        payloads = [_read_json(path) for path in args.s0]
+        agreement = _read_json(args.build_agreement) if args.build_agreement else None
+        return emit("select", selection(payloads, agreement), started)
     raise SystemExit(f"unknown stage {args.stage}")
 
 
