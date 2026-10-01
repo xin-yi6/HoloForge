@@ -90,15 +90,38 @@ class ReferenceAndCandidateTests(unittest.TestCase):
                 np.testing.assert_allclose(first @ nodes, 1.0, rtol=0.0, atol=1.0e-11)
                 np.testing.assert_allclose(second @ nodes**2, 2.0, rtol=0.0, atol=1.0e-9)
 
-    def test_legacy_copy_is_the_production_construction(self) -> None:
+    def test_production_is_the_selected_construction_over_the_plan_node_set(self) -> None:
+        from holoforge.numerics import CHEBYSHEV_CONSTRUCTION, chebyshev_lobatto_grid
+
+        self.assertEqual(CHEBYSHEV_CONSTRUCTION, repair.SELECTED_CONSTRUCTION)
+        differs_from_legacy = 0
+        for degree in repair.DEGREES:
+            for lower, upper in repair.INTERVALS:
+                nodes, first, second = repair.construct("C-S1", degree, lower, upper)
+                grid = chebyshev_lobatto_grid(degree, lower, upper)
+                self.assertEqual(nodes.tobytes(), grid.nodes.tobytes(), (degree, lower, upper))
+                self.assertEqual(first.tobytes(), grid.first_derivative.tobytes(), (degree, lower, upper))
+                self.assertEqual(second.tobytes(), grid.second_derivative.tobytes(), (degree, lower, upper))
+                if degree <= 64:
+                    legacy = repair.construct("current", degree, lower, upper)
+                    differs_from_legacy += int(legacy[2].tobytes() != second.tobytes())
+        self.assertGreater(differs_from_legacy, 0)
+
+    def test_production_matches_the_committed_selection_evidence(self) -> None:
+        import json
+
         from holoforge.numerics import chebyshev_lobatto_grid
 
-        for degree, lower, upper in ((12, -0.7, 2.3), (40, 1.0e-5, 1.0)):
-            nodes, first, second = repair.construct("current", degree, lower, upper)
-            grid = chebyshev_lobatto_grid(degree, lower, upper)
-            self.assertEqual(nodes.tobytes(), grid.nodes.tobytes())
-            self.assertEqual(first.tobytes(), grid.first_derivative.tobytes())
-            self.assertEqual(second.tobytes(), grid.second_derivative.tobytes())
+        evidence = json.loads((ROOT / "docs/generated/chebyshev-repair/B1-s0.json").read_text())["result"]["grids"]
+        matched = 0
+        for degree in (2, 3, 16, 17, 64):
+            for lower, upper in repair.INTERVALS:
+                grid = chebyshev_lobatto_grid(degree, lower, upper)
+                recorded = evidence[repair.grid_label(degree, lower, upper)]["C-S1"]["sha256"]
+                matched += int(repair._matrix_hashes(grid.nodes, grid.first_derivative, grid.second_derivative) == recorded)
+        # The stored nodes depend on the platform's sine, so equality with the
+        # evidence is required only where that evidence was produced.
+        self.assertIn(matched, (0, 20) if matched else (0,))
 
     def test_grid_metrics_are_finite_and_small(self) -> None:
         matrices = {name: repair.construct(name, 9, 0.0, 1.0) for name in repair.CONSTRUCTIONS}
@@ -608,6 +631,23 @@ class ContinuationStageTests(unittest.TestCase):
                       "result": {key: value for key, value in self.AGREEMENT["result"].items() if key != "verified"}}
         self.assertEqual(repair.amended_selection(payloads, runs, unverified)["stopped"], "invalid continuation evidence")
 
+    def test_committed_continuation_evidence_is_admitted_and_selects_the_stored_node_candidate(self) -> None:
+        import json
+
+        folder = ROOT / "docs/generated/chebyshev-repair"
+        s0 = [json.loads((folder / f"{label}-s0.json").read_text()) for label in ("B1", "B3")]
+        runs = [json.loads((folder / f"{label}-c1.json").read_text()) for label in ("B1", "B3")]
+        agreement = json.loads((folder / "build-agreement-hash-bound.json").read_text())
+        outcome = repair.amended_selection(s0, runs, agreement)
+        self.assertTrue(outcome["passed"], outcome.get("evidence_errors"))
+        self.assertEqual(outcome["qualified"], ["C-S1"])
+        self.assertEqual(outcome["selected"], "C-S1")
+        recorded = json.loads((folder / "c2-selection-amendment-1.json").read_text())["result"]
+        self.assertEqual(recorded["selected_label"], outcome["selected_label"])
+        self.assertEqual(recorded["qualification"], json.loads(json.dumps(repair._jsonable(outcome["qualification"]))))
+        # The frozen rule's result is unchanged.
+        self.assertEqual(repair.selection(s0, agreement)["stopped"], "no candidate qualifies")
+
     def test_the_measurement_stage_on_a_small_configuration(self) -> None:
         from unittest.mock import patch
 
@@ -918,6 +958,144 @@ class ArtifactBindingTests(unittest.TestCase):
         self._save(nodes=self.other[0], D1=self.other[1], D2=self.other[2])
         result = repair.build_agreement(self.arrays, "B2", self.payloads)
         self.assertIn("is not one of", result["stopped"])
+
+
+def regression_payload(build, role, source, mutate=None):
+    """A complete synthetic regression-run output built from the audited records."""
+
+    import copy
+    import json
+
+    table = repair.load_table()
+    consumers = {}
+    for consumer in table["consumers"]:
+        _, records = repair.records_for(consumer)
+        records = copy.deepcopy(records)
+        extracted = repair.EXTRACTORS[consumer["id"]](records)
+        runs = {name: {"arguments": arguments, "exit_status": 0, "seconds": 0.1, "passed": True,
+                       "acceptance_checks": {"gate-1": {"passed": True, "value": 1.0e-9, "criterion": "<= 1e-6"},
+                                             "gate-2": {"passed": False, "value": 2.0e-5, "criterion": "<= 1e-5"}}}
+                for name, arguments in repair.consumer_commands(consumer).items()}
+        consumers[consumer["id"]] = dict(extracted, runs=runs)
+    result = {"passed": True, "build_label": build, "role": role, "consumers": consumers, "source_sha256": source,
+              "chebyshev_construction": repair.SELECTED_CONSTRUCTION if role == "candidate" else None, "complete": True}
+    payload = {"tool": "chebyshev-repair", "stage": f"regression-{role}", "status": "ok", "tool_sha256": "a" * 64,
+               "plan_sha256": repair._file_sha256(repair.ROOT / repair.PLAN), "result": result}
+    payload = json.loads(json.dumps(repair._jsonable(payload)))
+    if mutate is not None:
+        mutate(payload["result"]["consumers"])
+    return payload
+
+
+class RegressionStageTests(unittest.TestCase):
+    """R0 limits and the S2 comparison (plan Sections 6 and 8), on synthetic runs."""
+
+    def _evidence(self, mutate=None, mutate_build="B1"):
+        baselines = [regression_payload(build, "baseline", "1" * 64) for build in ("B1", "B3")]
+        candidates = [regression_payload(build, "candidate", "2" * 64, mutate if build == mutate_build else None)
+                      for build in ("B1", "B3")]
+        limits = {"stage": "r0-limits", "status": "ok", "result": repair.regression_limits(baselines)}
+        return baselines, limits, candidates
+
+    def test_run_names_are_the_record_names_the_extractors_use(self) -> None:
+        import json
+
+        for consumer in repair.load_table()["consumers"]:
+            names = sorted(repair.consumer_commands(consumer))
+            path = ROOT / repair.SYNTHETIC_RECORDS / f"{consumer['id']}.json"
+            if consumer.get("committed_record") or not path.exists():
+                self.assertEqual(names, ["default"], consumer["id"])
+            else:
+                expected = sorted(key for key in json.loads(path.read_text()) if not key.startswith("_"))
+                self.assertEqual(names, expected, consumer["id"])
+
+    def test_limits_follow_the_plan_rule(self) -> None:
+        def shift(consumers):
+            consumers["gubser-rocha-emd"]["leaves"]["xi=1.0|hat_s"]["value"] += 3.0e-9
+
+        baselines = [regression_payload("B1", "baseline", "1" * 64), regression_payload("B3", "baseline", "1" * 64, shift)]
+        outcome = repair.regression_limits(baselines)
+        self.assertTrue(outcome["passed"])
+        entry = outcome["limits"]["gubser-rocha-emd"]["xi=1.0|hat_s"]
+        self.assertAlmostEqual(entry["X"], 3.0e-9, delta=1.0e-15)
+        leaf = baselines[0]["result"]["consumers"]["gubser-rocha-emd"]["leaves"]["xi=1.0|hat_s"]
+        expected = 10.0 * max(max(leaf["estimators"].values()), entry["X"], 8.0 * repair.EPS * abs(leaf["value"]))
+        self.assertEqual(entry["B1"]["allowance"], expected)
+        self.assertGreater(outcome["leaf_count"], 100)
+        self.assertEqual(repair.regression_limits(baselines[:1])["stopped"], "invalid baseline evidence")
+
+    def test_identical_candidate_passes_and_reports_baseline_failures(self) -> None:
+        outcome = repair.regression_compare(*self._evidence())
+        self.assertTrue(outcome["passed"], outcome.get("stopped"))
+        self.assertEqual(outcome["violation_counts"], {"A1": 0, "A2": 0, "controls": 0, "keys": 0})
+        summary = outcome["summary"]["B1"]["holographic-superconductor-optical"]
+        self.assertEqual(summary["checks_failing_at_baseline"], ["default:gate-2"])
+        self.assertEqual(summary["controls_changed"], 0)
+
+    def test_a_leaf_beyond_its_allowance_is_an_a2_stop(self) -> None:
+        def inside(consumers):
+            leaf = consumers["gubser-rocha-emd"]["leaves"]["xi=1.0|hat_s"]
+            leaf["value"] += 0.5 * 10.0 * max(leaf["estimators"].values())
+
+        def outside(consumers):
+            leaf = consumers["gubser-rocha-emd"]["leaves"]["xi=1.0|hat_s"]
+            leaf["value"] += 1.5 * 10.0 * max(leaf["estimators"].values())
+
+        self.assertTrue(repair.regression_compare(*self._evidence(inside))["passed"])
+        outcome = repair.regression_compare(*self._evidence(outside, "B3"))
+        self.assertEqual(outcome["stopped"], "regression stop: A2 (1)")
+        self.assertEqual(outcome["violations"]["A2"][0]["build"], "B3")
+
+    def test_a_complex_leaf_uses_the_modulus_of_the_difference(self) -> None:
+        def turn(consumers):
+            leaves = consumers["holographic-superconductor-optical"]["leaves"]
+            key = next(key for key in leaves if key.endswith("spectral_conductivity"))
+            allowance = 10.0 * max(leaves[key]["estimators"].values())
+            leaves[key]["value"] = [leaves[key]["value"][0] + 0.8 * allowance, leaves[key]["value"][1] + 0.8 * allowance]
+
+        outcome = repair.regression_compare(*self._evidence(turn))
+        self.assertEqual(outcome["violation_counts"]["A2"], 1)
+
+    def test_a_changed_control_or_a_newly_failing_gate_is_a_stop(self) -> None:
+        def control(consumers):
+            controls = consumers["hard-wall-vector"]["controls"]
+            key = sorted(controls)[0]
+            controls[key] = controls[key] * (1.0 + 2.0e-16) if controls[key] != 1.0 else 1.0 + 2.3e-16
+
+        outcome = repair.regression_compare(*self._evidence(control))
+        self.assertEqual(outcome["stopped"], "regression stop: controls (1)")
+
+        def gate(consumers):
+            consumers["gubser-nellore-ed"]["runs"]["default"]["acceptance_checks"]["gate-1"]["passed"] = False
+
+        outcome = repair.regression_compare(*self._evidence(gate))
+        self.assertEqual(outcome["stopped"], "regression stop: A1 (1)")
+
+        def still_failing(consumers):
+            consumers["gubser-nellore-ed"]["runs"]["default"]["acceptance_checks"]["gate-2"]["value"] = 9.0e-5
+
+        self.assertTrue(repair.regression_compare(*self._evidence(still_failing))["passed"])
+
+    def test_inadmissible_regression_evidence_is_rejected(self) -> None:
+        baselines, limits, candidates = self._evidence()
+        same_source = [regression_payload(build, "candidate", "1" * 64) for build in ("B1", "B3")]
+        self.assertIn("same source", repair.regression_compare(baselines, limits, same_source)["stopped"])
+        self.assertEqual(repair.regression_compare(baselines, limits, baselines)["stopped"], "invalid regression evidence")
+        limits["result"]["limits"]["gubser-rocha-emd"]["xi=1.0|hat_s"]["B1"]["allowance"] *= 100.0
+        outcome = repair.regression_compare(baselines, limits, candidates)
+        self.assertIn("do not follow from these baselines", " ".join(outcome["evidence_errors"]))
+
+        def missing(consumers):
+            consumers["soft-wall-vector"]["leaves"].popitem()
+
+        outcome = repair.regression_compare(*self._evidence(missing))
+        self.assertEqual(outcome["violation_counts"]["keys"], 1)
+
+    def test_a_tree_without_the_package_is_rejected(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertIn("no src/holoforge", repair.regression_run("B1", Path(directory), "baseline")["stopped"])
 
 
 if __name__ == "__main__":

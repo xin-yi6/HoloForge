@@ -2242,6 +2242,347 @@ def selection_rule(results: Sequence[Mapping[str, Any]], build_agreement: Option
 
 
 # ---------------------------------------------------------------------------
+# R0 and S2: cross-benchmark regression (plan Sections 6 and 8)
+# ---------------------------------------------------------------------------
+
+SELECTED_CONSTRUCTION = "c-s1-r1"
+KEY_COORDINATE_TOLERANCE = 4.0 * EPS
+REPRESENTATION_FLOOR = 8.0 * EPS
+ALLOWANCE_FACTOR = 10.0
+
+
+def run_name(arguments: Sequence[str]) -> str:
+    """The record name the extractors use for one table command."""
+
+    options = dict(zip(arguments[1::2], arguments[2::2]))
+    if "--method" not in options:
+        return "finite-difference" if arguments[0] == "soft-wall-vector" else "default"
+    name = options["--method"]
+    if "--spectral-degree" in options:
+        name += f"-{options['--spectral-degree']}"
+    if "--modes" in options:
+        name += f"-modes-{options['--modes']}"
+    if "--z-max" in options:
+        name += f"-zmax-{options['--z-max']}"
+    return name
+
+
+def consumer_commands(consumer: Mapping[str, Any]) -> Dict[str, List[str]]:
+    commands: Dict[str, List[str]] = {}
+    for group in ("table", "verdict_controls", "controls"):
+        for arguments in consumer["commands"].get(group, []):
+            _add(commands, run_name(arguments), list(arguments))
+    return commands
+
+
+def regression_run(build_label: str, source: Path, role: str, consumers: Optional[Sequence[str]] = None) -> Dict[str, Any]:
+    """Run every Section 8 command against the package in ``source`` and extract the table.
+
+    ``role`` is ``baseline`` (the pre-change tree) or ``candidate``. Each
+    verifier runs as a subprocess of this interpreter with ``source/src``
+    first on its path. A record that does not have the audited structure
+    is a stop.
+    """
+
+    import os
+    import subprocess
+
+    source = source.resolve()
+    if not (source / "src" / "holoforge" / "__init__.py").is_file():
+        return {"passed": False, "stopped": "the source tree has no src/holoforge package"}
+    environment = dict(os.environ, PYTHONPATH=str(source / "src"), PYTHONDONTWRITEBYTECODE="1")
+    report: Dict[str, Any] = {}
+    identities = set()
+    for consumer in load_table()["consumers"]:
+        identifier = consumer["id"]
+        if consumers is not None and identifier not in consumers:
+            continue
+        records: Dict[str, Any] = {}
+        runs: Dict[str, Any] = {}
+        for name, arguments in consumer_commands(consumer).items():
+            started = time.perf_counter()
+            completed = subprocess.run([sys.executable, "-m", "holoforge", "verify", *arguments, "--json"],
+                                       capture_output=True, text=True, env=environment, cwd=source)
+            seconds = time.perf_counter() - started
+            try:
+                record = json.loads(completed.stdout)
+                versions = record["software_versions"]
+                checks = {check["id"]: {"passed": bool(check["passed"]), "value": check.get("value"),
+                                        "criterion": check.get("criterion")} for check in record["acceptance_checks"]}
+                if len(checks) != len(record["acceptance_checks"]):
+                    raise ExtractionError("duplicate acceptance check")
+            except (ValueError, KeyError, TypeError, ExtractionError) as error:
+                return {"passed": False, "consumers": report,
+                        "stopped": f"{identifier} {name}: no usable record (exit {completed.returncode}; "
+                                   f"{type(error).__name__}); stderr: {completed.stderr.strip()[-300:]}"}
+            records[name] = record
+            identities.add((versions.get("holoforge_source_sha256"), versions.get("chebyshev_construction")))
+            runs[name] = {"arguments": arguments, "exit_status": completed.returncode, "seconds": seconds,
+                          "passed": bool(record.get("passed")), "acceptance_checks": checks}
+        try:
+            extracted = EXTRACTORS[identifier](records)
+        except ExtractionError as error:
+            return {"passed": False, "consumers": report,
+                    "stopped": f"{identifier}: the record does not have the audited structure ({error})"}
+        report[identifier] = dict(extracted, runs=runs)
+    if len(identities) != 1:
+        return {"passed": False, "consumers": report, "stopped": "the runs do not come from one source tree"}
+    source_sha256, construction = next(iter(identities))
+    expected = SELECTED_CONSTRUCTION if role == "candidate" else None
+    if construction != expected:
+        return {"passed": False, "consumers": report,
+                "stopped": f"{role} records report construction {construction!r}, expected {expected!r}"}
+    return {"passed": True, "build_label": build_label, "role": role, "consumers": report,
+            "source_sha256": source_sha256, "chebyshev_construction": construction,
+            "complete": consumers is None,
+            "seconds_total": sum(run["seconds"] for item in report.values() for run in item["runs"].values())}
+
+
+def _magnitude(value: Any) -> float:
+    if isinstance(value, (list, tuple)) and len(value) == 2:
+        return math.hypot(float(value[0]), float(value[1]))
+    return abs(float(value))
+
+
+def _difference(first: Any, second: Any) -> float:
+    if isinstance(first, (list, tuple)) and len(first) == 2:
+        return math.hypot(float(first[0]) - float(second[0]), float(first[1]) - float(second[1]))
+    return abs(float(first) - float(second))
+
+
+def _regression_inputs(payloads: Sequence[Mapping[str, Any]], role: str) -> Tuple[Dict[str, Any], List[str]]:
+    errors: List[str] = []
+    by_build: Dict[str, Any] = {}
+    for payload in payloads:
+        result = payload.get("result") if isinstance(payload, Mapping) else None
+        if not isinstance(result, Mapping) or payload.get("status") != "ok" or result.get("role") != role \
+                or result.get("complete") is not True or payload.get("plan_sha256") != _file_sha256(ROOT / PLAN):
+            errors.append(f"an input is not a complete successful {role} run under the frozen plan")
+            continue
+        if result["build_label"] in by_build:
+            errors.append(f"duplicate {role} build {result['build_label']}")
+        by_build[result["build_label"]] = result
+    if not errors and sorted(by_build) != sorted(REQUIRED_BUILDS):
+        errors.append(f"{role} builds are {sorted(by_build)}; {list(REQUIRED_BUILDS)} are required")
+    if not errors and len({payload.get("tool_sha256") for payload in payloads}) != 1:
+        errors.append(f"{role} runs come from different tool versions")
+    return by_build, errors
+
+
+def regression_limits(baselines: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+    """R0: per-leaf allowances ``10 max(E, X, 8 eps |value|)`` from the two baselines."""
+
+    by_build, errors = _regression_inputs(baselines, "baseline")
+    if errors:
+        return {"passed": False, "stopped": "invalid baseline evidence", "evidence_errors": errors}
+    first, second = (by_build[label]["consumers"] for label in REQUIRED_BUILDS)
+    limits: Dict[str, Any] = {}
+    for identifier in first:
+        if sorted(first[identifier]["leaves"]) != sorted(second[identifier]["leaves"]):
+            return {"passed": False, "stopped": f"{identifier}: the two builds give different table leaves"}
+        entries: Dict[str, Any] = {}
+        for key in first[identifier]["leaves"]:
+            values = {label: by_build[label]["consumers"][identifier]["leaves"][key] for label in REQUIRED_BUILDS}
+            build_difference = _difference(*(values[label]["value"] for label in REQUIRED_BUILDS))
+            entry: Dict[str, Any] = {"X": build_difference}
+            for label in REQUIRED_BUILDS:
+                estimator = max(values[label]["estimators"].values())
+                floor = REPRESENTATION_FLOOR * _magnitude(values[label]["value"])
+                entry[label] = {"value": values[label]["value"], "E": estimator, "floor": floor,
+                                "allowance": ALLOWANCE_FACTOR * max(estimator, build_difference, floor)}
+            entries[key] = entry
+        limits[identifier] = entries
+    if not _finite_tree(limits):
+        return {"passed": False, "stopped": "required quantity undefined: a baseline value or allowance is not finite"}
+    return {"passed": True, "limits": limits, "leaf_count": sum(len(item) for item in limits.values()),
+            "baseline_source_sha256": {label: by_build[label]["source_sha256"] for label in REQUIRED_BUILDS},
+            "baseline_tool_sha256": baselines[0].get("tool_sha256")}
+
+
+def regression_compare(baselines: Sequence[Mapping[str, Any]], limits_payload: Mapping[str, Any],
+                       candidates: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+    """S2: A1 (gates), A2 (allowances), A3 (gate values) and control identity."""
+
+    base, errors = _regression_inputs(baselines, "baseline")
+    cand, more = _regression_inputs(candidates, "candidate")
+    errors += more
+    limits = limits_payload.get("result", {}).get("limits") if isinstance(limits_payload, Mapping) else None
+    if not isinstance(limits, Mapping) or limits_payload.get("status") != "ok" or limits_payload.get("stage") != "r0-limits":
+        errors.append("the limits input is not a successful r0-limits output")
+    elif not errors and regression_limits(baselines).get("limits") != limits:
+        errors.append("the limits do not follow from these baselines")
+    if errors:
+        return {"passed": False, "stopped": "invalid regression evidence", "evidence_errors": errors}
+    violations: Dict[str, List[Any]] = {"A1": [], "A2": [], "controls": [], "keys": []}
+    summary: Dict[str, Any] = {}
+    gates: Dict[str, Any] = {}
+    for label in REQUIRED_BUILDS:
+        if cand[label]["source_sha256"] == base[label]["source_sha256"]:
+            return {"passed": False, "stopped": f"{label}: baseline and candidate ran the same source"}
+        summary[label] = {}
+        gates[label] = {}
+        for identifier, before in base[label]["consumers"].items():
+            after = cand[label]["consumers"].get(identifier)
+            if after is None or any(sorted(before[part]) != sorted(after[part])
+                                    for part in ("leaves", "controls", "report_only", "runs")):
+                violations["keys"].append({"build": label, "consumer": identifier, "problem": "different keys"})
+                continue
+            failing_before: List[str] = []
+            failing_after: List[str] = []
+            for name, run in before["runs"].items():
+                other = after["runs"][name]
+                if sorted(run["acceptance_checks"]) != sorted(other["acceptance_checks"]):
+                    violations["keys"].append({"build": label, "consumer": identifier, "run": name,
+                                               "problem": "different acceptance checks"})
+                    continue
+                for check, item in run["acceptance_checks"].items():
+                    new = other["acceptance_checks"][check]
+                    if not item["passed"]:
+                        failing_before.append(f"{name}:{check}")
+                    if not new["passed"]:
+                        failing_after.append(f"{name}:{check}")
+                    if item["passed"] and not new["passed"]:
+                        violations["A1"].append({"build": label, "consumer": identifier, "run": name, "check": check,
+                                                 "baseline_value": item["value"], "candidate_value": new["value"]})
+                if run["passed"] and not other["passed"]:
+                    violations["A1"].append({"build": label, "consumer": identifier, "run": name, "check": "record"})
+            worst = {"ratio": 0.0, "key": None, "delta": 0.0, "allowance": None}
+            largest_relative = 0.0
+            for key, leaf in before["leaves"].items():
+                new = after["leaves"][key]
+                if "key_coordinate" in leaf and abs(new["key_coordinate"] - leaf["key_coordinate"]) \
+                        > KEY_COORDINATE_TOLERANCE * abs(leaf["key_coordinate"]):
+                    violations["keys"].append({"build": label, "consumer": identifier, "key": key,
+                                               "problem": "configured coordinate differs"})
+                delta = _difference(new["value"], leaf["value"])
+                allowance = limits[identifier][key][label]["allowance"]
+                ratio = delta / allowance if allowance > 0.0 else (0.0 if delta == 0.0 else math.inf)
+                magnitude = _magnitude(leaf["value"])
+                if magnitude > 0.0:
+                    largest_relative = max(largest_relative, delta / magnitude)
+                if ratio > worst["ratio"]:
+                    worst = {"ratio": ratio, "key": key, "delta": delta, "allowance": allowance}
+                if not delta <= allowance:
+                    violations["A2"].append({"build": label, "consumer": identifier, "key": key, "delta": delta,
+                                             "allowance": allowance, "baseline": leaf["value"], "candidate": new["value"]})
+            changed_controls = [key for key, value in before["controls"].items() if after["controls"][key] != value]
+            for key in changed_controls:
+                violations["controls"].append({"build": label, "consumer": identifier, "key": key,
+                                               "baseline": before["controls"][key], "candidate": after["controls"][key]})
+            report_only = 0.0
+            report_only_key = None
+            for key, value in before["report_only"].items():
+                magnitude = _magnitude(value)
+                delta = _difference(after["report_only"][key], value)
+                relative = delta / magnitude if magnitude > 0.0 else (0.0 if delta == 0.0 else math.inf)
+                if relative > report_only:
+                    report_only, report_only_key = relative, key
+            summary[label][identifier] = {
+                "leaves": len(before["leaves"]), "controls": len(before["controls"]),
+                "controls_changed": len(changed_controls), "worst_delta_over_allowance": worst,
+                "largest_relative_leaf_change": largest_relative,
+                "largest_relative_report_only_change": {"value": report_only, "key": report_only_key},
+                "checks_failing_at_baseline": sorted(failing_before), "checks_failing_at_candidate": sorted(failing_after),
+                "seconds": {"baseline": sum(run["seconds"] for run in before["runs"].values()),
+                            "candidate": sum(run["seconds"] for run in after["runs"].values())},
+            }
+            gates[label][identifier] = {
+                name: {check: {"baseline": {"passed": item["passed"], "value": item["value"]},
+                               "candidate": {"passed": after["runs"][name]["acceptance_checks"][check]["passed"],
+                                             "value": after["runs"][name]["acceptance_checks"][check]["value"]},
+                               "criterion": item.get("criterion")}
+                       for check, item in run["acceptance_checks"].items()}
+                for name, run in before["runs"].items()}
+    counts = {name: len(items) for name, items in violations.items()}
+    outcome: Dict[str, Any] = {"summary": summary, "gates": gates, "violation_counts": counts,
+                               "violations": {name: items[:60] for name, items in violations.items()},
+                               "candidate_source_sha256": {label: cand[label]["source_sha256"] for label in REQUIRED_BUILDS},
+                               "passed": not any(counts.values())}
+    if not outcome["passed"]:
+        outcome["stopped"] = "regression stop: " + ", ".join(f"{name} ({count})" for name, count in counts.items() if count)
+    return outcome
+
+
+# ---------------------------------------------------------------------------
+# S3: post-selection revalidation with the O-C decomposition (plan Section 6)
+# ---------------------------------------------------------------------------
+
+S3_CASES = ((60.0, 640), (59.0, 640))
+S3_TARGET = 0.1
+
+
+def _complex_sum(*values: Sequence[float]) -> List[float]:
+    return [sum(float(value[0]) for value in values), sum(float(value[1]) for value in values)]
+
+
+def s3_run(build_label: str) -> Dict[str, Any]:
+    """Rerun the O-C decomposition at the two selection cases with the production grid.
+
+    Uses the unmodified O-C tool and writes no artifact. ``D-construction``
+    there is the first matrix with its exact square; ``D@D-product`` is the
+    step from that square to the production second matrix. With an explicit
+    second matrix the two steps are no longer separate effects, so their
+    sum (the whole matrix construction) is reported next to each.
+    """
+
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("gate_calibration", ROOT / "tools" / "gate_calibration.py")
+    calibration = importlib.util.module_from_spec(spec)
+    sys.modules.setdefault("gate_calibration", calibration)
+    spec.loader.exec_module(calibration)
+    from holoforge.numerics import CHEBYSHEV_CONSTRUCTION
+
+    if CHEBYSHEV_CONSTRUCTION != SELECTED_CONSTRUCTION:
+        return {"passed": False, "stopped": f"production construction is {CHEBYSHEV_CONSTRUCTION!r}"}
+    earlier = _read_json(ROOT / OC_EVIDENCE / f"{build_label}-optical-oc.json")
+    previous = {(record["omega_over_temperature"], record["degree"]): record
+                for record in earlier["result"]["records"]}
+    cache: Dict[Any, Any] = {}
+    started = time.perf_counter()
+    fixture = calibration.optical_oc_identity_fixture(cache)
+    fixture_seconds = time.perf_counter() - started
+    background = calibration.optical_background()
+    cases: List[Dict[str, Any]] = []
+    for frequency, degree in S3_CASES:
+        started = time.perf_counter()
+        record = calibration.optical_oc_case(frequency, degree, background, cache, label=f"S3-{build_label}",
+                                             artifact_dir=None)
+        old = previous[(frequency, degree)]["spike_attribution"]
+        new = record["spike_attribution"]
+        item: Dict[str, Any] = {"omega_over_temperature": frequency, "degree": degree,
+                                "wall_seconds": time.perf_counter() - started}
+        for name, attribution, source in (("oc", old, previous[(frequency, degree)]), ("s3", new, record)):
+            total = _complex_sum(attribution["steps"]["D-construction"], attribution["steps"]["D@D-product"])
+            item[name] = {
+                "stored_abs": attribution["stored_abs"], "shares": attribution["shares"],
+                "discretization": attribution["discretization"], "discretization_abs": _magnitude(attribution["discretization"]),
+                "operator_rounding_abs": _magnitude(attribution["operator_rounding"]),
+                "solve_abs": _magnitude(attribution["solve"]),
+                "steps": attribution["steps"],
+                "D_construction_abs": _magnitude(attribution["steps"]["D-construction"]),
+                "D_product_abs": _magnitude(attribution["steps"]["D@D-product"]),
+                "matrix_construction_total": total, "matrix_construction_total_abs": _magnitude(total),
+                "uncertainty_share": attribution["uncertainty_share"], "sum_identity_abs": attribution["sum_identity_abs"],
+                "classification": source["classification"], "named_step": source["named_step"],
+                "production_equation_residual": source["production_equation_residual"],
+                "bound_checks": source["row_decomposition"]["bound_checks"],
+                "row_maxima": source["row_decomposition"]["maxima"],
+            }
+        item["ratios_s3_over_oc"] = {
+            key: (item["s3"][key] / item["oc"][key] if item["oc"][key] > 0.0 else None)
+            for key in ("D_construction_abs", "matrix_construction_total_abs", "operator_rounding_abs",
+                        "discretization_abs", "stored_abs", "production_equation_residual")}
+        item["target_met"] = {key: item["ratios_s3_over_oc"][key] is not None and item["ratios_s3_over_oc"][key] <= S3_TARGET
+                              for key in ("D_construction_abs", "matrix_construction_total_abs")}
+        cases.append(item)
+    return {"passed": True, "build_label": build_label, "construction": CHEBYSHEV_CONSTRUCTION,
+            "identity_fixture": {key: value for key, value in fixture.items() if key != "record"},
+            "identity_fixture_seconds": fixture_seconds, "cases": cases, "target": S3_TARGET,
+            "target_is_acceptance": False}
+
+
+# ---------------------------------------------------------------------------
 # Command line
 # ---------------------------------------------------------------------------
 
@@ -2320,6 +2661,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     c2.add_argument("--s0", nargs=2, type=Path, required=True)
     c2.add_argument("--c1", nargs=2, type=Path, required=True)
     c2.add_argument("--build-agreement", type=Path, required=True)
+    regression = commands.add_parser("regression-run", help="run the Section 8 commands on one source tree")
+    regression.add_argument("--build-label", required=True, choices=REQUIRED_BUILDS)
+    regression.add_argument("--source", type=Path, required=True, help="tree whose src/ is verified")
+    regression.add_argument("--role", required=True, choices=("baseline", "candidate"))
+    regression.add_argument("--consumers", help="comma-separated subset, for development only")
+    limits = commands.add_parser("r0-limits", help="allowances from the two baseline runs")
+    limits.add_argument("baselines", nargs=2, type=Path)
+    s2 = commands.add_parser("s2", help="A1, A2, A3 and control identity")
+    s2.add_argument("--baselines", nargs=2, type=Path, required=True)
+    s2.add_argument("--limits", type=Path, required=True)
+    s2.add_argument("--candidates", nargs=2, type=Path, required=True)
+    s3 = commands.add_parser("s3", help="O-C decomposition with the production grid")
+    s3.add_argument("--build-label", required=True, choices=REQUIRED_BUILDS)
     args = parser.parse_args(argv)
     started = time.perf_counter()
     if args.stage == "p0":
@@ -2349,6 +2703,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         except RequiredMetricUndefined as error:
             result = {"passed": False, "stopped": f"required metric undefined: {error}"}
         return emit("c1", result, started, compact=True)
+    if args.stage == "regression-run":
+        subset = tuple(args.consumers.split(",")) if args.consumers else None
+        return emit(f"regression-{args.role}", regression_run(args.build_label, args.source, args.role, subset),
+                    started, compact=True)
+    if args.stage == "r0-limits":
+        return emit("r0-limits", regression_limits([_read_json(path) for path in args.baselines]), started, compact=True)
+    if args.stage == "s2":
+        return emit("s2", regression_compare([_read_json(path) for path in args.baselines], _read_json(args.limits),
+                                             [_read_json(path) for path in args.candidates]), started)
+    if args.stage == "s3":
+        try:
+            result = s3_run(args.build_label)
+        except Exception as error:  # the O-C tool's own failures are reported, not hidden
+            result = {"passed": False, "stopped": f"the O-C decomposition raised {type(error).__name__}: {error}"}
+        return emit("s3", result, started)
     if args.stage == "c2":
         return emit("c2", amended_selection([_read_json(path) for path in args.s0],
                                             [_read_json(path) for path in args.c1],
