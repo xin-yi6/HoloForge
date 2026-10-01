@@ -1,7 +1,9 @@
 # Chebyshev differentiation-matrix construction repair: report (stopped at S2)
 
-- **Status: STOPPED at S2, a declared stop.** AI-assisted (Claude); awaiting
-  review and an owner decision. Nothing is merged.
+- **Status: STOPPED at S2, a declared stop, and PARKED.** AI-assisted
+  (Claude). The owner parked this PR unmerged on 1 October 2026 and ended
+  this maintenance phase for now (Section 11). Nothing is merged, and the
+  construction is not accepted.
   - **Under the frozen plan** ([plan](chebyshev-construction-repair-plan.md),
     freeze commit `0cd24dd`, SHA-256 `7d26e662…`), S1 stopped: no candidate
     qualifies. That result stands.
@@ -899,8 +901,10 @@ only documents, tests and the diagnostic tool differ between the commits.
 
 Gate telemetry and the wheel jobs passed on both.
 
-**The failures differ between two runs of the same package source.** So at
-these thresholds the outcome depends on the CI machine. In detail:
+**The failures differ between two runs of the same package source.** That
+is run-to-run variation, and its cause is unresolved (Section 11, item 3).
+An earlier wording here, that the outcome "depends on the CI machine",
+claimed more than was shown. In detail:
 
 | Test | `bc6d002` | `b87213d` | Threshold |
 | --- | --- | --- | --- |
@@ -919,12 +923,12 @@ threshold was touched.
   runs. Proposal: treat it as a regression signal of the same class as A1.
   It needs a diagnosis within the optical follow-up before the construction
   can be accepted.
-- **The two "preserves the stop" audits** assert that superseded routes
-  still stop at `1e-7`. That is a statement about the old primitive.
-  Proposal: keep the tests and their thresholds, and decide separately
-  whether a historical audit should run against the live shared primitive
-  or replay the pinned historical commit. The plan already says historical
-  replay uses an isolated exact commit and adds no legacy switch.
+- **The two "preserves the stop" audits.** This proposal treated both as
+  statements about the old primitive. That is wrong for one of them and is
+  corrected in Section 11, item 2. As first written: keep the tests and
+  their thresholds, and decide separately whether a historical audit should
+  run against the live shared primitive or replay the pinned historical
+  commit.
 - **The owner-approved optical quantity.** The pinned finite-frequency
   slope moves by about `1e-8`, at the edge of its `1e-8` tolerance. On B1
   the related agreement check moves from `4.238e-7` to `4.255e-7`. A pinned
@@ -981,15 +985,90 @@ attempt acceptance through this PR's criteria.**
   metric, both known failing gates passing on the Accelerate build, and
   bit-identical controls.
 - **Why not accept.** Items 1 to 5 are real breaches of frozen or
-  owner-approved criteria. Several depend on the machine, which means the
-  benchmarks' own tight criteria sit at the level where any change of the
-  primitive moves them. Accepting would need those criteria examined one
-  benchmark at a time.
-- **What a later proposal would have to be.** A separate, prospective
-  contract review per affected benchmark (Gubser--Rocha ordering clause,
-  DGR and soft-wall regression budgets, the optical control and pinned
-  slope), each with its own evidence and adverse controls, reviewed by
-  Codex and approved by the owner. It should not be folded into this
-  repair, and nothing in it should be chosen to make this sample pass.
-- **Until then,** private research can proceed on `main`, which is
-  unchanged.
+  owner-approved criteria, and several vary between runs. Accepting would
+  need each affected requirement resolved.
+- **What a later step would have to be,** and the precaution for private
+  research: see Section 11, items 4 and 5, which replace the wording first
+  given here.
+
+## 11. Disposition: parked (1 October 2026)
+
+Codex reviewed `892f243` and agreed with parking. The owner parked PR #55
+unmerged and ended this maintenance phase for now. This note records what
+stays open. It adds no calculation and changes no code, criterion or
+evidence file.
+
+**State.**
+- PR #55 is open, unmerged and **not accepted**. Its branch carries the
+  candidate construction (`bea799b`). `main` is `5846975`.
+- **Kept as they are:** the candidate, the frozen plan and amendment, the
+  original S0, S1, C1, C2, R0 and S2 evidence, the corrected DGR replay and
+  the Gubser--Rocha recovery records.
+- **Confirmed independently by Codex:** the S2 replay (A1 2, A2 13), the
+  four recovery records and their hashes, the single failing Gubser--Rocha
+  row, and the corrected DGR replay.
+
+**Open items.**
+
+1. **The runner does not yet enforce the required leaf and check sets.
+   This blocks any future use of it for acceptance.**
+   - It checks the consumers and commands, and that leaves and checks are
+     not empty. It compares the two sides with each other, not with the
+     frozen required coverage.
+   - Codex's saved-data reproduction: remove the 11 failing leaf keys and
+     the Gubser--Rocha `spectral-refinement` check consistently from all
+     four payloads. They are still admitted, and the comparison then passes
+     with 2,055 leaves instead of 2,066.
+   - This does not affect the recorded stop, which Codex checked
+     independently. No fix is authorized now, and none was made.
+2. **The two historical optical audits are different cases.**
+   - `test_figure_target_preserves_the_spectral_resolution_stop` asserts
+     that an old route still stops. Its residual, `9.28e-8`, no longer
+     exceeds the `1e-7` stop threshold.
+   - `test_endpoint_split_normal_state_preserves_the_w2_stop` fails on a
+     **formerly passing safeguard**: the bulk element residual must stay at
+     most `1e-7` and is `1.50e-7` in the observed run (`1.06e-7` in the
+     first). That is a regression signal, like the moderate-frequency
+     control. It is not an old failure being reproduced.
+   - Replaying history at the pinned commit is appropriate for claims about
+     the historical implementation. It cannot replace checks of routes that
+     are still callable under the new primitive.
+3. **The CI differences are run-to-run variation with an unresolved
+   cause.**
+
+   | Commit (same package source) | Tests (Python 3.11) | Historical audit |
+   | --- | --- | --- |
+   | `bc6d002` | 2 fail: both Gubser--Rocha | 2 fail |
+   | `b87213d` | 1 fails: owner-approved optical slope | 3 fail |
+   | `892f243` | 2 fail: both Gubser--Rocha | 3 fail |
+
+   - The runs differ in test files and tooling. Environment, dependencies,
+     thread configuration, test order and numerical nondeterminism have not
+     been separated. A hardware cause is not shown.
+4. **Future adoption requires resolving the affected requirements. It does
+   not mean amending every contract.**
+   - A later implementation repair may satisfy the current rules.
+   - A rule shown to be inappropriate for portability or regression may
+     instead warrant a justified, prospective amendment.
+   - One bounded plan can hold the per-benchmark dispositions. No threshold
+     relaxation is pre-authorized.
+   - The requirements concerned: the Gubser--Rocha ordering clause, the 12
+     DGR neutral leaves and the soft-wall leaf (A2), the optical
+     moderate-frequency control, the endpoint-split bulk residual, and the
+     owner-approved optical slope. For the slope, the pinned reference and
+     its tolerance stay unchanged; any later change needs independent
+     numerical justification and explicit owner review.
+5. **Precaution for private research.**
+   - `main` is unchanged, but the shared checkout is on this branch, and the
+     default `holoforge` environment imports this working tree. So an
+     ordinary import uses the candidate construction, not `main`.
+   - Before any private calculation, verify the task's framework pin and
+     the package path and source hash that are actually imported.
+   - The shared checkout was not switched and nothing was reinstalled.
+
+**Closed:** merge, release, gate or contract changes, S3, production or
+helper changes, further calculations, branch deletion and cleanup.
+
+**Resources at parking:** about 62.2 of 90 execution minutes and about 3.4
+of 6 hours of active work. Nothing was run for this note except a
+documentation policy check.
