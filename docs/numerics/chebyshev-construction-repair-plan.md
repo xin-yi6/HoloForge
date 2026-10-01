@@ -1,11 +1,12 @@
-# Chebyshev differentiation-matrix construction repair: proposed plan (revision 3)
+# Chebyshev differentiation-matrix construction repair: plan, frozen before execution
 
-- **Status: PROPOSED, revision 3.** Batch 3, item 1. Not approved, not
-  frozen, not executed. AI-assisted (Claude).
-  - Revision 1 (`2a50de5`) and revision 2 (`121060c`) were reviewed by Codex.
-    Revision 3 is a documentation-only revision addressing the second review
-    (Section 11).
-  - On owner approval of this exact text, a freeze commit precedes any code.
+- **Status: FROZEN** before any P0, S0–S3 code or run. Batch 3, item 1.
+  AI-assisted (Claude).
+  - This is revision 3 (`0d4442d`), which Codex reviewed with no blocking
+    finding. The owner approved the complete bounded milestone on 1 October
+    2026. Only this status block and the title changed at freeze.
+  - **Baseline (pre-change) commit:** `main` at `5846975`, merged into this
+    branch before the freeze.
   - One approval covers the whole bounded milestone (P0, S0–S3). No routine
     step needs separate approval unless it hits a stop.
 - **Scope:** one shared routine, `chebyshev_lobatto_grid`, used by eight
