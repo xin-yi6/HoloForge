@@ -1262,6 +1262,26 @@ class RegressionStageTests(unittest.TestCase):
         self.assertEqual(added, 80)
         self.assertEqual(repair.validate_regression_run(corrected, "baseline"), [])
 
+    def test_committed_recovery_records_give_the_single_failing_row(self) -> None:
+        import json
+
+        folder = ROOT / "docs/generated/chebyshev-repair"
+        keys = [(role, build) for role in ("baseline", "candidate") for build in ("B1", "B3")]
+        recoveries = [json.loads((folder / "gr-recovery" / f"recovery-{role}-{build}.json").read_text()) for role, build in keys]
+        originals = {f"{role}|{build}": json.loads(
+            (folder / (f"r0-baseline-{build}.json" if role == "baseline" else f"s2-candidate-{build}.json")).read_text())
+            for role, build in keys}
+        outcome = repair.gr_refinement_diagnosis(recoveries, folder / "gr-recovery" / "records", originals)
+        self.assertTrue(outcome["passed"], outcome.get("stopped"))
+        failing = {key: [(row["xi"], row["observable"]) for row in item["failing_rows"]] for key, item in outcome["runs"].items()}
+        self.assertEqual(failing, {"baseline|B1": [], "baseline|B3": [], "candidate|B1": [(16.0, "entropy_density")],
+                                   "candidate|B3": []})
+        for item in outcome["runs"].values():
+            self.assertTrue(item["reproduces_original_leaves"])
+            self.assertTrue(item["reproduces_original_check_verdicts_and_values"])
+        recorded = json.loads((folder / "gr-recovery" / "gr-diagnosis.json").read_text())["result"]
+        self.assertEqual(recorded, json.loads(json.dumps(repair._jsonable(outcome))))
+
     def test_gubser_rocha_diagnosis_lists_the_failing_rows(self) -> None:
         import copy
         import hashlib

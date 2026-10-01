@@ -27,14 +27,17 @@
 
 ## Answer
 
-- **The new construction does what it was designed for.**
+- **The new construction does what it was designed for, on the measures
+  taken.**
   - On the preserved O-C stored solutions, the construction error at UV-end
     collocation rows falls by **97×** (C-S1).
   - With it in production, the two gates that fail today on the Accelerate
-    build both pass: the Gubser--Nellore collocation residual
+    build both pass in these runs: the Gubser--Nellore collocation residual
     (`1.72e-9` to `9.3e-10`, limit `1e-9`) and the optical numerical gate
     ratio (`1.001` to `0.42`, limit 1).
   - Every control route is bit for bit unchanged, on both builds.
+  - This supports the repair and agrees with the earlier diagnostics. It
+    does not isolate every mechanism (Section 10.5).
 - **It does not pass the frozen regression criteria, so the work stops.**
   - **A1.** The Gubser--Rocha `spectral-refinement` gate passes at baseline
     and fails afterwards on the Accelerate build, and in Linux CI. It still
@@ -50,11 +53,13 @@
   - Under amendment 1, written after the results were seen, C-S1 qualifies
     on the 84 observed grids and on 20 fresh ones, on both builds. Its label
     is "qualified under post-observation amendment 1".
-- **What is decided next is the owner's** (Section 9.8).
+- **What is decided next is the owner's** (Section 10.7, which supersedes
+  Section 9.8).
 
 **Reading order.** Sections 1–8 record the work up to the S1 stop and the
 two review rounds, as written at the time. Section 9 records the
-continuation and supersedes Section 6.
+continuation and supersedes Section 6. Section 10 records the correction
+and diagnosis after Codex's review of the S2 stop.
 
 ## 1. Execution and resource use
 
@@ -652,9 +657,10 @@ between baseline and candidate. No key or configured coordinate differs.
 No other acceptance check changes its verdict on either build.
 
 **What this does and does not show.**
-- It shows that the construction error was the cause of the two failing
-  gates on the Accelerate build. With the new construction both pass, and
-  the optical gate ratio falls by more than half on both builds.
+- With the new construction both known failing gates pass on the
+  Accelerate build in these runs, and the optical gate ratio falls by more
+  than half on both builds. (An earlier wording here, that the construction
+  error "was the cause", was too strong; see Section 10.5.)
 - It does not show that the new construction is acceptable. By the frozen
   criteria it is not: A1 takes precedence over everything else.
 - The allowances are maintenance regression allowances. Exceeding one is a
@@ -785,3 +791,205 @@ the working files found no retained full record.
   reported as found.
 - **Charge.** The four runs took about 30 s in total in R0 and S2. They are
   charged to this step's ten minutes.
+
+### 10.2 R55-S2-1: the regression evidence is now admitted strictly
+
+- **Defect.** The comparison trusted the success flags. It accepted empty
+  evidence, candidate runs that reported failure with exit status 2, and
+  two builds with different candidate sources.
+- **Correction.** Evidence is admitted only with:
+  - the plan's eight consumers and 17 commands, with their arguments;
+  - a Boolean verdict for every record and check, at least one check per
+    record, and a record verdict equal to the conjunction of its checks;
+  - exit status 0 for a pass and 1 for a scientific fail, never anything
+    else;
+  - finite leaf values, estimators, controls and check values;
+  - the approved package digests: `66d9bd28…` (`5846975`) for the baseline
+    and `1c731e1b…` (`bea799b`) with construction `c-s1-r1` for the
+    candidate.
+- **Three outcomes are kept apart:**
+
+  | Outcome | Meaning |
+  | --- | --- |
+  | scientific FAIL of a verifier | admissible data; compared like any other |
+  | `scientific regression stop` | A1, A2, a control or a key violated |
+  | `inadmissible evidence`, `execution failure` | malformed, incomplete or wrongly sourced evidence; no verdict is drawn |
+
+- **Tests.** Codex's three reproductions and fourteen further malformed
+  cases are rejected. The synthetic fixture no longer declares a passing
+  record next to a failed check.
+- **The committed R0 and S2 files** pass the strict admission unchanged,
+  and the stop reproduces.
+
+### 10.3 R55-S2-2: full records, and the Gubser--Rocha diagnosis
+
+- **Prospectively.** The runner records the SHA-256 and size of each
+  verifier's complete output, and can save that output unchanged. It never
+  overwrites a saved record.
+- **The original Gubser--Rocha records were not retained.** The four
+  recovery runs of Section 10.1 were made, once each, with no retry.
+  - Evidence: `gr-recovery/` (four runner outputs, four full records, and
+    `gr-diagnosis.json`).
+  - **Each recovery run reproduces its original** exactly: all 42 leaves and
+    every check verdict and value.
+
+**The failing row.** One state and one observable fail the ordering clause,
+on the candidate on B1 only: the entropy density at `xi = 16`, between
+degrees 40, 60 and 80. The clause fails when the coarse-to-middle change is
+above `5e-10` and the middle-to-fine change is not smaller.
+
+| Run | Coarse to middle | Middle to fine | Ordered | Exact-solution error (scaled) |
+| --- | ---: | ---: | --- | ---: |
+| baseline, B1 | `1.686e-9` | `1.626e-9` | yes, by 4% | `1.27e-9` |
+| baseline, B3 | `2.168e-9` | `1.181e-9` | yes | `1.40e-9` |
+| candidate, B1 | `1.948e-9` | `4.731e-9` | **no** | `4.66e-9` |
+| candidate, B3 | `1.688e-9` | `3.27e-10` | yes | `1.5e-10` |
+
+- **The same row was already marginal at baseline on B1.** Its two changes
+  differed by 4%.
+- **Absolute accuracy at that state.** The gate on the exact solution is
+  `2e-7`. The candidate's error on B1 is `4.66e-9`, which is 43 times
+  inside the gate, but 3.7 times larger than the baseline's there. On B3
+  the candidate's error is 9.5 times smaller than the baseline's.
+- **The other row above the floor,** the temperature at `xi = 16`, is
+  ordered in all four runs (about `5.8e-8` falling to `1.5e-9` or less).
+  On baseline B1 a third row, the entropy at `xi = 8`, is above the floor
+  and ordered.
+
+**Interpretation, with its limits.**
+- At this state the refinement changes of the entropy sit near `1e-9` to
+  `5e-9` at every degree, and the direction of the candidate's effect
+  differs between the two builds. That is what a plateau set by something
+  other than the polynomial degree looks like, and it makes a near-floor
+  ordering failure plausible.
+- **It is not established.** Nothing here identifies what sets the plateau,
+  and the candidate's larger error on B1 is a measured fact. No scan,
+  higher degree or solver change was run.
+- **The ordering clause and the absolute-accuracy gate are separate
+  requirements.** The candidate fails the first on B1 and passes the second
+  on both builds. Neither was changed.
+
+### 10.4 R55-S2-3: the DGR quadrature estimator
+
+- **Defect.** The frozen plan gives the quadrature estimator to both
+  susceptibility fields, converted by the leaf's magnitude. The extractor
+  gave it only to the curve and degree-150 leaves. The degree-80 and
+  degree-120 susceptibility leaves lacked it.
+- **Correction.** The extractor now follows the plan, with a regression
+  test. The plan is not changed.
+- **Saved-data replay**
+  (`s2-comparison-corrected-dgr-estimator.json`; post-observation, appended;
+  the original `r0-limits.json` and `s2-comparison.json` are unchanged and
+  remain the frozen record):
+  - 80 estimators are added per build, rescaled from the saved degree-150
+    leaf at the same position.
+  - One allowance changes: `chi_2/T^2` at degree 80, position 2, on B1,
+    from `4.90e-12` to `5.34e-12`. Its ratio falls from `4.42` to `4.06`.
+  - **The stop is unchanged:** A1 (2) and A2 (13), the same 13 leaves.
+
+### 10.5 R55-S2-4: CI inventory and the interpretation
+
+**CI on the candidate.** The package source is identical in these runs;
+only documents, tests and the diagnostic tool differ between the commits.
+
+| Commit | Tests (Python 3.11) | Extended historical route audit |
+| --- | --- | --- |
+| `bc6d002` | 2 of 535 fail: both Gubser--Rocha tests | 2 of 53 fail |
+| `b87213d` | 1 of 536 fails: `test_owner_approved_quantities_are_unchanged` (optical) | 3 of 53 fail |
+
+Gate telemetry and the wheel jobs passed on both.
+
+**The failures differ between two runs of the same package source.** So at
+these thresholds the outcome depends on the CI machine. In detail:
+
+| Test | `bc6d002` | `b87213d` | Threshold |
+| --- | --- | --- | --- |
+| Gubser--Rocha, two tests (declared gates) | fail | pass | ordering clause |
+| Optical `test_owner_approved_quantities_are_unchanged` | pass | **fail**: finite-frequency slope differs from its pinned value by `1.06e-8` | `1e-8` |
+| Historical `test_figure_target_preserves_the_spectral_resolution_stop` | fail: `9.28e-8` | fail: `9.28e-8` | must exceed `1e-7` |
+| Historical `test_endpoint_split_normal_state_preserves_the_w2_stop` | fail: `1.06e-7` | fail: `1.50e-7` | at most `1e-7` |
+| Historical `test_revised_series_transfer_moderate_control_passes` | pass | **fail**: equation residual `1.26e-6` | at most `1e-6` |
+
+**Proposed dispositions.** Nothing was repaired or rerun, and no test or
+threshold was touched.
+- **The moderate-frequency control** (`omega = 0.2`, degrees 192, 256 and
+  320, residual limit `1e-6`) is not an old failure that should stay a
+  failure. It is a positive control of the series-transfer route, which is
+  still callable, and it fails under the new primitive on one of two CI
+  runs. Proposal: treat it as a regression signal of the same class as A1.
+  It needs a diagnosis within the optical follow-up before the construction
+  can be accepted.
+- **The two "preserves the stop" audits** assert that superseded routes
+  still stop at `1e-7`. That is a statement about the old primitive.
+  Proposal: keep the tests and their thresholds, and decide separately
+  whether a historical audit should run against the live shared primitive
+  or replay the pinned historical commit. The plan already says historical
+  replay uses an isolated exact commit and adds no legacy switch.
+- **The owner-approved optical quantity.** The pinned finite-frequency
+  slope moves by about `1e-8`, at the edge of its `1e-8` tolerance. On B1
+  the related agreement check moves from `4.238e-7` to `4.255e-7`. A pinned
+  owner-approved value can change only by explicit owner review. Proposal:
+  list it as a required item of any acceptance decision.
+- **The O-B diagnostic unit test** (Section 9.6) stays as reported.
+
+**Interpretation corrected.** Section 9.5 and the Answer said the
+construction error "was the cause" of the two failing gates. That was too
+strong.
+- **What the runs show:** the approved change is sufficient to turn both
+  gates into passes in these saved runs, and the earlier diagnostics (O-C)
+  point the same way.
+- **What they do not show:** the change alters the nodes and both matrices,
+  and it can alter where a nonlinear solver stops. The runs do not separate
+  those effects, S3 was not run, and other error sources may remain.
+
+### 10.6 Resources for this step
+
+| Run | Wall time |
+| --- | ---: |
+| Focused tests (four short runs) | about `45 s` |
+| Four Gubser--Rocha recovery runs | `29 s` |
+| Diagnosis and saved-data replay | under `1 s` |
+| **Charged** (conservative) | **`90 s`** |
+
+- **Cumulative execution:** about 62.2 of 90 minutes.
+- **Active work:** about 0.5 hours in this step, and about 3.3 of the 6
+  hours in total.
+- **Not used:** production changes, gate or allowance changes, S3, a full
+  benchmark rerun, extra CI dispatches, installations.
+
+### 10.7 State and recommendation
+
+**State.** The S2 stop stands, and the branch must not be merged. The
+construction is a promising repair that is not accepted.
+
+**What now stands against acceptance** (each needs a written disposition;
+none is waived by the gates that improved):
+
+| # | Item | Size | Status after this step |
+| --- | --- | --- | --- |
+| 1 | Gubser--Rocha ordering clause (A1) | one row, entropy at `xi = 16`; B1 and one of two CI runs | located; cause not established |
+| 2 | DGR neutral allowances (A2) | 12 leaves, up to 4.1× | unchanged by the estimator correction |
+| 3 | Soft-wall allowance (A2) | 1 leaf, 1.09×, `1.9e-14` relative | unchanged |
+| 4 | Optical moderate-frequency control | residual `1.26e-6` against `1e-6`, one of two CI runs | new; not diagnosed |
+| 5 | Owner-approved optical slope | moves by about `1e-8` against a `1e-8` tolerance | new; needs owner review |
+| 6 | Two historical "stop" audits; one O-B diagnostic test | thresholds crossed | need a policy decision, not a repair |
+
+**Recommendation: keep the candidate on this unmerged branch, and do not
+attempt acceptance through this PR's criteria.**
+- **Why not withdraw.** The evidence that the construction improves the
+  shared primitive is strong and reproducible: 97× on the optical action
+  metric, both known failing gates passing on the Accelerate build, and
+  bit-identical controls.
+- **Why not accept.** Items 1 to 5 are real breaches of frozen or
+  owner-approved criteria. Several depend on the machine, which means the
+  benchmarks' own tight criteria sit at the level where any change of the
+  primitive moves them. Accepting would need those criteria examined one
+  benchmark at a time.
+- **What a later proposal would have to be.** A separate, prospective
+  contract review per affected benchmark (Gubser--Rocha ordering clause,
+  DGR and soft-wall regression budgets, the optical control and pinned
+  slope), each with its own evidence and adverse controls, reviewed by
+  Codex and approved by the owner. It should not be folded into this
+  repair, and nothing in it should be chosen to make this sample pass.
+- **Until then,** private research can proceed on `main`, which is
+  unchanged.
