@@ -1,48 +1,60 @@
-# Chebyshev differentiation-matrix construction repair: report (stopped at S1)
+# Chebyshev differentiation-matrix construction repair: report (stopped at S2)
 
-- **Status: STOPPED at S1, a declared stop.** Under the frozen qualification
-  rule no candidate qualifies, so the
-  [frozen plan](chebyshev-construction-repair-plan.md) (freeze commit
-  `0cd24dd`, SHA-256 `7d26e662…`) requires that no production change is made.
-  AI-assisted (Claude); revised after Codex's review of `f01da66`
-  (Section 7) and its re-review of `d5eb95a` (Section 8); awaiting targeted
-  review and an owner decision.
-- **Completed:** P0, and S0 on B1 and B3.
-- **Not run (incomplete):**
-  - the implementation freeze;
-  - R0 (numerical baseline);
-  - S2 (cross-benchmark regression);
-  - S3 (post-selection revalidation).
-- **Unchanged:** `chebyshev_lobatto_grid`, every gate, threshold and record,
-  the historical evidence and the BTZ pin. No reserved case was used.
+- **Status: STOPPED at S2, a declared stop.** AI-assisted (Claude); awaiting
+  review and an owner decision. Nothing is merged.
+  - **Under the frozen plan** ([plan](chebyshev-construction-repair-plan.md),
+    freeze commit `0cd24dd`, SHA-256 `7d26e662…`), S1 stopped: no candidate
+    qualifies. That result stands.
+  - **Under post-observation
+    [amendment 1](chebyshev-construction-repair-amendment-1.md)**, which the
+    owner approved for one bounded continuation, the stored-node candidate
+    C-S1 qualified and was selected. It was frozen into
+    `chebyshev_lobatto_grid` on this unmerged branch (`bea799b`).
+  - **S2, the cross-benchmark regression, then stopped** on the plan's own
+    criteria: one gate that passed at baseline fails (A1), and 13 table
+    leaves exceed their allowances (A2). Section 9 has the details.
+- **Completed:** P0; S0 and S1 on B1 and B3; the continuation stages C0, C1
+  and C2; the implementation freeze; R0; the S2 runs and comparison.
+- **Not run:** S3 (post-selection revalidation), and the full unit suite on
+  the local builds. Both come after the stop.
+- **State of this branch.** It contains the new construction in production
+  code. `main` is unchanged. **The branch must not be merged as it is.**
+- **Unchanged:** every gate, threshold, tolerance and model card, the
+  historical evidence, and the BTZ pin. No reserved optical case was used.
 - **Baseline commit:** `main` at `5846975`.
 - **Scientific boundary:** a statement about the numerics of one shared
   routine. It is not a physical result.
 
 ## Answer
 
-- **The repair works on the measure it was designed for.**
+- **The new construction does what it was designed for.**
   - On the preserved O-C stored solutions, the construction error at UV-end
-    collocation rows falls by **135×** (C-T2, C-T3) and **97×** (C-S1).
-  - The explicit-D2 candidates are bit-identical between Accelerate and
-    OpenBLAS at every tested grid.
-  - Polynomial exactness holds with a margin of more than three orders of
-    magnitude.
-- **No candidate passes the frozen qualification rule.**
-  - The rule requires every operator-agreement component to be within 2× of
-    the current construction's value. It has no rounding floor.
-  - Many of the compared values are below one machine epsilon. They are
-    measured against 50-digit references, so they are real construction
-    rounding, not measurement noise. The rule compares the rounding of two
-    different constructions and counts any factor of 2 as a regression.
-  - **C-S1 (stored-node candidate):** 26 of 1,680 comparisons fail per
-    build. Every failing value is below 8 epsilons, and 20 are below one.
-  - **C-T family:** the same kind of failures, plus 10–11 at 64 epsilons or
-    more. Those come from the difference between the stored nodes and the
-    ideal nodes.
-- **The stop is correct under the plan.** Adding a floor after seeing the
-  results would weaken a frozen criterion, so it was not done. Whether to
-  amend the rule is an owner decision (Section 6).
+    collocation rows falls by **97×** (C-S1).
+  - With it in production, the two gates that fail today on the Accelerate
+    build both pass: the Gubser--Nellore collocation residual
+    (`1.72e-9` to `9.3e-10`, limit `1e-9`) and the optical numerical gate
+    ratio (`1.001` to `0.42`, limit 1).
+  - Every control route is bit for bit unchanged, on both builds.
+- **It does not pass the frozen regression criteria, so the work stops.**
+  - **A1.** The Gubser--Rocha `spectral-refinement` gate passes at baseline
+    and fails afterwards on the Accelerate build, and in Linux CI. It still
+    passes on the OpenBLAS build.
+  - **A2.** 13 of 4,132 leaf comparisons exceed their allowance: 12 in DGR
+    neutral and 1 in the soft-wall spectrum. The changes are between `2e-14`
+    and `5e-12` relative, up to 4.4 times the allowance.
+  - Under the plan each is a stop to be reported. It is not, by itself, a
+    physics failure, and no criterion was changed.
+- **How C-S1 came to be selected.**
+  - Under the frozen rule no candidate qualifies (Section 4). That is
+    unchanged.
+  - Under amendment 1, written after the results were seen, C-S1 qualifies
+    on the 84 observed grids and on 20 fresh ones, on both builds. Its label
+    is "qualified under post-observation amendment 1".
+- **What is decided next is the owner's** (Section 9.8).
+
+**Reading order.** Sections 1–8 record the work up to the S1 stop and the
+two review rounds, as written at the time. Section 9 records the
+continuation and supersedes Section 6.
 
 ## 1. Execution and resource use
 
@@ -72,12 +84,15 @@ runs (Section 7, R55-4).
 | Short runs that were not timed | `60 s` | conservative allowance |
 | Amendment-preparation step | `15 s` | log gives `8 s`; charged conservatively |
 | Correction step after the re-review (Section 8) | `30 s` | log gives about `15 s`; charged conservatively |
-| **Total charged** | **about `1,299 s` (21.7 min)** | |
+| **Total charged before the continuation** | **about `1,299 s` (21.7 min)** | |
+
+The continuation's execution is in Section 9.7. The cumulative total is
+about 60.7 of the 90 minutes the owner then allowed.
 
 - **Untimed runs** covered by the allowance: three tool-test runs, the
   soft-wall verifier, the reproduction of eight schema tests on `main`, and
   two helper checks. Each took a few seconds at most.
-- **Remaining:** at most about 38.3 of the 60 minutes. Nothing was reset or
+- **Remaining at that point:** at most about 38.3 of the 60 minutes. Nothing was reset or
   extended.
 - **Not charged:**
   - recreating the two environments (an installation the owner approved,
@@ -281,9 +296,10 @@ threshold or rule was changed):
 8. **Incomplete stages.** The implementation freeze, R0, S2 and S3 were not
    run, because of the S1 stop.
 
-## 6. Decisions for the owner (with Codex)
+## 6. Decisions for the owner (with Codex), as they stood at the S1 stop
 
-Nothing below is decided or done.
+**Superseded by Section 9.** The owner chose option A with conditions; the
+text below is kept as the record of what was offered.
 
 - **A. Adopt a qualification amendment and continue.**
   - The exact proposal is
@@ -448,3 +464,284 @@ execution within the existing ceilings.
   matters to a physical observable. A2 is a maintenance regression
   allowance, not a complete physical uncertainty bound.
 - **Execution.** About `15 s` by the log; `30 s` charged (Section 1).
+
+## 9. Continuation under amendment 1 (1 October 2026): stopped at S2
+
+The owner approved one bounded continuation on Codex's five conditions,
+after Codex's review of `335331c`. The frozen plan's stages, gates,
+thresholds, A1 and A2 requirements and control checks were kept. The
+cumulative execution ceiling became 90 minutes, including what was already
+charged.
+
+### 9.1 C0: what was frozen first
+
+- **CI at `335331c`.** The test job had failed on one test added in the
+  previous step. It pinned an entry error of `14.17u`. That number depends
+  on the platform's sine through the stored nodes, and Linux gives `14.03u`.
+  The test now checks only the portable claim. Nothing else failed.
+- **Freeze (`0ca7a8d`),** before any continuation run:
+  - the amendment, revised to the approved conditions: rule 2 for C-S1
+    only; an entry requirement for C-S1; the bound described as first order
+    and not as an exact certificate;
+  - the evaluator stages `c1` (measurements) and `c2` (qualification and
+    selection), with tests;
+  - the four adverse controls, defined in the evaluator with unchanged
+    perturbations.
+- **CI at `0ca7a8d`:** passed.
+
+### 9.2 C1 and C2: qualification and selection under amendment 1
+
+Evidence: `B1-c1.json`, `B3-c1.json`, `c2-selection-amendment-1.json`. The
+oracle fixtures passed on both builds. The two builds agree in every count
+and, to the digits shown, in every ratio.
+
+**C-S1:**
+
+| Set | Components failing rule 1, all excused by rule 2 | Other failures | Largest bound ratio | Largest entry ratio, D1 / D2 |
+| --- | ---: | ---: | ---: | --- |
+| Retrospective (84 grids, `v1`–`v3`) | 26 | 0 | `0.74` | `0.95` / `0.52` |
+| Confirmation (20 grids, `w1`–`w3`, first use) | 8 | 0 | `0.37` | `0.87` / `0.47` |
+
+- **Entrywise rule and exactness** (unchanged rules): no failure. On the
+  confirmation set C-S1's largest entrywise error is `8.1e-14`, against
+  `5.2e-11` for the current construction, and its polynomial-exactness
+  defect is at most `4.7e-16`.
+- **The margin of the entry requirement is thin at large degrees.** The
+  largest D1 entry ratio rises with the degree:
+
+  | Degrees | Largest D1 entry ratio |
+  | --- | ---: |
+  | 2, 3 | `0.36`, `0.46` |
+  | 16 to 640 | `0.72` to `0.86` |
+  | 1024 | `0.95` |
+  | 1280 | `0.92` |
+
+  So the worst entry's actual error grows about as fast as the bound. This
+  answers the open question of the previous step: the linear growth of the
+  bound is not slack. The bound held everywhere it was tested, with 5% to
+  spare at degree 1024. Nothing is known above degree 1280.
+
+**C-T1, C-T2 and C-T3** keep the frozen rule and do not qualify:
+126 / 112 / 112 failures on B1 and 125 / 111 / 111 on B3 on the
+retrospective set, and 16 / 11 / 11 and 16 / 12 / 12 on the confirmation
+set.
+
+**Adverse controls** at degree 1280 on `[1e-5, 1]` (identical on both
+builds):
+
+| Operator | Rejected | By which checks | Largest entry ratio, D1 / D2 | Largest bound ratio |
+| --- | --- | --- | --- | ---: |
+| undamaged C-S1 | no | — | `0.85` / `0.35` | `0.12` |
+| `one_D1_entry` | **yes** | action rule 2, entry | `154` / `0.35` | `8.7e3` |
+| `all_D1_entries` | **yes** | action rule 2, entry | `349` / `0.35` | `5.4` |
+| `shifted_nodes` | **yes** | entrywise, action, entry, exactness | `4.8e9` / `9.7e8` | `1.7e6` |
+| `one_D2_entry` | **yes** | action rule 2, entry | `0.85` / `244` | `8.6e3` |
+
+- **All four are rejected,** as required.
+- **A limit worth knowing.** The unchanged entrywise 2× rule did not reject
+  three of the four at this grid. The current construction's own entrywise
+  error is larger there than those damages. The action rule and the entry
+  requirement rejected them.
+
+**Selection.** C-S1 is the only qualified candidate. Its improvement on
+metric (c) is `97×`, against the required `10×`. It is recorded as "C-S1
+qualified under post-observation amendment 1".
+
+### 9.3 Implementation freeze (`bea799b`)
+
+- **Change.** `chebyshev_lobatto_grid` now builds C-S1: half-angle nodes,
+  weights recomputed from the returned nodes by double-double products,
+  compensated negative-sum diagonals, and the explicit second-derivative
+  recurrence. Signatures, defaults, ordering, dtype and read-only arrays are
+  unchanged.
+- **Identity.** The production matrices are bit for bit those of the
+  qualified diagnostic construction on all 84 grids of the plan, on both
+  builds.
+- **Provenance.** Every record's `software_versions` gains one string,
+  `chebyshev_construction: "c-s1-r1"`. No schema version changes.
+- **Cost.** About `25 ms` per grid at degree 640, against `4 ms` before.
+  The verifier commands of Section 8 took 434 s after the change against
+  414 s before on B1, and 528 s against 622 s on B3. Each was timed once,
+  so the difference is within run-to-run variation.
+- **Order kept.** The freeze was committed locally, and pushed only after
+  the R0 baseline was committed.
+
+### 9.4 R0: numerical baseline (`bc6d002`)
+
+- **What ran.** All 17 commands of the plan's Section 8, on B1 and B3,
+  against an extracted copy of `main` at `5846975` (package source SHA-256
+  `66d9bd28…`).
+- **Structure.** All eight real records have the audited structure. That
+  includes the five whose extraction had only been validated on synthetic
+  records.
+- **Allowances.** `10 × max(E, X, 8 eps |value|)` for 2,066 leaves per
+  build (`r0-limits.json`), committed before any candidate verifier run.
+- **Gates failing at baseline:**
+
+  | Build | Failing gates |
+  | --- | --- |
+  | B1 (Accelerate) | Gubser--Nellore `collocation-residual`; optical `optical-response-numerics` |
+  | B3 (OpenBLAS) | neither |
+  | both | the two truncated-domain soft-wall verdict controls, as intended |
+
+### 9.5 S2: regression — the stop
+
+Evidence: `s2-candidate-B1.json`, `s2-candidate-B3.json`,
+`s2-comparison.json`. The candidate runs report construction `c-s1-r1` and
+package source SHA-256 `1c731e1b…`.
+
+**A1 — one gate that passed at baseline fails.**
+
+| Gate | Build | Baseline | Candidate |
+| --- | --- | --- | --- |
+| Gubser--Rocha `spectral-refinement` | B1 | pass, `1.63e-9` | **fail**, `4.73e-9` |
+| | B3 | pass, `1.18e-9` | pass, `3.3e-10` |
+
+- **Criterion:** "final <= 2.0e-06; zero ordering failures above 5.0e-10".
+- **What failed.** The final refinement change, `4.73e-9`, is far inside
+  its `2e-6` limit. The check therefore failed on its ordering clause: a
+  refinement change above `5e-10` that does not decrease.
+- **Also on Linux.** Ordinary PR CI fails two Gubser--Rocha tests on the
+  candidate for the same reason (Section 9.6).
+- **Not investigated.** Whether this is a rounding plateau near `1e-9` or a
+  real loss of convergence was not examined. Examining it would be repair
+  work after a stop.
+
+**A2 — 13 of 4,132 leaf comparisons exceed their allowance.**
+
+| Consumer | Build | Leaves over | Largest ratio to allowance | Relative size of those changes |
+| --- | --- | ---: | ---: | --- |
+| DGR neutral | B1 | 9 | `4.4` | `5e-13` to `5e-12` |
+| DGR neutral | B3 | 3 | `2.1` | about `5e-13` |
+| Soft-wall vector | B3 | 1 | `1.09` | `1.9e-14` |
+
+- **DGR neutral.** The leaves are `chi_2/T^2` at degree 80 (positions 1 to
+  6) and at degree 120 (position 3). On B1, at degree 120 and position 3,
+  the entropy, the temperature and the susceptibility integral exceed too.
+  Their allowances are small because the recorded refinement and build
+  differences there are tiny, about `1e-13` relative for `chi_2/T^2`.
+- **Soft-wall.** Spectral degree 56, mode `n = 1`. Its allowance is the
+  representation floor, `10 × 8 eps`.
+
+**Every leaf, by consumer** (largest ratio of change to allowance; largest
+relative change of any leaf):
+
+| Consumer | Leaves | B1 ratio | B3 ratio | Largest relative change |
+| --- | ---: | ---: | ---: | ---: |
+| Soft-wall vector | 22 | `0.37` | **`1.09`** | `3.4e-14` |
+| Hard-wall vector | 7 | `5.0e-4` | `2.8e-4` | `3.3e-14` |
+| Hard-wall chiral | 28 | `0.025` | `0.084` | `1.0e-12` |
+| Gubser--Nellore | 1,556 | `1.9e-4` | `1.4e-4` | `1.1e-10` |
+| Gubser--Rocha | 42 | `0.37` | `0.24` | `5.9e-9` |
+| DGR neutral | 320 | **`4.4`** | **`2.1`** | `8.6e-11` |
+| DGR finite density | 53 | `0.15` | `0.33` | `2.2e-9` |
+| HHH optical | 38 | `0.0083` | `0.0083` | `1.7e-9` |
+
+**Controls.** All 71 control values per build are bit for bit identical
+between baseline and candidate. No key or configured coordinate differs.
+
+**A3 — the two known gates, on all builds:**
+
+| Gate (limit) | Build | Baseline | Candidate |
+| --- | --- | --- | --- |
+| Gubser--Nellore `collocation-residual` (`<= 1e-9`) | B1 | **fail**, `1.716e-9` | pass, `9.28e-10` |
+| | B3 | pass, `9.96e-10` | pass, `9.85e-10` |
+| Optical `optical-response-numerics` (ratio `<= 1`) | B1 | **fail**, `1.0011` | pass, `0.421` |
+| | B3 | pass, `0.979` | pass, `0.402` |
+
+No other acceptance check changes its verdict on either build.
+
+**What this does and does not show.**
+- It shows that the construction error was the cause of the two failing
+  gates on the Accelerate build. With the new construction both pass, and
+  the optical gate ratio falls by more than half on both builds.
+- It does not show that the new construction is acceptable. By the frozen
+  criteria it is not: A1 takes precedence over everything else.
+- The allowances are maintenance regression allowances. Exceeding one is a
+  stop to be reported, not an automatic physics failure (plan Section 8.1).
+  The largest relative change of any table leaf is `5.9e-9`.
+
+### 9.6 Not run, and CI on the candidate
+
+- **S3 was not run.** It follows S2 in the declared order.
+- **The full unit suite was not run locally,** for the same reason.
+- **Ordinary PR CI on the candidate (`bc6d002`, Linux),** reported as
+  additional execution:
+
+  | Job | Result |
+  | --- | --- |
+  | Tests (Python 3.11) | **fail**: 2 of 535, both Gubser--Rocha (`test_amended_preflight_passes_all_declared_gates`, `test_artifacts_are_complete_and_fail_closed_on_overwrite`) |
+  | Extended historical route audit | **fail**: 2 of 53, both audits of superseded optical routes (`test_figure_target_preserves_the_spectral_resolution_stop`, `test_endpoint_split_normal_state_preserves_the_w2_stop`) |
+  | Gate telemetry (Ubuntu, macOS) | pass (it records verdicts and does not enforce them) |
+  | Wheel build, wheel portability | pass |
+
+  - The two historical audits assert that an old, superseded route still
+    stops at a `1e-7` threshold. With the new construction its value moves
+    across that threshold (`9.3e-8`, and `1.06e-7`).
+- **One further local failure.** On B1 an existing unit test of the O-B
+  diagnostic tool fails with the new construction
+  (`test_regular_residual_matches_the_double_formula`). It asserts that the
+  normal-state spike residual is at least twice its own double-precision
+  evaluation error. The residual fell to that level. It did not fail in
+  Linux CI. It is not a benchmark gate, and it was left unchanged.
+
+### 9.7 Resources
+
+**Local execution in the continuation:**
+
+| Run | Wall time |
+| --- | ---: |
+| C1 on B1, on B3 | `123 s`, `131 s` |
+| C2 | under `1 s` |
+| Runner smoke test on the baseline tree (two cheap consumers) | `6 s` |
+| R0 baseline on B1, on B3 | `414 s`, `622 s` |
+| S2 candidate on B1, on B3 | `434 s`, `528 s` |
+| Limits and comparison | about `1 s` |
+| Unit tests of the evaluator, runners and grid (short runs) | `62 s` |
+| **Logged** | **`2,321 s`** |
+| **Charged** (conservative) | **`2,340 s` (39.0 min)** |
+
+- **Cumulative execution:** about 60.7 of 90 minutes. About 29 remain.
+  Nothing was reset.
+- **Active work:** about 1.3 hours in the continuation, and about 2.8 of the
+  6 hours in total.
+- **Not used:** paid compute, installations, extra CI dispatches, reserved
+  optical cases, private research.
+- **Additional execution, not charged:** ordinary PR CI and the existing
+  gate telemetry on the pushed commits.
+
+### 9.8 Disclosures and the decision
+
+**Disclosures.**
+- **A diagnostic unit-test file ran on the new code before R0 was
+  committed.** While checking the implementation I ran
+  `tests/test_gate_calibration.py`, which exercises the O-B tool on the
+  production grid. That is how the failing unit test above was found. No
+  Section 8 verifier ran on the new code before the R0 commit.
+- **One unit test touched a confirmation node set before the freeze.** It
+  evaluated the three confirmation vectors, and no matrix, at the nodes of
+  one confirmation grid. It was moved off the set before the freeze.
+- **The runner was smoke-tested on the baseline tree** for two cheap
+  consumers before the implementation freeze. Those runs are charged above.
+- **The amendment file is frozen by hash.** The continuation evidence
+  records its SHA-256, and a test checks it. Later notes belong here, not
+  there.
+- **No changelog entry was written.** The plan asks for one listing the
+  per-consumer deltas. Writing it for a change that stopped at S2 would
+  present the change as accepted.
+
+**Nothing below is decided or done.** The stop returns the work to the
+owner. No criterion was tuned, no candidate was added, and no repair was
+attempted.
+
+| Option | What it means |
+| --- | --- |
+| **Review the three stop items first** | Codex reviews the S2 evidence. Each item (the Gubser--Rocha ordering clause near `1e-9`, the DGR allowances, the single soft-wall leaf) gets a written disposition before anything else runs. A change to a gate or to the allowance rule would be a scientific-contract change with its own review. |
+| **Accept the stop and withdraw the change** | The production change is reverted on this branch. The evidence, tool and report stay. The Gubser--Nellore and optical gates keep failing on the Accelerate build. |
+| **Decide later** | The branch stays unmerged as it is. |
+
+The first option is recommended. The evidence that the construction is the
+cause of the two failing gates is strong, and the three stop items are all
+at or below the `1e-8` relative level. But whether they are acceptable is a
+judgement about three benchmarks' contracts, and it should not be made by
+the author of the change.

@@ -1091,6 +1091,22 @@ class RegressionStageTests(unittest.TestCase):
         outcome = repair.regression_compare(*self._evidence(missing))
         self.assertEqual(outcome["violation_counts"]["keys"], 1)
 
+    def test_committed_regression_evidence_reproduces_the_s2_stop(self) -> None:
+        import json
+
+        folder = ROOT / "docs/generated/chebyshev-repair"
+        baselines = [json.loads((folder / f"r0-baseline-{label}.json").read_text()) for label in ("B1", "B3")]
+        candidates = [json.loads((folder / f"s2-candidate-{label}.json").read_text()) for label in ("B1", "B3")]
+        limits = json.loads((folder / "r0-limits.json").read_text())
+        outcome = repair.regression_compare(baselines, limits, candidates)
+        self.assertEqual(outcome["stopped"], "regression stop: A1 (2), A2 (13)")
+        self.assertEqual(outcome["violation_counts"], {"A1": 2, "A2": 13, "controls": 0, "keys": 0})
+        self.assertEqual({(item["build"], item["consumer"], item["check"]) for item in outcome["violations"]["A1"]},
+                         {("B1", "gubser-rocha-emd", "spectral-refinement"), ("B1", "gubser-rocha-emd", "record")})
+        recorded = json.loads((folder / "s2-comparison.json").read_text())["result"]
+        self.assertEqual(recorded["violation_counts"], outcome["violation_counts"])
+        self.assertEqual(recorded["stopped"], outcome["stopped"])
+
     def test_a_tree_without_the_package_is_rejected(self) -> None:
         import tempfile
 
