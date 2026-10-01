@@ -5,7 +5,8 @@
   [frozen plan](chebyshev-construction-repair-plan.md) (freeze commit
   `0cd24dd`, SHA-256 `7d26e662…`) requires that no production change is made.
   AI-assisted (Claude); revised after Codex's review of `f01da66`
-  (Section 7); awaiting targeted review and an owner decision.
+  (Section 7) and its re-review of `d5eb95a` (Section 8); awaiting targeted
+  review and an owner decision.
 - **Completed:** P0, and S0 on B1 and B3.
 - **Not run (incomplete):**
   - the implementation freeze;
@@ -70,24 +71,28 @@ runs (Section 7, R55-4).
 | Full unit suite (integration validation), B1 | `458 s` | log |
 | Short runs that were not timed | `60 s` | conservative allowance |
 | Amendment-preparation step | `15 s` | log gives `8 s`; charged conservatively |
-| **Total charged** | **about `1,269 s` (21.2 min)** | |
+| Correction step after the re-review (Section 8) | `30 s` | log gives about `15 s`; charged conservatively |
+| **Total charged** | **about `1,299 s` (21.7 min)** | |
 
 - **Untimed runs** covered by the allowance: three tool-test runs, the
   soft-wall verifier, the reproduction of eight schema tests on `main`, and
   two helper checks. Each took a few seconds at most.
-- **Remaining:** at most about 38.8 of the 60 minutes. Nothing was reset or
+- **Remaining:** at most about 38.3 of the 60 minutes. Nothing was reset or
   extended.
 - **Not charged:**
   - recreating the two environments (an installation the owner approved,
     not timed);
   - Codex's own review runs.
 - **Active work**, reported separately: about 45 minutes up to the S1
-  handoff, and about 20 more for the amendment-preparation step, of the
-  6-hour ceiling.
+  handoff, about 20 more for the amendment-preparation step, and about 25
+  more for the correction step after the re-review (its own limit was one
+  hour). That is about 1.5 of the 6 hours.
 - **Not used:** paid compute, CI-dispatched scientific runs, reserved cases.
-- **Provenance.** Each evidence file records plan SHA-256 `7d26e662…`, tool
-  SHA-256 `6d0eff7c…` (the committed tool), commit `474a6c2` with `src/`
-  unmodified, and the build.
+- **Provenance.** Each original evidence file records plan SHA-256
+  `7d26e662…`, tool SHA-256 `6d0eff7c…` (the tool committed at that time),
+  commit `474a6c2` with `src/` unmodified, and the build. The appended
+  replays record the tool version that produced them: `ded34a52…`
+  (Section 7) and `9e339930…` (Section 8).
 
 ## 2. P0: structural preflight
 
@@ -122,6 +127,11 @@ Its record sources differ, and the output says which:
 Manual source review, not executable: the five structures and their
 normalizations, and whether a control route depends on spectral outputs
 through its data.
+
+**Second revalidation** (`p0-revalidation-duplicate-rows.json`, appended;
+Section 8, R55-F2). The extraction now rejects a duplicate source row before
+the rows are mapped. The replay passes for all eight consumers, with the
+same record sources as above.
 
 ## 3. S0: fixtures and measurements
 
@@ -290,7 +300,11 @@ Nothing below is decided or done.
   - **Withdrawn:** the blanket `gamma_(N+1)` floor first suggested here. It
     is not a bound for these metrics, and its outcome depends on the
     convention: 0 C-S1 failures with `eps`, 1 with `u = eps/2`.
-  - **Budget:** at most about 38.8 minutes of execution remain, against an
+  - **Unresolved (Section 8, R55-F1).** The corrected C-S1 bound is derived
+    and tested, but it grows about linearly with the degree. Whether rule 2
+    with that bound is an acceptable regression rule at the larger degrees
+    is not established.
+  - **Budget:** at most about 38.3 minutes of execution remain, against an
     estimated 36–50 for a continuation. A continuation approval should state
     the budget explicitly.
 - **B. Accept the stop.** No repair is made. The optical gate and every
@@ -344,3 +358,93 @@ data were run.
 - **Also recorded.** The 97× and 135× figures are operator-action
   diagnostics on saved vectors. They are not achieved improvements in a
   physical observable, in the optical residual, or in production.
+
+## 8. Corrections after the re-review (1 October 2026)
+
+Codex re-reviewed `d5eb95a` and raised three findings. They were addressed
+in one correction-only step, limited to one hour of work and five minutes of
+execution within the existing ceilings.
+- **Unchanged:** the frozen plan, the S1 stop, every earlier evidence file,
+  the candidate implementations, production code, and every gate and
+  threshold.
+- **Run:** focused tests, synthetic checks and replay of saved data only.
+- **Not run:** S0, R0, S2 or S3. No grid or vector of the confirmation set
+  was used. Amendment 1 is not adopted.
+
+- **R55-F1: the proposed C-S1 rounding bound was wrong at first order.**
+  - **The error.** The entry model counted the rounding of the operations on
+    the barycentric weight products. It omitted the rounding already inside
+    the node differences that are multiplied.
+  - **The counterexample.** C-S1, degree 30 on `[1e-3, 1]`, zero-based entry
+    `(7, 8)`: relative error `14.17u`, against the claimed `5u`. For the
+    coordinate vector `e_8` the action error was `2.83` times the claimed
+    bound.
+  - **The correction.** The uniform constant is withdrawn and not replaced
+    by a larger one. The entry bound is now derived from the implemented
+    operations: `4u` for the four rounded operations, plus the exactly
+    computed subtraction errors that enter the two weight products and the
+    final division
+    ([amendment 1](chebyshev-construction-repair-amendment-1.md),
+    Section 3).
+  - **Tests.**
+    - The counterexample is a regression test. It is now inside the bound.
+    - The accounting is checked against exact rational arithmetic for all
+      930 off-diagonal entries at that grid. After the exact input term is
+      subtracted, the remainder is at most `2.45u`, against the derived
+      `4u`.
+    - Every entry of both matrices is inside the bound at that grid, by a
+      regression test. On it and nine other small grids the largest ratio
+      is `0.72` for D1 and `0.33` for D2.
+    - The adverse controls of the amendment are still rejected.
+  - **Unresolved derivation issue.** The corrected bound is valid where
+    tested, but it grows about linearly with the degree. Its largest entry
+    value is about `27u` at degree 30 and about `850u` (`9.4e-14` relative)
+    at degree 1000. Whether rule 2 with a bound of that size is an
+    acceptable regression rule at the larger degrees is not established.
+    Whether C-S1's actual errors grow in the same way is not measured; that
+    needs a pass over the S0 grids. Nothing was tuned
+    (amendment Section 3.1).
+  - **Also unverified.** The C-T model still assumes a library sine accurate
+    to one ulp, and it is not checked against exact arithmetic. It does not
+    change an outcome here: C-T2 and C-T3 fail the unchanged entrywise rule.
+- **R55-F2: duplicate source rows were collapsed before the uniqueness
+  checks.**
+  - **The error.** Four extractors turned some source rows into mappings
+    first, so a repeated row could silently overwrite the earlier one.
+  - **The correction.** Rows are now mapped by one helper that rejects any
+    repeated key before mapping. It is used at every such site: hard-wall
+    vector modes (both routes), hard-wall chiral levels and table,
+    Gubser--Rocha thermodynamic and refinement cases, and the DGR
+    finite-density refinement states, changes and controls.
+  - **Tests.** An exact duplicate and a conflicting duplicate are rejected
+    at each of the nine sites. Codex's two reproductions are regression
+    tests.
+  - **Replay.** `p0-revalidation-duplicate-rows.json` (appended) passes for
+    all eight consumers.
+- **R55-F3: saved matrices were not bound to the S0 hashes.**
+  - **The error.** The build-agreement stage checked the file names only. A
+    stale or changed file with the right name could supply a statistic.
+  - **The correction.** The stage now stops unless:
+    - the other build is one of the two in the evidence;
+    - each file holds `nodes`, `D1` and `D2` as finite double arrays of the
+      expected shapes;
+    - the bytes of each saved matrix hash to the other build's S0 entry;
+    - each local reconstruction hashes to this build's S0 entry.
+
+    The output records that verification, and the selector rejects a
+    build-agreement record without it.
+  - **Tests.** A correctly named file with other bytes, Codex's
+    reproduction, a local matrix that is not the recorded one, a missing
+    array, a wrong type, a wrong shape and a non-finite value each stop the
+    stage.
+  - **Replay.** All 56 saved B3 matrices match the B3 hashes, and all 56 B1
+    reconstructions match the B1 hashes
+    (`build-agreement-hash-bound.json`). The selector reproduces the stop
+    with the same counts (`s1-selection-hash-bound.json`).
+  - **Superseded, kept.** `build-agreement-revalidated.json` has no
+    verification record, so the corrected selector now rejects it. It stays
+    in the folder as the record of the earlier step.
+- **Wording.** The amendment no longer says that A2 answers whether rounding
+  matters to a physical observable. A2 is a maintenance regression
+  allowance, not a complete physical uncertainty bound.
+- **Execution.** About `15 s` by the log; `30 s` charged (Section 1).

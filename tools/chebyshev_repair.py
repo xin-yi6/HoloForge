@@ -261,6 +261,24 @@ def _add(target: Dict[str, Any], key: str, value: Any) -> None:
     target[key] = value
 
 
+def _unique_rows(rows: Any, key: Callable[[Any], Any], what: str) -> Dict[Any, Any]:
+    """Map source rows by a key, rejecting any duplicate before it can overwrite.
+
+    An exact duplicate is rejected as well as a conflicting one: a record
+    with a repeated row is not the structure the table describes.
+    """
+
+    if not isinstance(rows, list):
+        raise ExtractionError(f"{what} is not a list of rows")
+    mapped: Dict[Any, Any] = {}
+    for row in rows:
+        identifier = key(row)
+        if identifier in mapped:
+            raise ExtractionError(f"duplicate {what} row for {identifier!r}")
+        mapped[identifier] = row
+    return mapped
+
+
 def _leaf(value: Any, estimators: Mapping[str, float]) -> Dict[str, Any]:
     cleaned = {name: _number(item, f"estimator {name}") for name, item in estimators.items()}
     if not cleaned:
@@ -307,9 +325,8 @@ def extract_hard_wall_vector(records: Mapping[str, Any]) -> Dict[str, Any]:
     out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
     spectral = _get(records, "spectral")
     final = _number(_get(spectral, "spectral_convergence", "successive_max_relative_differences")[-1], "difference")
-    shooting = {(_get(row, "n")): row for row in _get(records, "shooting", "results")}
-    for row in _get(spectral, "results"):
-        n = _get(row, "n")
+    shooting = _unique_rows(_get(records, "shooting", "results"), lambda row: _get(row, "n"), "shooting mode")
+    for n, row in _unique_rows(_get(spectral, "results"), lambda row: _get(row, "n"), "spectral mode").items():
         if n not in shooting:
             raise ExtractionError(f"mode {n} has no shooting counterpart")
         mass = _number(_get(row, "numerical_m_z_m"), "mass")
@@ -332,11 +349,12 @@ def extract_hard_wall_vector(records: Mapping[str, Any]) -> Dict[str, Any]:
 def extract_hard_wall_chiral(records: Mapping[str, Any]) -> Dict[str, Any]:
     out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
     results = _get(records, "default", "results")
-    levels = {int(_get(level, "degree")): _get(level, "observables") for level in _get(results, "levels")}
+    levels = {degree: _get(level, "observables") for degree, level in _unique_rows(
+        _get(results, "levels"), lambda level: int(_get(level, "degree")), "level").items()}
     if sorted(levels) != [64, 80, 96]:
         raise ExtractionError(f"levels are {sorted(levels)}, not 64, 80, 96")
     independent = _get(results, "independent")
-    table = {_get(row, "observable"): row for row in _get(results, "table")}
+    table = _unique_rows(_get(results, "table"), lambda row: _get(row, "observable"), "table")
     if sorted(table) != sorted(CHIRAL_OBSERVABLES):
         raise ExtractionError("table rows are not the seven observables")
     for name in CHIRAL_OBSERVABLES:
@@ -401,9 +419,10 @@ def extract_gubser_nellore(records: Mapping[str, Any]) -> Dict[str, Any]:
 def extract_gubser_rocha(records: Mapping[str, Any]) -> Dict[str, Any]:
     out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
     results = _get(records, "default", "results")
-    refinement = {_get(row, "xi"): _get(row, "observables") for row in _get(results, "refinement", "cases")}
-    cases = _get(results, "cases")
-    if sorted(refinement) != sorted(_get(case, "xi") for case in cases) or len(refinement) != len(cases):
+    refinement = {xi: _get(row, "observables") for xi, row in _unique_rows(
+        _get(results, "refinement", "cases"), lambda row: _get(row, "xi"), "refinement case").items()}
+    cases = list(_unique_rows(_get(results, "cases"), lambda case: _get(case, "xi"), "thermodynamic case").values())
+    if sorted(refinement) != sorted(_get(case, "xi") for case in cases):
         raise ExtractionError("refinement cases do not match the thermodynamic cases by xi")
     for case in cases:
         xi = _get(case, "xi")
@@ -463,12 +482,12 @@ def extract_dgr_neutral(records: Mapping[str, Any]) -> Dict[str, Any]:
 def extract_dgr_critical(records: Mapping[str, Any]) -> Dict[str, Any]:
     out: Dict[str, Dict[str, Any]] = {"leaves": {}, "controls": {}, "report_only": {}}
     results = _get(records, "default", "results")
-    states = {int(_get(state, "degree")): state for state in _get(results, "refinement", "states")}
-    if len(states) != len(_get(results, "refinement", "states")):
-        raise ExtractionError("refinement states are not unique by degree")
-    changes: Dict[int, Tuple[int, Mapping[str, Any]]] = {}
-    for item in _get(results, "refinement", "changes"):
-        changes[int(_get(item, "fine_degree"))] = (int(_get(item, "coarse_degree")), _get(item, "changes"))
+    states = _unique_rows(_get(results, "refinement", "states"), lambda state: int(_get(state, "degree")),
+                          "refinement state")
+    changes: Dict[int, Tuple[int, Mapping[str, Any]]] = {
+        fine: (int(_get(item, "coarse_degree")), _get(item, "changes"))
+        for fine, item in _unique_rows(_get(results, "refinement", "changes"),
+                                       lambda item: int(_get(item, "fine_degree")), "refinement change").items()}
     ordered = sorted(states)
     for degree in ordered:
         for field in DGR_POINT_FIELDS:
@@ -486,10 +505,7 @@ def extract_dgr_critical(records: Mapping[str, Any]) -> Dict[str, Any]:
             estimators["refinement"] = converted
             _add(out["leaves"], f"state|degree={degree}|primary|{field}", _leaf(primary, estimators))
             _add(out["leaves"], f"state|degree={degree}|explicit|{field}", _leaf(explicit, estimators))
-    labels = [_get(item, "label") for item in _get(results, "controls")]
-    if len(labels) != len(set(labels)):
-        raise ExtractionError("control states are not unique by label")
-    for item in results["controls"]:
+    for item in _unique_rows(_get(results, "controls"), lambda item: _get(item, "label"), "control state").values():
         for field in DGR_POINT_FIELDS:
             primary = _number(_get(item, "primary", "point", field), field)
             explicit = _number(_get(item, "explicit", "point", field), field)
@@ -1142,7 +1158,7 @@ def grid_metrics(degree: int, lower: float, upper: float, names: Sequence[str],
                 entry["exactness"][label] = _required(float(np.max(np.abs(defect) / denominator)), "exactness")
                 if keep is not None:
                     keep[(name, degree, lower, upper, order)] = stored_error
-            if name in ENTRY_ERROR_UNITS:
+            if name in BOUNDED_CONSTRUCTIONS:
                 # Recorded for proposed amendment 1; not used by the frozen rule.
                 entry["bound_ratio"] = bound_ratios(reference, scales, nodes, vectors, stored_errors, name, degree)
             entry["sha256"] = {
@@ -1360,37 +1376,60 @@ def s0_run(build_label: str, degrees: Sequence[int] = DEGREES, intervals=INTERVA
     return result
 
 
+def _matrix_hashes(nodes: Any, first: Any, second: Any) -> Dict[str, str]:
+    return {"nodes": hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest(),
+            "D1": hashlib.sha256(np.ascontiguousarray(first).tobytes()).hexdigest(),
+            "D2": hashlib.sha256(np.ascontiguousarray(second).tobytes()).hexdigest()}
+
+
 def build_agreement(arrays: Path, other_label: str, payloads: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     """Metric (d): entrywise agreement of each construction between two builds.
 
     The grids at which a construction differs between the builds come from
     the matrix hashes in the two S0 outputs. ``arrays`` must hold the other
-    build's matrices for exactly those grids; a missing or unexpected file
-    is a stop. Equality is never inferred from an empty folder. Also times
-    each construction.
+    build's matrices for exactly those grids. Every saved matrix must hash
+    to the other build's S0 entry, and every local reconstruction to this
+    build's S0 entry; otherwise the stage stops and reports no statistic.
+    Equality is never inferred from an empty folder. Also times each
+    construction.
     """
 
     errors = validate_evidence(payloads)
     if errors:
         return {"passed": False, "stopped": "invalid evidence", "evidence_errors": errors[:200]}
-    results = sorted((payload["result"] for payload in payloads), key=lambda item: item["build_label"])
+    by_label = {payload["result"]["build_label"]: payload["result"] for payload in payloads}
+    if other_label not in by_label:
+        return {"passed": False, "stopped": f"other build {other_label!r} is not one of {sorted(by_label)}"}
+    local_label = next(label for label in sorted(by_label) if label != other_label)
+    results = [by_label[label] for label in sorted(by_label)]
     differing = hash_agreement(results)
-    expected = {f"{other_label}-{name}-{label.replace('|', '-')}.npz"
+    expected = {f"{other_label}-{name}-{label.replace('|', '-')}.npz": (name, label)
                 for name, labels in differing.items() for label in labels}
     found = {path.name for path in arrays.glob(f"{other_label}-*.npz")} if arrays.is_dir() else set()
-    if found != expected:
+    if found != set(expected):
         return {"passed": False, "stopped": "saved matrices do not match the grids whose hashes differ",
-                "missing": sorted(expected - found)[:20], "unexpected": sorted(found - expected)[:20]}
+                "missing": sorted(set(expected) - found)[:20], "unexpected": sorted(found - set(expected))[:20]}
     report: Dict[str, Any] = {name: {"differing_grids": len(differing[name]), "max_relative_difference": 0.0}
                               for name in CONSTRUCTIONS}
     for file_name in sorted(found):
-        path = arrays / file_name
-        rest = path.stem.split("-", 1)[1]
-        name = next(candidate for candidate in CONSTRUCTIONS if rest.startswith(candidate + "-"))
-        with np.load(path) as saved:
-            other = (saved["nodes"], saved["D1"], saved["D2"])
-        degree, lower, upper = _parse_grid(path.stem, name)
+        name, label = expected[file_name]
+        degree, lower, upper = _parse_grid(Path(file_name).stem, name)
+        try:
+            with np.load(arrays / file_name, allow_pickle=False) as saved:
+                other = tuple(np.asarray(saved[key]) for key in ("nodes", "D1", "D2"))
+        except (OSError, ValueError, KeyError) as error:
+            return {"passed": False, "stopped": f"{file_name}: unreadable or incomplete ({type(error).__name__})"}
+        shapes = ((degree + 1,), (degree + 1, degree + 1), (degree + 1, degree + 1))
+        if any(array.dtype != np.float64 or array.shape != shape or not np.all(np.isfinite(array))
+               for array, shape in zip(other, shapes)):
+            return {"passed": False, "stopped": f"{file_name}: wrong type, shape or non-finite values"}
+        if _matrix_hashes(*other) != by_label[other_label]["grids"][label][name]["sha256"]:
+            return {"passed": False,
+                    "stopped": f"{file_name}: saved bytes do not match the {other_label} S0 hashes"}
         mine = construct(name, degree, lower, upper)
+        if _matrix_hashes(*mine) != by_label[local_label]["grids"][label][name]["sha256"]:
+            return {"passed": False,
+                    "stopped": f"{name} at {label}: local matrices do not match the {local_label} S0 hashes"}
         worst = 0.0
         if mine[0].tobytes() != other[0].tobytes():
             worst = math.inf
@@ -1403,6 +1442,8 @@ def build_agreement(arrays: Path, other_label: str, payloads: Sequence[Mapping[s
         for _ in range(3):
             construct(name, 640, 1.0e-5, 1.0)
         report[name]["seconds"] = (time.perf_counter() - started) / 3.0
+    report["verified"] = {"other_label": other_label, "local_label": local_label, "files": len(found),
+                          "saved_bytes_match_s0_hashes": True, "local_matrices_match_s0_hashes": True}
     return report
 
 
@@ -1426,22 +1467,81 @@ def _parse_grid(stem: str, name: str) -> Tuple[int, float, float]:
 # above stays the rule of record until the owner approves an amendment.
 
 UNIT_ROUNDOFF = EPS / 2.0  # u = 2^-53, round to nearest
-# First-order relative error of one off-diagonal D1 entry, in units of u, from
-# the operation count of each declared construction (amendment Section 3).
-ENTRY_ERROR_UNITS = {"C-S1": 5.0, "C-T1": 12.0, "C-T2": 12.0, "C-T3": 12.0}
-# First-order relative error of one computed node difference, in units of u.
-DIFFERENCE_ERROR_UNITS = {"C-S1": 1.0, "C-T1": 11.0, "C-T2": 11.0, "C-T3": 11.0}
+# C-T family (closed-form weights): uniform first-order relative error of one
+# off-diagonal D1 entry and of one trigonometric node difference, in units
+# of u (amendment Section 3). C-S1 has no uniform constant: its entry error
+# is the matrix returned by ``stored_node_entry_errors``.
+TRIG_ENTRY_ERROR_UNITS = 12.0
+TRIG_DIFFERENCE_ERROR_UNITS = 11.0
+BOUNDED_CONSTRUCTIONS = ("C-T1", "C-T2", "C-T3", "C-S1")
 EXPLICIT_SECOND = ("C-T2", "C-T3", "C-S1")
+STORED_ENTRY_ROUNDINGS = 4.0  # quotient, two correction additions, final division
+
+
+def stored_difference_errors(nodes: np.ndarray) -> np.ndarray:
+    """``|delta_ij|``: the exact relative rounding error of ``fl(u_i - u_j)``.
+
+    An error-free transformation gives ``u_i - u_j = s + e`` exactly, with
+    ``s`` the rounded difference, so ``|delta_ij| = |e| / |s + e|``. It is
+    zero when the subtraction is exact and at most ``u`` otherwise. The
+    diagonal is zero.
+    """
+
+    total, error = _two_sum(nodes[:, None], -nodes[None, :])
+    size = nodes.size
+    off = ~np.eye(size, dtype=bool)
+    relative = np.zeros((size, size))
+    relative[off] = np.abs(error[off]) / np.abs(total[off] + error[off])
+    return relative
+
+
+def stored_node_entry_errors(nodes: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """First-order relative error bound of each off-diagonal C-S1 D1 entry.
+
+    C-S1 forms ``D1_ij = (P_i / P_j) / d_ij`` from the rounded differences
+    ``d_ik = fl(u_i - u_k)``, with ``P_i = prod_{k != i} d_ik`` accumulated in
+    double-double arithmetic. The accumulation is accurate, but every factor
+    carries its own subtraction error ``delta_ik``. The factor ``d_ij``
+    occurs in both products with the same relative error and cancels in the
+    ratio, then enters once more through the final division. To first order
+
+        |error_ij| <= 4 u + |delta_ij| + sum_{k != i, j} (|delta_ik| + |delta_jk|)
+                    = 4 u + A_i + A_j - |delta_ij|,   A_i = sum_{k != i} |delta_ik|,
+
+    where ``4 u`` covers the quotient, the two correction additions and the
+    final division. Returns the entry bound and ``|delta|``.
+    """
+
+    relative = stored_difference_errors(nodes)
+    row = relative.sum(axis=1)
+    entry = STORED_ENTRY_ROUNDINGS * UNIT_ROUNDOFF + row[:, None] + row[None, :] - relative
+    entry[np.arange(nodes.size), np.arange(nodes.size)] = 0.0
+    return entry, relative
+
+
+def entry_error_model(name: str, nodes: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """Per-entry D1 error bound and per-difference error bound of a construction."""
+
+    size = nodes.size
+    if name == "C-S1":
+        return stored_node_entry_errors(nodes)
+    if name in ("C-T1", "C-T2", "C-T3"):
+        off = ~np.eye(size, dtype=bool)
+        return (np.where(off, TRIG_ENTRY_ERROR_UNITS * UNIT_ROUNDOFF, 0.0),
+                np.where(off, TRIG_DIFFERENCE_ERROR_UNITS * UNIT_ROUNDOFF, 0.0))
+    raise ValueError(f"no a-priori error model for {name!r}")
 
 
 def apriori_action_bounds(reference: "Reference", nodes: np.ndarray, vector: np.ndarray,
-                          entry_units: float, difference_units: float) -> Tuple[np.ndarray, np.ndarray]:
+                          entry_error: np.ndarray, difference_error: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """First-order a-priori bounds on ``|((R - D) v)_i|`` for D1 and explicit D2.
 
-    Assumptions (amendment Section 3): off-diagonal D1 entries have relative
-    error at most ``entry_units * u``; computed node differences at most
-    ``difference_units * u``; diagonals are negative row sums rounded once;
-    ``D2_ij = 2 D1_ij (D1_ii - 1/d_ij)``. Second-order terms are neglected.
+    ``entry_error[i, j]`` bounds the relative error of the off-diagonal entry
+    ``D1_ij`` and ``difference_error[i, j]`` that of the computed difference
+    ``d_ij`` (amendment Section 3). Diagonals are negative row sums rounded
+    once; ``D2_ij = 2 D1_ij (D1_ii - 1/d_ij)``. Second-order terms are
+    neglected, including the accumulation error of the compensated sums and
+    products.
     """
 
     u = UNIT_ROUNDOFF
@@ -1451,14 +1551,14 @@ def apriori_action_bounds(reference: "Reference", nodes: np.ndarray, vector: np.
     off = ~np.eye(size, dtype=bool)
     spread = np.abs(vector[None, :] - vector[:, None])
     magnitude = np.abs(vector)
-    entry = entry_units * u
     first_off = np.where(off, first, 0.0)
-    bound_first = entry * np.sum(first_off * spread, axis=1) + u * np.diag(first) * magnitude
-    diagonal_error = entry * np.sum(first_off, axis=1) + u * np.diag(first)
+    weighted = entry_error * first_off
+    bound_first = np.sum(weighted * spread, axis=1) + u * np.diag(first) * magnitude
+    diagonal_error = np.sum(weighted, axis=1) + u * np.diag(first)
     inverse = np.zeros((size, size))
     inverse[off] = 1.0 / np.abs(nodes[:, None] - nodes[None, :])[off]
-    second_entry = 2.0 * first_off * (diagonal_error[:, None] + (difference_units + 1.0) * u * inverse) \
-        + (entry + 2.0 * u) * np.where(off, second, 0.0)
+    second_entry = 2.0 * first_off * (diagonal_error[:, None] + (difference_error + u) * inverse) \
+        + (entry_error + 2.0 * u) * np.where(off, second, 0.0)
     bound_second = np.sum(second_entry * spread, axis=1) + u * np.diag(second) * magnitude
     return bound_first, bound_second
 
@@ -1470,7 +1570,7 @@ def bound_ratios(reference: "Reference", ideal_scales: Mapping[Tuple[int, str], 
     sets = row_sets(degree)
     ratios: Dict[str, float] = {}
     for vector_name, vector in vectors.items():
-        bounds = apriori_action_bounds(reference, nodes, vector, ENTRY_ERROR_UNITS[name], DIFFERENCE_ERROR_UNITS[name])
+        bounds = apriori_action_bounds(reference, nodes, vector, *entry_error_model(name, nodes))
         for order, label in ((0, "D1"), (1, "D2")):
             if order == 1 and name not in EXPLICIT_SECOND:
                 continue
@@ -1709,6 +1809,12 @@ def validate_agreement(payload: Optional[Mapping[str, Any]], results: Sequence[M
     result = payload.get("result") if isinstance(payload, Mapping) else None
     if not isinstance(result, Mapping) or payload.get("stage") != "build-agreement" or payload.get("status") != "ok":
         return ["build-agreement input is not a successful build-agreement output"]
+    verified = result.get("verified")
+    if not isinstance(verified, Mapping) or verified.get("saved_bytes_match_s0_hashes") is not True \
+            or verified.get("local_matrices_match_s0_hashes") is not True \
+            or sorted((str(verified.get("other_label")), str(verified.get("local_label")))) != sorted(REQUIRED_BUILDS) \
+            or verified.get("files") != sum(len(labels) for labels in differing.values()):
+        errors.append("build agreement: matrices were not verified against the S0 hashes")
     for name in CONSTRUCTIONS:
         item = result.get(name)
         if not isinstance(item, Mapping):

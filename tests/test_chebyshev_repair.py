@@ -150,9 +150,14 @@ class SelectionRuleTests(unittest.TestCase):
         agreement = {"tool": "chebyshev-repair", "stage": "build-agreement", "status": "ok",
                      "result": {name: {"differing_grids": 0, "max_relative_difference": 0.0, "seconds": 0.01}
                                 for name in repair.CONSTRUCTIONS}}
+        agreement["result"]["verified"] = {"other_label": "B3", "local_label": "B1", "files": 0,
+                                           "saved_bytes_match_s0_hashes": True,
+                                           "local_matrices_match_s0_hashes": True}
         outcome = repair.selection(synthetic_pair(), agreement)
         self.assertTrue(outcome["passed"], outcome.get("stopped"))
         self.assertIn(outcome["selected"], repair.CANDIDATES)
+        del agreement["result"]["verified"]
+        self.assertEqual(repair.selection(synthetic_pair(), agreement)["stopped"], "invalid build-agreement evidence")
 
     def test_a_tie_without_build_agreement_is_not_selected(self) -> None:
         outcome = repair.selection(synthetic_pair())
@@ -277,7 +282,7 @@ class EvidenceAdmissionTests(unittest.TestCase):
         folder = ROOT / "docs/generated/chebyshev-repair"
         payloads = [json.loads((folder / f"{label}-s0.json").read_text()) for label in ("B1", "B3")]
         self.assertEqual(repair.validate_evidence(payloads), [])
-        outcome = repair.selection(payloads, json.loads((folder / "build-agreement-revalidated.json").read_text()))
+        outcome = repair.selection(payloads, json.loads((folder / "build-agreement-hash-bound.json").read_text()))
         self.assertEqual(outcome["stopped"], "no candidate qualifies")
         counts = {build: [outcome["qualification"][build][name]["failure_count"] for name in repair.CANDIDATES]
                   for build in ("B1", "B3")}
@@ -444,6 +449,268 @@ class ProposedAmendmentTests(unittest.TestCase):
         payload = synthetic_payload("B1", candidate_value=3.0e-15, current_value=1.0e-15)
         failures = repair.qualification_v2(payload["result"])["C-S1"]["failures"]
         self.assertTrue(any(item["metric"].startswith("b:") for item in failures))
+
+
+class CorrectedBoundTests(unittest.TestCase):
+    """Re-review R55-F1: subtraction errors entering the weight products.
+
+    The exact values use ``fractions.Fraction`` on the stored nodes and are
+    independent of the tool's 50-digit reference.
+    """
+
+    degree, lower, upper = 30, 1.0e-3, 1.0
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        from fractions import Fraction
+
+        cls.nodes, cls.first, cls.second = repair.construct("C-S1", cls.degree, cls.lower, cls.upper)
+        cls.exact_nodes = [Fraction(float(value)) for value in cls.nodes]
+        cls.size = cls.nodes.size
+        cls.products = []
+        for i, x in enumerate(cls.exact_nodes):
+            product = Fraction(1)
+            for k, y in enumerate(cls.exact_nodes):
+                if k != i:
+                    product *= x - y
+            cls.products.append(product)
+        cls.unit = Fraction(1, 2 ** 53)
+        cls.entry_bound, cls.relative = repair.stored_node_entry_errors(cls.nodes)
+
+    def _exact_entry(self, i, j):
+        return self.products[i] / self.products[j] / (self.exact_nodes[i] - self.exact_nodes[j])
+
+    def _reference(self):
+        from decimal import Decimal, localcontext
+
+        with localcontext() as context:
+            context.prec = repair.DIGITS
+            return repair.Reference([Decimal(float(value)) for value in self.nodes])
+
+    def test_the_review_counterexample_refutes_a_uniform_constant_and_is_inside_the_bound(self) -> None:
+        from fractions import Fraction
+
+        i, j = 7, 8
+        exact = self._exact_entry(i, j)
+        error = abs(Fraction(float(self.first[i, j])) - exact) / abs(exact)
+        units = float(error / self.unit)
+        self.assertGreater(units, 5.0)  # the withdrawn k = 5 entry model
+        self.assertAlmostEqual(units, 14.172087803131994, places=6)
+        self.assertLessEqual(units, self.entry_bound[i, j] / repair.UNIT_ROUNDOFF)
+        vector = np.zeros(self.size)
+        vector[j] = 1.0
+        reference = self._reference()
+        bound, _ = repair.apriori_action_bounds(reference, self.nodes, vector, self.entry_bound, self.relative)
+        action = abs((reference.error(0, self.first) @ vector)[i])
+        self.assertLessEqual(action, bound[i])
+        self.assertAlmostEqual(action, float(error * abs(exact)), delta=1.0e-20)
+
+    def test_input_product_error_accounting_matches_exact_arithmetic(self) -> None:
+        from fractions import Fraction
+
+        exact_nodes, size, unit = self.exact_nodes, self.size, self.unit
+        delta = [[Fraction(0)] * size for _ in range(size)]
+        for i in range(size):
+            for k in range(size):
+                if i != k:
+                    true = exact_nodes[i] - exact_nodes[k]
+                    delta[i][k] = (Fraction(float(self.nodes[i] - self.nodes[k])) - true) / true
+                    self.assertLessEqual(abs(delta[i][k]), unit)
+                    self.assertAlmostEqual(float(abs(delta[i][k])), self.relative[i, k], delta=1.0e-24)
+        rows = [sum(delta[i]) for i in range(size)]
+        worst_rounding = worst_input = worst_total = Fraction(0)
+        for i in range(size):
+            for j in range(size):
+                if i == j:
+                    continue
+                exact = self._exact_entry(i, j)
+                error = (Fraction(float(self.first[i, j])) - exact) / exact
+                # P_i / P_j carries sum_k delta_ik - sum_k delta_jk, in which
+                # delta_ij cancels; the final division by d_ij removes it once more.
+                predicted = (rows[i] - delta[i][j]) - (rows[j] - delta[j][i]) - delta[i][j]
+                worst_rounding = max(worst_rounding, abs(error - predicted))
+                worst_input = max(worst_input, abs(predicted))
+                worst_total = max(worst_total, abs(error))
+                self.assertLessEqual(float(abs(error)), self.entry_bound[i, j] * (1.0 + 1.0e-9))
+        # What is left after the input errors is the four rounded operations.
+        self.assertLessEqual(float(worst_rounding / unit), repair.STORED_ENTRY_ROUNDINGS * (1.0 + 1.0e-9))
+        # The input errors are a first-order term and exceed the withdrawn constant.
+        self.assertGreater(float(worst_input / unit), 5.0)
+        self.assertGreater(float(worst_total / unit), 5.0)
+        self.assertLessEqual(self.entry_bound.max(), (2 * self.degree + 3) * repair.UNIT_ROUNDOFF)
+
+    def test_every_entry_of_both_matrices_is_inside_the_bound(self) -> None:
+        reference = self._reference()
+        errors = [np.abs(reference.error(0, self.first)), np.abs(reference.error(1, self.second))]
+        worst = [0.0, 0.0]
+        for j in range(self.size):
+            vector = np.zeros(self.size)
+            vector[j] = 1.0
+            bounds = repair.apriori_action_bounds(reference, self.nodes, vector, self.entry_bound, self.relative)
+            for order in (0, 1):
+                self.assertTrue(np.all(bounds[order] > 0.0))
+                worst[order] = max(worst[order], float(np.max(errors[order][:, j] / bounds[order])))
+        self.assertLessEqual(worst[0], 1.0)
+        self.assertLessEqual(worst[1], 1.0)
+
+    def test_closed_form_weight_candidates_keep_a_uniform_model(self) -> None:
+        entry, difference = repair.entry_error_model("C-T2", self.nodes)
+        off = ~np.eye(self.size, dtype=bool)
+        self.assertTrue(np.all(entry[off] == repair.TRIG_ENTRY_ERROR_UNITS * repair.UNIT_ROUNDOFF))
+        self.assertTrue(np.all(difference[off] == repair.TRIG_DIFFERENCE_ERROR_UNITS * repair.UNIT_ROUNDOFF))
+        with self.assertRaises(ValueError):
+            repair.entry_error_model("current", self.nodes)
+
+
+class DuplicateSourceRowTests(unittest.TestCase):
+    """Re-review R55-F2: duplicate source rows are rejected before mapping."""
+
+    SITES = (
+        ("hard-wall-chiral", ("default", "results", "table")),
+        ("hard-wall-chiral", ("default", "results", "levels")),
+        ("gubser-rocha-emd", ("default", "results", "refinement", "cases")),
+        ("gubser-rocha-emd", ("default", "results", "cases")),
+        ("hard-wall-vector", ("shooting", "results")),
+        ("hard-wall-vector", ("spectral", "results")),
+        ("dewolfe-gubser-rosen-emd-finite-density", ("default", "results", "refinement", "states")),
+        ("dewolfe-gubser-rosen-emd-finite-density", ("default", "results", "refinement", "changes")),
+        ("dewolfe-gubser-rosen-emd-finite-density", ("default", "results", "controls")),
+    )
+
+    @staticmethod
+    def _scaled(node, factor):
+        if isinstance(node, dict):
+            return {key: (value if key in ("xi", "n", "degree", "fine_degree", "coarse_degree", "label", "observable")
+                          else DuplicateSourceRowTests._scaled(value, factor)) for key, value in node.items()}
+        if isinstance(node, list):
+            return [DuplicateSourceRowTests._scaled(value, factor) for value in node]
+        if isinstance(node, float):
+            return node * factor
+        return node
+
+    def test_exact_and_conflicting_duplicates_are_rejected_at_every_mapping_site(self) -> None:
+        import copy
+
+        table = {item["id"]: item for item in repair.load_table()["consumers"]}
+        for consumer, path in self.SITES:
+            _, records = repair.records_for(table[consumer])
+            repair.EXTRACTORS[consumer](records)
+            for factor in (1.0, 2.0):
+                with self.subTest(consumer=consumer, path=path, factor=factor):
+                    changed = copy.deepcopy(records)
+                    rows = changed
+                    for key in path:
+                        rows = rows[key]
+                    rows.append(self._scaled(copy.deepcopy(rows[0]), factor))
+                    with self.assertRaisesRegex(repair.ExtractionError, "duplicate"):
+                        repair.EXTRACTORS[consumer](changed)
+
+    def test_the_two_review_reproductions_are_rejected(self) -> None:
+        import copy
+
+        table = {item["id"]: item for item in repair.load_table()["consumers"]}
+        _, chiral = repair.records_for(table["hard-wall-chiral"])
+        changed = copy.deepcopy(chiral)
+        row = copy.deepcopy(changed["default"]["results"]["table"][0])
+        row["computed"] *= 2.0
+        changed["default"]["results"]["table"].append(row)
+        with self.assertRaisesRegex(repair.ExtractionError, "duplicate table row"):
+            repair.extract_hard_wall_chiral(changed)
+        _, rocha = repair.records_for(table["gubser-rocha-emd"])
+        changed = copy.deepcopy(rocha)
+        row = copy.deepcopy(changed["default"]["results"]["refinement"]["cases"][0])
+        for item in row["observables"].values():
+            item["middle_to_fine"] *= 1.0e6
+        changed["default"]["results"]["refinement"]["cases"].append(row)
+        with self.assertRaisesRegex(repair.ExtractionError, "duplicate refinement case row"):
+            repair.extract_gubser_rocha(changed)
+
+    def test_a_mapping_in_place_of_rows_is_rejected(self) -> None:
+        with self.assertRaises(repair.ExtractionError):
+            repair._unique_rows({"a": 1}, lambda row: row, "table")
+
+
+class ArtifactBindingTests(unittest.TestCase):
+    """Re-review R55-F3: saved and local matrices are bound to the S0 hashes."""
+
+    grid, file_name = "64|0.0|1.0", "B3-C-T1-64-0.0-1.0.npz"
+
+    def setUp(self) -> None:
+        import tempfile
+
+        self.local = repair.construct("C-T1", 64, 0.0, 1.0)
+        other_second = self.local[2].copy()
+        other_second[1, 2] *= 1.0 + 1.0e-12
+        self.other = (self.local[0], self.local[1], other_second)
+        self.payloads = synthetic_pair()
+        self.payloads[0]["result"]["grids"][self.grid]["C-T1"]["sha256"] = repair._matrix_hashes(*self.local)
+        self.payloads[1]["result"]["grids"][self.grid]["C-T1"]["sha256"] = repair._matrix_hashes(*self.other)
+        self._directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self._directory.cleanup)
+        self.arrays = Path(self._directory.name)
+
+    def _save(self, **arrays) -> None:
+        np.savez(self.arrays / self.file_name, **arrays)
+
+    def _run(self):
+        return repair.build_agreement(self.arrays, "B3", self.payloads)
+
+    def test_matching_matrices_are_admitted_and_marked_verified(self) -> None:
+        self._save(nodes=self.other[0], D1=self.other[1], D2=self.other[2])
+        result = self._run()
+        self.assertNotIn("stopped", result)
+        self.assertEqual(result["verified"], {"other_label": "B3", "local_label": "B1", "files": 1,
+                                              "saved_bytes_match_s0_hashes": True,
+                                              "local_matrices_match_s0_hashes": True})
+        self.assertGreater(result["C-T1"]["max_relative_difference"], 0.0)
+        envelope = {"stage": "build-agreement", "status": "ok", "result": result}
+        results = [item["result"] for item in self.payloads]
+        self.assertEqual(repair.validate_agreement(envelope, results), [])
+        unverified = {"stage": "build-agreement", "status": "ok",
+                      "result": {key: value for key, value in result.items() if key != "verified"}}
+        self.assertIn("not verified", " ".join(repair.validate_agreement(unverified, results)))
+
+    def test_a_correctly_named_file_with_other_bytes_stops(self) -> None:
+        damaged = self.other[2].copy()
+        damaged[3, 4] *= 1.0 + 1.0e-12
+        self._save(nodes=self.other[0], D1=self.other[1], D2=damaged)
+        result = self._run()
+        self.assertIn("saved bytes do not match the B3 S0 hashes", result["stopped"])
+        self.assertNotIn("C-T1", result)
+
+    def test_the_review_reproduction_stops(self) -> None:
+        self.payloads[1]["result"]["grids"][self.grid]["C-T1"]["sha256"]["D2"] = "c" * 64
+        self._save(nodes=self.other[0], D1=self.other[1], D2=self.other[2])
+        result = self._run()
+        self.assertIn("saved bytes do not match", result["stopped"])
+        self.assertFalse(result["passed"])
+
+    def test_a_local_matrix_that_is_not_the_recorded_one_stops(self) -> None:
+        self.payloads[0]["result"]["grids"][self.grid]["C-T1"]["sha256"]["D1"] = "d" * 64
+        self._save(nodes=self.other[0], D1=self.other[1], D2=self.other[2])
+        result = self._run()
+        self.assertIn("local matrices do not match the B1 S0 hashes", result["stopped"])
+        self.assertNotIn("C-T1", result)
+
+    def test_missing_arrays_wrong_types_shapes_and_non_finite_values_stop(self) -> None:
+        nodes, first, second = self.other
+        bad_second = second.copy()
+        bad_second[0, 0] = np.nan
+        cases = ({"nodes": nodes, "D1": first},
+                 {"nodes": nodes, "D1": first, "D2": second.astype(np.float32)},
+                 {"nodes": nodes, "D1": first, "D2": second[:-1]},
+                 {"nodes": nodes, "D1": first, "D2": bad_second})
+        for arrays in cases:
+            with self.subTest(keys=sorted(arrays), dtype=str(arrays.get("D2", first).dtype)):
+                self._save(**arrays)
+                result = self._run()
+                self.assertIn("stopped", result)
+                self.assertIn(self.file_name, result["stopped"])
+
+    def test_an_unknown_other_build_stops(self) -> None:
+        self._save(nodes=self.other[0], D1=self.other[1], D2=self.other[2])
+        result = repair.build_agreement(self.arrays, "B2", self.payloads)
+        self.assertIn("is not one of", result["stopped"])
 
 
 if __name__ == "__main__":

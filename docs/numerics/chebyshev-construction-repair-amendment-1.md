@@ -3,6 +3,10 @@
 - **Status: PROPOSED. Not adopted, not applied.** AI-assisted (Claude),
   prepared at Codex's request after its review of PR #55 (item R55-3).
   Continuation is a separate owner decision.
+- **Revised once, after Codex's re-review of `d5eb95a` (item R55-F1).** The
+  first version's C-S1 entry model was wrong at first order. Section 3 now
+  derives it from the implemented operations, and Section 3.1 states what
+  remains unresolved. The rule in Section 2 is unchanged.
 - **Post-observation.** This amendment was written after the S0 results were
   seen: every metric at 84 grids on two builds, and every qualification
   failure. It is not a prospective rule for those grids, and it must never be
@@ -50,9 +54,11 @@ second derivative, which is formed by `D @ D`.
   correct constructions and calls any factor of 2 a regression. It does so
   even when both are inside what their algorithms can guarantee.
 - **What rule 2 does.** It treats rounding inside the candidate's own
-  first-order a-priori bound as not a regression. Whether such rounding
-  matters to a physical observable is a separate question. Stage A2 answers
-  that question, and A2 is unchanged.
+  first-order a-priori bound as not a regression.
+- **What rule 2 does not settle.** Whether such rounding moves a benchmark
+  output beyond its recorded regression allowance is checked separately by
+  Stage A2, which is unchanged. A2 is a maintenance regression allowance. It
+  is not a complete uncertainty bound on a physical observable.
 - **No blanket floor.** A single constant such as `gamma_(N+1)` is not a
   bound for these metrics. It carries no term magnitudes, and it does not
   follow from the algorithm. The earlier suggestion of such a floor is
@@ -60,34 +66,84 @@ second derivative, which is formed by `D @ D`.
 
 ## 3. Roundoff convention, operation assumptions and the bound
 
-**Convention.**
+**Correction (re-review item R55-F1).** The first version of this section
+gave C-S1 a uniform entry error of `5u`. That was wrong at first order.
+- **What it missed.** It counted the rounding of the operations *on* the
+  weight products. It did not count the rounding already *inside* the
+  differences that are multiplied. Accurate accumulation of rounded factors
+  does not remove their errors.
+- **Codex's counterexample.** C-S1, degree 30 on `[1e-3, 1]`, zero-based
+  entry `(7, 8)`: the relative error against exact rational arithmetic is
+  `14.17u`.
+- **What replaces it.** The uniform constant is withdrawn. It is not
+  replaced by a larger one. The C-S1 entry model below follows the
+  implemented operations and depends on the stored nodes.
+
+**Convention and assumptions.**
 - `u = 2^-53`, the unit roundoff for round-to-nearest. This is half of
   NumPy's `eps`.
-- The analysis is first order in `u`; second-order terms are neglected.
-- The bound is evaluated with the 50-digit reference rounded to double,
-  which changes it by a relative `1e-16`.
+- IEEE binary64 arithmetic with round-to-nearest for `+`, `-`, `*` and `/`,
+  and no underflow, overflow or subnormal intermediate. This is assumed. The
+  tool does not check it at run time.
+- The analysis is first order in `u`. The neglected terms are listed at the
+  end of this section.
+- The stored nodes `u_k` are inputs. The stored-node reference is defined on
+  exactly those doubles, so they carry no error.
 
-**Entry model.** An off-diagonal first-derivative entry satisfies
-`|R1_ij - D1_ij| <= k u |R1_ij|`. The count `k` comes from each
-construction's operations:
+**C-S1 entry model, from the implemented operations.**
 
-| Construction | `k` | Operations counted (one `u` each unless stated) |
+1. **Differences.** `d_ik = fl(u_i - u_k) = (u_i - u_k)(1 + delta_ik)` with
+   `|delta_ik| <= u`.
+   - `delta_ik` is known exactly from an error-free transformation of the
+     subtraction. It is zero when the subtraction is exact.
+   - `delta_ki = delta_ik`, because `d_ki = -d_ik` exactly.
+2. **Weight products.** `P_i = prod_{k != i} d_ik`, accumulated in
+   double-double arithmetic. The accumulation adds only second-order error,
+   but `P_i` inherits every input error:
+   `P_i = P_i^exact (1 + sum_{k != i} delta_ik)`.
+3. **Ratio.** `P_i / P_j` is formed from the two `(high, low)` pairs by one
+   rounded quotient and two rounded correction additions: `3u`.
+4. **Entry.** `D1_ij = fl(ratio / d_ij)`: one more rounding, and the input
+   error of `d_ij` once more.
+
+The factor `d_ij` occurs in both `P_i` and `P_j` with the same relative
+error, so it cancels in the ratio. The final division then removes it once.
+The signed first-order relative error of an off-diagonal entry is therefore
+
+```text
+eps_ij = sum_{k != i, j} (delta_ik - delta_jk)  -  delta_ij  +  rho_ij,     |rho_ij| <= 4u
+```
+
+and the entry bound is
+
+```text
+|R1_ij - D1_ij| <= E_ij |R1_ij|,
+E_ij = 4u + A_i + A_j - |delta_ij|,        A_i = sum_{k != i} |delta_ik|.
+```
+
+- **`E_ij` is not a constant.** It is evaluated from the actual
+  `delta_ik` of the stored nodes.
+- **Worst case:** `(2N + 3) u` at degree `N`, when no subtraction is exact.
+
+**C-T1, C-T2 and C-T3** (closed-form weights, trigonometric differences)
+keep a uniform model, because their weights are exact and no product of
+differences occurs:
+
+| Quantity | Units of `u` | Operations counted (one `u` each unless stated) |
 | --- | ---: | --- |
-| **C-S1** | 5 | quotient of the two weight products; two correction additions; the stored-node difference; the final division |
-| **C-T1, C-T2, C-T3** | 12 | two sines, each `2.4u` for forming its argument plus `2u` for a library sine assumed accurate to one ulp; their product; the multiplication by the width; the final division. The total is `11.8u`, rounded up |
+| off-diagonal D1 entry, `E_ij` | 12 | two sines, each `2.4u` for forming its argument plus `2u` for a library sine assumed accurate to one ulp; their product; the multiplication by the width; the final division. The total is `11.8u`, rounded up |
+| node difference | 11 | the same without the final division (`10.8u`, rounded up) |
 
-- **C-S1's count uses no library assumption.** Its weight products are
-  accumulated in double-double arithmetic, so their own error is second
-  order.
-- **The C-T count assumes a library sine accurate to one ulp.** It also
-  bounds only rounding against the *ideal* nodes. The C-T matrices differ
-  from the stored-node reference by the node-set difference, which is not
-  rounding. That difference is deliberately not covered, so C-T is expected
-  to fail honestly.
+- **Assumption.** The library sine is accurate to one ulp. This is assumed
+  and not verified here. Unlike the C-S1 model, the C-T model is not checked
+  against exact arithmetic.
+- **Scope.** It bounds only rounding against the *ideal* nodes. The C-T
+  matrices differ from the stored-node reference by the node-set difference,
+  which is not rounding. That difference is deliberately not covered, so C-T
+  is expected to fail honestly.
 
-**Computed node difference.** Its relative error is `k_d u`, with `k_d = 1`
-for C-S1 (one subtraction) and `k_d = 11` for the C-T family (`10.8u`,
-rounded up).
+**Computed node difference.** Its relative error `E^d_ij` is `|delta_ij|`
+for C-S1 and `11u` for the C-T family.
 
 **Diagonals.** Each is the negative row sum of the rounded off-diagonal
 entries, taken in compensated arithmetic and rounded once (`u`).
@@ -97,22 +153,87 @@ entries, taken in compensated arithmetic and rounded once (`u`).
 - **First derivative.** Because the diagonal is the negative row sum, the
   entry errors act on differences of the vector:
   ```text
-  B1_i = k u * sum_{j != i} |R1_ij| |v_j - v_i|  +  u |R1_ii| |v_i|
+  B1_i = sum_{j != i} E_ij |R1_ij| |v_j - v_i|  +  u |R1_ii| |v_i|
   ```
 - **Second derivative**, explicit form `D2_ij = 2 D1_ij (D1_ii - 1/d_ij)`.
-  With the diagonal error `g_i = k u sum_{j != i} |R1_ij| + u |R1_ii|`:
+  With the diagonal error `g_i = sum_{j != i} E_ij |R1_ij| + u |R1_ii|`:
   ```text
-  |R2_ij - D2_ij| <= 2 |R1_ij| ( g_i + (k_d + 1) u / |u_i - u_j| )
-                     + (k + 2) u |R2_ij|            =: delta2_ij
+  |R2_ij - D2_ij| <= 2 |R1_ij| ( g_i + (E^d_ij + u) / |u_i - u_j| )
+                     + (E_ij + 2u) |R2_ij|            =: delta2_ij
   B2_i = sum_{j != i} delta2_ij |v_j - v_i|  +  u |R2_ii| |v_i|
   ```
+  The `+ u` is the rounded reciprocal. The `2u` is the rounded subtraction
+  and the rounded product. Multiplication by 2 is exact.
 
 **Normalization.** The measured action and its bound are divided by the
 same `S_i`, so the bound ratio does not depend on the row scaling.
 
-**What the bound is not.** It is a first-order bound for a correct
-implementation of the declared algorithm. It is not a statement about
-accuracy for any consumer, and it is not a bound on the node-set difference.
+**Neglected terms.**
+- Products of two first-order errors: at most about `(2N u)^2` relative,
+  which is `8e-26` at degree 1280.
+- The accumulation error of the double-double products (about `N u^2`
+  relative) and of the compensated sums (about `N^2 u^2 sum_j |D_ij|`
+  absolute).
+- The rounding of the two small correction terms in the weight ratio.
+- The bound is evaluated with the 50-digit reference rounded to double and
+  with `|u_i - u_j|` replaced by its rounded value. Each changes it by a
+  relative `1e-16`.
+
+**What the bound is not.**
+- It is a first-order bound for a correct implementation of the declared
+  algorithm. It is not a statement about accuracy for any consumer, and it
+  is not a bound on the node-set difference.
+- It bounds absolute values. The signed terms can cancel, so the actual
+  error can be much smaller than the bound.
+
+### 3.1 Size of the C-S1 bound, and what remains unresolved
+
+**Checked against exact rational arithmetic** (degree 30 on `[1e-3, 1]`, all
+930 off-diagonal entries; independent of the tool's 50-digit reference):
+
+| Quantity | Value |
+| --- | ---: |
+| largest entry error | `14.17u` (Codex's entry) |
+| largest input term `sum (delta_ik - delta_jk) - delta_ij` | `14.96u` |
+| largest remainder after subtracting the exact input term | `2.45u` (bound: `4u`) |
+| `E_ij`, smallest to largest | `7.7u` to `26.7u` (worst case `63u`) |
+| largest error divided by `E_ij` | `0.70` |
+
+**Size at larger degrees.** `E_ij` was evaluated from the nodes alone at
+three synthetic degrees. They are outside both the S0 set and the
+confirmation set, and no candidate matrix was evaluated on them:
+
+| Degree | Interval | Median `E_ij` | Largest `E_ij` | Largest, relative | Worst case |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 60 | `[-0.5, 1.5]` | `24u` | `40u` | `4.5e-15` | `123u` |
+| 60 | `[1e-3, 1]` | `22u` | `53u` | `5.9e-15` | `123u` |
+| 250 | `[-0.5, 1.5]` | `84u` | `157u` | `1.7e-14` | `503u` |
+| 250 | `[1e-3, 1]` | `94u` | `216u` | `2.4e-14` | `503u` |
+| 1000 | `[-0.5, 1.5]` | `310u` | `599u` | `6.6e-14` | `2003u` |
+| 1000 | `[1e-3, 1]` | `392u` | `851u` | `9.4e-14` | `2003u` |
+
+**Unresolved.**
+- **The corrected bound grows about linearly with the degree.** That is a
+  property of the derivation: it sums absolute values of up to `2N - 1`
+  input errors.
+- **Consequence for rule 2.** At degree 1000 the bound admits entry errors
+  up to about `1e-13` relative. Rule 2 would excuse an action component that
+  exceeds twice the current value whenever it stays inside a bound of that
+  size. Whether that is an acceptable regression rule at the larger degrees
+  is **not established**.
+- **Not measured.** Whether C-S1's actual errors grow in the same way is not
+  known. Measuring it needs a pass over the S0 grids, which this correction
+  step does not include.
+- **Not tuned.** The bound was not tightened or loosened to reach an
+  outcome.
+
+**Two alternatives, neither adopted nor evaluated.**
+- **A signed prediction in place of the bound.** The input term is exactly
+  computable, which leaves only the `4u` remainder unknown. Using it would
+  be a different rule and would need its own review.
+- **A different candidate.** A construction that carries each subtraction
+  error into the weight products would remove the input term. That is a new
+  candidate. The candidate set is frozen and is not extended here.
 
 ## 4. Adverse controls
 
@@ -121,11 +242,14 @@ with C-S1 as the candidate:
 
 | Operator | Qualifies under rule 2 | D1 bound ratio | D2 bound ratio | Worst (a) / current |
 | --- | --- | ---: | ---: | ---: |
-| undamaged C-S1 | yes | `0.18` | `0.11` | `0.028` |
-| one D1 entry scaled by `1 + 1e-11` | **no** | `1.4e4` | `0.11` | `154` |
-| all off-diagonal D1 entries perturbed by `1e-12`, diagonal recomputed | **no** | `1.5e3` | `0.11` | `90` |
-| matrices built for nodes shifted by `1e-10` (a stored-node regression) | **no** | `1.9e6` | `7.0e5` | `8.6e5` |
-| one D2 entry scaled by `1 + 1e-10` | **no** | `0.18` | `2.3e4` | `1.7e3` |
+| undamaged C-S1 | yes | `0.088` | `0.047` | `0.028` |
+| one D1 entry scaled by `1 + 1e-11` | **no** | `5.4e3` | `0.047` | `154` |
+| all off-diagonal D1 entries perturbed by `1e-12`, diagonal recomputed | **no** | `7.2e2` | `0.047` | `90` |
+| matrices built for nodes shifted by `1e-10` (a stored-node regression) | **no** | `1.1e6` | `3.6e5` | `8.5e5` |
+| one D2 entry scaled by `1 + 1e-10` | **no** | `0.088` | `7.0e3` | `1.6e3` |
+
+The bound ratios are those of the corrected bound of Section 3. They are
+smaller than in the first version because the corrected bound is larger.
 
 Further synthetic tests show that rule 2:
 - still fails a candidate on metric (a) alone, even when every action
@@ -134,9 +258,20 @@ Further synthetic tests show that rule 2:
 - still fails an action component whose bound ratio exceeds 1, or which has
   no recorded bound ratio.
 
-**Bound validity.** On ten small grids outside the S0 node set (degrees 7,
-11, 13, 21 and 30, on `[-0.5, 1.5]` and `[1e-3, 1]`), C-S1's largest bound
-ratio is `0.39` for D1 and `0.16` for D2.
+**Bound validity.** On ten small grids outside the S0 node set and the
+confirmation set (degrees 7, 11, 13, 21 and 30, on `[-0.5, 1.5]` and
+`[1e-3, 1]`), C-S1's largest bound ratio is:
+
+| Vectors | D1 | D2 |
+| --- | ---: | ---: |
+| the three smooth vectors `v1`–`v3` | `0.27` | `0.14` |
+| every coordinate vector, which tests every matrix entry | `0.72` | `0.33` |
+
+- **Regression tests** hold the counterexample, the exact-arithmetic
+  accounting of Section 3.1 and the every-entry check at degree 30.
+- **Limit of these checks.** They show the bound holding where it was
+  tested. They are not a proof, and they say nothing about the larger
+  degrees (Section 3.1).
 
 ## 5. Retrospective replay versus new confirmation
 
@@ -175,16 +310,17 @@ ratio is `0.39` for D1 and `0.16` for D2.
   constant chosen that way would be chosen for the result.
 
 **Whether C-S1 would qualify under rule 2 on either set is not known.** It
-has not been computed, and the constants of Section 3 come from the
-operation counts, not from the S0 values.
+has not been computed. The entry model of Section 3 comes from the
+implemented operations and the stored nodes, not from the S0 metric values.
 
 ## 7. Budget
 
-Reconciled from the existing logs (report Section 7):
-- **Charged so far:** about 21.2 of 60 minutes of local execution. That
-  includes the 458 s full test suite omitted from the first table, and a
-  conservative 60 s for short untimed runs.
-- **Remaining:** at most about 38.8 minutes.
+Reconciled from the existing logs (report Sections 1, 7 and 8):
+- **Charged so far:** about 21.7 of 60 minutes of local execution. That
+  includes the 458 s full test suite omitted from the first table, a
+  conservative 60 s for short untimed runs, and 30 s for the correction
+  step after the re-review.
+- **Remaining:** at most about 38.3 minutes.
 - **Estimated need for a continuation:**
 
   | Step | Estimate |
