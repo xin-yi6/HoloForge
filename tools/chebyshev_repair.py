@@ -182,6 +182,7 @@ CHIRAL_OBSERVABLES = ("m_pi_MeV", "m_rho_MeV", "m_a1_MeV", "f_pi_MeV", "sqrt_F_r
 GR_NAME_MAP = {"mu_bh": "mu_bh", "energy_density": "hat_epsilon", "entropy_density": "hat_s",
                "charge_density": "hat_rho", "temperature": "temperature", "chemical_potential": "Omega"}
 DGR_FIELDS = ("temperature_BH", "entropy_BH", "susceptibility_integral", "chi_2_over_T2_BH")
+DGR_QUADRATURE_FIELDS = ("susceptibility_integral", "chi_2_over_T2_BH")
 DGR_POINT_FIELDS = ("temperature_BH", "mu_BH", "entropy_BH", "rho_canonical_BH")
 DGR_CRITICAL_FIELDS = ("phi_H", "eta", "T_BH", "mu_BH", "rho_canonical_BH")
 SOFT_WALL_TABLE = ("spectral-40", "spectral-56", "spectral-64", "spectral-100", "spectral-64-modes-6")
@@ -462,14 +463,18 @@ def extract_dgr_neutral(records: Mapping[str, Any]) -> Dict[str, Any]:
             coarse = _number(_get(points["80"][position], field), field)
             if field != "chi_2_over_T2_BH":
                 largest = max(largest, abs(fine - middle) / max(abs(fine), abs(middle), 1.0e-300))
-            high = {"refinement": abs(fine - middle)}
-            low = {"refinement": abs(middle - coarse)}
-            if field in ("susceptibility_integral", "chi_2_over_T2_BH"):
-                high["quadrature"] = quadrature_change * abs(fine)
-            _add(out["leaves"], f"curve|{position}|{field}", _leaf(_number(_get(curve[position], field), field), high))
-            _add(out["leaves"], f"degree=150|{position}|{field}", _leaf(fine, high))
-            _add(out["leaves"], f"degree=120|{position}|{field}", _leaf(middle, low))
-            _add(out["leaves"], f"degree=80|{position}|{field}", _leaf(coarse, low))
+            # The quadrature estimator applies to both susceptibility fields
+            # at every degree, converted by the leaf's own magnitude (plan
+            # Section 8.2).
+            leaves = (("curve", _number(_get(curve[position], field), field), abs(fine - middle)),
+                      ("degree=150", fine, abs(fine - middle)),
+                      ("degree=120", middle, abs(middle - coarse)),
+                      ("degree=80", coarse, abs(middle - coarse)))
+            for prefix, value, refinement in leaves:
+                estimators = {"refinement": refinement}
+                if field in DGR_QUADRATURE_FIELDS:
+                    estimators["quadrature"] = quadrature_change * abs(value)
+                _add(out["leaves"], f"{prefix}|{position}|{field}", _leaf(value, estimators))
         for field in ("phi_h", "x_h", "temperature_MeV", "s_over_T3_plot", "chi_2_over_T2_plot"):
             _add(out["report_only"], f"curve|{position}|{field}", _number(_get(curve[position], field), field))
     recorded = _number(_get(results, "refinement", "maximum_final_change"), "refinement")
@@ -2275,13 +2280,51 @@ def consumer_commands(consumer: Mapping[str, Any]) -> Dict[str, List[str]]:
     return commands
 
 
-def regression_run(build_label: str, source: Path, role: str, consumers: Optional[Sequence[str]] = None) -> Dict[str, Any]:
-    """Run every Section 8 command against the package in ``source`` and extract the table.
+APPROVED_SOURCES: Dict[str, Dict[str, Any]] = {
+    # Package source digests of the two trees of this milestone, as recorded
+    # by the verifiers themselves (``software_versions``).
+    "baseline": {"commit": "5846975", "construction": None,
+                 "source_sha256": "66d9bd288254e4a11253e0345187e1d8cbdbe48dd19ba0463f559361e800277a"},
+    "candidate": {"commit": "bea799b", "construction": SELECTED_CONSTRUCTION,
+                  "source_sha256": "1c731e1b97aef6f3b7215bd28e04512fc50242bd8b99e928aa57edea53229d3a"},
+}
+
+
+def _run_verdict(record: Mapping[str, Any], exit_status: int) -> Dict[str, Any]:
+    """Strict verdict of one verifier record; raises ``ExtractionError`` if malformed.
+
+    A scientific FAIL (a well-formed record whose checks do not all pass,
+    with exit status 1) is a valid verdict. Anything else that is not a
+    clean PASS with exit status 0 is an execution failure or malformed.
+    """
+
+    passed = record.get("passed")
+    checks = record.get("acceptance_checks")
+    if type(passed) is not bool or not isinstance(checks, list) or not checks:
+        raise ExtractionError("the record has no Boolean verdict or no acceptance checks")
+    verdicts: Dict[str, Any] = {}
+    for check in checks:
+        if not isinstance(check, Mapping) or not isinstance(check.get("id"), str) or type(check.get("passed")) is not bool:
+            raise ExtractionError("an acceptance check has no identifier or no Boolean verdict")
+        _add(verdicts, check["id"], {"passed": check["passed"], "value": check.get("value"),
+                                     "criterion": check.get("criterion")})
+    if passed != all(item["passed"] for item in verdicts.values()):
+        raise ExtractionError("the record verdict contradicts its acceptance checks")
+    if exit_status != (0 if passed else 1):
+        raise ExtractionError(f"exit status {exit_status} does not match the record verdict")
+    return verdicts
+
+
+def regression_run(build_label: str, source: Path, role: str, consumers: Optional[Sequence[str]] = None,
+                   records_dir: Optional[Path] = None, purpose: str = "regression") -> Dict[str, Any]:
+    """Run Section 8 commands against the package in ``source`` and extract the table.
 
     ``role`` is ``baseline`` (the pre-change tree) or ``candidate``. Each
     verifier runs as a subprocess of this interpreter with ``source/src``
-    first on its path. A record that does not have the audited structure
-    is a stop.
+    first on its path. Its complete standard output is hashed, and with
+    ``records_dir`` saved unchanged (never overwriting). Three outcomes are
+    kept apart: a scientific PASS or FAIL of a well-formed record is data;
+    an execution failure or malformed record is a stop of this stage.
     """
 
     import os
@@ -2289,7 +2332,7 @@ def regression_run(build_label: str, source: Path, role: str, consumers: Optiona
 
     source = source.resolve()
     if not (source / "src" / "holoforge" / "__init__.py").is_file():
-        return {"passed": False, "stopped": "the source tree has no src/holoforge package"}
+        return {"passed": False, "stop_kind": "execution failure", "stopped": "the source tree has no src/holoforge package"}
     environment = dict(os.environ, PYTHONPATH=str(source / "src"), PYTHONDONTWRITEBYTECODE="1")
     report: Dict[str, Any] = {}
     identities = set()
@@ -2302,37 +2345,51 @@ def regression_run(build_label: str, source: Path, role: str, consumers: Optiona
         for name, arguments in consumer_commands(consumer).items():
             started = time.perf_counter()
             completed = subprocess.run([sys.executable, "-m", "holoforge", "verify", *arguments, "--json"],
-                                       capture_output=True, text=True, env=environment, cwd=source)
+                                       capture_output=True, env=environment, cwd=source)
             seconds = time.perf_counter() - started
+            run: Dict[str, Any] = {"arguments": arguments, "exit_status": completed.returncode, "seconds": seconds,
+                                   "record_sha256": hashlib.sha256(completed.stdout).hexdigest(),
+                                   "record_bytes": len(completed.stdout)}
+            if records_dir is not None:
+                records_dir.mkdir(parents=True, exist_ok=True)
+                file_name = f"{role}-{build_label}--{identifier}--{name}.json"
+                try:
+                    with open(records_dir / file_name, "xb") as handle:
+                        handle.write(completed.stdout)
+                except FileExistsError:
+                    return {"passed": False, "stop_kind": "execution failure", "consumers": report,
+                            "stopped": f"{file_name} already exists; refusing to overwrite it"}
+                run["record_file"] = file_name
             try:
-                record = json.loads(completed.stdout)
+                record = json.loads(completed.stdout.decode("utf-8"))
                 versions = record["software_versions"]
-                checks = {check["id"]: {"passed": bool(check["passed"]), "value": check.get("value"),
-                                        "criterion": check.get("criterion")} for check in record["acceptance_checks"]}
-                if len(checks) != len(record["acceptance_checks"]):
-                    raise ExtractionError("duplicate acceptance check")
+                run["acceptance_checks"] = _run_verdict(record, completed.returncode)
+                run["passed"] = record["passed"]
             except (ValueError, KeyError, TypeError, ExtractionError) as error:
-                return {"passed": False, "consumers": report,
+                return {"passed": False, "stop_kind": "execution failure", "consumers": report,
                         "stopped": f"{identifier} {name}: no usable record (exit {completed.returncode}; "
-                                   f"{type(error).__name__}); stderr: {completed.stderr.strip()[-300:]}"}
+                                   f"{type(error).__name__}: {error}); stderr: "
+                                   f"{completed.stderr.decode('utf-8', 'replace').strip()[-300:]}"}
             records[name] = record
             identities.add((versions.get("holoforge_source_sha256"), versions.get("chebyshev_construction")))
-            runs[name] = {"arguments": arguments, "exit_status": completed.returncode, "seconds": seconds,
-                          "passed": bool(record.get("passed")), "acceptance_checks": checks}
+            runs[name] = run
         try:
             extracted = EXTRACTORS[identifier](records)
         except ExtractionError as error:
-            return {"passed": False, "consumers": report,
+            return {"passed": False, "stop_kind": "execution failure", "consumers": report,
                     "stopped": f"{identifier}: the record does not have the audited structure ({error})"}
         report[identifier] = dict(extracted, runs=runs)
     if len(identities) != 1:
-        return {"passed": False, "consumers": report, "stopped": "the runs do not come from one source tree"}
+        return {"passed": False, "stop_kind": "execution failure", "consumers": report,
+                "stopped": "the runs do not come from one source tree"}
     source_sha256, construction = next(iter(identities))
-    expected = SELECTED_CONSTRUCTION if role == "candidate" else None
-    if construction != expected:
-        return {"passed": False, "consumers": report,
-                "stopped": f"{role} records report construction {construction!r}, expected {expected!r}"}
-    return {"passed": True, "build_label": build_label, "role": role, "consumers": report,
+    approved = APPROVED_SOURCES[role]
+    if construction != approved["construction"] or source_sha256 != approved["source_sha256"]:
+        return {"passed": False, "stop_kind": "execution failure", "consumers": report,
+                "stopped": f"{role} records report source {str(source_sha256)[:12]} and construction {construction!r}; "
+                           f"the approved {role} is {approved['source_sha256'][:12]} ({approved['commit']}), "
+                           f"{approved['construction']!r}"}
+    return {"passed": True, "build_label": build_label, "role": role, "purpose": purpose, "consumers": report,
             "source_sha256": source_sha256, "chebyshev_construction": construction,
             "complete": consumers is None,
             "seconds_total": sum(run["seconds"] for item in report.values() for run in item["runs"].values())}
@@ -2350,15 +2407,89 @@ def _difference(first: Any, second: Any) -> float:
     return abs(float(first) - float(second))
 
 
+def _finite_value(value: Any) -> bool:
+    if isinstance(value, (list, tuple)):
+        return len(value) == 2 and all(_finite_value(item) for item in value)
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def validate_regression_run(payload: Any, role: str) -> List[str]:
+    """Admission of one regression-run output: coverage, verdicts, data and identity.
+
+    A scientific FAIL of a verifier is admissible. Missing consumers or
+    commands, changed arguments, non-Boolean or contradictory verdicts,
+    exit statuses other than 0 (pass) and 1 (scientific fail), non-finite
+    data, or a source other than the approved one are not.
+    """
+
+    result = payload.get("result") if isinstance(payload, Mapping) else None
+    if not isinstance(result, Mapping):
+        return [f"a {role} input is not a regression-run output"]
+    label = result.get("build_label")
+    where = f"{role} {label}"
+    errors: List[str] = []
+    if payload.get("status") != "ok" or payload.get("stage") != f"regression-{role}" or result.get("passed") is not True \
+            or result.get("complete") is not True or result.get("role") != role:
+        errors.append(f"{where}: not a complete successful {role} run")
+    if payload.get("plan_sha256") != _file_sha256(ROOT / PLAN):
+        errors.append(f"{where}: not produced under the frozen plan")
+    if label not in REQUIRED_BUILDS:
+        errors.append(f"{where}: unknown build")
+    approved = APPROVED_SOURCES[role]
+    if result.get("source_sha256") != approved["source_sha256"] or result.get("chebyshev_construction") != approved["construction"]:
+        errors.append(f"{where}: source or construction is not the approved {role} ({approved['commit']})")
+    consumers = result.get("consumers")
+    expected = {consumer["id"]: consumer_commands(consumer) for consumer in load_table()["consumers"]}
+    if not isinstance(consumers, Mapping) or sorted(consumers) != sorted(expected):
+        errors.append(f"{where}: consumers are not the plan's {len(expected)}")
+        return errors
+    for identifier, commands in expected.items():
+        item = consumers[identifier]
+        runs = item.get("runs") if isinstance(item, Mapping) else None
+        if not isinstance(runs, Mapping) or sorted(runs) != sorted(commands):
+            errors.append(f"{where} {identifier}: runs are not the plan's commands")
+            continue
+        for name, arguments in commands.items():
+            run = runs[name]
+            checks = run.get("acceptance_checks") if isinstance(run, Mapping) else None
+            if not isinstance(run, Mapping) or run.get("arguments") != arguments:
+                errors.append(f"{where} {identifier} {name}: arguments differ from the plan's")
+                continue
+            if type(run.get("passed")) is not bool or not isinstance(checks, Mapping) or not checks \
+                    or any(not isinstance(check, Mapping) or type(check.get("passed")) is not bool for check in checks.values()):
+                errors.append(f"{where} {identifier} {name}: verdicts are missing or not Boolean")
+                continue
+            if run["passed"] != all(check["passed"] for check in checks.values()):
+                errors.append(f"{where} {identifier} {name}: record verdict contradicts its checks")
+            status = run.get("exit_status")
+            if type(status) is not int or status != (0 if run["passed"] else 1):
+                errors.append(f"{where} {identifier} {name}: exit status {status!r} does not match the verdict")
+            if any(check.get("value") is not None and not isinstance(check["value"], bool) and not _finite_value(check["value"])
+                   for check in checks.values()):
+                errors.append(f"{where} {identifier} {name}: a check value is not finite")
+        leaves = item.get("leaves")
+        if not isinstance(leaves, Mapping) or not leaves:
+            errors.append(f"{where} {identifier}: no table leaves")
+        elif any(not isinstance(leaf, Mapping) or not _finite_value(leaf.get("value"))
+                 or not isinstance(leaf.get("estimators"), Mapping) or not leaf["estimators"]
+                 or any(not _valid_metric(value) for value in leaf["estimators"].values())
+                 or ("key_coordinate" in leaf and not _finite_value(leaf["key_coordinate"])) for leaf in leaves.values()):
+            errors.append(f"{where} {identifier}: a leaf value or estimator is missing or not finite")
+        if not isinstance(item.get("controls"), Mapping) or not isinstance(item.get("report_only"), Mapping) \
+                or not _finite_tree({"controls": item.get("controls"), "report_only": item.get("report_only")}):
+            errors.append(f"{where} {identifier}: controls or report-only values are missing or not finite")
+    return errors
+
+
 def _regression_inputs(payloads: Sequence[Mapping[str, Any]], role: str) -> Tuple[Dict[str, Any], List[str]]:
     errors: List[str] = []
     by_build: Dict[str, Any] = {}
     for payload in payloads:
-        result = payload.get("result") if isinstance(payload, Mapping) else None
-        if not isinstance(result, Mapping) or payload.get("status") != "ok" or result.get("role") != role \
-                or result.get("complete") is not True or payload.get("plan_sha256") != _file_sha256(ROOT / PLAN):
-            errors.append(f"an input is not a complete successful {role} run under the frozen plan")
+        problems = validate_regression_run(payload, role)
+        errors += problems
+        if problems:
             continue
+        result = payload["result"]
         if result["build_label"] in by_build:
             errors.append(f"duplicate {role} build {result['build_label']}")
         by_build[result["build_label"]] = result
@@ -2374,7 +2505,8 @@ def regression_limits(baselines: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
 
     by_build, errors = _regression_inputs(baselines, "baseline")
     if errors:
-        return {"passed": False, "stopped": "invalid baseline evidence", "evidence_errors": errors}
+        return {"passed": False, "stop_kind": "inadmissible evidence", "stopped": "invalid baseline evidence",
+                "evidence_errors": errors}
     first, second = (by_build[label]["consumers"] for label in REQUIRED_BUILDS)
     limits: Dict[str, Any] = {}
     for identifier in first:
@@ -2412,13 +2544,12 @@ def regression_compare(baselines: Sequence[Mapping[str, Any]], limits_payload: M
     elif not errors and regression_limits(baselines).get("limits") != limits:
         errors.append("the limits do not follow from these baselines")
     if errors:
-        return {"passed": False, "stopped": "invalid regression evidence", "evidence_errors": errors}
+        return {"passed": False, "stop_kind": "inadmissible evidence", "stopped": "invalid regression evidence",
+                "evidence_errors": errors[:200]}
     violations: Dict[str, List[Any]] = {"A1": [], "A2": [], "controls": [], "keys": []}
     summary: Dict[str, Any] = {}
     gates: Dict[str, Any] = {}
     for label in REQUIRED_BUILDS:
-        if cand[label]["source_sha256"] == base[label]["source_sha256"]:
-            return {"passed": False, "stopped": f"{label}: baseline and candidate ran the same source"}
         summary[label] = {}
         gates[label] = {}
         for identifier, before in base[label]["consumers"].items():
@@ -2499,8 +2630,146 @@ def regression_compare(baselines: Sequence[Mapping[str, Any]], limits_payload: M
                                "candidate_source_sha256": {label: cand[label]["source_sha256"] for label in REQUIRED_BUILDS},
                                "passed": not any(counts.values())}
     if not outcome["passed"]:
+        outcome["stop_kind"] = "scientific regression stop"
         outcome["stopped"] = "regression stop: " + ", ".join(f"{name} ({count})" for name, count in counts.items() if count)
     return outcome
+
+
+def corrected_dgr_estimators(baseline: Mapping[str, Any]) -> Tuple[Dict[str, Any], int]:
+    """A copy of a saved baseline with the DGR quadrature estimator the plan requires.
+
+    The first extractor gave the quadrature estimator only to the curve and
+    degree-150 susceptibility leaves. The plan (Section 8.2) gives it to
+    both susceptibility fields at every degree, converted by the leaf's
+    magnitude. The saved files hold no full record, so the relative
+    estimator is recovered from the degree-150 leaf at the same position
+    and rescaled. The saved file is not modified.
+    """
+
+    import copy
+
+    payload = copy.deepcopy(dict(baseline))
+    leaves = payload["result"]["consumers"]["dewolfe-gubser-rosen-emd"]["leaves"]
+    added = 0
+    for key, leaf in leaves.items():
+        prefix, position, field = key.split("|")
+        if field not in DGR_QUADRATURE_FIELDS or "quadrature" in leaf["estimators"]:
+            continue
+        fine = leaves[f"degree=150|{position}|{field}"]
+        leaf["estimators"]["quadrature"] = fine["estimators"]["quadrature"] / abs(fine["value"]) * abs(leaf["value"])
+        added += 1
+    return payload, added
+
+
+def corrected_regression_replay(baselines: Sequence[Mapping[str, Any]], candidates: Sequence[Mapping[str, Any]],
+                                original: Mapping[str, Any]) -> Dict[str, Any]:
+    """Post-observation replay of S2 on saved data with the corrected DGR estimator."""
+
+    corrected = [corrected_dgr_estimators(baseline) for baseline in baselines]
+    payloads = [payload for payload, _ in corrected]
+    limits = regression_limits(payloads)
+    if not limits.get("passed"):
+        return dict(limits, label="post-observation saved-data replay")
+    outcome = regression_compare(payloads, {"stage": "r0-limits", "status": "ok", "result": limits}, candidates)
+    before = original["result"]["limits"]["dewolfe-gubser-rosen-emd"]
+    after = limits["limits"]["dewolfe-gubser-rosen-emd"]
+    changed = {key: {label: {"original": before[key][label]["allowance"], "corrected": after[key][label]["allowance"]}
+                     for label in REQUIRED_BUILDS}
+               for key in after if any(after[key][label]["allowance"] != before[key][label]["allowance"]
+                                       for label in REQUIRED_BUILDS)}
+    unchanged_elsewhere = all(limits["limits"][name] == original["result"]["limits"][name]
+                              for name in limits["limits"] if name != "dewolfe-gubser-rosen-emd")
+    outcome.update({
+        "label": "post-observation saved-data replay; the original R0 limits and S2 comparison are unchanged "
+                 "and remain the frozen record",
+        "correction": "DGR neutral: quadrature estimator added to the degree-80 and degree-120 susceptibility "
+                      "leaves (plan Section 8.2), rescaled from the saved degree-150 leaf",
+        "estimators_added_per_build": [count for _, count in corrected],
+        "allowances_changed": len(changed), "changed_allowances": changed,
+        "other_consumers_limits_identical": unchanged_elsewhere,
+    })
+    return outcome
+
+
+# ---------------------------------------------------------------------------
+# Gubser--Rocha recovery diagnosis (after the S2 stop; new runs, not the S2 records)
+# ---------------------------------------------------------------------------
+
+GR_CONSUMER = "gubser-rocha-emd"
+
+
+def gr_refinement_diagnosis(recoveries: Sequence[Mapping[str, Any]], records_dir: Path,
+                            originals: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
+    """Which states and observables fail the Gubser--Rocha ordering clause.
+
+    Reads the full records saved by the four recovery runs, checks each
+    against its recorded hash, and lists every state/observable with its
+    two refinement changes and its exact-solution errors. ``originals``
+    maps ``role|build`` to the committed R0/S2 output, to show whether a
+    recovery run reproduces the original leaves and check values.
+    """
+
+    report: Dict[str, Any] = {}
+    for payload in recoveries:
+        result = payload.get("result") if isinstance(payload, Mapping) else None
+        if not isinstance(result, Mapping) or payload.get("status") != "ok" or result.get("purpose") != "recovery" \
+                or sorted(result.get("consumers", {})) != [GR_CONSUMER]:
+            return {"passed": False, "stop_kind": "inadmissible evidence", "stopped": "an input is not a Gubser-Rocha recovery run"}
+        role, build = result["role"], result["build_label"]
+        approved = APPROVED_SOURCES[role]
+        if result["source_sha256"] != approved["source_sha256"] or result["chebyshev_construction"] != approved["construction"]:
+            return {"passed": False, "stop_kind": "inadmissible evidence", "stopped": f"{role} {build}: not the approved source"}
+        run = result["consumers"][GR_CONSUMER]["runs"]["default"]
+        data = (records_dir / run["record_file"]).read_bytes()
+        if hashlib.sha256(data).hexdigest() != run["record_sha256"]:
+            return {"passed": False, "stop_kind": "inadmissible evidence", "stopped": f"{run['record_file']}: hash mismatch"}
+        record = json.loads(data.decode("utf-8"))
+        refinement = _get(record, "results", "refinement")
+        floor = _number(_get(refinement, "ordering_floor"), "floor")
+        exact = {}
+        for case in _get(record, "results", "cases"):
+            errors = {}
+            for field in GR_NAME_MAP.values():
+                value = _number(_get(case, "thermodynamics", field), field)
+                reference = _number(_get(case, "source_exact_thermodynamics", field), field)
+                errors[field] = {"absolute": abs(value - reference), "scaled": abs(value - reference) / max(1.0, abs(reference))}
+            exact[_get(case, "xi")] = errors
+        rows = []
+        for case in _get(refinement, "cases"):
+            xi = _get(case, "xi")
+            for name, item in _get(case, "observables").items():
+                earlier = _number(_get(item, "coarse_to_middle"), "change")
+                final = _number(_get(item, "middle_to_fine"), "change")
+                ordered = _get(item, "ordered_above_floor")
+                if earlier > floor or ordered is not True:
+                    rows.append({"xi": xi, "observable": name, "field": GR_NAME_MAP[name], "coarse_to_middle": earlier,
+                                 "middle_to_fine": final, "ordered_above_floor": ordered,
+                                 "exact_solution_error": exact[xi][GR_NAME_MAP[name]]})
+        original = originals[f"{role}|{build}"]["result"]["consumers"][GR_CONSUMER]
+        recovered = result["consumers"][GR_CONSUMER]
+        checks = {check["id"]: check for check in record["acceptance_checks"]}
+        report[f"{role}|{build}"] = {
+            "record_file": run["record_file"], "record_sha256": run["record_sha256"], "exit_status": run["exit_status"],
+            "passed": record["passed"], "degrees": _get(refinement, "degrees"), "ordering_floor": floor,
+            "coarse_to_middle_maximum": _get(refinement, "coarse_to_middle_maximum"),
+            "maximum_final_change": _get(refinement, "maximum_final_change"),
+            "ordering_failures": _get(refinement, "ordering_failures"),
+            "spectral_refinement_check": {key: checks["spectral-refinement"].get(key) for key in ("passed", "value", "criterion")},
+            "source_thermodynamics_check": {key: checks["source-thermodynamics"].get(key) for key in ("passed", "value", "criterion")},
+            "rows_above_floor_or_unordered": rows,
+            "failing_rows": [row for row in rows if row["ordered_above_floor"] is not True],
+            "largest_exact_solution_error_scaled": max(item["scaled"] for errors in exact.values() for item in errors.values()),
+            "reproduces_original_leaves": json.dumps(_jsonable(recovered["leaves"]), sort_keys=True)
+            == json.dumps(original["leaves"], sort_keys=True),
+            "reproduces_original_check_verdicts_and_values": {
+                key: {"passed": item["passed"], "value": item["value"]} for key, item in recovered["runs"]["default"]["acceptance_checks"].items()}
+            == {key: {"passed": item["passed"], "value": item["value"]}
+                for key, item in original["runs"]["default"]["acceptance_checks"].items()},
+        }
+    if sorted(report) != sorted(f"{role}|{build}" for role in APPROVED_SOURCES for build in REQUIRED_BUILDS):
+        return {"passed": False, "stop_kind": "inadmissible evidence", "stopped": "the four recovery runs are not all present"}
+    return {"passed": True, "label": "new recovery runs after the S2 stop; not the original R0/S2 records",
+            "runs": report}
 
 
 # ---------------------------------------------------------------------------
@@ -2665,13 +2934,23 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     regression.add_argument("--build-label", required=True, choices=REQUIRED_BUILDS)
     regression.add_argument("--source", type=Path, required=True, help="tree whose src/ is verified")
     regression.add_argument("--role", required=True, choices=("baseline", "candidate"))
-    regression.add_argument("--consumers", help="comma-separated subset, for development only")
+    regression.add_argument("--consumers", help="comma-separated subset (development or recovery only)")
+    regression.add_argument("--records-dir", type=Path, help="save each verifier's complete output here")
+    regression.add_argument("--purpose", default="regression", choices=("regression", "recovery"))
     limits = commands.add_parser("r0-limits", help="allowances from the two baseline runs")
     limits.add_argument("baselines", nargs=2, type=Path)
     s2 = commands.add_parser("s2", help="A1, A2, A3 and control identity")
     s2.add_argument("--baselines", nargs=2, type=Path, required=True)
     s2.add_argument("--limits", type=Path, required=True)
     s2.add_argument("--candidates", nargs=2, type=Path, required=True)
+    replay = commands.add_parser("s2-replay-corrected", help="saved-data replay with the corrected DGR estimator")
+    replay.add_argument("--baselines", nargs=2, type=Path, required=True)
+    replay.add_argument("--limits", type=Path, required=True, help="the original r0-limits output, for comparison")
+    replay.add_argument("--candidates", nargs=2, type=Path, required=True)
+    diagnosis = commands.add_parser("gr-diagnosis", help="Gubser-Rocha ordering rows from the recovery records")
+    diagnosis.add_argument("--recoveries", nargs=4, type=Path, required=True)
+    diagnosis.add_argument("--records-dir", type=Path, required=True)
+    diagnosis.add_argument("--originals", nargs=4, type=Path, required=True, help="committed R0 and S2 outputs")
     s3 = commands.add_parser("s3", help="O-C decomposition with the production grid")
     s3.add_argument("--build-label", required=True, choices=REQUIRED_BUILDS)
     args = parser.parse_args(argv)
@@ -2705,8 +2984,20 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return emit("c1", result, started, compact=True)
     if args.stage == "regression-run":
         subset = tuple(args.consumers.split(",")) if args.consumers else None
-        return emit(f"regression-{args.role}", regression_run(args.build_label, args.source, args.role, subset),
-                    started, compact=True)
+        stage = f"regression-{args.role}" if args.purpose == "regression" else f"recovery-{args.role}"
+        return emit(stage, regression_run(args.build_label, args.source, args.role, subset, args.records_dir,
+                                          args.purpose), started, compact=True)
+    if args.stage == "s2-replay-corrected":
+        return emit("s2-replay-corrected", corrected_regression_replay(
+            [_read_json(path) for path in args.baselines], [_read_json(path) for path in args.candidates],
+            _read_json(args.limits)), started)
+    if args.stage == "gr-diagnosis":
+        originals = {}
+        for path in args.originals:
+            payload = _read_json(path)
+            originals[f"{payload['result']['role']}|{payload['result']['build_label']}"] = payload
+        return emit("gr-diagnosis", gr_refinement_diagnosis([_read_json(path) for path in args.recoveries],
+                                                            args.records_dir, originals), started)
     if args.stage == "r0-limits":
         return emit("r0-limits", regression_limits([_read_json(path) for path in args.baselines]), started, compact=True)
     if args.stage == "s2":

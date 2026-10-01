@@ -745,3 +745,43 @@ cause of the two failing gates is strong, and the three stop items are all
 at or below the `1e-8` relative level. But whether they are acceptable is a
 judgement about three benchmarks' contracts, and it should not be made by
 the author of the change.
+
+## 10. Correction and diagnosis after the S2 review (1 October 2026)
+
+Codex reviewed `b87213d` and kept the S2 stop. The owner approved one
+consolidated step: at most one hour of work and ten minutes of local
+execution, inside the existing cumulative ceilings. The S2 stop and the
+do-not-merge status are unchanged. No production code, gate, threshold or
+allowance is changed, and S3 is not run.
+
+### 10.1 Recovery scope, recorded before the runs
+
+**Why.** The S2 runner kept only the extracted table and discarded each
+verifier's full record. The saved files therefore do not say which
+Gubser--Rocha state and observable failed the ordering clause. A search of
+the working files found no retained full record.
+
+**What is authorized and will be run, once each, with no retry:**
+
+| # | Role | Build | Source | Command |
+| --- | --- | --- | --- | --- |
+| 1 | baseline | B1 | extracted copy of `main` at `5846975` | `holoforge verify gubser-rocha-emd --json` |
+| 2 | baseline | B3 | the same | the same |
+| 3 | candidate | B1 | this branch, package source as frozen at `bea799b` | the same |
+| 4 | candidate | B3 | the same | the same |
+
+- **Unchanged inputs.** The arguments are the plan's Section 8 command for
+  this consumer. The runner refuses a source whose package digest is not
+  the approved one (`66d9bd28…` for the baseline, `1c731e1b…` for the
+  candidate).
+- **Kept.** Each run's complete output, byte for byte, with its SHA-256.
+- **Label.** These are new recovery runs. They are not the original R0 or
+  S2 records, and nothing in the original evidence is replaced.
+- **What will be read from them:** every state and observable whose
+  coarse-to-middle change is above the ordering floor or that is not
+  ordered, with both refinement changes and the exact-solution error.
+- **Not done:** scans, other degrees, retries, solver or tolerance changes.
+- **If a run stops or does not reproduce the original values,** that is
+  reported as found.
+- **Charge.** The four runs took about 30 s in total in R0 and S2. They are
+  charged to this step's ten minutes.

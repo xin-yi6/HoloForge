@@ -960,8 +960,12 @@ class ArtifactBindingTests(unittest.TestCase):
         self.assertIn("is not one of", result["stopped"])
 
 
-def regression_payload(build, role, source, mutate=None):
-    """A complete synthetic regression-run output built from the audited records."""
+def regression_payload(build, role, mutate=None, source=None):
+    """A complete synthetic regression-run output built from the audited records.
+
+    Every run passes except the optical one, which carries one failing check
+    (a scientific FAIL: verdict False, exit status 1).
+    """
 
     import copy
     import json
@@ -972,13 +976,17 @@ def regression_payload(build, role, source, mutate=None):
         _, records = repair.records_for(consumer)
         records = copy.deepcopy(records)
         extracted = repair.EXTRACTORS[consumer["id"]](records)
-        runs = {name: {"arguments": arguments, "exit_status": 0, "seconds": 0.1, "passed": True,
+        failing = consumer["id"] == "holographic-superconductor-optical"
+        runs = {name: {"arguments": arguments, "exit_status": 1 if failing else 0, "seconds": 0.1, "passed": not failing,
                        "acceptance_checks": {"gate-1": {"passed": True, "value": 1.0e-9, "criterion": "<= 1e-6"},
-                                             "gate-2": {"passed": False, "value": 2.0e-5, "criterion": "<= 1e-5"}}}
+                                             "gate-2": {"passed": not failing, "value": 2.0e-5 if failing else 2.0e-6,
+                                                        "criterion": "<= 1e-5"}}}
                 for name, arguments in repair.consumer_commands(consumer).items()}
         consumers[consumer["id"]] = dict(extracted, runs=runs)
-    result = {"passed": True, "build_label": build, "role": role, "consumers": consumers, "source_sha256": source,
-              "chebyshev_construction": repair.SELECTED_CONSTRUCTION if role == "candidate" else None, "complete": True}
+    approved = repair.APPROVED_SOURCES[role]
+    result = {"passed": True, "build_label": build, "role": role, "consumers": consumers,
+              "source_sha256": source or approved["source_sha256"],
+              "chebyshev_construction": approved["construction"], "complete": True}
     payload = {"tool": "chebyshev-repair", "stage": f"regression-{role}", "status": "ok", "tool_sha256": "a" * 64,
                "plan_sha256": repair._file_sha256(repair.ROOT / repair.PLAN), "result": result}
     payload = json.loads(json.dumps(repair._jsonable(payload)))
@@ -991,8 +999,8 @@ class RegressionStageTests(unittest.TestCase):
     """R0 limits and the S2 comparison (plan Sections 6 and 8), on synthetic runs."""
 
     def _evidence(self, mutate=None, mutate_build="B1"):
-        baselines = [regression_payload(build, "baseline", "1" * 64) for build in ("B1", "B3")]
-        candidates = [regression_payload(build, "candidate", "2" * 64, mutate if build == mutate_build else None)
+        baselines = [regression_payload(build, "baseline") for build in ("B1", "B3")]
+        candidates = [regression_payload(build, "candidate", mutate if build == mutate_build else None)
                       for build in ("B1", "B3")]
         limits = {"stage": "r0-limits", "status": "ok", "result": repair.regression_limits(baselines)}
         return baselines, limits, candidates
@@ -1013,7 +1021,7 @@ class RegressionStageTests(unittest.TestCase):
         def shift(consumers):
             consumers["gubser-rocha-emd"]["leaves"]["xi=1.0|hat_s"]["value"] += 3.0e-9
 
-        baselines = [regression_payload("B1", "baseline", "1" * 64), regression_payload("B3", "baseline", "1" * 64, shift)]
+        baselines = [regression_payload("B1", "baseline"), regression_payload("B3", "baseline", shift)]
         outcome = repair.regression_limits(baselines)
         self.assertTrue(outcome["passed"])
         entry = outcome["limits"]["gubser-rocha-emd"]["xi=1.0|hat_s"]
@@ -1066,30 +1074,247 @@ class RegressionStageTests(unittest.TestCase):
         self.assertEqual(outcome["stopped"], "regression stop: controls (1)")
 
         def gate(consumers):
-            consumers["gubser-nellore-ed"]["runs"]["default"]["acceptance_checks"]["gate-1"]["passed"] = False
+            run = consumers["gubser-nellore-ed"]["runs"]["default"]
+            run["acceptance_checks"]["gate-1"]["passed"] = False
+            run.update(passed=False, exit_status=1)
 
         outcome = repair.regression_compare(*self._evidence(gate))
-        self.assertEqual(outcome["stopped"], "regression stop: A1 (1)")
+        self.assertEqual(outcome["stopped"], "regression stop: A1 (2)")
+        self.assertEqual(outcome["stop_kind"], "scientific regression stop")
 
         def still_failing(consumers):
-            consumers["gubser-nellore-ed"]["runs"]["default"]["acceptance_checks"]["gate-2"]["value"] = 9.0e-5
+            consumers["holographic-superconductor-optical"]["runs"]["default"]["acceptance_checks"]["gate-2"]["value"] = 9.0e-5
 
         self.assertTrue(repair.regression_compare(*self._evidence(still_failing))["passed"])
 
+    def _rejected(self, baselines, limits, candidates):
+        outcome = repair.regression_compare(baselines, limits, candidates)
+        self.assertFalse(outcome["passed"])
+        self.assertEqual(outcome["stopped"], "invalid regression evidence")
+        self.assertEqual(outcome["stop_kind"], "inadmissible evidence")
+        return " ".join(outcome["evidence_errors"])
+
     def test_inadmissible_regression_evidence_is_rejected(self) -> None:
         baselines, limits, candidates = self._evidence()
-        same_source = [regression_payload(build, "candidate", "1" * 64) for build in ("B1", "B3")]
-        self.assertIn("same source", repair.regression_compare(baselines, limits, same_source)["stopped"])
-        self.assertEqual(repair.regression_compare(baselines, limits, baselines)["stopped"], "invalid regression evidence")
+        wrong_source = [regression_payload(build, "candidate", source=repair.APPROVED_SOURCES["baseline"]["source_sha256"])
+                        for build in ("B1", "B3")]
+        self.assertIn("not the approved candidate", self._rejected(baselines, limits, wrong_source))
+        self.assertIn("not a complete successful candidate run", self._rejected(baselines, limits, baselines))
         limits["result"]["limits"]["gubser-rocha-emd"]["xi=1.0|hat_s"]["B1"]["allowance"] *= 100.0
-        outcome = repair.regression_compare(baselines, limits, candidates)
-        self.assertIn("do not follow from these baselines", " ".join(outcome["evidence_errors"]))
+        self.assertIn("do not follow from these baselines", self._rejected(baselines, limits, candidates))
 
         def missing(consumers):
             consumers["soft-wall-vector"]["leaves"].popitem()
 
         outcome = repair.regression_compare(*self._evidence(missing))
         self.assertEqual(outcome["violation_counts"]["keys"], 1)
+
+    def test_review_reproduction_empty_evidence_is_rejected(self) -> None:
+        baselines, _, candidates = self._evidence()
+        for payload in baselines + candidates:
+            payload["result"]["consumers"] = {}
+        outcome = repair.regression_limits(baselines)
+        self.assertEqual(outcome["stopped"], "invalid baseline evidence")
+        self.assertIn("consumers are not the plan's 8", " ".join(outcome["evidence_errors"]))
+        limits = {"stage": "r0-limits", "status": "ok", "result": {"passed": True, "limits": {}, "leaf_count": 0}}
+        self.assertIn("consumers are not the plan's 8", self._rejected(baselines, limits, candidates))
+
+    def test_review_reproduction_failed_runner_and_exit_status_two_are_rejected(self) -> None:
+        baselines, limits, candidates = self._evidence()
+        for payload in candidates:
+            payload["result"]["passed"] = False
+            for consumer in payload["result"]["consumers"].values():
+                for run in consumer["runs"].values():
+                    run["exit_status"] = 2
+        errors = self._rejected(baselines, limits, candidates)
+        self.assertIn("not a complete successful candidate run", errors)
+        self.assertIn("exit status 2 does not match the verdict", errors)
+
+    def test_review_reproduction_candidate_builds_with_different_sources_are_rejected(self) -> None:
+        baselines, limits, candidates = self._evidence()
+        candidates[1]["result"]["source_sha256"] = "f" * 64
+        self.assertIn("candidate B3: source or construction is not the approved candidate",
+                      self._rejected(baselines, limits, candidates))
+
+    def test_coverage_verdicts_and_data_are_strict(self) -> None:
+        def rejected(mutate):
+            return self._rejected(*self._evidence(mutate))
+
+        def run_of(consumers):
+            return consumers["gubser-rocha-emd"]["runs"]["default"]
+
+        self.assertIn("consumers are not the plan's 8", rejected(lambda consumers: consumers.pop("hard-wall-chiral")))
+        self.assertIn("runs are not the plan's commands",
+                      rejected(lambda consumers: consumers["soft-wall-vector"]["runs"].pop("spectral-56")))
+        self.assertIn("arguments differ", rejected(lambda consumers: run_of(consumers)["arguments"].append("--degree")))
+        self.assertIn("not Boolean", rejected(lambda consumers: run_of(consumers).update(passed=1)))
+        self.assertIn("not Boolean", rejected(lambda consumers: run_of(consumers).update(acceptance_checks={})))
+        self.assertIn("not Boolean", rejected(
+            lambda consumers: run_of(consumers)["acceptance_checks"]["gate-1"].update(passed="true")))
+        self.assertIn("contradicts its checks", rejected(lambda consumers: run_of(consumers).update(passed=False, exit_status=1)))
+        self.assertIn("exit status 1 does not match", rejected(lambda consumers: run_of(consumers).update(exit_status=1)))
+        self.assertIn("exit status True", rejected(lambda consumers: run_of(consumers).update(exit_status=True)))
+        self.assertIn("check value is not finite", rejected(
+            lambda consumers: run_of(consumers)["acceptance_checks"]["gate-1"].update(value="nan")))
+        self.assertIn("not finite", rejected(
+            lambda consumers: consumers["gubser-rocha-emd"]["leaves"]["xi=1.0|hat_s"].update(value=float("inf"))))
+        self.assertIn("not finite", rejected(
+            lambda consumers: consumers["gubser-rocha-emd"]["leaves"]["xi=1.0|hat_s"].update(estimators={})))
+        self.assertIn("no table leaves", rejected(lambda consumers: consumers["hard-wall-vector"].update(leaves={})))
+        baselines, limits, candidates = self._evidence()
+        candidates[0]["plan_sha256"] = "0" * 64
+        self.assertIn("frozen plan", self._rejected(baselines, limits, candidates))
+
+    def test_a_scientific_fail_is_admissible_and_distinct_from_malformed_evidence(self) -> None:
+        # The optical run fails one check at baseline and candidate: admitted, and not a stop.
+        outcome = repair.regression_compare(*self._evidence())
+        self.assertTrue(outcome["passed"])
+        self.assertNotIn("stop_kind", outcome)
+        self.assertEqual(repair.validate_regression_run(regression_payload("B1", "baseline"), "baseline"), [])
+
+    def test_the_runner_keeps_execution_failures_apart_and_preserves_records(self) -> None:
+        import hashlib
+        import json
+        import os
+        import tempfile
+        from unittest.mock import patch
+
+        table = {item["id"]: item for item in repair.load_table()["consumers"]}
+        _, records = repair.records_for(table["hard-wall-vector"])
+        for record in records.values():
+            record.update(passed=True, acceptance_checks=[{"id": "gate", "passed": True, "value": 1.0e-9}],
+                          software_versions={"holoforge_source_sha256": repair.APPROVED_SOURCES["baseline"]["source_sha256"]})
+        program = (
+            "import json, os, sys\n"
+            "arguments = sys.argv[1:]\n"
+            "records = json.load(open(os.environ['FAKE_RECORDS']))\n"
+            "sys.stdout.write(json.dumps(records[arguments[arguments.index('--method') + 1]]))\n"
+            "sys.exit(int(os.environ.get('FAKE_EXIT', '0')))\n"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            tree = Path(directory)
+            (tree / "src" / "holoforge").mkdir(parents=True)
+            (tree / "src" / "holoforge" / "__init__.py").write_text("")
+            (tree / "src" / "holoforge" / "__main__.py").write_text(program)
+            (tree / "records.json").write_text(json.dumps(records))
+            saved = tree / "saved"
+            options = dict(consumers=("hard-wall-vector",), records_dir=saved, purpose="recovery")
+            with patch.dict(os.environ, {"FAKE_RECORDS": str(tree / "records.json")}):
+                result = repair.regression_run("B1", tree, "baseline", **options)
+                self.assertTrue(result["passed"], result.get("stopped"))
+                self.assertFalse(result["complete"])
+                self.assertEqual(result["purpose"], "recovery")
+                run = result["consumers"]["hard-wall-vector"]["runs"]["spectral"]
+                data = (saved / run["record_file"]).read_bytes()
+                self.assertEqual(run["record_file"], "baseline-B1--hard-wall-vector--spectral.json")
+                self.assertEqual(hashlib.sha256(data).hexdigest(), run["record_sha256"])
+                self.assertEqual(json.loads(data), records["spectral"])
+                again = repair.regression_run("B1", tree, "baseline", **options)
+                self.assertIn("refusing to overwrite", again["stopped"])
+                with patch.dict(os.environ, {"FAKE_EXIT": "2"}):
+                    failed = repair.regression_run("B1", tree, "baseline", consumers=("hard-wall-vector",))
+                self.assertEqual(failed["stop_kind"], "execution failure")
+                self.assertIn("exit status 2 does not match the record verdict", failed["stopped"])
+                with patch.dict(os.environ, {"FAKE_EXIT": "1"}):
+                    failed = repair.regression_run("B1", tree, "baseline", consumers=("hard-wall-vector",))
+                self.assertIn("exit status 1 does not match the record verdict", failed["stopped"])
+                wrong = repair.regression_run("B1", tree, "candidate", consumers=("hard-wall-vector",))
+                self.assertEqual(wrong["stop_kind"], "execution failure")
+                self.assertIn("the approved candidate is", wrong["stopped"])
+            for record in records.values():
+                record["passed"] = "yes"
+            (tree / "records.json").write_text(json.dumps(records))
+            with patch.dict(os.environ, {"FAKE_RECORDS": str(tree / "records.json")}):
+                failed = repair.regression_run("B1", tree, "baseline", consumers=("hard-wall-vector",))
+            self.assertIn("no Boolean verdict", failed["stopped"])
+
+    def test_dgr_quadrature_estimator_covers_every_degree(self) -> None:
+        table = {item["id"]: item for item in repair.load_table()["consumers"]}
+        _, records = repair.records_for(table["dewolfe-gubser-rosen-emd"])
+        leaves = repair.extract_dgr_neutral(records)["leaves"]
+        change = records["default"]["results"]["quadrature_refinement"]["records"][3]["middle_to_fine_change"]
+        for prefix in ("curve", "degree=150", "degree=120", "degree=80"):
+            for field in repair.DGR_QUADRATURE_FIELDS:
+                leaf = leaves[f"{prefix}|3|{field}"]
+                self.assertEqual(leaf["estimators"]["quadrature"], change * abs(leaf["value"]), (prefix, field))
+            for field in ("temperature_BH", "entropy_BH"):
+                self.assertEqual(sorted(leaves[f"{prefix}|3|{field}"]["estimators"]), ["refinement"])
+
+    def test_corrected_dgr_replay_keeps_the_stop_and_the_original_files(self) -> None:
+        import json
+
+        folder = ROOT / "docs/generated/chebyshev-repair"
+        names = [f"r0-baseline-{label}.json" for label in ("B1", "B3")] + \
+                [f"s2-candidate-{label}.json" for label in ("B1", "B3")] + ["r0-limits.json"]
+        before = {name: repair._file_sha256(folder / name) for name in names}
+        payloads = [json.loads((folder / name).read_text()) for name in names]
+        outcome = repair.corrected_regression_replay(payloads[:2], payloads[2:4], payloads[4])
+        self.assertEqual({name: repair._file_sha256(folder / name) for name in names}, before)
+        self.assertEqual(outcome["stopped"], "regression stop: A1 (2), A2 (13)")
+        self.assertEqual(outcome["estimators_added_per_build"], [80, 80])
+        self.assertTrue(outcome["other_consumers_limits_identical"])
+        self.assertGreater(outcome["allowances_changed"], 0)
+        self.assertIn("post-observation", outcome["label"])
+        for change in outcome["changed_allowances"].values():
+            for item in change.values():
+                self.assertGreaterEqual(item["corrected"], item["original"])
+        corrected, added = repair.corrected_dgr_estimators(payloads[0])
+        self.assertEqual(added, 80)
+        self.assertEqual(repair.validate_regression_run(corrected, "baseline"), [])
+
+    def test_gubser_rocha_diagnosis_lists_the_failing_rows(self) -> None:
+        import copy
+        import hashlib
+        import json
+        import tempfile
+
+        table = {item["id"]: item for item in repair.load_table()["consumers"]}
+        _, records = repair.records_for(table["gubser-rocha-emd"])
+        record = copy.deepcopy(records["default"])
+        refinement = record["results"]["refinement"]
+        refinement.update(ordering_floor=5.0e-10, coarse_to_middle_maximum=3.0e-8, ordering_failures=0)
+        record.update(passed=True, acceptance_checks=[
+            {"id": "spectral-refinement", "passed": True, "value": 4.0e-11, "criterion": "c"},
+            {"id": "source-thermodynamics", "passed": True, "value": 2.0e-11, "criterion": "c"}])
+        failing = copy.deepcopy(record)
+        row = failing["results"]["refinement"]["cases"][0]["observables"]["entropy_density"]
+        row.update(coarse_to_middle=1.0e-9, middle_to_fine=3.0e-9, ordered_above_floor=False)
+        failing["results"]["refinement"]["ordering_failures"] = 1
+        failing["passed"] = False
+        failing["acceptance_checks"][0]["passed"] = False
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            recoveries, originals = [], {}
+            for role in ("baseline", "candidate"):
+                for build in ("B1", "B3"):
+                    content = failing if (role, build) == ("candidate", "B1") else record
+                    data = json.dumps(content).encode()
+                    name = f"{role}-{build}--gubser-rocha-emd--default.json"
+                    (folder / name).write_bytes(data)
+                    extracted = json.loads(json.dumps(repair._jsonable(repair.extract_gubser_rocha({"default": content}))))
+                    checks = {check["id"]: {"passed": check["passed"], "value": check["value"]}
+                              for check in content["acceptance_checks"]}
+                    run = {"record_file": name, "record_sha256": hashlib.sha256(data).hexdigest(),
+                           "exit_status": 0 if content["passed"] else 1, "acceptance_checks": checks}
+                    approved = repair.APPROVED_SOURCES[role]
+                    result = {"role": role, "build_label": build, "purpose": "recovery",
+                              "source_sha256": approved["source_sha256"], "chebyshev_construction": approved["construction"],
+                              "consumers": {"gubser-rocha-emd": dict(extracted, runs={"default": run})}}
+                    recoveries.append({"status": "ok", "result": result})
+                    originals[f"{role}|{build}"] = {"result": copy.deepcopy(result)}
+            outcome = repair.gr_refinement_diagnosis(recoveries, folder, originals)
+            self.assertTrue(outcome["passed"], outcome.get("stopped"))
+            self.assertIn("new recovery runs", outcome["label"])
+            failed = outcome["runs"]["candidate|B1"]
+            self.assertEqual(failed["ordering_failures"], 1)
+            self.assertEqual([(item["xi"], item["observable"], item["coarse_to_middle"], item["middle_to_fine"])
+                              for item in failed["failing_rows"]], [(0.5, "entropy_density", 1.0e-9, 3.0e-9)])
+            self.assertAlmostEqual(failed["failing_rows"][0]["exact_solution_error"]["absolute"], 2.0e-11, delta=1e-15)
+            self.assertTrue(failed["reproduces_original_leaves"])
+            self.assertEqual(outcome["runs"]["baseline|B3"]["failing_rows"], [])
+            (folder / "baseline-B1--gubser-rocha-emd--default.json").write_bytes(b"{}")
+            self.assertIn("hash mismatch", repair.gr_refinement_diagnosis(recoveries, folder, originals)["stopped"])
+            self.assertIn("not all present", repair.gr_refinement_diagnosis(recoveries[1:], folder, originals)["stopped"])
 
     def test_committed_regression_evidence_reproduces_the_s2_stop(self) -> None:
         import json
