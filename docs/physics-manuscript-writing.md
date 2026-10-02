@@ -273,6 +273,12 @@ is only proposed, describe it as an open research question, not the paper's
 accomplishment. This comparison supports judgment; it is not a publication
 score or a requirement that every useful paper discover a new phenomenon.
 
+When the owner has selected the work for the pilot, a
+[claim review](research-gate-workflow.md#review-the-question-independently)
+gives an independent reading of this comparison before publication claims are
+drafted. It does not replace the comparison, hold an authorized editorial task
+or open new research.
+
 Assess scientific substance separately from presentation. Neither page count,
 figure count, elapsed effort nor a famous short paper establishes that a new
 manuscript contains enough work. Ask:

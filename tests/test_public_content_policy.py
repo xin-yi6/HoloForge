@@ -724,6 +724,42 @@ class PublicContentPolicyTests(unittest.TestCase):
         for private_identifier in ("c01", "c02", "c03", "d001", "m001"):
             self.assertNotIn(private_identifier, combined)
 
+    def test_question_review_pilot_keeps_authority_and_disclosure_boundaries(self):
+        workflow = (ROOT / "docs/research-gate-workflow.md").read_text(
+            encoding="utf-8"
+        )
+        section = workflow.split(
+            "### Review the question independently", maxsplit=1
+        )[1].split("### Use a claim-sufficiency checkpoint", maxsplit=1)[0]
+        template = (
+            ROOT / "docs/templates/question-review-template.md"
+        ).read_text(encoding="utf-8")
+        policy = " ".join(section.lower().split())
+        form = " ".join(template.lower().split())
+
+        # Authority and disclosure boundaries not covered by other checks.
+        for boundary in (
+            "only to the uses the owner selects",
+            "does not hold work that is already authorized",
+            "not human review, independent replication",
+            "opens no calculation",
+            "analytical or methodological contribution",
+            "nonholographic comparison",
+            "before any card is sent to a service, the owner approves",
+            "without amending frozen contracts",
+        ):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, policy)
+
+        # Public policy names no provider and carries no private locator.
+        for text in (policy, form):
+            for name in (
+                "codex", "claude", "gpt", "deepseek", "openai", "anthropic",
+            ):
+                self.assertNotIn(name, text)
+            self.assertNotIn("/users/", text)
+            self.assertNotIn("holoforge-explore-private", text)
+
     def test_readme_leads_with_the_general_platform_not_example_domains(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         overview, implementations = readme.split(

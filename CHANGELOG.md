@@ -60,6 +60,22 @@ All notable changes to HoloForge are recorded here.
 
 ### Changed
 
+- Add an independent question review as an owner-selected pilot with status
+  `prepared-not-run`. A fresh reviewer from a different provider or model
+  family reads a short card to inform the investment decision and again
+  before publication claims are drafted. The review asks what physical,
+  analytical or methodological contribution is claimed and whether agreement
+  is already forced by shared inputs, an identity or a fit; it preserves
+  analytical contributions and demonstrated computational advantages. The
+  author replies item by item and the owner decides disputed items. Any
+  transfer of a card needs the owner's prior disclosure approval. Add a short
+  recheck when the central claim materially changes, a review template, and
+  links from the workflow, intake scorecard, gate skill, manuscript guide and
+  evaluation record. A review is evidence for the owner, not human review,
+  replication or a publication certificate. Frozen contracts, framework pins,
+  autonomous missions, numerical behavior and acceptance thresholds are
+  unchanged, and no improvement in research performance is claimed.
+
 - Extend standing owner authorization for scoped, owner-requested public work
   to merging the corresponding pull request into `main` after full default CI,
   public-content review and resolution of blocking feedback. Align agent

@@ -173,6 +173,101 @@ Do not weaken numerical acceptance gates to create apparent physical progress.
 The purpose of this rule is to change research ordering and investment, not
 verification rigor.
 
+### Review the question independently
+
+Falsifiability, outcome value, the contribution comparison and the owner's
+investment judgment are already required. This pilot adds one arrangement: a
+fresh reader, limited to a short card, assesses the question's contribution
+before investment and again before publication claims. It applies only to the
+uses the owner selects for the
+[pilot](agent-workflow-evaluation.md#independent-question-review-pilot). It is
+not a default for every publication-targeted project and does not hold work
+that is already authorized.
+
+For a selected use, obtain the review at one or both of these points:
+
+1. **Question review:** after the intake scorecard is prepared, to inform the
+   owner's investment decision before the first physical-discriminator
+   contract is frozen. The review does not authorize execution or freeze a
+   contract.
+2. **Claim review:** after the claim-bearing result, or after a material
+   change in the central claim, before publication claims are drafted. An
+   exploratory draft that reveals missing evidence remains permitted.
+
+Use the [question-review template](templates/question-review-template.md). The
+author writes a short card. One page is a target, not a reason to omit a
+decisive assumption, relation, shared input or evidence limitation. One
+reviewer from a different provider or model family than the author reads it in
+a fresh context. The review is input-limited: the reviewer receives the card
+and public literature access, without the process history, the author's
+defense or critic report, or another review. Record the actual input scope and
+any prior exposure. Missing information is a `concern` or a request for
+clarification, not a reason to guess. A second reviewer, or a fallback when no
+different family is available, needs the owner's approval; the author must not
+substitute one silently. Preserve each report unchanged, with its hash, before
+the author replies or another reviewer reads it. Reviewers have no write
+access to the project; the canonical writer imports the report.
+
+Every report answers these questions with `pass`, `concern` or `fail`, a short
+reason and an evidence locator, without an aggregate score:
+
+1. **What is claimed, and what could undermine it?** Name the physical,
+   analytical or methodological contribution. For a physical comparison, say
+   whether agreement is already forced by shared assumptions, shared inputs,
+   an identity or a fit; forced agreement tests the implementation, not the
+   physical claim. For an analytical result, separate new reasoning and
+   consequences from a restated identity. For a computational claim, name the
+   controlled holographic advantage and the nonholographic comparison, for the
+   same problem and regime, that could refute it.
+2. **Who uses the result?** State what positive, negative and inconclusive
+   outcomes would change for the intended readers in knowledge, control or
+   calculational access.
+3. **What is new?** Name the closest prior work found and the exact
+   difference, with primary-source locators and the actual search scope.
+   Neither a missing search hit nor reviewer agreement establishes novelty.
+4. **Strongest supported referee objection:** include answer-encoding inputs
+   and the strongest simpler explanation when relevant.
+5. **Optional: a better question.** A suggestion is a proposal to the owner.
+   Available capability must not choose the science.
+
+The author replies item by item with `Confirmed`, `Disputed`, `Already known`
+or `Needs owner decision`. Brief factual clarification and one rebuttal round
+are allowed; do not replace the preserved reports with an open discussion
+between models. The verdicts are reviewer assessments, not scientific-support
+states or investment decisions. The named human research owner decides
+disputed items. Reuse the existing
+[execution receipts](agent-maintenance.md#record-execution-not-just-requested-roles)
+for each review.
+
+A review is evidence for the owner's judgment, triaged like other
+[external feedback](physics-manuscript-writing.md#triage-external-feedback-before-rewriting).
+It is not human review, independent replication, or a novelty or publication
+certificate, and it does not replace the gate's hostile critic report. It
+opens no calculation, pivot or new question, changes no frozen contract or
+threshold, and reopens no stopped or terminal work.
+
+A card carries an unpublished question, hypothesis or strategy even when it
+contains no numbers, code or identifiers. Before any card is sent to a
+service, the owner approves the exact content class, recipient and service
+account, after that service's data-use terms have been checked. Access granted
+for one purpose does not authorize another transfer. Model and service names
+belong in a private operating note, not in public HoloForge.
+
+**Recheck a materially changed claim.** When a stop, exclusion or failed
+qualification materially changes the central contribution of
+publication-targeted work, add to the existing return packet the claim as
+registered, the claim that survives, and whether the remaining physical,
+analytical or methodological contribution still has a meaningful evidential
+test and an identifiable use. Preserve the registered claim; do not replace
+it. Dropping an unrelated extension or recording a recoverable development
+failure does not trigger the recheck, and a technical stop is not a physical
+negative result. This is a short statement by the author, not a new gate. If
+the contribution is unclear or materially changed, recommend a claim review to
+the owner; the recommendation authorizes nothing.
+
+Apply this section prospectively without amending frozen contracts, framework
+pins, or running or terminal missions.
+
 ### Use a claim-sufficiency checkpoint
 
 Numerics serve the physical question; they are not the default research

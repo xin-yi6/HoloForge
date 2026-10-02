@@ -46,7 +46,7 @@ judgment, not an automatic score or a novelty/publication certificate.
 | --- | --- | --- | --- |
 | Physical importance | `<phenomenon, tension, missing explanation, or new application>` | `<why importance may be overstated>` | `<strong | plausible | weak | undecided>` |
 | Gap plausibility | `<exact closest prior work and bounded no-hit evidence>` | `<coverage limitation>` | `<assessment>` |
-| Falsifiability | `<observable, derivation, scaling relation, branch comparison, or discriminator>` | `<risk that coefficients absorb the effect>` | `<assessment>` |
+| Falsifiability | `<observable, derivation, scaling relation, branch comparison, or discriminator>` | `<risk that coefficients absorb the effect, or that agreement is guaranteed by construction>` | `<assessment>` |
 | Physical or conceptual holographic leverage | `<new mechanism, relation, controlled regime, or prediction beyond simpler descriptions>` | `<risk that holography is decorative or unnecessarily flexible>` | `<assessment>` |
 | Computational or representational holographic leverage | `<same physical problem; holographic method versus best nonholographic baseline; dictionary and validity regime; otherwise inaccessible observable or demonstrated accuracy/total-cost advantage>` | `<risk that only numerical convenience improves, the comparison is uncontrolled, or the baseline was not attempted>` | `<assessment>` |
 | Explanatory or predictive depth | `<mechanism, relation, controlled regime, or reusable dictionary>` | `<risk of another curve or fit>` | `<assessment>` |
@@ -98,6 +98,11 @@ guarantee publication, or replace the next-gate checks below.
 | First physical-discriminator gate | `<earliest honest checkpoint plus prerequisite milestones>` | `<risk that infrastructure loses contact with physics>` | `<assessment>` |
 | Numerical-dependence lane | `<analytic/semi-analytic | qualified-route reuse | new infrastructure | numerical-method contribution>` | `<implementation risk>` | `<assessment>` |
 | Construction, repair, and pivot budgets | `<planned capability cost; separate maximum repair count; pivot rule>` | `<sunk-cost or repair-ladder risk>` | `<assessment>` |
+
+- **Independent question review:** `<not selected for the pilot | preserved
+  report link, with the reviewer's provider or model family>`
+- **Author reply and owner disposition of disputed items:** `<link, pending,
+  or not applicable>`
 
 The construction budget covers planned, question-necessary model and capability
 work. It is not a numerical repair budget. A failed first numerical repair
