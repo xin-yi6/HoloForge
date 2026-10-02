@@ -303,11 +303,15 @@ Confirm that the agent has:
 - kept support claims within the evidence;
 - excluded private paths, secrets, unpublished results, and confidential
   material;
-- used the standing public-repository commit/push authorization in `AGENTS.md`
-  within its scope, verified the remote commit, and reported CI; and
-- obtained separate authority for merging, releasing, private export or
-  scientific disclosure, and honored any narrower task or frozen-campaign
-  restriction.
+- used the standing public-repository commit, push and merge authorization in
+  `AGENTS.md` within its scope, required passing full default CI for the exact
+  reviewed head and resolved blocking feedback before merging, verified the
+  remote commit, updated local `main` without disturbing unrelated work, and
+  reported CI; and
+- obtained separate authority for releases, branch deletion, history rewrites,
+  remote destination changes, private export or scientific disclosure, and
+  honored any review-only request, explicit hold, narrower task or
+  frozen-campaign restriction and platform approval decision.
 
 For contributions, continue with `CONTRIBUTING.md` and submit a narrow pull
 request that lists the checks performed.
