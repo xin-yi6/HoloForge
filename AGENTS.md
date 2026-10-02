@@ -84,14 +84,19 @@ or new concerns. Full default CI remains required for public integration.
 - Stage only intended files; never discard unrelated work.
 - For owner-requested work in this public repository, standing owner
   authorization permits scoped local commits and normal fast-forward pushes
-  to the existing `origin` remote and intended branch. Complete the relevant
-  local validation and public-content review, inspect the outgoing commits,
-  and check the remote state first. Do not ask again for each routine push;
-  verify the remote commit and report CI afterward.
-- Merging, releases, branch deletion, force pushes or history rewrites, changing
-  the remote destination, and private export or scientific disclosure require
-  separate explicit authorization. A later task-specific restriction overrides
-  the standing public-repository permission.
+  to the existing `origin` remote and intended branch, and merging the
+  corresponding pull request into `main`. Complete the relevant local
+  validation and public-content review, inspect the outgoing commits, and check
+  the remote state first. Before merging, require passing full default CI for
+  the exact reviewed head, resolve blocking review feedback, and verify the
+  pull request's scope and target. Do not ask again for routine commits,
+  pushes, or merges within this scope; verify the remote commit, update local
+  `main` without disturbing unrelated work, and report CI afterward.
+- Releases, branch deletion, force pushes or history rewrites, changing the
+  remote destination, and private export or scientific disclosure require
+  separate explicit authorization. A review-only request, explicit hold, or
+  narrower task restriction overrides the standing public-repository
+  permission. Never bypass branch protections or platform approval decisions.
 - Treat a bounded autonomy window as execution authority only. A local commit
   must be explicitly included in it; push, merge, release, branch deletion,
   public export, and disclosure remain separate owner decisions for that

@@ -60,6 +60,13 @@ All notable changes to HoloForge are recorded here.
 
 ### Changed
 
+- Extend standing owner authorization for scoped, owner-requested public work
+  to merging the corresponding pull request into `main` after full default CI,
+  public-content review and resolution of blocking feedback. Align agent
+  instructions, maintenance and onboarding guidance; preserve narrower task
+  restrictions, platform approval decisions and separate authorization for
+  releases, destructive Git operations, private export and scientific disclosure.
+
 - Clarify that computational or representational holographic advantage means
   an advantage of the holographic method over the best nonholographic baseline
   for the same physical problem in a stated validity regime. Mere ease of
