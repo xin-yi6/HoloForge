@@ -73,6 +73,13 @@ changes. Open the repository root and follow the
 [agent quick start](docs/agent-quickstart.md), using [AGENTS.md](AGENTS.md) for
 the shared project instructions. Scientific review remains part of the workflow.
 
+For publication-targeted work, an experimental pilot lets the agent that wrote
+a research question send a short card to a model from a different provider for
+an [independent question review](docs/research-gate-workflow.md#review-the-question-independently).
+The review asks what contribution is claimed and whether agreement is already
+forced by shared inputs. It is evidence for the human research owner, not a
+replacement for scientific review, and its benefit has not yet been measured.
+
 ## Documentation
 
 | I want to… | Start here |
@@ -82,6 +89,7 @@ the shared project instructions. Scientific review remains part of the workflow.
 | Draft or revise a physics paper | [Manuscript guide](docs/physics-manuscript-writing.md) |
 | Understand or extend the software | [Architecture](docs/architecture.md) · [Add a benchmark](docs/benchmark-extension-guide.md) |
 | Explore bounded autonomous research | [Experimental campaign workflow](docs/autonomous-research-workflow.md) |
+| Have a model from another provider review a research question | [Independent question review](docs/research-gate-workflow.md#review-the-question-independently) (pilot) · [Card template](docs/templates/question-review-template.md) |
 
 ## Project status
 
