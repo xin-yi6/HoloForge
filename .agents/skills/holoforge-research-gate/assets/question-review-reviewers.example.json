@@ -5,13 +5,13 @@
       "family": "<provider or model family>",
       "command": ["<local non-interactive agent command>", "<flag>"],
       "model": "<requested model, optional>",
-      "approved_cards": ["question", "claim"],
+      "approved_cards": ["brief", "question", "claim"],
       "literature_access": true
     },
     "reviewer-b": {
       "family": "<another provider or model family>",
       "command": ["<another local non-interactive command>"],
-      "approved_cards": ["question"],
+      "approved_cards": ["brief", "question"],
       "literature_access": false
     }
   }

@@ -21,6 +21,27 @@ reviewer configuration is that approval. The runner fills in the fixed
 reviewer prompt, and its receipt records the reviewer, the hashes and the
 message actually sent; the reviewer's own statements stay in its report.
 
+## Scope brief
+
+Written by the author of an intake after recording its own seed list, when the
+owner has selected independent candidate proposals. It is sent with the fixed
+proposal prompt, and each proposer returns at most five candidates. Proposed
+seeds are screened like every other seed; a proposer's novelty statement is a
+locator to verify, not evidence.
+
+- **Portfolio intent and search shape:** `<as declared for the intake>`
+- **Domains included:** `<scientific domains or subfields>`
+- **Domains excluded, with the public reason:** `<domains, or none>`
+- **Kind of contribution sought:** `<physical comparison | analytical result |
+  computational or methodological advantage | any>`
+- **Public constraints:** `<research horizon, model families or methods
+  available, cost class>`
+- **Owner-approved recipients for this brief:** `<decision record>`
+
+Leave out unpublished candidates, results, private identifiers and the record
+of stopped directions. Compare the proposals with private closures only after
+they are received.
+
 ## Question card
 
 Written by the author after the intake scorecard is prepared, to inform the

@@ -17,6 +17,15 @@ All notable changes to HoloForge are recorded here.
   fallback, oversized cards and overwrites. It contains no provider names,
   network code or credentials. Add the fixed review and rebuttal prompts and
   an example configuration.
+- Let an intake collect independent candidate proposals through the same
+  runner. The author records its own seeds, then sends a scope brief with a
+  fixed proposal prompt to models from other providers or model families;
+  each returns at most five candidates. A brief carries no unpublished
+  candidate, result or stopped-direction history and needs the owner's
+  approval per recipient. Proposed seeds pass the same screening as any other
+  seed, a proposer's novelty statement is not evidence, and there is no
+  voting or score averaging. Also allow a question review of an
+  owner-selected short list instead of only the recommended lead.
 
 - Record an on-disk package source fingerprint, the Git commit and `src/`
   modification state when running from a checkout (both recomputed per

@@ -27,6 +27,8 @@ hide a failed prerequisite or replace owner judgment.
 - **Domains intentionally excluded:** `<domains and reason, or none>`
 - **Source classes searched:** `<primary papers, reviews used only as maps, public code/data, other>`
 - **Coverage limitation:** `<why this is bounded rather than exhaustive>`
+- **Independent candidate proposals:** `<not selected | preserved proposal
+  links, each proposer's provider or model family, and seeds contributed>`
 
 | Domain or area | Why included | Seeds inspected | Sources or search route | Coverage note |
 | --- | --- | ---: | --- | --- |

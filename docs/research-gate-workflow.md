@@ -95,6 +95,24 @@ bottom-up scope. Coverage is an audit against an accidental blind spot, not a
 quota: an intake may deliberately focus on one area, and no candidate should
 advance merely to balance the table.
 
+**Collect independent candidate proposals.** When the owner selects it for an
+intake, the author may ask models from other providers or model families for
+independent seeds before ranking. The author first records its own seed list.
+It then sends one short **scope brief** through the
+[review runner](#review-the-question-independently) with the fixed
+[proposal prompt](templates/candidate-proposal-prompt.md). Each proposer works
+separately, in a fresh context, and returns at most five candidates. A brief
+states the portfolio intent, search shape, included and excluded domains, the
+kind of contribution sought and public constraints. It contains no unpublished
+candidate, result or record of stopped directions, and the owner approves the
+brief class for each recipient as for a card. Proposed seeds enter the coverage
+table with their source and pass the same prior-knowledge review, scorecard and
+readiness checks as every other seed; the author compares them with private
+closures only after receipt. A proposer's reference or novelty statement is a
+locator to verify, not evidence. Do not rank a seed by how many models proposed
+it, average scores or vote. One canonical writer prepares the scorecards, and
+the named human research owner chooses the investment.
+
 When the portfolio intent is publication-targeted, complete a separate
 **publication-pathway assessment** after the scientific-opportunity assessment
 and before choosing the investment. It should ask whether the candidate has a
@@ -194,6 +212,10 @@ For a selected use, obtain the review at one or both of these points:
    change in the central claim, before publication claims are drafted. An
    exploratory draft that reveals missing evidence remains permitted.
 
+A question review covers the recommended lead. The owner may instead select a
+short list of candidates, each with its own card, so that a stronger candidate
+ranked lower can be seen.
+
 Use the [question-review template](templates/question-review-template.md). The
 author writes a short card. One page is a target, not a reason to omit a
 decisive assumption, relation, shared input or evidence limitation. One
@@ -263,8 +285,9 @@ model family, and the card classes it may receive. The runner starts the
 reviewer in an empty working directory with only the fixed
 [review prompt](templates/question-review-prompt.md) and the card. It
 preserves the output, the exact message sent and a receipt with their hashes,
-and it allows one [rebuttal](templates/question-review-rebuttal-prompt.md). It
-refuses an unapproved card class, a reviewer of the author's own family
+and it allows one [rebuttal](templates/question-review-rebuttal-prompt.md). A
+scope brief goes through the same runner with the proposal prompt and has no
+rebuttal round. The runner an unapproved card class, a reviewer of the author's own family
 without a recorded fallback, an oversized card and any overwrite. HoloForge
 holds no provider names, network code or credentials for this; each command
 uses its own login. Because the author launches its own reviewer, the owner

@@ -209,10 +209,45 @@ class QuestionReviewRunnerTests(unittest.TestCase):
         self.assertEqual(code, runner.EXIT_REFUSED)
         self.assertIn("no longer matches", err)
 
+    def test_scope_brief_uses_the_proposal_prompt_and_its_own_approval(self) -> None:
+        # A reviewer approved only for question cards must not receive a brief.
+        code, err = self.review(card_kind="brief")
+        self.assertEqual(code, runner.EXIT_REFUSED)
+        self.assertIn("does not approve", err)
+        self.assertFalse(self.out.exists())
+
+        self.config = self.write_config(approved_cards=["brief"])
+        code, err = self.review(card_kind="brief")
+        self.assertEqual(code, runner.EXIT_OK, err)
+        message = (self.out / "message.md").read_text(encoding="utf-8")
+        proposal_prompt = runner.DEFAULT_PROPOSAL_PROMPT.read_text(encoding="utf-8")
+        self.assertIn("--- SCOPE BRIEF ---", message)
+        self.assertIn("END-OF-CARD", message)
+        self.assertNotIn("Strongest supported referee objection", message)
+        receipt = json.loads((self.out / "receipt.json").read_text(encoding="utf-8"))
+        self.assertEqual(receipt["stage"], "proposal")
+        self.assertEqual(receipt["card_kind"], "brief")
+        self.assertEqual(receipt["sha256"]["prompt_template"], sha(proposal_prompt))
+
+    def test_proposals_have_no_rebuttal_round(self) -> None:
+        self.config = self.write_config(approved_cards=["brief"])
+        self.assertEqual(self.review(card_kind="brief")[0], runner.EXIT_OK)
+        reply = self.dir / "reply.md"
+        reply.write_text("Candidate 1: declined.\n", encoding="utf-8")
+        code, err = self.run_main(
+            "rebuttal", "--review-dir", str(self.out), "--reply", str(reply),
+            "--config", str(self.config),
+        )
+        self.assertEqual(code, runner.EXIT_REFUSED)
+        self.assertIn("only a question or claim review", err)
+        self.assertFalse((self.out / "rebuttal.md").exists())
+
     def test_shipped_templates_and_example_are_valid_and_provider_neutral(self) -> None:
         review_prompt = runner.DEFAULT_PROMPT.read_text(encoding="utf-8")
         rebuttal_prompt = runner.DEFAULT_REBUTTAL_PROMPT.read_text(encoding="utf-8")
+        proposal_prompt = runner.DEFAULT_PROPOSAL_PROMPT.read_text(encoding="utf-8")
         runner.fill_template(review_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
+        runner.fill_template(proposal_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
         runner.fill_template(
             rebuttal_prompt, {"CARD": "c", "REPORT": "r", "REPLY": "p"}
         )
@@ -226,6 +261,7 @@ class QuestionReviewRunnerTests(unittest.TestCase):
         public_texts = (
             review_prompt,
             rebuttal_prompt,
+            proposal_prompt,
             SCRIPT.read_text(encoding="utf-8"),
             json.dumps(example),
         )
