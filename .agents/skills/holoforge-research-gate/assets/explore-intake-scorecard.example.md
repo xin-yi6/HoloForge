@@ -99,9 +99,10 @@ guarantee publication, or replace the next-gate checks below.
 | Numerical-dependence lane | `<analytic/semi-analytic | qualified-route reuse | new infrastructure | numerical-method contribution>` | `<implementation risk>` | `<assessment>` |
 | Construction, repair, and pivot budgets | `<planned capability cost; separate maximum repair count; pivot rule>` | `<sunk-cost or repair-ladder risk>` | `<assessment>` |
 
-- **Independent question review:** `<not applicable and why | sealed report
-  links, with each reviewer's provider or model family>`
-- **Author reply and owner disposition of disputed items:** `<link or pending>`
+- **Independent question review:** `<not selected for the pilot | preserved
+  report link, with the reviewer's provider or model family>`
+- **Author reply and owner disposition of disputed items:** `<link, pending,
+  or not applicable>`
 
 The construction budget covers planned, question-necessary model and capability
 work. It is not a numerical repair budget. A failed first numerical repair

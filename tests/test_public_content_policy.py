@@ -724,7 +724,7 @@ class PublicContentPolicyTests(unittest.TestCase):
         for private_identifier in ("c01", "c02", "c03", "d001", "m001"):
             self.assertNotIn(private_identifier, combined)
 
-    def test_independent_question_review_is_blind_bounded_and_provider_neutral(self):
+    def test_question_review_pilot_keeps_authority_and_disclosure_boundaries(self):
         workflow = (ROOT / "docs/research-gate-workflow.md").read_text(
             encoding="utf-8"
         )
@@ -734,59 +734,24 @@ class PublicContentPolicyTests(unittest.TestCase):
         template = (
             ROOT / "docs/templates/question-review-template.md"
         ).read_text(encoding="utf-8")
-        skill = (
-            ROOT / ".agents/skills/holoforge-research-gate/SKILL.md"
-        ).read_text(encoding="utf-8")
-        scorecard = (
-            ROOT
-            / ".agents/skills/holoforge-research-gate/assets/explore-intake-scorecard.example.md"
-        ).read_text(encoding="utf-8")
-        evaluation = (
-            ROOT / "docs/agent-workflow-evaluation.md"
-        ).read_text(encoding="utf-8")
         policy = " ".join(section.lower().split())
         form = " ".join(template.lower().split())
 
-        for phrase in (
-            "publication-targeted work",
-            "different provider or model family",
-            "fresh context",
-            "seal each report",
-            "can it fail for a physical reason",
-            "guaranteed by construction",
-            "without an aggregate score",
-            "named human research owner decides disputed items",
+        # Authority and disclosure boundaries not covered by other checks.
+        for boundary in (
+            "only to the uses the owner selects",
+            "does not hold work that is already authorized",
             "not human review, independent replication",
-            "does not replace the gate's hostile critic report",
             "opens no calculation",
-            "external communication",
-            "recheck the surviving claim",
-            "not a new gate",
-            "without amending frozen contracts, framework pins or running missions",
+            "analytical or methodological contribution",
+            "nonholographic comparison",
+            "before any card is sent to a service, the owner approves",
+            "without amending frozen contracts",
         ):
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, policy)
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, policy)
 
-        for phrase in (
-            "question card",
-            "claim card",
-            "reviewer report",
-            "author reply",
-            "owner disposition",
-            "do not give an aggregate score",
-            "confirmed | disputed | already known | needs owner decision",
-        ):
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, form)
-
-        self.assertIn("question-review-template.md", skill)
-        self.assertIn("#review-the-question-independently", skill)
-        self.assertIn("guaranteed by construction", scorecard)
-        self.assertIn("Independent question review", scorecard)
-        self.assertIn("## Independent question review pilot", evaluation)
-        self.assertIn("`prepared-not-run`", evaluation)
-
-        # Public policy names no provider; the assignment is a private record.
+        # Public policy names no provider and carries no private locator.
         for text in (policy, form):
             for name in (
                 "codex", "claude", "gpt", "deepseek", "openai", "anthropic",

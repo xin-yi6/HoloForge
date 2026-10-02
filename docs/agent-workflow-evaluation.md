@@ -8,22 +8,32 @@ measurements before it becomes a default.
 ## Independent question review pilot
 
 The [independent question review](research-gate-workflow.md#review-the-question-independently)
-adds a blind reader from a different provider or model family at two points
-of publication-targeted work. Its status is `prepared-not-run`. It was adopted
-because the existing scientific-value questions were being answered only by
-the agent that also ran the work. No measurement supports it yet.
+gives a fresh, input-limited reader from a different provider or model family
+a short card at two decision points of publication-targeted work. Its status
+is `prepared-not-run`. The scientific-value criteria it uses already exist;
+the pilot tests whether an explicit fresh assessment of the question's
+contribution adds supported objections at acceptable cost. No measurement
+supports it yet, and documentation or policy tests do not execute it.
 
-The pilot is two uses: one retrospective claim review of a completed project
-and the next publication-targeted intake. For each use, record in the private
-project the items raised that the author's own critic report had not raised,
-how many the owner accepted, the reviewers used with their reported models,
-and the handling time. Missing measurements are unknown, not zero. Publish
-only generic counts.
+The pilot is two prospective uses that the owner selects, with one reviewer
+each. A second reviewer needs an approved budget and disclosure scope, and its
+distinct useful objections and added handling cost are then recorded
+separately. Existing retrospective feedback on completed work remains
+historical external feedback; it is not counted as an input-limited review and
+receives no backfilled card, hash or receipt.
 
-After two uses the owner decides to keep, adjust or drop the arrangement,
-including whether a second reviewer adds enough over one. Models from
-different providers can share blind spots, so agreement between reviewers is
-not independent confirmation and does not replace the owner's judgment.
+For each use, record in the private project the supported useful objections
+not already in the project's records, the unsupported or irrelevant concerns,
+the owner's disposition of each, the reviewer's reported provider and model,
+the actual input scope and prior exposure, and the handling time. Missing
+measurements are unknown, not zero. Owner agreement is a disposition, not
+independent proof of correctness. Publish only generic counts.
+
+After two uses the owner decides to keep, adjust or drop the arrangement. Two
+uses can test handling and expose overlooked objections; they cannot establish
+a generally superior review architecture. Models from different providers can
+share blind spots, so a different family is a precaution against shared
+framing, not an independent method.
 
 ## Physics workflow availability pilot — 2026-09-21
 
