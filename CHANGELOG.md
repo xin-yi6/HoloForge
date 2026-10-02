@@ -60,6 +60,18 @@ All notable changes to HoloForge are recorded here.
 
 ### Changed
 
+- Add an independent question review for publication-targeted Explore work,
+  as a pilot. A reviewer from a different provider or model family reads a
+  one-page card, blind, before the first physical-discriminator contract is
+  frozen and again before manuscript drafting. Reports are sealed, the author
+  replies item by item and the owner decides disputed items. A short
+  surviving-claim recheck is added to owner returns that narrow the registered
+  claim. Add the review template and align the workflow, intake scorecard,
+  gate skill, manuscript guide and evaluation record. A review is evidence for
+  the owner, not human review, replication or a publication certificate.
+  Frozen contracts, framework pins, autonomous missions, numerical behavior
+  and acceptance thresholds are unchanged.
+
 - Extend standing owner authorization for scoped, owner-requested public work
   to merging the corresponding pull request into `main` after full default CI,
   public-content review and resolution of blocking feedback. Align agent

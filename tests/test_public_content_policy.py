@@ -724,6 +724,77 @@ class PublicContentPolicyTests(unittest.TestCase):
         for private_identifier in ("c01", "c02", "c03", "d001", "m001"):
             self.assertNotIn(private_identifier, combined)
 
+    def test_independent_question_review_is_blind_bounded_and_provider_neutral(self):
+        workflow = (ROOT / "docs/research-gate-workflow.md").read_text(
+            encoding="utf-8"
+        )
+        section = workflow.split(
+            "### Review the question independently", maxsplit=1
+        )[1].split("### Use a claim-sufficiency checkpoint", maxsplit=1)[0]
+        template = (
+            ROOT / "docs/templates/question-review-template.md"
+        ).read_text(encoding="utf-8")
+        skill = (
+            ROOT / ".agents/skills/holoforge-research-gate/SKILL.md"
+        ).read_text(encoding="utf-8")
+        scorecard = (
+            ROOT
+            / ".agents/skills/holoforge-research-gate/assets/explore-intake-scorecard.example.md"
+        ).read_text(encoding="utf-8")
+        evaluation = (
+            ROOT / "docs/agent-workflow-evaluation.md"
+        ).read_text(encoding="utf-8")
+        policy = " ".join(section.lower().split())
+        form = " ".join(template.lower().split())
+
+        for phrase in (
+            "publication-targeted work",
+            "different provider or model family",
+            "fresh context",
+            "seal each report",
+            "can it fail for a physical reason",
+            "guaranteed by construction",
+            "without an aggregate score",
+            "named human research owner decides disputed items",
+            "not human review, independent replication",
+            "does not replace the gate's hostile critic report",
+            "opens no calculation",
+            "external communication",
+            "recheck the surviving claim",
+            "not a new gate",
+            "without amending frozen contracts, framework pins or running missions",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, policy)
+
+        for phrase in (
+            "question card",
+            "claim card",
+            "reviewer report",
+            "author reply",
+            "owner disposition",
+            "do not give an aggregate score",
+            "confirmed | disputed | already known | needs owner decision",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, form)
+
+        self.assertIn("question-review-template.md", skill)
+        self.assertIn("#review-the-question-independently", skill)
+        self.assertIn("guaranteed by construction", scorecard)
+        self.assertIn("Independent question review", scorecard)
+        self.assertIn("## Independent question review pilot", evaluation)
+        self.assertIn("`prepared-not-run`", evaluation)
+
+        # Public policy names no provider; the assignment is a private record.
+        for text in (policy, form):
+            for name in (
+                "codex", "claude", "gpt", "deepseek", "openai", "anthropic",
+            ):
+                self.assertNotIn(name, text)
+            self.assertNotIn("/users/", text)
+            self.assertNotIn("holoforge-explore-private", text)
+
     def test_readme_leads_with_the_general_platform_not_example_domains(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         overview, implementations = readme.split(

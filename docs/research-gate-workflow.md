@@ -173,6 +173,74 @@ Do not weaken numerical acceptance gates to create apparent physical progress.
 The purpose of this rule is to change research ordering and investment, not
 verification rigor.
 
+### Review the question independently
+
+The agent that prepares a candidate and expects to run it should not be the
+only reader of its scientific value. For publication-targeted work, obtain an
+**independent question review** at two points:
+
+1. **Question review:** after the intake scorecard is prepared, before the
+   owner's investment decision and before the first physical-discriminator
+   contract is frozen.
+2. **Claim review:** after the physical gate closes, before manuscript
+   drafting starts or continues.
+
+Use the [question-review template](templates/question-review-template.md). The
+author writes a one-page card. At least one reviewer is a model from a
+different provider or model family than the author; use two reviewers when
+available. Each reviewer starts in a fresh context and receives only the card
+and public literature access, without the process history, gate records, the
+author's critic report or another reviewer's report. Seal each report before
+the author or another reviewer reads it. Reviewers have no write access to the
+project.
+
+Every report answers the same five questions with `pass`, `concern` or `fail`
+and a short reason, without an aggregate score:
+
+1. **Can it fail for a physical reason?** Could the planned comparison disagree
+   if the physics were different, or only if the implementation were wrong?
+   Agreement guaranteed by construction, whether through an identity,
+   analyticity, shared inputs or a fit, tests the implementation and not the
+   physics.
+2. **Who uses the result?** Name the readers and what they would do differently
+   after a positive and after a negative outcome.
+3. **What is new?** Name the closest prior work found and the exact difference,
+   with the search scope and its limits.
+4. **Strongest referee objection:** state it as a referee would.
+5. **A better question?** With the same model and data, is there a nearby
+   question that answers the first two items more clearly?
+
+The author replies item by item with `Confirmed`, `Disputed`, `Already known`
+or `Needs owner decision`. One rebuttal round is allowed; do not replace sealed
+reports with an open discussion between models. The named human research owner
+decides disputed items. Record the requested and reported model of each review
+under [execution receipts](agent-maintenance.md#record-execution-not-just-requested-roles).
+
+A review is evidence for the owner's judgment, triaged like other
+[external feedback](physics-manuscript-writing.md#triage-external-feedback-before-rewriting).
+It is not human review, independent replication, or a novelty or publication
+certificate, and it does not replace the gate's hostile critic report. A
+reviewer's proposed question is a proposal to the owner; it opens no
+calculation and changes no frozen contract or threshold. Sending a card to an
+external service is an external communication. The owner decides in advance
+which services may receive which class of card, and a card carries no
+unpublished identifiers, numbers or code beyond that decision. Model and
+service names belong in a private operating note, not in public HoloForge.
+
+**Recheck the surviving claim.** At any owner return where a stop, exclusion or
+failed qualification narrows the registered minimum publishable physical
+claim, state in the existing return packet the claim as registered, the claim
+that survives, and whether the surviving claim can still fail for a physical
+reason and who would use it. This is a short statement by the author, not a
+new gate. If the answer is not a clear yes, recommend a claim review before
+further investment in that claim.
+
+Other portfolio intents may use these reviews but do not require them. Apply
+them prospectively without amending frozen contracts, framework pins or
+running missions. The arrangement is a
+[pilot](agent-workflow-evaluation.md#independent-question-review-pilot), not
+yet a measured default.
+
 ### Use a claim-sufficiency checkpoint
 
 Numerics serve the physical question; they are not the default research

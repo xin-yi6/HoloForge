@@ -5,6 +5,26 @@ Regression tests can establish numerical or record-handling behavior. A role
 arrangement needs observed task outcomes, cost, intervention and recovery
 measurements before it becomes a default.
 
+## Independent question review pilot
+
+The [independent question review](research-gate-workflow.md#review-the-question-independently)
+adds a blind reader from a different provider or model family at two points
+of publication-targeted work. Its status is `prepared-not-run`. It was adopted
+because the existing scientific-value questions were being answered only by
+the agent that also ran the work. No measurement supports it yet.
+
+The pilot is two uses: one retrospective claim review of a completed project
+and the next publication-targeted intake. For each use, record in the private
+project the items raised that the author's own critic report had not raised,
+how many the owner accepted, the reviewers used with their reported models,
+and the handling time. Missing measurements are unknown, not zero. Publish
+only generic counts.
+
+After two uses the owner decides to keep, adjust or drop the arrangement,
+including whether a second reviewer adds enough over one. Models from
+different providers can share blind spots, so agreement between reviewers is
+not independent confirmation and does not replace the owner's judgment.
+
 ## Physics workflow availability pilot — 2026-09-21
 
 The separate [physics pilot](../evals/agent-workflows/physics-pilot/README.md)
