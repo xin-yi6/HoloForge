@@ -253,6 +253,23 @@ account, after that service's data-use terms have been checked. Access granted
 for one purpose does not authorize another transfer. Model and service names
 belong in a private operating note, not in public HoloForge.
 
+**Run the review without a manual handoff.** The author may run the review with
+[`run_question_review.py`](../.agents/skills/holoforge-research-gate/scripts/run_question_review.py)
+instead of carrying the card by hand. The owner's approval is then a standing
+private configuration, following the
+[example](../.agents/skills/holoforge-research-gate/assets/question-review-reviewers.example.json),
+that names each reviewer's local non-interactive command, its provider or
+model family, and the card classes it may receive. The runner starts the
+reviewer in an empty working directory with only the fixed
+[review prompt](templates/question-review-prompt.md) and the card. It
+preserves the output, the exact message sent and a receipt with their hashes,
+and it allows one [rebuttal](templates/question-review-rebuttal-prompt.md). It
+refuses an unapproved card class, a reviewer of the author's own family
+without a recorded fallback, an oversized card and any overwrite. HoloForge
+holds no provider names, network code or credentials for this; each command
+uses its own login. Because the author launches its own reviewer, the owner
+audits the receipt and the message actually sent.
+
 **Recheck a materially changed claim.** When a stop, exclusion or failed
 qualification materially changes the central contribution of
 publication-targeted work, add to the existing return packet the claim as

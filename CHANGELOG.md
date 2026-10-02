@@ -6,6 +6,18 @@ All notable changes to HoloForge are recorded here.
 
 ### Added
 
+- Add `run_question_review.py` to the research-gate skill, so the author of a
+  question or claim card can run the independent review without carrying the
+  card by hand. Each reviewer is a local non-interactive command named in the
+  owner's private configuration, together with its provider or model family
+  and the card classes it may receive. The runner sends only the fixed
+  reviewer prompt and the card from an empty working directory, preserves the
+  output, the message sent and a hashed receipt, and allows one rebuttal. It
+  refuses unapproved card classes, a same-family reviewer without a recorded
+  fallback, oversized cards and overwrites. It contains no provider names,
+  network code or credentials. Add the fixed review and rebuttal prompts and
+  an example configuration.
+
 - Record an on-disk package source fingerprint, the Git commit and `src/`
   modification state when running from a checkout (both recomputed per
   record), NumPy/SciPy BLAS and LAPACK backend names, and `long double`
