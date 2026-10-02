@@ -4,7 +4,9 @@
 The author of a card uses this script instead of a manual handoff. It passes
 the fixed reviewer prompt and one card to a reviewer command that the owner
 approved in a private configuration file, stores the command's output
-unchanged and writes an execution receipt. The script names no provider and
+unchanged and writes an execution receipt. A scope brief is handled the same
+way with the fixed proposal prompt: the command then returns independent
+candidate questions instead of a review. The script names no provider and
 contains no network code or credentials: each reviewer is a local
 non-interactive command, and its provider, account and approvals come from the
 owner's configuration.
@@ -30,7 +32,9 @@ from typing import Any, Mapping, Optional, Sequence
 
 
 RUNNER_VERSION = 1
-CARD_KINDS = ("question", "claim")
+CARD_KINDS = ("question", "claim", "brief")
+# A brief asks for candidate proposals; there is no report to rebut.
+REVIEW_KINDS = ("question", "claim")
 # A card is a short record. The cap keeps a manuscript, data file or code
 # listing from being sent under the name of a card.
 MAX_CARD_CHARS = 12000
@@ -39,6 +43,7 @@ SECRET_WORDS = ("key", "token", "secret", "password")
 
 ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_PROMPT = ROOT / "docs/templates/question-review-prompt.md"
+DEFAULT_PROPOSAL_PROMPT = ROOT / "docs/templates/candidate-proposal-prompt.md"
 DEFAULT_REBUTTAL_PROMPT = ROOT / "docs/templates/question-review-rebuttal-prompt.md"
 
 SCOPE_WITH_LITERATURE = (
@@ -229,7 +234,10 @@ def run_review(args: argparse.Namespace) -> Path:
             f"{MAX_CARD_CHARS}. Send a card, not a manuscript, data or code"
         )
 
-    template = read_text(args.prompt)
+    prompt_path = args.prompt or (
+        DEFAULT_PROPOSAL_PROMPT if args.card_kind == "brief" else DEFAULT_PROMPT
+    )
+    template = read_text(prompt_path)
     scope = (
         SCOPE_WITH_LITERATURE
         if reviewer["literature_access"]
@@ -253,7 +261,8 @@ def run_review(args: argparse.Namespace) -> Path:
     write_new_text(out_dir / "card.md", card)
     write_new_text(out_dir / "message.md", message)
     write_new_text(out_dir / "report.md", result["output"])
-    receipt = base_receipt("review", args.reviewer, reviewer, config)
+    stage = "proposal" if args.card_kind == "brief" else "review"
+    receipt = base_receipt(stage, args.reviewer, reviewer, config)
     receipt.update(
         {
             "card_kind": args.card_kind,
@@ -286,6 +295,8 @@ def run_rebuttal(args: argparse.Namespace) -> Path:
         report = read_text(review_dir / "report.md")
     except (OSError, json.JSONDecodeError) as error:
         raise Refused(f"no preserved review in {review_dir.name}: {error}") from error
+    if receipt.get("card_kind") not in REVIEW_KINDS:
+        raise Refused("only a question or claim review has a rebuttal round")
     if sha256_text(report) != receipt["sha256"]["report"]:
         raise Refused("the preserved report no longer matches its receipt")
     if sha256_text(card) != receipt["sha256"]["card"]:
@@ -351,7 +362,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     commands = parser.add_subparsers(dest="stage", required=True)
 
-    review = commands.add_parser("review", help="send one card to one reviewer")
+    review = commands.add_parser(
+        "review", help="send one card or scope brief to one reviewer"
+    )
     review.add_argument("--card", type=Path, required=True)
     review.add_argument("--card-kind", choices=CARD_KINDS, required=True)
     review.add_argument("--reviewer", required=True)
@@ -362,7 +375,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="provider or model family of the agent that wrote the card",
     )
     review.add_argument("--out-dir", type=Path, required=True)
-    review.add_argument("--prompt", type=Path, default=DEFAULT_PROMPT)
+    review.add_argument(
+        "--prompt",
+        type=Path,
+        help="fixed prompt template; defaults to the one for the card kind",
+    )
     review.add_argument(
         "--fallback-decision",
         help="owner decision record allowing a reviewer of the author's family",

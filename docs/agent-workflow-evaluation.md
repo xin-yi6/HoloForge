@@ -29,6 +29,11 @@ the actual input scope and prior exposure, and the handling time. Missing
 measurements are unknown, not zero. Owner agreement is a disposition, not
 independent proof of correctness. Publish only generic counts.
 
+When an intake also collects independent candidate proposals, record how many
+proposed seeds were distinct from the author's own list, how many survived the
+prior-work and scorecard screening, and how many had unsupported references.
+A seed proposed by several models is not thereby stronger.
+
 After two uses the owner decides to keep, adjust or drop the arrangement. Two
 uses can test handling and expose overlooked objections; they cannot establish
 a generally superior review architecture. Models from different providers can
