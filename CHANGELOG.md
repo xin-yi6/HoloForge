@@ -60,6 +60,15 @@ All notable changes to HoloForge are recorded here.
 
 ### Changed
 
+- Clarify that computational or representational holographic advantage means
+  an advantage of the holographic method over the best nonholographic baseline
+  for the same physical problem in a stated validity regime. Mere ease of
+  numerical implementation, existing code or a faster bulk solver does not
+  establish scientific value. Preserve this route without requiring a new
+  physical phenomenon, while requiring a demonstrated comparative advantage.
+  Align the Constitution, intake scorecard and guidance; frozen contracts,
+  framework pins, numerical behavior and acceptance thresholds are unchanged.
+
 - Soft-wall spectral refinement check, rule version 2
   (`soft-wall-spectral-refinement-v2`). The check keeps the final `1e-8`
   accuracy requirement and still accepts strictly decreasing errors. It now

@@ -135,6 +135,13 @@ old first-failure contracts; do not apply this distinction retroactively.
    construction and compute cost. The agent supplies evidence and a
    recommendation; the owner decides scientific value and investment.
 
+   Computational advantage compares the holographic method with the best
+   nonholographic baseline for the same physical problem in a stated validity
+   regime. Mere ease of numerical implementation, available code, or a faster bulk
+   solver does not establish that advantage. A new physical phenomenon is not
+   required for this route; a consequential comparative advantage must be
+   demonstrated. Nonholographic methods need not be classical.
+
    Then choose an honest horizon: open discovery, strategic development, or
    short-horizon execution. For publication-targeted work, complete the
    separate publication-pathway assessment and record the minimum publishable

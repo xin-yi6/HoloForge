@@ -80,6 +80,17 @@ not merely move the difficulty into a more flexible model, an uncontrolled
 dictionary, or an expensive bulk solve. This route may support a physics,
 method, or combined contribution, but its claim must match the evidence.
 
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+The advantage may be access to an otherwise inaccessible observable, better
+controlled accuracy, or lower total cost at comparable accuracy; compare against
+closest prior methods. This clarification does not amend existing frozen
+contracts or framework pins.
+
 ## Three research horizons
 
 Classify a selected opportunity by the work it actually requires:

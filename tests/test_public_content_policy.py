@@ -295,6 +295,25 @@ class PublicContentPolicyTests(unittest.TestCase):
         self.assertIn("best nonholographic baseline", combined)
         self.assertIn("one extra dimension", combined)
         self.assertIn("construction effort, and compute cost", combined)
+        for path in (
+            ROOT / "CONSTITUTION.md",
+            ROOT / "docs/research-objective.md",
+            ROOT / "docs/research-gate-workflow.md",
+            ROOT / "CONTRIBUTING.md",
+            ROOT / "docs/private-research-workflow.md",
+            ROOT / "docs/agent-quickstart.md",
+            ROOT / ".agents/skills/holoforge-auto-research/references/campaign-workflow.md",
+            ROOT / ".agents/skills/holoforge-research-gate/assets/explore-intake-scorecard.example.md",
+        ):
+            text = " ".join(path.read_text(encoding="utf-8").lower().split())
+            with self.subTest(path=path.relative_to(ROOT)):
+                self.assertIn("holographic method", text)
+                self.assertIn("nonholographic baseline", text)
+                self.assertIn("same physical problem", text)
+                self.assertIn("validity regime", text)
+                self.assertIn("mere ease of numerical implementation", text)
+                self.assertIn("a new physical phenomenon is not required", text)
+                self.assertNotIn("must target a new physical contribution", text)
         self.assertIn("not a novelty", scorecard)
         self.assertIn("prior-knowledge review", scorecard)
         self.assertIn("stable knowledge or lesson id", combined)

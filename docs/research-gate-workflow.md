@@ -66,6 +66,16 @@ because the nonholographic calculation has not yet been attempted. A
 holographic calculation that is less controlled or more costly than its
 baseline does not gain value from tractability language alone.
 
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+Name the otherwise inaccessible observable or proposed accuracy or total-cost
+advantage, and the evidence that would demonstrate it. Apply this clarification
+prospectively without amending frozen contracts or pins.
+
 ## Declare portfolio intent and search scope
 
 An intake is a bounded candidate search, not an automatic survey of every

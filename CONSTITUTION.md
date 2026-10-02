@@ -39,9 +39,18 @@ or representational leverage over a scientifically important problem that is
 otherwise intractable or poorly controlled. Computational leverage must be
 demonstrated against a named nonholographic baseline with an explicit
 dictionary, validity regime, accuracy boundary, and cost comparison; an extra
-dimension or an easier numerical run is not sufficient by itself. Novel,
-unpublished Explore work may remain in a separate private workspace; Explore
-is an evidence category, not a requirement to disclose research in progress.
+dimension or an easier numerical run is not sufficient by itself.
+
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+Novel, unpublished Explore work may remain in a separate private workspace;
+Explore is an evidence category, not a requirement to disclose research in
+progress. This clarification is prospective and does not amend existing frozen
+contracts or framework pins.
 
 ## 3. Claim labels
 
