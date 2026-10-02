@@ -271,9 +271,9 @@ class PublicContentPolicyTests(unittest.TestCase):
         for opportunity_row in (
             "physical importance",
             "gap plausibility",
+            "new physical contribution",
             "falsifiability",
             "physical or conceptual holographic leverage",
-            "computational or representational holographic leverage",
             "explanatory or predictive depth",
             "outcome value",
             "owner fit",
@@ -295,6 +295,25 @@ class PublicContentPolicyTests(unittest.TestCase):
         self.assertIn("best nonholographic baseline", combined)
         self.assertIn("one extra dimension", combined)
         self.assertIn("construction effort, and compute cost", combined)
+        self.assertIn("supporting computational or representational advantage", scorecard)
+        for path in (
+            ROOT / "CONSTITUTION.md",
+            ROOT / "docs/research-objective.md",
+            ROOT / "docs/research-gate-workflow.md",
+            ROOT / "CONTRIBUTING.md",
+            ROOT / "docs/private-research-workflow.md",
+            ROOT / "docs/agent-quickstart.md",
+            ROOT / ".agents/skills/holoforge-auto-research/references/campaign-workflow.md",
+        ):
+            text = " ".join(path.read_text(encoding="utf-8").lower().split())
+            with self.subTest(path=path.relative_to(ROOT)):
+                self.assertIn("must target a new physical contribution", text)
+                self.assertIn("not a standalone", text)
+                self.assertNotIn("legitimate research-value route", text)
+                self.assertNotIn("the two holographic-leverage rows are independent", text)
+        self.assertNotIn(
+            "| computational or representational holographic leverage |", scorecard
+        )
         self.assertIn("not a novelty", scorecard)
         self.assertIn("prior-knowledge review", scorecard)
         self.assertIn("stable knowledge or lesson id", combined)

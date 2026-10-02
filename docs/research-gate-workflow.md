@@ -36,16 +36,12 @@ prepare a **scientific-opportunity assessment** that addresses independently:
 4. **Physical or conceptual holographic leverage:** what mechanism, relation,
    controlled regime, or prediction can gauge/gravity modelling expose that a
    simpler effective, symmetry, perturbative, or data-fit description cannot?
-5. **Computational or representational holographic leverage:** does a
-   controlled dual description make a scientifically important strongly
-   coupled problem calculable, or expose observables and regimes that the best
-   named nonholographic baseline cannot access with comparable control?
-6. **Explanatory or predictive depth:** would the result reveal a mechanism,
+5. **Explanatory or predictive depth:** would the result reveal a mechanism,
    relation, controlled regime, or reusable dictionary rather than only add a
    curve or flexible fit?
-7. **Outcome value:** what would be learned from positive, negative, and
+6. **Outcome value:** what would be learned from positive, negative, and
    inconclusive outcomes?
-8. **Owner fit:** how does the direction fit the human research owner's
+7. **Owner fit:** how does the direction fit the human research owner's
    expertise, interests, available time, risk tolerance, and portfolio?
 
 Agents, literature records, and hostile critics supply evidence and competing
@@ -53,18 +49,26 @@ interpretations for these rows. They must not collapse them into one opaque
 score or certify importance, novelty, or publication value. The named human
 research owner makes the final scientific-value and investment decision.
 
-The two holographic-leverage rows are independent. A candidate does not need
-both a new phenomenon and a calculational advantage, but it must establish at
-least one non-decorative role appropriate to its claim. For the computational
-or representational route, record the hard original problem, the best named
-nonholographic method, why that method is insufficient, the dictionary and
-validity regime of the holographic replacement, which observables become
-accessible, and a prospective comparison of accuracy, robustness, human
-construction effort, and compute cost. Do not award leverage merely because
-the bulk has one extra dimension, because a classical equation can be run, or
-because the nonholographic calculation has not yet been attempted. A
-holographic calculation that is less controlled or more costly than its
-baseline does not gain value from tractability language alone.
+Every scientific Explore candidate must target a new physical contribution
+beyond the closest prior work. Name the unanswered physical question, the
+possible mechanism, relation, prediction, unexplored regime or observable, or
+physical consistency result, and a discriminator that could support or reject
+it. This applies to all three novelty tracks, including method transfer and
+model improvement. It does not require a qualitatively new phenomenon or a
+completed calculation at intake; open discovery may construct the missing
+dictionary or test. A contribution claim remains provisional until checked.
+
+Computational or representational advantages cannot substitute for the physical
+contribution. Assess them as supporting means after scientific opportunity,
+when choosing the horizon and route. Record the hard original problem, best
+nonholographic baseline, dictionary and validity regime, accessible observables,
+and comparison of accuracy, robustness, human construction effort, and compute
+cost. State which new physical question the advantage enables. One extra
+dimension, an easier numerical run, or more accurate recovery of an already
+established result is not a standalone reason to select an Explore direction.
+This requirement concerns scientific candidate selection; Forge/Verify,
+infrastructure and synthetic workflow tests keep their declared purposes.
+Apply it prospectively without amending existing frozen contracts or pins.
 
 ## Declare portfolio intent and search scope
 
@@ -128,7 +132,8 @@ not the research endpoint. Before selecting the lead, also record:
   physics checkpoint and every prerequisite before it;
 - the **numerical-dependence lane**: analytic or semi-analytic, reuse of an
   already qualified numerical route, new numerical infrastructure, or an
-  explicitly publication-targeted numerical-method contribution;
+  explicitly publication-targeted numerical-method contribution that enables
+  the new physical claim;
 - a **campaign construction budget** for planned new capabilities and a
   separate **candidate-wide numerical-repair budget** that cannot be reset by
   opening a sequence of smaller gates; and

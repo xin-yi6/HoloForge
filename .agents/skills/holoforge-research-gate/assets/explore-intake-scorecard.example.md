@@ -46,9 +46,9 @@ judgment, not an automatic score or a novelty/publication certificate.
 | --- | --- | --- | --- |
 | Physical importance | `<phenomenon, tension, missing explanation, or new application>` | `<why importance may be overstated>` | `<strong | plausible | weak | undecided>` |
 | Gap plausibility | `<exact closest prior work and bounded no-hit evidence>` | `<coverage limitation>` | `<assessment>` |
+| New physical contribution | `<unanswered physical question and possible mechanism, relation, prediction, unexplored regime or observable, or physical consistency result beyond closest prior work>` | `<risk that only an established result or numerical improvement is obtained>` | `<assessment>` |
 | Falsifiability | `<observable, derivation, scaling relation, branch comparison, or discriminator>` | `<risk that coefficients absorb the effect>` | `<assessment>` |
 | Physical or conceptual holographic leverage | `<new mechanism, relation, controlled regime, or prediction beyond simpler descriptions>` | `<risk that holography is decorative or unnecessarily flexible>` | `<assessment>` |
-| Computational or representational holographic leverage | `<hard original problem; best nonholographic baseline; what the controlled dual makes accessible; accuracy and total-cost comparison>` | `<risk that the dictionary is uncontrolled, the baseline was not attempted, or the bulk only moves/adds difficulty>` | `<assessment>` |
 | Explanatory or predictive depth | `<mechanism, relation, controlled regime, or reusable dictionary>` | `<risk of another curve or fit>` | `<assessment>` |
 | Outcome value | `<what positive, negative, and inconclusive results would teach>` | `<risk that only a technical artifact is produced>` | `<assessment>` |
 | Owner fit | `<expertise, interest, time, risk tolerance, and portfolio role>` | `<opportunity cost>` | `<assessment by named owner>` |
@@ -57,6 +57,13 @@ judgment, not an automatic score or a novelty/publication certificate.
 - **Human owner decision:** `<pending or exact recorded decision>`
 - **Reason:** `<comparative scientific judgment; do not cite readiness alone>`
 - **Non-inference boundary:** `<no novelty, truth, or publication claim follows>`
+
+Every scientific Explore candidate must target a new physical contribution.
+Computational or representational advantages cannot substitute for that aim.
+Assess those advantages below as supporting means after the physical
+opportunity, including for method-transfer/model-improvement candidates.
+A missing dictionary or solver may require open discovery or strategic
+development; it does not require a completed contribution at intake.
 
 ## Research-horizon and capability map
 
@@ -70,6 +77,7 @@ the current starting point; they do not decide which question is valuable.
 | Planned new capabilities | `<dictionary, action, observable, artifact, solver, validation route, or none>` |
 | Dependency order and milestones | `<bounded sequence; several capabilities are allowed when explicit>` |
 | First planned physical checkpoint | `<earliest honest discriminator and prerequisites>` |
+| Supporting computational or representational advantage | `<new physical contribution enabled; best nonholographic baseline; dictionary and validity regime; accessible observables; accuracy, robustness and total-cost comparison, or not applicable>` |
 | Campaign construction budget | `<literature, derivation, implementation, compute, and review ceiling>` |
 | Separate numerical-repair budget | `<begins only after a frozen route fails>` |
 | Failure value and pivot rule | `<what is retained and when the campaign stops>` |
@@ -89,7 +97,7 @@ guarantee publication, or replace the next-gate checks below.
 | Physical discriminator or mechanism | `<observable that survives generic flexibility>` | `<genericity risk>` | `<assessment>` |
 | Research horizon and current readiness | `<why this is discovery, strategic development, or short-horizon execution>` | `<construction or sunk-cost risk>` | `<assessment>` |
 | First physical-discriminator gate | `<earliest honest checkpoint plus prerequisite milestones>` | `<risk that infrastructure loses contact with physics>` | `<assessment>` |
-| Numerical-dependence lane | `<analytic/semi-analytic | qualified-route reuse | new infrastructure | numerical-method contribution>` | `<implementation risk>` | `<assessment>` |
+| Numerical-dependence lane | `<analytic/semi-analytic | qualified-route reuse | new infrastructure | numerical-method contribution enabling the new physical claim>` | `<implementation risk>` | `<assessment>` |
 | Construction, repair, and pivot budgets | `<planned capability cost; separate maximum repair count; pivot rule>` | `<sunk-cost or repair-ladder risk>` | `<assessment>` |
 
 The construction budget covers planned, question-necessary model and capability

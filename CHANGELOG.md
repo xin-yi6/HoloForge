@@ -60,6 +60,13 @@ All notable changes to HoloForge are recorded here.
 
 ### Changed
 
+- Require a new physical contribution when selecting scientific Explore
+  candidates, including method transfer and model improvement. Computational
+  or representational advantages support that objective but no longer provide
+  a standalone selection route. Align the Constitution, intake guidance,
+  scorecard and autonomous screening instructions. Existing frozen research
+  contracts and framework pins are unchanged.
+
 - Soft-wall spectral refinement check, rule version 2
   (`soft-wall-spectral-refinement-v2`). The check keeps the final `1e-8`
   accuracy requirement and still accepts strictly decreasing errors. It now

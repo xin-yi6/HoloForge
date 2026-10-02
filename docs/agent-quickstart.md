@@ -140,7 +140,11 @@ Before the detailed gate, ask the agent to copy and complete
 inside the private repository. First ask it to assess the scientific
 opportunity independently of current capabilities: importance, gap
 plausibility, falsifiability, holographic leverage, explanatory depth, outcome
-value, and owner fit. The agent recommends; the named human owner decides
+value, and owner fit. Every scientific Explore candidate must target a new
+physical contribution beyond the closest prior work. Computational or
+representational advantages support that aim; they are not a standalone reason
+to select a direction. Method transfer and model improvement must also name the
+unanswered physical question. The agent recommends; the named human owner decides
 whether the question deserves investment. Then choose open discovery,
 strategic development, or short-horizon execution and qualify the proposed
 next gate through its inputs, discriminator, cheapest honest test, endpoint,

@@ -38,7 +38,12 @@ closure-lesson indexes first. Record every serious candidate, including the
 reason it was screened out.
 
 Rank scientific opportunity without allowing capability receipts to select the
-question. Then evaluate execution readiness, physical discriminator, cheapest
+question. Every scientific Explore candidate must target a new physical
+contribution beyond the closest prior work; computational or representational
+advantages are supporting means, not a standalone selection route. This applies
+prospectively and does not amend an existing mission or its pinned framework.
+Synthetic workflow tests retain their explicitly declared nonphysical purpose.
+Then evaluate execution readiness, physical discriminator, cheapest
 honest test, source and novelty status, construction cost, and total numerical
 dependence. Do not aggregate these distinct judgments into one misleading score.
 

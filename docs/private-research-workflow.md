@@ -127,13 +127,16 @@ old first-failure contracts; do not apply this distinction retroactively.
    and candidate-pool coverage. Before inspecting capability receipts or
    ranking by cost, complete the scientific-opportunity assessment: physical
    importance, gap plausibility, falsifiability, physical or conceptual
-   holographic leverage, computational or representational holographic
-   leverage, explanatory or predictive depth, outcome value, and fit with the
-   named human owner's expertise and portfolio. A computational-leverage claim
-   must name the hard original problem, best nonholographic baseline,
-   dictionary and validity regime, accessible observables, accuracy, and total
-   construction and compute cost. The agent supplies evidence and a
-   recommendation; the owner decides scientific value and investment.
+   holographic leverage, explanatory or predictive depth, outcome value, and fit
+   with the named human owner's expertise and portfolio. Every scientific
+   Explore candidate must target a new physical contribution beyond the closest
+   prior work. Computational or representational advantages are supporting
+   means, not a standalone scientific-value route. Assess them in the later
+   horizon/route decision: name the new physical question they enable, best
+   nonholographic baseline, dictionary, validity regime, accessible observables,
+   accuracy, robustness, and total construction and compute cost. The agent
+   supplies evidence and a recommendation; the owner decides scientific value
+   and investment.
 
    Then choose an honest horizon: open discovery, strategic development, or
    short-horizon execution. For publication-targeted work, complete the
