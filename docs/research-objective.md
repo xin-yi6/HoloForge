@@ -49,6 +49,9 @@ non-aggregate assessment of:
 - falsifiability and the existence of a meaningful physical discriminator;
 - physical or conceptual holographic leverage: a mechanism, relation, regime,
   or prediction unavailable from a simpler description;
+- computational or representational holographic leverage: controlled access
+  to a scientifically important strongly coupled problem that the best named
+  nonholographic baseline cannot solve or control comparably;
 - explanatory or predictive depth beyond a generic flexible-model fit;
 - the prospective value of positive, negative, and inconclusive outcomes; and
 - fit with the owner's expertise, interests, time, and portfolio strategy.
@@ -66,24 +69,27 @@ selection remains AI-generated and unreviewed; it cannot certify importance,
 novelty, truth, or publication value. Any change to the envelope or policy
 returns to the owner.
 
-Every scientific Explore candidate must target a new physical contribution
-beyond the closest prior work. State the unanswered question and the mechanism,
-relation, prediction, unexplored regime or observable, or physical consistency
-result that either outcome could establish. This is a prospective research aim,
-not a novelty certificate or a demand for a positive result. A qualitatively new
-phenomenon is not required in every project.
+Computational or representational leverage is a legitimate research-value
+route even when holography does not predict a qualitatively new phenomenon.
+It is not an automatic pass. The candidate must identify the hard original
+problem and best available comparison method, establish the source-response
+dictionary and duality or modelling regime, and compare accessible
+observables, accuracy, robustness, and total construction and compute cost.
+The higher-dimensional description must provide a real scientific advantage,
+not merely move the difficulty into a more flexible model, an uncontrolled
+dictionary, or an expensive bulk solve. This route may support a physics,
+method, or combined contribution, but its claim must match the evidence.
 
-Computational or representational advantages are supporting means, not a
-standalone scientific-value route. Assess them after the physical opportunity:
-name the best nonholographic baseline, source-response dictionary and modelling
-regime, then compare accessible observables, accuracy, robustness, human
-construction effort, and compute cost. Explain which unanswered physical
-question the advantage enables. Faster or more accurate recovery of an already
-established result alone does not justify selecting an Explore direction.
-Method transfer and model improvement follow the same physical-contribution
-requirement. Forge/Verify reproductions, infrastructure maintenance and synthetic
-workflow tests retain their separate purposes. Apply this selection policy to
-future work without changing existing frozen contracts or framework pins.
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+The advantage may be access to an otherwise inaccessible observable, better
+controlled accuracy, or lower total cost at comparable accuracy; compare against
+closest prior methods. This clarification does not amend existing frozen
+contracts or framework pins.
 
 ## Three research horizons
 

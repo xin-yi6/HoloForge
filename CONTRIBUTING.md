@@ -61,14 +61,21 @@ disclosure status separate. Record the intake's portfolio intent and actual
 domain coverage. Assess scientific opportunity before capability readiness;
 the named human owner decides scientific value after reviewing importance,
 gap plausibility, falsifiability, physical or conceptual holographic leverage,
-explanatory depth, outcome value, and owner fit. Every scientific Explore
-candidate must target a new physical contribution beyond the closest prior
-work, including method transfer and model improvement. Computational or
-representational advantages are supporting means, not a standalone selection
-route. Compare their baseline, dictionary, validity regime, accessible
-observables, accuracy, robustness and total cost only in relation to the new
-physical question they enable. Then classify the opportunity as open discovery,
-strategic development, or short-horizon execution. Publication-targeted
+computational or representational holographic leverage, explanatory depth,
+outcome value, and owner fit. A computational-leverage route must compare the
+hard original problem and best nonholographic baseline against the holographic
+dictionary, validity regime, accessible observables, accuracy, robustness, and
+total construction and compute cost; an extra dimension alone is not an
+advantage.
+
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+Then classify the opportunity as open discovery, strategic
+development, or short-horizon execution. Publication-targeted
 scorecards must name the minimum publishable physical claim, earliest honest
 physical-discriminator gate and prerequisites, numerical-dependence lane,
 campaign construction budget, and separate candidate-wide repair budget;

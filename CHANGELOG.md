@@ -60,12 +60,14 @@ All notable changes to HoloForge are recorded here.
 
 ### Changed
 
-- Require a new physical contribution when selecting scientific Explore
-  candidates, including method transfer and model improvement. Computational
-  or representational advantages support that objective but no longer provide
-  a standalone selection route. Align the Constitution, intake guidance,
-  scorecard and autonomous screening instructions. Existing frozen research
-  contracts and framework pins are unchanged.
+- Clarify that computational or representational holographic advantage means
+  an advantage of the holographic method over the best nonholographic baseline
+  for the same physical problem in a stated validity regime. Mere ease of
+  numerical implementation, existing code or a faster bulk solver does not
+  establish scientific value. Preserve this route without requiring a new
+  physical phenomenon, while requiring a demonstrated comparative advantage.
+  Align the Constitution, intake scorecard and guidance; frozen contracts,
+  framework pins, numerical behavior and acceptance thresholds are unchanged.
 
 - Soft-wall spectral refinement check, rule version 2
   (`soft-wall-spectral-refinement-v2`). The check keeps the final `1e-8`

@@ -32,21 +32,25 @@ envelope, candidate-selection policy, decision set, resource ceiling, and
 mandatory-return boundary. The agent may then select and execute candidates
 inside that authority without a new human choice at every transition. This
 delegation neither assigns human review nor authorizes changes to the framework,
-scientific thresholds, disclosure, submission, or publication. Every scientific
-Explore candidate must target a new physical contribution: a mechanism,
-relation, prediction, unexplored regime or observable, or physical consistency
-result beyond the closest prior work. A proposed contribution remains a
-hypothesis until its discriminating test supplies evidence; a qualitatively new
-phenomenon is not required in every project. Computational or representational
-advantages may support that physical objective, but are not a standalone reason
-to select an Explore direction. Faster, more accurate or more convenient
-recovery of an already established result is not sufficient. Method transfer
-and model improvement must name the unanswered physical question they serve.
-Forge/Verify reproductions, infrastructure maintenance and synthetic workflow
-tests retain their separate purposes. Novel, unpublished Explore work may remain
-in a separate private workspace; Explore is an evidence category, not a
-requirement to disclose research in progress. This selection policy applies
-prospectively; it does not amend existing frozen contracts or framework pins.
+scientific thresholds, disclosure, submission, or publication. Holographic
+value may come from a distinct
+physical mechanism, relation, or prediction, or from controlled computational
+or representational leverage over a scientifically important problem that is
+otherwise intractable or poorly controlled. Computational leverage must be
+demonstrated against a named nonholographic baseline with an explicit
+dictionary, validity regime, accuracy boundary, and cost comparison; an extra
+dimension or an easier numerical run is not sufficient by itself.
+
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+Novel, unpublished Explore work may remain in a separate private workspace;
+Explore is an evidence category, not a requirement to disclose research in
+progress. This clarification is prospective and does not amend existing frozen
+contracts or framework pins.
 
 ## 3. Claim labels
 

@@ -140,11 +140,15 @@ Before the detailed gate, ask the agent to copy and complete
 inside the private repository. First ask it to assess the scientific
 opportunity independently of current capabilities: importance, gap
 plausibility, falsifiability, holographic leverage, explanatory depth, outcome
-value, and owner fit. Every scientific Explore candidate must target a new
-physical contribution beyond the closest prior work. Computational or
-representational advantages support that aim; they are not a standalone reason
-to select a direction. Method transfer and model improvement must also name the
-unanswered physical question. The agent recommends; the named human owner decides
+value, and owner fit.
+
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+The agent recommends; the named human owner decides
 whether the question deserves investment. Then choose open discovery,
 strategic development, or short-horizon execution and qualify the proposed
 next gate through its inputs, discriminator, cheapest honest test, endpoint,

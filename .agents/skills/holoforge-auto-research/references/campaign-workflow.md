@@ -38,11 +38,15 @@ closure-lesson indexes first. Record every serious candidate, including the
 reason it was screened out.
 
 Rank scientific opportunity without allowing capability receipts to select the
-question. Every scientific Explore candidate must target a new physical
-contribution beyond the closest prior work; computational or representational
-advantages are supporting means, not a standalone selection route. This applies
-prospectively and does not amend an existing mission or its pinned framework.
-Synthetic workflow tests retain their explicitly declared nonphysical purpose.
+question.
+
+Computational advantage compares the holographic method with the best
+nonholographic baseline for the same physical problem in a stated validity
+regime. Mere ease of numerical implementation, available code, or a faster bulk
+solver does not establish that advantage. A new physical phenomenon is not
+required for this route; a consequential comparative advantage must be
+demonstrated. Nonholographic methods need not be classical.
+This clarification does not amend existing missions or framework pins.
 Then evaluate execution readiness, physical discriminator, cheapest
 honest test, source and novelty status, construction cost, and total numerical
 dependence. Do not aggregate these distinct judgments into one misleading score.
