@@ -46,6 +46,9 @@ contribution; it cannot certify that the calculation establishes the claim.
 - **Claim that survives, in one sentence:** `<claim>`
 - **Contribution type:** `<physical comparison | analytical result |
   computational or methodological advantage>`
+- **Model, regime, necessary assumptions and named comparison:** `<short
+  statement; for a computational claim, the nonholographic baseline for the
+  same problem and regime>`
 - **Excluded or stopped on the way, and why:** `<list>`
 - **Evidence boundary:** `<analytic | numerical | comparison; what is
   established and what is not>`
@@ -61,7 +64,11 @@ contribution; it cannot certify that the calculation establishes the claim.
 - **Differs from the author's provider or model family:** `<yes | owner-approved
   fallback, with the decision record>`
 - **Actual input scope and prior exposure to this project:** `<statement>`
-- **Date, card hash and report hash:** `<ISO date; hashes>`
+- **Date and card hash:** `<ISO date; hash>`
+
+Do not write the report's own hash inside the report. The canonical writer
+records the hash of the unchanged final report in the existing execution
+receipt.
 
 Answer each item with `pass`, `concern` or `fail`, a reason of at most five
 lines and an evidence locator. Use `concern` when the card gives too little

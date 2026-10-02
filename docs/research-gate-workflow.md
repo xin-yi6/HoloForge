@@ -204,9 +204,9 @@ defense or critic report, or another review. Record the actual input scope and
 any prior exposure. Missing information is a `concern` or a request for
 clarification, not a reason to guess. A second reviewer, or a fallback when no
 different family is available, needs the owner's approval; the author must not
-substitute one silently. Preserve each report unchanged, with its hash, before
-the author replies or another reviewer reads it. Reviewers have no write
-access to the project; the canonical writer imports the report.
+substitute one silently. Preserve each report unchanged, and record its hash in
+the receipt, before the author replies or another reviewer reads it. Reviewers
+have no write access to the project; the canonical writer imports the report.
 
 Every report answers these questions with `pass`, `concern` or `fail`, a short
 reason and an evidence locator, without an aggregate score:
