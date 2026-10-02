@@ -16,6 +16,11 @@ identifiers. Before sending it to any service, confirm that the owner has
 approved the exact content class, recipient and service account, and that the
 service's data-use terms have been checked.
 
+When the review runs through `run_question_review.py`, the owner's private
+reviewer configuration is that approval. The runner fills in the fixed
+reviewer prompt, and its receipt records the reviewer, the hashes and the
+message actually sent; the reviewer's own statements stay in its report.
+
 ## Question card
 
 Written by the author after the intake scorecard is prepared, to inform the

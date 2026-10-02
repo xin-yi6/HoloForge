@@ -1,0 +1,18 @@
+{
+  "owner_approval": "<private decision-record locator and ISO date>",
+  "reviewers": {
+    "reviewer-a": {
+      "family": "<provider or model family>",
+      "command": ["<local non-interactive agent command>", "<flag>"],
+      "model": "<requested model, optional>",
+      "approved_cards": ["question", "claim"],
+      "literature_access": true
+    },
+    "reviewer-b": {
+      "family": "<another provider or model family>",
+      "command": ["<another local non-interactive command>"],
+      "approved_cards": ["question"],
+      "literature_access": false
+    }
+  }
+}
