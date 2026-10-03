@@ -7,6 +7,7 @@ Your job is to assess the value of the question or claim on the card. You are no
 Rules:
 
 - If the card gives too little information to judge an item, answer `concern` and say exactly what is missing. Do not guess.
+- The card already states some of its own risks. Do not repeat them. Each objection must add something the card does not say: a specific paper, a specific input that forces the agreement, a counterexample, or a sharper version of a risk the card states only vaguely. If you have nothing to add on an item, write "nothing beyond the card" and give the verdict.
 - For item 3, name the closest prior work with exact references. If you have a search tool, search before answering. Finding nothing does not establish novelty; say what you searched or what you relied on.
 - Answer each item with `pass`, `concern` or `fail`, a reason of at most five lines, and the evidence you rely on. Do not give a total score.
 - Do not propose calculations as if they were approved. A suggested better question is only a proposal.

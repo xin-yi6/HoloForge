@@ -17,6 +17,11 @@ All notable changes to HoloForge are recorded here.
   fallback, oversized cards and overwrites. It contains no provider names,
   network code or credentials. Add the fixed review and rebuttal prompts and
   an example configuration.
+- After two pilot uses, require that no reviewer of a proposed candidate come
+  from the proposer's provider or model family, give every reviewer the same
+  prompt and its own literature search where available, and tell reviewers not
+  to restate risks the card already lists. Record the generic results of the
+  two uses in the workflow evaluation.
 - Let an intake collect independent candidate proposals through the same
   runner. The author records its own seeds, then sends a scope brief with a
   fixed proposal prompt to models from other providers or model families;
