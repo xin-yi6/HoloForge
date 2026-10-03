@@ -1,0 +1,419 @@
+{
+  "plan": "docs/numerics/chebyshev-construction-repair-plan.md",
+  "plan_sha256": "7d26e662d33e50713a5403a5a0455e59b7abc052ad4ed1732135d9efab7b25fb",
+  "result": {
+    "consumers": [
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "_spectral_level_diagnostics",
+              "_spectral_spectrum"
+            ],
+            "found": [
+              "_spectral_level_diagnostics",
+              "_spectral_spectrum"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {
+              "_finite_difference_spectrum": {
+                "defined": true,
+                "reaches_routine": false
+              }
+            },
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "soft-wall-vector",
+        "passed": true
+      },
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "_spectral_dimensionless_masses"
+            ],
+            "found": [
+              "_spectral_dimensionless_masses"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {
+              "_collocation_dimensionless_masses": {
+                "defined": true,
+                "reaches_routine": false
+              },
+              "_shooting_dimensionless_masses": {
+                "defined": true,
+                "reaches_routine": false
+              }
+            },
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "hard-wall-vector",
+        "passed": true
+      },
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "_mode_diagnostics",
+              "solve_spectral_mode"
+            ],
+            "found": [
+              "_mode_diagnostics",
+              "solve_spectral_mode"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {
+              "_independent_level": {
+                "defined": true,
+                "reaches_routine": false
+              }
+            },
+            "passed": true
+          },
+          "record_pointers": {
+            "absent": {},
+            "detail": {
+              "/results/cross_route_differences/*": {
+                "leaves": 4,
+                "numeric": 4
+              },
+              "/results/cutoff_changes/*": {
+                "leaves": 4,
+                "numeric": 4
+              },
+              "/results/gmor/*/R_GMOR": {
+                "leaves": 4,
+                "numeric": 4
+              },
+              "/results/gmor/*/m_q_factor": {
+                "leaves": 4,
+                "numeric": 4
+              },
+              "/results/independent/*/epsilon": {
+                "leaves": 3,
+                "numeric": 3
+              },
+              "/results/independent/*/f_pi_dop853_MeV": {
+                "leaves": 3,
+                "numeric": 3
+              },
+              "/results/independent/*/f_pi_route_relative_difference": {
+                "leaves": 3,
+                "numeric": 3
+              },
+              "/results/independent/*/m_pi_MeV": {
+                "leaves": 3,
+                "numeric": 3
+              },
+              "/results/levels/*/degree": {
+                "leaves": 3,
+                "numeric": 3
+              },
+              "/results/levels/*/observables/*": {
+                "leaves": 21,
+                "numeric": 21
+              },
+              "/results/refinement/*/N64_to_N80": {
+                "leaves": 7,
+                "numeric": 7
+              },
+              "/results/refinement/*/N80_to_N96": {
+                "leaves": 7,
+                "numeric": 7
+              },
+              "/results/table/*/computed": {
+                "leaves": 7,
+                "numeric": 7
+              }
+            },
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "hard-wall-chiral",
+        "passed": true
+      },
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "coupled_equation_diagnostics",
+              "solve_coupled_profile"
+            ],
+            "found": [
+              "coupled_equation_diagnostics",
+              "solve_coupled_profile"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {},
+            "passed": true
+          },
+          "record_pointers": {
+            "absent": {
+              "/results/presets/*/curve/*/entropy": 0
+            },
+            "detail": {
+              "/results/presets/*/curve/*/phi_h": {
+                "leaves": 1218,
+                "numeric": 1218
+              },
+              "/results/presets/*/curve/*/sound_speed_squared": {
+                "leaves": 1218,
+                "numeric": 1218
+              },
+              "/results/presets/*/curve/*/temperature_L": {
+                "leaves": 1218,
+                "numeric": 1218
+              },
+              "/results/presets/*/curve/*/x_h": {
+                "leaves": 1218,
+                "numeric": 1218
+              },
+              "/results/presets/*/independent_comparisons/*/target_phi_h": {
+                "leaves": 10,
+                "numeric": 10
+              },
+              "/results/presets/*/independent_comparisons/*/temperature_relative_error": {
+                "leaves": 10,
+                "numeric": 10
+              },
+              "/results/presets/*/maximum_collocation_residual": {
+                "leaves": 2,
+                "numeric": 2
+              },
+              "/results/presets/*/maximum_derivative_disagreement": {
+                "leaves": 2,
+                "numeric": 2
+              },
+              "/results/presets/*/refinement/maximum_final_change": {
+                "leaves": 2,
+                "numeric": 2
+              }
+            },
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "gubser-nellore-ed",
+        "passed": true
+      },
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "equation_diagnostics",
+              "solve_emd_profile"
+            ],
+            "found": [
+              "equation_diagnostics",
+              "solve_emd_profile"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {},
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "gubser-rocha-emd",
+        "passed": true
+      },
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "einstein_constraint_residual"
+            ],
+            "found": [
+              "einstein_constraint_residual"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {},
+            "passed": true
+          },
+          "imports_solver": {
+            "passed": true
+          },
+          "record_pointers": {
+            "absent": {},
+            "detail": {
+              "/configuration/physical_phi_h_targets/*": {
+                "leaves": 20,
+                "numeric": 20
+              },
+              "/results/curve/*/chi_2_over_T2_BH": {
+                "leaves": 20,
+                "numeric": 20
+              },
+              "/results/curve/*/entropy_BH": {
+                "leaves": 20,
+                "numeric": 20
+              },
+              "/results/curve/*/susceptibility_integral": {
+                "leaves": 20,
+                "numeric": 20
+              },
+              "/results/curve/*/temperature_BH": {
+                "leaves": 20,
+                "numeric": 20
+              },
+              "/results/degree_branches/*/points/*/chi_2_over_T2_BH": {
+                "leaves": 60,
+                "numeric": 60
+              },
+              "/results/degree_branches/*/points/*/temperature_BH": {
+                "leaves": 60,
+                "numeric": 60
+              },
+              "/results/quadrature_refinement/records/*/middle_to_fine_change": {
+                "leaves": 20,
+                "numeric": 20
+              },
+              "/results/refinement/maximum_final_change": {
+                "leaves": 1,
+                "numeric": 1
+              }
+            },
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "dewolfe-gubser-rosen-emd",
+        "passed": true
+      },
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "_solve_charged_once",
+              "_solve_explicit_maxwell_once",
+              "charged_equation_diagnostics",
+              "explicit_maxwell_diagnostics"
+            ],
+            "found": [
+              "_solve_charged_once",
+              "_solve_explicit_maxwell_once",
+              "charged_equation_diagnostics",
+              "explicit_maxwell_diagnostics"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {},
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "dewolfe-gubser-rosen-emd-finite-density",
+        "passed": true
+      },
+      {
+        "checks": {
+          "call_sites": {
+            "expected": [
+              "_independent_element_equation_residual",
+              "_independent_equation_residual_localization",
+              "solve_endpoint_split_spectral_response",
+              "solve_series_transferred_spectral_response",
+              "solve_spectral_response"
+            ],
+            "found": [
+              "_independent_element_equation_residual",
+              "_independent_equation_residual_localization",
+              "solve_endpoint_split_spectral_response",
+              "solve_series_transferred_spectral_response",
+              "solve_spectral_response"
+            ],
+            "passed": true
+          },
+          "control_functions": {
+            "detail": {
+              "solve_dop853_response": {
+                "defined": true,
+                "reaches_routine": false
+              },
+              "solve_riccati_dop853_response": {
+                "defined": true,
+                "reaches_routine": false
+              },
+              "solve_static_london_response": {
+                "defined": true,
+                "reaches_routine": false
+              }
+            },
+            "passed": true
+          },
+          "source_keys": {
+            "missing": [],
+            "passed": true
+          }
+        },
+        "consumer": "holographic-superconductor-optical",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "table_sha256": "16d31da930ea9969820995e7ab3ac9d453e925bcbaeb0956c95fe766abf2d06f"
+  },
+  "runtime": {
+    "byteorder": "little",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "0cd24ddbe7eacd7bbf0710cf1a23143f5b8dfb0b",
+    "holoforge_git_src_modified": "false",
+    "holoforge_source_sha256": "66d9bd288254e4a11253e0345187e1d8cbdbe48dd19ba0463f559361e800277a",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+    "numpy": "2.4.6",
+    "numpy_blas": "accelerate",
+    "numpy_lapack": "accelerate",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.15",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "accelerate",
+    "scipy_lapack": "accelerate"
+  },
+  "stage": "p0",
+  "status": "ok",
+  "tool": "chebyshev-repair",
+  "tool_sha256": "c29bd8318076a21d7261b0df60dfcfde2fbee3b05a6502ed13578ff6ffc74abd",
+  "wall_seconds": 0.1522028340000361
+}

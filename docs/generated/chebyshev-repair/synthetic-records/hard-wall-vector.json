@@ -1,0 +1,150 @@
+{
+  "_note": "SYNTHETIC record, hand-built from a manual audit of the record-building source at commit 5846975. It is not a verifier output and carries no physics. It exists only to exercise the regression-table extraction where no verifier record is committed.",
+  "spectral": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_m_z_m": 2.404800001,
+        "analytic_m_z_m": 2.4048,
+        "numerical_mass_gev": 2.404800001,
+        "numerical_ratio": 1.0,
+        "analytic_ratio": 1.0,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 2,
+        "numerical_m_z_m": 5.520100002,
+        "analytic_m_z_m": 5.520100001,
+        "numerical_mass_gev": 5.520100002,
+        "numerical_ratio": 2.2954507650135354,
+        "analytic_ratio": 2.2954507655522294,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 3,
+        "numerical_m_z_m": 8.653700003,
+        "analytic_m_z_m": 8.653700002,
+        "numerical_mass_gev": 8.653700003,
+        "numerical_ratio": 3.598511310463028,
+        "analytic_ratio": 3.59851131154358,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 4,
+        "numerical_m_z_m": 11.791500004,
+        "analytic_m_z_m": 11.791500003,
+        "numerical_mass_gev": 11.791500004,
+        "numerical_ratio": 4.903318362897822,
+        "analytic_ratio": 4.903318364520958,
+        "ratio_relative_error": 1e-09
+      }
+    ],
+    "max_ratio_relative_error": 1e-09,
+    "tolerance": 0.0001,
+    "spectral_convergence": {
+      "degrees": [
+        24,
+        32,
+        40
+      ],
+      "successive_max_relative_differences": [
+        3e-09,
+        4e-12
+      ],
+      "final_difference_below_tolerance": true
+    }
+  },
+  "shooting": {
+    "numerical_method": {
+      "route": "shooting"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_m_z_m": 2.404800002,
+        "analytic_m_z_m": 2.4048,
+        "numerical_mass_gev": 2.404800002,
+        "numerical_ratio": 1.0,
+        "analytic_ratio": 1.0,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 2,
+        "numerical_m_z_m": 5.520100004000001,
+        "analytic_m_z_m": 5.520100002,
+        "numerical_mass_gev": 5.520100004000001,
+        "numerical_ratio": 2.295450764890677,
+        "analytic_ratio": 2.2954507659680643,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 3,
+        "numerical_m_z_m": 8.653700006000001,
+        "analytic_m_z_m": 8.653700004000001,
+        "numerical_mass_gev": 8.653700006000001,
+        "numerical_ratio": 3.598511310214146,
+        "analytic_ratio": 3.5985113123752503,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 4,
+        "numerical_m_z_m": 11.791500008,
+        "analytic_m_z_m": 11.791500006,
+        "numerical_mass_gev": 11.791500008,
+        "numerical_ratio": 4.9033183625221906,
+        "analytic_ratio": 4.903318365768463,
+        "ratio_relative_error": 1e-09
+      }
+    ],
+    "max_ratio_relative_error": 1e-09,
+    "tolerance": 0.0001
+  },
+  "collocation": {
+    "numerical_method": {
+      "route": "collocation"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_m_z_m": 2.4048003999999996,
+        "analytic_m_z_m": 2.4048,
+        "numerical_mass_gev": 2.4048003999999996,
+        "numerical_ratio": 1.0,
+        "analytic_ratio": 1.0,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 2,
+        "numerical_m_z_m": 5.5201008,
+        "analytic_m_z_m": 5.5201004,
+        "numerical_mass_gev": 5.5201008,
+        "numerical_ratio": 2.295450715992895,
+        "analytic_ratio": 2.2954509314703926,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 3,
+        "numerical_m_z_m": 8.6537012,
+        "analytic_m_z_m": 8.653700800000001,
+        "numerical_mass_gev": 8.6537012,
+        "numerical_ratio": 3.5985112111591473,
+        "analytic_ratio": 3.5985116433799074,
+        "ratio_relative_error": 1e-09
+      },
+      {
+        "n": 4,
+        "numerical_m_z_m": 11.791501599999998,
+        "analytic_m_z_m": 11.791501199999999,
+        "numerical_mass_gev": 11.791501599999998,
+        "numerical_ratio": 4.903318213020923,
+        "analytic_ratio": 4.903318862275449,
+        "ratio_relative_error": 1e-09
+      }
+    ],
+    "max_ratio_relative_error": 1e-09,
+    "tolerance": 0.0001
+  }
+}

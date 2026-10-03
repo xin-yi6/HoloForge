@@ -4,7 +4,7 @@ import unittest
 
 import numpy as np
 
-from holoforge.numerics import chebyshev_lobatto_grid
+from holoforge.numerics import CHEBYSHEV_CONSTRUCTION, chebyshev_lobatto_grid
 from holoforge.numerics.interpolation import (
     deterministic_barycentric_interpolator,
 )
@@ -51,6 +51,47 @@ class ChebyshevGridTests(unittest.TestCase):
         self.assertFalse(grid.nodes.flags.writeable)
         self.assertFalse(grid.first_derivative.flags.writeable)
         self.assertFalse(grid.second_derivative.flags.writeable)
+
+    def test_grid_contract_over_the_repair_node_set(self) -> None:
+        # Section 4 of docs/numerics/chebyshev-construction-repair-plan.md.
+        degrees = (2, 3, 16, 17, 40, 41, 64, 80, 96, 120, 128, 150, 160, 192, 256, 320, 384, 512, 640, 1024, 1280)
+        intervals = ((-1.0, 1.0), (1.0e-5, 1.0), (0.0, 1.0), (2.0, 5.0))
+        self.assertEqual(CHEBYSHEV_CONSTRUCTION, "c-s1-r1")
+        for degree in degrees:
+            for lower, upper in intervals:
+                with self.subTest(degree=degree, interval=(lower, upper)):
+                    grid = chebyshev_lobatto_grid(degree, lower, upper)
+                    self.assertEqual(grid.nodes[0], lower)
+                    self.assertEqual(grid.nodes[-1], upper)
+                    self.assertTrue(np.all(np.diff(grid.nodes) > 0.0))
+                    for matrix in (grid.first_derivative, grid.second_derivative):
+                        self.assertEqual(matrix.shape, (degree + 1, degree + 1))
+                        self.assertEqual(matrix.dtype, np.float64)
+                        self.assertTrue(np.all(np.isfinite(matrix)))
+                        self.assertFalse(matrix.flags.writeable)
+                    self.assertFalse(grid.nodes.flags.writeable)
+                    # Rows annihilate constants; D1 and D2 are exact on the
+                    # affine coordinate. The tolerances allow for the rounding
+                    # of the matrix-vector product itself (up to 1281 terms).
+                    xi = (2.0 * grid.nodes - lower - upper) / (upper - lower)
+                    scale = 2.0 / (upper - lower)
+                    for matrix, expected in ((grid.first_derivative, scale), (grid.second_derivative, 0.0)):
+                        row_scale = np.abs(matrix) @ np.ones(grid.size)
+                        self.assertLessEqual(np.max(np.abs(matrix @ np.ones(grid.size)) / row_scale), 1.0e-14)
+                        self.assertLessEqual(np.max(np.abs(matrix @ xi - expected) / row_scale), 1.0e-13)
+
+    def test_nodes_are_symmetric_about_the_midpoint(self) -> None:
+        for degree in (2, 3, 16, 17, 640):
+            grid = chebyshev_lobatto_grid(degree, -1.0, 1.0)
+            np.testing.assert_array_equal(grid.nodes, -grid.nodes[::-1])
+            if degree % 2 == 0:
+                self.assertEqual(grid.nodes[degree // 2], 0.0)
+
+    def test_second_derivative_is_exact_for_a_quadratic(self) -> None:
+        grid = chebyshev_lobatto_grid(64, 1.0e-5, 1.0)
+        z = grid.nodes
+        row_scale = np.abs(grid.second_derivative) @ (z * z)
+        self.assertLessEqual(np.max(np.abs(grid.second_derivative @ (z * z) - 2.0) / row_scale), 1.0e-14)
 
     def test_invalid_inputs_fail_clearly(self) -> None:
         for invalid_degree in (True, 1, 3.5):
