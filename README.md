@@ -78,7 +78,8 @@ a research question send a short card to a model from a different provider for
 an [independent question review](docs/research-gate-workflow.md#review-the-question-independently).
 The review asks what contribution is claimed and whether agreement is already
 forced by shared inputs. It is evidence for the human research owner, not a
-replacement for scientific review, and its benefit has not yet been measured.
+replacement for scientific review. Its first two uses are recorded in the
+[workflow evaluation](docs/agent-workflow-evaluation.md#independent-question-review-pilot).
 
 ## Documentation
 

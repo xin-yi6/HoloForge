@@ -226,7 +226,13 @@ defense or critic report, or another review. Record the actual input scope and
 any prior exposure. Missing information is a `concern` or a request for
 clarification, not a reason to guess. A second reviewer, or a fallback when no
 different family is available, needs the owner's approval; the author must not
-substitute one silently. Preserve each report unchanged, and record its hash in
+substitute one silently. When a shortlisted candidate came from an independent
+proposal, no reviewer of its card may come from the proposer's provider or
+model family, so that no model judges its own family's idea. If that leaves
+only the author's family, a fresh session of it may serve under the owner's
+recorded fallback decision. Give every reviewer the same prompt and its own
+literature search where available, so that reviewers are compared on equal
+terms. Preserve each report unchanged, and record its hash in
 the receipt, before the author replies or another reviewer reads it. Reviewers
 have no write access to the project; the canonical writer imports the report.
 

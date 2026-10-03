@@ -9,11 +9,11 @@ measurements before it becomes a default.
 
 The [independent question review](research-gate-workflow.md#review-the-question-independently)
 gives a fresh, input-limited reader from a different provider or model family
-a short card at two decision points of publication-targeted work. Its status
-is `prepared-not-run`. The scientific-value criteria it uses already exist;
-the pilot tests whether an explicit fresh assessment of the question's
-contribution adds supported objections at acceptable cost. No measurement
-supports it yet, and documentation or policy tests do not execute it.
+a short card at two decision points of publication-targeted work. The
+scientific-value criteria it uses already exist; the pilot tests whether an
+explicit fresh assessment of the question's contribution adds supported
+objections at acceptable cost. Documentation or policy tests do not execute it.
+Two uses have now run; their generic results are recorded below.
 
 The pilot is two prospective uses that the owner selects, with one reviewer
 each. A second reviewer needs an approved budget and disclosure scope, and its
@@ -39,6 +39,38 @@ uses can test handling and expose overlooked objections; they cannot establish
 a generally superior review architecture. Models from different providers can
 share blind spots, so a different family is a precaution against shared
 framing, not an independent method.
+
+### Results of the first two uses
+
+Two private publication-targeted intakes each collected proposals from two
+external proposers and sent question cards for a three-candidate shortlist to
+two reviewers. Counts are from the private pilot records and were not
+independently audited.
+
+| Measure | Intake A | Intake B |
+| --- | ---: | ---: |
+| Author's own seeds, sealed before proposals | 9 | 10 |
+| Proposed seeds, proposer 1 / proposer 2 | 4 / 5 | 4 / 4 |
+| Proposed seeds reaching the shortlist, proposer 1 / proposer 2 | 3 / 0 | 1 / 0 |
+| Recommended lead came from | proposer 1 | proposer 1 |
+| Supported new omissions found by reviewer 1 | 2 | 4 |
+| Supported new objections from reviewer 2 | 0 | 0 |
+| Reviewer calls used (Intake A includes one retry) | 10 | 9 |
+
+Proposer 1 and reviewer 1 were the same external family and had literature
+search; proposer 2 and reviewer 2 were another family and had none. Reviewer
+1's useful contributions were mostly relevant prior work that the author's own
+bounded search had missed. Reviewer 2's items restated risks the cards already
+listed, and its references needed correction. Both leads were reviewed by the
+family that had proposed them, so no model should judge its own family's idea.
+
+**Decision:** keep the arrangement and adjust it for a further use. Reviewers
+must come from families other than the candidate's proposer; every reviewer
+receives the same prompt and its own literature search; and the shared prompt
+forbids restating risks the card already lists. Reviewer 2 is re-evaluated on
+those equal terms after one more use and removed if it again adds no supported
+objection. These results describe two uses only and do not establish that the
+review improves research outcomes.
 
 ## Physics workflow availability pilot — 2026-09-21
 
