@@ -242,12 +242,47 @@ class QuestionReviewRunnerTests(unittest.TestCase):
         self.assertIn("only a question or claim review", err)
         self.assertFalse((self.out / "rebuttal.md").exists())
 
+    def test_derivation_setup_uses_its_prompt_and_its_own_approval(self) -> None:
+        # Approval for claim cards does not cover derivation setups.
+        self.config = self.write_config(approved_cards=["question", "claim"])
+        code, err = self.review(card_kind="derivation")
+        self.assertEqual(code, runner.EXIT_REFUSED)
+        self.assertIn("does not approve", err)
+        self.assertFalse(self.out.exists())
+
+        self.config = self.write_config(approved_cards=["derivation"])
+        code, err = self.review(card_kind="derivation")
+        self.assertEqual(code, runner.EXIT_OK, err)
+        message = (self.out / "message.md").read_text(encoding="utf-8")
+        derivation_prompt = runner.DEFAULT_DERIVATION_PROMPT.read_text(encoding="utf-8")
+        self.assertIn("--- SETUP ---", message)
+        self.assertIn("END-OF-CARD", message)
+        self.assertNotIn("Strongest supported referee objection", message)
+        receipt = json.loads((self.out / "receipt.json").read_text(encoding="utf-8"))
+        self.assertEqual(receipt["stage"], "derivation")
+        self.assertEqual(receipt["card_kind"], "derivation")
+        self.assertEqual(receipt["sha256"]["prompt_template"], sha(derivation_prompt))
+
+    def test_derivation_has_no_rebuttal_round(self) -> None:
+        self.config = self.write_config(approved_cards=["derivation"])
+        self.assertEqual(self.review(card_kind="derivation")[0], runner.EXIT_OK)
+        reply = self.dir / "reply.md"
+        reply.write_text("Result differs.\n", encoding="utf-8")
+        code, err = self.run_main(
+            "rebuttal", "--review-dir", str(self.out), "--reply", str(reply),
+            "--config", str(self.config),
+        )
+        self.assertEqual(code, runner.EXIT_REFUSED)
+        self.assertIn("only a question or claim review", err)
+
     def test_shipped_templates_and_example_are_valid_and_provider_neutral(self) -> None:
         review_prompt = runner.DEFAULT_PROMPT.read_text(encoding="utf-8")
         rebuttal_prompt = runner.DEFAULT_REBUTTAL_PROMPT.read_text(encoding="utf-8")
         proposal_prompt = runner.DEFAULT_PROPOSAL_PROMPT.read_text(encoding="utf-8")
+        derivation_prompt = runner.DEFAULT_DERIVATION_PROMPT.read_text(encoding="utf-8")
         runner.fill_template(review_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
         runner.fill_template(proposal_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
+        runner.fill_template(derivation_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
         runner.fill_template(
             rebuttal_prompt, {"CARD": "c", "REPORT": "r", "REPLY": "p"}
         )
@@ -262,6 +297,7 @@ class QuestionReviewRunnerTests(unittest.TestCase):
             review_prompt,
             rebuttal_prompt,
             proposal_prompt,
+            derivation_prompt,
             SCRIPT.read_text(encoding="utf-8"),
             json.dumps(example),
         )

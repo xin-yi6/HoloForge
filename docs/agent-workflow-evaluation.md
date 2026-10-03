@@ -34,6 +34,10 @@ proposed seeds were distinct from the author's own list, how many survived the
 prior-work and scorecard screening, and how many had unsupported references.
 A seed proposed by several models is not thereby stronger.
 
+For each blind re-derivation, record whether the two results agree on the
+deciding point, the reviewer's run time, and any later finding that the setup
+itself was wrong. Agreement between the two does not count as verification.
+
 After two uses the owner decides to keep, adjust or drop the arrangement. Two
 uses can test handling and expose overlooked objections; they cannot establish
 a generally superior review architecture. Models from different providers can
