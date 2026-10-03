@@ -5,7 +5,7 @@
       "family": "<provider or model family>",
       "command": ["<local non-interactive agent command>", "<flag>"],
       "model": "<requested model, optional>",
-      "approved_cards": ["brief", "question", "claim"],
+      "approved_cards": ["brief", "question", "claim", "derivation"],
       "literature_access": true
     },
     "reviewer-b": {

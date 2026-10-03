@@ -17,6 +17,13 @@ All notable changes to HoloForge are recorded here.
   fallback, oversized cards and overwrites. It contains no provider names,
   network code or credentials. Add the fixed review and rebuttal prompts and
   an example configuration.
+- Add a blind re-derivation check for decisive analytic results. The author
+  seals a derivation setup before deriving and, only if its own outcome is
+  decisive, sends it through the review runner with a new `derivation` card
+  type and a fixed re-derivation prompt to a model of another family. The
+  reviewer never sees the author's result; one call per gate; disagreement on
+  the deciding point goes to the owner. Each reviewer needs separate approval
+  for the derivation class.
 - After two pilot uses, require that no reviewer of a proposed candidate come
   from the proposer's provider or model family, give every reviewer the same
   prompt and its own literature search where available, and tell reviewers not

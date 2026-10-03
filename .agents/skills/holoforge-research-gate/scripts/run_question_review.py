@@ -6,7 +6,9 @@ the fixed reviewer prompt and one card to a reviewer command that the owner
 approved in a private configuration file, stores the command's output
 unchanged and writes an execution receipt. A scope brief is handled the same
 way with the fixed proposal prompt: the command then returns independent
-candidate questions instead of a review. The script names no provider and
+candidate questions instead of a review. A derivation setup is handled with
+the fixed re-derivation prompt: the command derives the stated result itself,
+without seeing the author's answer. The script names no provider and
 contains no network code or credentials: each reviewer is a local
 non-interactive command, and its provider, account and approvals come from the
 owner's configuration.
@@ -32,8 +34,9 @@ from typing import Any, Mapping, Optional, Sequence
 
 
 RUNNER_VERSION = 1
-CARD_KINDS = ("question", "claim", "brief")
-# A brief asks for candidate proposals; there is no report to rebut.
+CARD_KINDS = ("question", "claim", "brief", "derivation")
+# A brief asks for proposals and a derivation setup for an independent
+# result; neither has a report to rebut. A disagreement goes to the owner.
 REVIEW_KINDS = ("question", "claim")
 # A card is a short record. The cap keeps a manuscript, data file or code
 # listing from being sent under the name of a card.
@@ -44,6 +47,12 @@ SECRET_WORDS = ("key", "token", "secret", "password")
 ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_PROMPT = ROOT / "docs/templates/question-review-prompt.md"
 DEFAULT_PROPOSAL_PROMPT = ROOT / "docs/templates/candidate-proposal-prompt.md"
+DEFAULT_DERIVATION_PROMPT = ROOT / "docs/templates/independent-derivation-prompt.md"
+KIND_PROMPTS = {
+    "brief": DEFAULT_PROPOSAL_PROMPT,
+    "derivation": DEFAULT_DERIVATION_PROMPT,
+}
+KIND_STAGES = {"brief": "proposal", "derivation": "derivation"}
 DEFAULT_REBUTTAL_PROMPT = ROOT / "docs/templates/question-review-rebuttal-prompt.md"
 
 SCOPE_WITH_LITERATURE = (
@@ -234,9 +243,7 @@ def run_review(args: argparse.Namespace) -> Path:
             f"{MAX_CARD_CHARS}. Send a card, not a manuscript, data or code"
         )
 
-    prompt_path = args.prompt or (
-        DEFAULT_PROPOSAL_PROMPT if args.card_kind == "brief" else DEFAULT_PROMPT
-    )
+    prompt_path = args.prompt or KIND_PROMPTS.get(args.card_kind, DEFAULT_PROMPT)
     template = read_text(prompt_path)
     scope = (
         SCOPE_WITH_LITERATURE
@@ -261,7 +268,7 @@ def run_review(args: argparse.Namespace) -> Path:
     write_new_text(out_dir / "card.md", card)
     write_new_text(out_dir / "message.md", message)
     write_new_text(out_dir / "report.md", result["output"])
-    stage = "proposal" if args.card_kind == "brief" else "review"
+    stage = KIND_STAGES.get(args.card_kind, "review")
     receipt = base_receipt(stage, args.reviewer, reviewer, config)
     receipt.update(
         {

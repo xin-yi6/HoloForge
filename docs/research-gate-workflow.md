@@ -503,6 +503,25 @@ skill, fresh reviewer or different model is not itself independent replication.
 Separate same-agent checks, independent methods and named human review. Passing
 component counts are bookkeeping, not a measure of scientific support.
 
+**Re-derive a decisive analytic result blindly.** When a gate's claim-bearing
+outcome rests on an analytic derivation, the author may obtain one blind
+re-derivation from a model of a different provider or model family before the
+owner accepts the outcome. Before deriving, the author writes and seals a
+**derivation setup** with the
+[question-review template](templates/question-review-template.md): the model or
+action, definitions and conventions, fitted or fixed inputs, target quantity,
+order and regime, without its result or expectation. Only if its own outcome is
+decisive, a clear positive or negative, does it send the setup through the
+[review runner](#review-the-question-independently) with the fixed
+[re-derivation prompt](templates/independent-derivation-prompt.md); an
+inconclusive outcome needs no check. The reviewer must be approved for the
+derivation class, and the gate allows one such call within its budget. Compare
+the two results only after both exist. Agreement is a consistency check, not
+proof: both derivations share the setup, so an error in the setup itself is not
+caught. If they disagree on the deciding point, report both to the owner
+without choosing between them. This is an independent derivation from a shared
+setup, not independent replication or human review.
+
 ## Use an owner-approved bounded autonomy window
 
 This section governs routine execution inside one frozen gate. It is distinct

@@ -42,6 +42,25 @@ Leave out unpublished candidates, results, private identifiers and the record
 of stopped directions. Compare the proposals with private closures only after
 they are received.
 
+## Derivation setup
+
+Written and sealed by the author of an analytic gate before it derives, when
+the outcome may need a blind re-derivation. It is sent with the fixed
+re-derivation prompt only if the author's own outcome is decisive. The
+reviewer never sees the author's result.
+
+- **Model or action:** `<exact action or model, with its source>`
+- **Definitions and conventions:** `<fields, normalizations, signs, boundary
+  terms>`
+- **Fitted or fixed inputs:** `<what is calibrated and to what>`
+- **Target quantity, order and regime:** `<what to determine, at which order,
+  in which regime>`
+- **Comparison, if any:** `<the description the result is compared with>`
+- **Owner-approved recipients for this setup:** `<decision record>`
+
+Leave out the author's result, expectation and any private identifier. If the
+setup does not fit within the card limit, it is too large for this check.
+
 ## Question card
 
 Written by the author after the intake scorecard is prepared, to inform the
