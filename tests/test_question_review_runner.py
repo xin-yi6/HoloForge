@@ -280,6 +280,10 @@ class QuestionReviewRunnerTests(unittest.TestCase):
         rebuttal_prompt = runner.DEFAULT_REBUTTAL_PROMPT.read_text(encoding="utf-8")
         proposal_prompt = runner.DEFAULT_PROPOSAL_PROMPT.read_text(encoding="utf-8")
         derivation_prompt = runner.DEFAULT_DERIVATION_PROMPT.read_text(encoding="utf-8")
+        choice_prompt = (
+            ROOT / "docs/templates/construction-choice-prompt.md"
+        ).read_text(encoding="utf-8")
+        runner.fill_template(choice_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
         runner.fill_template(review_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
         runner.fill_template(proposal_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
         runner.fill_template(derivation_prompt, {"INPUT_SCOPE": "s", "CARD": "c"})
@@ -298,6 +302,7 @@ class QuestionReviewRunnerTests(unittest.TestCase):
             rebuttal_prompt,
             proposal_prompt,
             derivation_prompt,
+            choice_prompt,
             SCRIPT.read_text(encoding="utf-8"),
             json.dumps(example),
         )

@@ -42,6 +42,29 @@ Leave out unpublished candidates, results, private identifiers and the record
 of stopped directions. Compare the proposals with private closures only after
 they are received.
 
+## Comparison card
+
+Written by the author when the owner asks for independent advice before a
+construction investment, after the author has sealed its own recommendation.
+It is sent with the fixed construction-choice prompt. It belongs to the
+question class and must fit the card limit.
+
+For each eligible candidate, without saying who proposed it:
+
+- **Question, in one sentence:** `<question>`
+- **Physical payoff and readers:** `<what would be learned, and for whom>`
+- **Deciding test:** `<what could fail, and what a negative would show>`
+- **Construction cost and uncertainty:** `<estimate, confidence and main
+  prerequisites>`
+- **Main risk:** `<strongest reason it might not be worth the investment>`
+
+Then once for the card:
+
+- **Owner-approved recipients for this card:** `<decision record>`
+
+Leave out results, private identifiers, proposer labels and the record of
+stopped directions.
+
 ## Derivation setup
 
 Written and sealed by the author of an analytic gate before it derives, when

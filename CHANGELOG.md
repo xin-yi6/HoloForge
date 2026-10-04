@@ -17,6 +17,12 @@ All notable changes to HoloForge are recorded here.
   fallback, oversized cards and overwrites. It contains no provider names,
   network code or credentials. Add the fixed review and rebuttal prompts and
   an example configuration.
+- Add independent advice before a construction investment. The author seals
+  its own recommendation, then sends one comparison card of the eligible
+  reserve candidates, without proposer labels, through the review runner with
+  a fixed construction-choice prompt. Each reviewer returns a first and second
+  choice, a first milestone with a stop rule, and the main risk. The advice is
+  shown side by side, unaveraged; the owner chooses.
 - Add a blind re-derivation check for decisive analytic results. The author
   seals a derivation setup before deriving and, only if its own outcome is
   decisive, sends it through the review runner with a new `derivation` card

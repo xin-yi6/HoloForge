@@ -191,6 +191,23 @@ Do not weaken numerical acceptance gates to create apparent physical progress.
 The purpose of this rule is to change research ordering and investment, not
 verification rigor.
 
+**Ask for independent advice before a construction investment.** When the
+owner is ready to invest construction time in one of several reserve
+candidates, the owner may ask for independent recommendations. The author
+first writes and seals its own recommendation. It then writes one
+**comparison card** with the
+[question-review template](templates/question-review-template.md): for each
+eligible candidate, the question, its physical payoff, the deciding test, the
+construction cost and its uncertainty, and the main risk, without saying who
+proposed it. The card belongs to the question class. Each approved reviewer
+receives it through the [review runner](#review-the-question-independently)
+with the fixed [construction-choice prompt](templates/construction-choice-prompt.md)
+and returns a first and second choice, a first milestone with a stop rule, and
+the main risk. Present the sealed author recommendation and every reviewer's
+advice side by side, unchanged and unaveraged. Do not rank by agreement. The
+owner chooses; a staged strategic-development plan with milestone budgets and
+stop rules follows only after that choice.
+
 ### Review the question independently
 
 Falsifiability, outcome value, the contribution comparison and the owner's
