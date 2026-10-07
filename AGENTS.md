@@ -84,16 +84,17 @@ or new concerns. Full default CI remains required for public integration.
 
 - Keep commits and pull requests limited to one logical change.
 - Stage only intended files; never discard unrelated work.
-- For owner-requested work in this public repository, standing owner
-  authorization permits scoped local commits and normal fast-forward pushes
-  to the existing `origin` remote and intended branch, and merging the
-  corresponding pull request into `main`. Complete the relevant local
+- For owner-requested implementation work in this public repository, standing
+  owner authorization permits scoped local commits, normal fast-forward pushes
+  to the existing `origin` remote and intended branch, and creating and merging
+  the corresponding pull request into `main`. Complete the relevant local
   validation and public-content review, inspect the outgoing commits, and check
   the remote state first. Before merging, require passing full default CI for
   the exact reviewed head, resolve blocking review feedback, and verify the
-  pull request's scope and target. Do not ask again for routine commits,
-  pushes, or merges within this scope; verify the remote commit, update local
-  `main` without disturbing unrelated work, and report CI afterward.
+  pull request's scope and target. The implementation request authorizes these
+  routine delivery steps without a second per-PR approval; verify the remote
+  commit, update local `main` without disturbing unrelated work, and report CI
+  afterward.
 - Releases, branch deletion, force pushes or history rewrites, changing the
   remote destination, and private export or scientific disclosure require
   separate explicit authorization. A review-only request, explicit hold, or
