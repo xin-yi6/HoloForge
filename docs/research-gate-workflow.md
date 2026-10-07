@@ -20,6 +20,32 @@ Classify the intended contribution before screening it:
 All three can be scientifically valuable. The class must be stated explicitly,
 and any priority or novelty claim requires a targeted literature search.
 
+## Match requirements to the current stage
+
+Scale preparation, records and checks to the next authorized action and the
+claim it will bear. The research horizon describes the route and investment;
+the current stage determines what must be ready now. Use the existing contract
+and result records rather than adding a separate stage checklist.
+
+| Current stage | Required preparation | Meaning of progress |
+| --- | --- | --- |
+| Early Explore | State the unknown, relevant prior knowledge, known scientific constraints, and a bounded next step with its learning objective, budget and stops. | Resolve or narrow a named uncertainty; an incomplete dictionary can be the research target. |
+| Model or method construction | Name the missing action, dictionary, observable or capability, permitted development choices, milestone checks and planned physical checkpoint. | Construct and qualify the prerequisite; a working implementation alone is not a physical conclusion. |
+| Physical confirmation | Freeze the exact claim, inputs, comparison, diagnostics, acceptance criteria and independent checks. | Support, exclude or leave unresolved a bounded physical claim in its stated regime. |
+| Publication assessment | Establish the contribution, evidence, robustness, limitations and applicable owner-selected reviews. | Advise whether the evidence supports manuscript preparation; the owner decides. |
+
+Forge/Verify reproduction follows its published model contract and benchmark
+controls; it does not acquire an Explore novelty assessment merely because an
+agent executes it. During every calculation, check applicable units, signs,
+normalizations, symmetries, boundary conditions and validity limits, with
+diagnostics sufficient to rule out obvious implementation or numerical
+artifacts. Later confirmation adds the controls needed for the consequential
+claim; it does not postpone these basic checks.
+
+This stage guidance is prospective. Existing frozen gates, framework pins,
+owner selections and autonomous mission/schema requirements continue to
+control their work.
+
 ## Assess scientific opportunity before execution readiness
 
 Capability availability cannot decide which physics questions are worth
@@ -334,7 +360,11 @@ pins, or running or terminal missions.
 ### Use a claim-sufficiency checkpoint
 
 Numerics serve the physical question; they are not the default research
-endpoint. Before a numerical gate starts, name the **claim-bearing physical
+endpoint. For an owner-approved construction or strategic-development
+milestone, first name its prerequisite, prospective validation boundary and
+planned physical checkpoint. Continue the necessary development checks within
+that allowance; a qualified capability is not itself a physical result.
+Before numerical work bears a physical claim, name the **claim-bearing physical
 decision** and define prospectively when the numerical evidence will be
 **claim-sufficient**. Numerical evidence is claim-sufficient only when all of
 the following hold:
@@ -370,13 +400,19 @@ seeing the result.
 
 ## Record opportunity and qualify the next gate
 
-Before writing a detailed frozen contract, complete the generic
+At candidate assessment or an investment decision, complete the generic
 [`Explore intake scorecard`](../.agents/skills/holoforge-research-gate/assets/explore-intake-scorecard.example.md)
 inside the private research repository. It keeps two decisions separate:
 
 1. whether the question is a scientific opportunity worth considering; and
 2. whether the **next proposed gate** is ready, bounded, and proportionate to
    the chosen research horizon.
+
+Reuse that opportunity assessment for subsequent gates of the selected
+question. Before a new contract, update the next-gate readiness and any
+materially changed scientific evidence, prerequisite or cost; routine reading,
+implementation and debugging inside an approved gate do not require another
+scorecard. Link canonical fields rather than recopying them.
 
 First read the current private reviewed-knowledge and closure-lesson indexes
 and the primary evidence behind potentially relevant entries. Record the index
@@ -388,19 +424,27 @@ the next test; it does not decide a different candidate in advance.
 
 1. **Gate-complete inputs:** the primary sources and private records identify
    every equation, convention, branch, ensemble, coefficient, and comparison
-   needed by the proposed next gate. A strategic-development gate may be
-   specifically authorized to derive or construct one missing item.
+   needed for its next action. An open-discovery or strategic-development gate
+   may explicitly target a missing item: fix the known scientific envelope,
+   the item to derive or construct, permitted choices and its checks rather
+   than requiring the completed construction as an input.
 2. **Invariant target beyond the generic baseline:** the candidate names a
    dimensionless ratio, branch-resolved feature, consistency condition, or
    other observable that cannot be removed by conventions or obtained from a
-   simpler generic model alone.
+   simpler generic model alone. For a prerequisite gate, link the intended
+   physical target and name the source, dictionary or capability uncertainty
+   this milestone must resolve; do not claim an invariant is already established.
 3. **Cheapest discriminating test:** use a preregistered source, analytic, or
    low-cost numerical kill test when one exists. If none exists for an
    otherwise valuable flagship question, record that fact, the cheapest honest
    alternative, and the owner's reason for accepting or declining the risk.
+   A construction gate uses the cheapest honest prerequisite check and its
+   planned physical checkpoint rather than inventing an immediate physical test.
 4. **Positive-result endpoint:** the record states exactly what result would
    count as meaningful, what evidence it would support, and which next
-   decision it would open.
+   decision it would open. A successful exploration or construction milestone
+   may qualify a prerequisite or close an uncertainty; state that narrower
+   endpoint without presenting it as a supported physical claim.
 5. **Cost ceiling:** the owner fixes the maximum literature, implementation,
    compute, and review cost of the first gate and the conditions that stop
    further investment.
@@ -408,7 +452,7 @@ the next test; it does not decide a different candidate in advance.
 Mark every next-gate item `pass`, `conditional`, or `fail` and cite the
 evidence. A gate opens only when the inputs, endpoint, methods, cost, and stop
 conditions for that gate are prospectively closed. Conditional items may open
-one named evidence task or one owner-approved strategic-development milestone
+one named evidence task or one owner-approved exploration or construction milestone
 whose purpose is to close them. A failed prerequisite stops that proposed gate;
 it does not by itself prove that the scientific opportunity is valueless.
 There is no aggregate score that can hide a failed gate prerequisite or replace
@@ -421,12 +465,17 @@ unpublished candidate identities, literature notes, equations, or results.
 
 ## One gate, one bounded question
 
-Every research gate should contain the following records:
+Every research gate should preserve the following information in its canonical
+records. These are information obligations, not eight mandatory separate
+files. Use sections and links in the existing contract, attempt log, result,
+status and decision records; preserve raw artifacts and historical evidence.
 
 1. **Frozen contract:** written before the calculation and limited to one
    question. It fixes inputs, permitted methods, diagnostics, acceptance
-   thresholds, stop conditions, exclusions, the claim-bearing physical decision, the
-   prospective claim-sufficiency checkpoint, and the decision owner. When
+   thresholds, stop conditions, exclusions and the decision owner. For
+   claim-bearing work, fix the physical decision and prospective
+   claim-sufficiency checkpoint. For exploration or construction, fix the
+   learning or qualification milestone and planned physical checkpoint. When
    development is needed, declare its allowance and qualification boundary;
    freezing scientific criteria does not require freezing untested code.
 2. **Calculation and durable artifacts:** code, configuration, environment
@@ -437,9 +486,10 @@ Every research gate should contain the following records:
    the scientific risk.
 4. **Result record:** supported findings first, followed by numerical evidence,
    limitations, reproduction instructions, and explicit non-claims.
-5. **Hostile critic report:** the strongest alternative explanations,
-   uncontrolled assumptions, window artifacts, missing comparisons, and the
-   cheapest defensible next test.
+5. **Hostile critic report:** a concise assessment of the strongest alternative
+   explanations, uncontrolled assumptions, window artifacts, missing comparisons, and the
+   cheapest defensible next test. It may be a section of the result record;
+   a separate reviewer is used when selected or needed for a specific risk.
 6. **Owner review:** a short list of separate decisions covering the
    implementation, numerical verdict, evidence boundary, and next action,
    followed by an explicit recommendation for every requested choice.
@@ -451,6 +501,14 @@ Every research gate should contain the following records:
    only when that local Git action is explicitly authorized. Scientific
    acceptance alone is not commit authority.
 
+Routine intermediate attempts update these records; they do not by themselves
+require a new gate, scorecard, retrospective or PDF. Honor declared return
+boundaries, new decisions and explicitly requested presentation. At delivery,
+state completed work, current stage, recommended next action and whether that
+action is already authorized.
+Use the [PDF packet](#owner-review-pdf-packet) when its presentation conditions
+apply, preserving the established scientific-report format.
+
 If a stop condition fires, stop the gate, preserve the bounded stopped result
 under its correct outcome class, and return to owner review. Do not expand the
 scope to rescue the hypothesis.
@@ -458,9 +516,13 @@ scope to rescue the hypothesis.
 ### Separate development from confirmation
 
 Use one owner-approved milestone, not an approval chain for each debugging
-attempt. Before any test, fix the physical question, model, dictionary,
-observable, acceptance criteria, allowed implementation/representation changes,
-total resources, and return triggers. Explicitly distinguish recoverable
+attempt. Before development starts, fix the known physical question and
+scientific envelope, acceptance criteria, permitted development choices,
+total resources and return triggers. If the model, dictionary or observable is
+itself being constructed, explicitly name that missing item, allowed
+alternatives and its qualification boundary. Freeze the completed scientific
+inputs before their confirmatory use; development permission does not confer
+scientific support. Explicitly distinguish recoverable
 development-test failures from milestone stops. If that distinction is absent,
 the existing first-failure rule controls; this policy never reopens a stopped
 gate or overrides a stricter frozen contract.
@@ -490,6 +552,31 @@ All revisions consume the same cumulative allowance. When qualification
 passes, proceed to an already authorized physical calculation without an
 extra approval. Return once with the scientific outcome, relevant failed
 attempts, verification and the next real decision.
+
+### Choose additional checks for a specific risk
+
+Before a consequential claim or investment recommendation, identify the
+strongest known failure mechanism or alternative that could change it, and
+link the checks already covering it. If a grounded, material risk remains
+uncovered, choose the smallest independent check or targeted review that can
+address it. Specify the question, necessary inputs and independence limits.
+This assessment belongs in the existing result or recommendation, not a new
+generic review form. Reuse sufficient checks and preserve adverse evidence.
+
+For example, an unresolved search gap may justify independent candidate
+proposals; a contribution or baseline dispute may justify question review;
+and a decisive analytic step may justify blind re-derivation. Mathematical
+limits, conservation checks and genuinely independent numerical methods can
+address risks that model feedback cannot. A second reviewer or rebuttal is
+useful when a specific unresolved disagreement can change the decision, not
+merely to accumulate agreement.
+
+Existing owner-selected reviews, reviewer routing and disclosure approvals
+remain controlling. This rule guides recommendations for additional work;
+it does not waive a selected review or authorize a provider transfer. Complete
+checks within approved scope and budget, returning when an authority boundary
+would change. Independent verification remains required where the claim or
+frozen contract requires it; an AI review is not a substitute.
 
 ### Verify the physical comparison
 
@@ -574,9 +661,10 @@ The window ends and the agent must return immediately when:
 
 1. the physical discriminator, declared outcome, stop condition, or return
    milestone is reached;
-2. the scientific question, model or action, ensemble or branch, boundary
-   conditions, source--response dictionary, observable, acceptance threshold,
-   or stop rule would change;
+2. the scientific question, a fixed scientific constraint, acceptance threshold
+   or stop rule would change, or the model or action, ensemble or branch,
+   boundary conditions, source--response dictionary or observable would change
+   beyond the prospectively permitted construction target and alternatives;
 3. a source, implementation, compute, review, or repair ceiling would be
    exceeded;
 4. the bounded impasse protocol, a new repair, a pivot, a new candidate, or a
@@ -769,7 +857,10 @@ prior-art-stopped, or technically stopped outcomes. Use
 [`docs/templates/research-retrospective-template.md`](templates/research-retrospective-template.md)
 and follow [Learning From Every Research Result](learning-from-results.md).
 
-The retrospective links the primary evidence and records what held, what
+The retrospective may be a section of the existing result or closure record,
+with its knowledge-index entry linked to that source. A separate report is
+needed only when the task or frozen contract requires it. The retrospective
+links the primary evidence and records what held, what
 failed, what the gate taught, what must not be inferred, one prospective
 workflow improvement when warranted, and the evidence required to reopen the
 direction. Give the lesson a stable ID, retrieval tags, and explicit

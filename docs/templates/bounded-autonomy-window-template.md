@@ -10,6 +10,10 @@ same owner decision. It has no effect until that approval is recorded.
 An optional development allowance can be part of that same decision; follow
 [development and confirmation](../research-gate-workflow.md#separate-development-from-confirmation).
 Existing stopped or stricter contracts are not amended by using this template.
+Use sections or references in existing canonical project records for this
+information; the template does not require a new file for each field. For a
+construction milestone, freeze the known scientific envelope and explicitly
+name the missing item to be determined within the approved development scope.
 
 ## Authorization record
 
@@ -22,10 +26,13 @@ Existing stopped or stricter contracts are not amended by using this template.
 - **Return milestone:** `<one outcome, stop, or review packet>`
 - **Window expiry:** `<date, cost ceiling, or milestone; no automatic renewal>`
 - **Claim-bearing physical decision:** `<the classification, comparison, or
-  physical conclusion that the numerical evidence must decide>`
+  physical conclusion that the numerical evidence must decide; for exploration
+  or construction, name the bounded learning/qualification endpoint and planned
+  physical checkpoint instead of implying a physical verdict is already ready>`
 - **Prospective claim-sufficiency checkpoint:** `<claim-appropriate residual,
   convergence, smoothness, constraint, reproducibility, uncertainty,
-  independent-check, and interpretation-validity conditions>`
+  independent-check, and interpretation-validity conditions; for construction,
+  state milestone validation and the conditions for later physical confirmation>`
 
 ## Work allowed without another owner decision
 
@@ -57,6 +64,9 @@ Complete this section when development is needed; otherwise write `not
 authorized`. Do not add a separate approval for routine attempts inside it.
 
 - **Permitted changes:** `<components, algorithms/representations and limits>`
+- **Known envelope and construction target:** `<fixed scientific constraints,
+  explicitly missing dictionary/observable/method item, permitted alternatives,
+  and the validation boundary before physical confirmation>`
 - **Development allowance:** `<finite attempts and aggregate effort/compute;
   how these charge the existing construction or repair budget>`
 - **Recoverable development failures:** `<tests that block production but
@@ -82,11 +92,13 @@ authorized`. Do not add a separate approval for routine attempts inside it.
 - **Compute ceiling:** `<runs, resolutions, wall time, or other useful bound>`
 - **Independent checks:** `<named checks and maximum attempts>`
 - **Repair budget:** `<zero or one already authorized bounded repair>`
-- **Additional-numerics test:** `<which claim-bearing physical decision could
-  more precision or another run change; write none when no further numerical
-  work is authorized>`
-- **Review artifacts:** `<required result, critic, short status summary, and
-  scientific PDF records; no process diagram or separate progress PDF by default>`
+- **Additional-numerics test:** `<which claim-bearing physical decision or
+  approved construction validation requirement could more precision or another
+  run change; write none when no further numerical work is authorized>`
+- **Review artifacts:** `<canonical result, critique and short status summary
+  records or sections, with linked evidence; scientific PDF when needed for
+  equations, figures or owner delivery; no process diagram or separate progress
+  PDF by default>`
 
 ## Mandatory return triggers
 
@@ -95,9 +107,11 @@ Stop the window and return to the owner as soon as any trigger fires:
 1. the frozen physical discriminator is reached, a milestone acceptance or stop
    condition fires, the claim-sufficiency checkpoint passes, or the stated
    return milestone is complete;
-2. the scientific question, action or model, ensemble or branch, boundary
-   conditions, source--response dictionary, observable, acceptance threshold,
-   or stop rule would need to change;
+2. the scientific question, a fixed scientific constraint, acceptance threshold
+   or stop rule would need to change, or the action or model, ensemble or branch,
+   boundary conditions,
+   source--response dictionary or observable would need to change beyond the
+   prospectively permitted construction target and alternatives;
 3. any source, implementation, compute, review, or repair ceiling would be
    exceeded;
 4. a repeated blocker requires the bounded impasse protocol, a new repair, a

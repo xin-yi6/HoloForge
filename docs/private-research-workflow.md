@@ -75,6 +75,8 @@ modify another active private project or its central ledgers. Publication,
 authorship, disclosure, human review, changes to scientific thresholds, and
 remote or external actions remain separate owner decisions. Use a distinct
 mission for every campaign; authority never rolls into a new question envelope.
+Stage-appropriate gate guidance does not amend the campaign's machine-checked
+mission or transition requirements; preserve its frozen framework pin.
 
 ## Research gates
 
@@ -91,6 +93,18 @@ even if older reports used them. Keep status, attempt history, evidence links
 and decisions current; preserve historical snapshots and reviewed packets.
 Requested views remain project-local; see the
 [snapshot style guide](research-progress-snapshots.md).
+
+Match the information to the current task stage. Reuse the candidate's
+opportunity assessment across routine gates and update it when new evidence
+materially changes contribution, cost or feasibility. Readiness concerns the
+next authorized action, not the completion of every later prerequisite. A
+bounded exploration or construction milestone may resolve a named unknown
+within a fixed scientific envelope; its endpoint must explain what is learned
+and which next decision it enables. Confirmation still requires the resulting
+dictionary, implementation and physical criteria to be frozen and qualified.
+Keep contracts, attempts, evidence, results, criticism and decisions in
+canonical records or linked sections; the gate sequence does not require a
+separate file or PDF for each item or development attempt.
 
 After an approved gate is recorded and closed, report completed/current/next
 status. Present fresh A-E choices when an actual next owner or portfolio
@@ -152,18 +166,24 @@ old first-failure contracts; do not apply this distinction retroactively.
    credibility status. Only the short-horizon lane normally reaches the
    physical discriminator in the first or second detailed gate.
 
-   Finally record the candidate dictionary, assumptions, falsification test,
-   AI involvement, and decision owner in a private hypothesis card. Qualify the
-   proposed next gate through gate-complete inputs, an invariant target beyond
-   the generic baseline, the cheapest honest discriminating test, a positive-
-   result endpoint, and a cost ceiling. A conditional item may open one bounded
-   evidence task or one owner-approved strategic-development milestone. A
-   failed gate prerequisite stops that gate without declaring the scientific
-   opportunity valueless.
+   Finally record the known candidate dictionary, assumptions, proposed
+   falsification test, AI involvement, and decision owner in a private
+   hypothesis card. Qualify the proposed next gate through the inputs it needs,
+   its stage-appropriate target, cheapest honest test, meaningful endpoint,
+   and cost ceiling. Name any missing dictionary, observable or method item
+   that an owner-approved exploration or construction milestone is to resolve,
+   with permitted changes and a planned physical checkpoint. A failed gate
+   prerequisite stops that gate without declaring the scientific opportunity
+   valueless. Refer back to this assessment during execution rather than
+   repeating intake for each routine step.
 2. **Screening:** search prior work and test dimensional, symmetry, boundary,
    and ensemble consistency before investing in a large calculation.
-3. **Discriminating calculation:** compare against a simpler baseline and use a
-   preregistered keep/reject criterion where practical.
+3. **Exploration, construction or discriminating calculation:** execute the
+   approved next action with dimensional, symmetry, boundary and ensemble
+   checks appropriate to its scientific content. Construction reaches its
+   declared validation boundary before confirmation; a claim-bearing
+   calculation compares against a simpler baseline and uses a preregistered
+   keep/reject criterion where practical.
 4. **Live knowledge update:** after source review, contract freeze,
    calculation, verification, criticism, and owner decisions, update the
    evidence-linked working queue and preserve its non-inference boundary.
