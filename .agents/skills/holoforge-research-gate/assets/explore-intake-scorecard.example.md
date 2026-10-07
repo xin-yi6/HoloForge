@@ -21,6 +21,13 @@ A failed gate prerequisite stops that proposed gate but does not by itself show
 that the scientific opportunity is unimportant. Do not average or add rows to
 hide a failed prerequisite or replace owner judgment.
 
+Use this card at candidate assessment or an investment decision. Reuse it during
+routine work; update affected fields when new evidence changes the opportunity,
+readiness, or proposed investment. Link canonical records where they already
+contain the requested facts rather than copy them into every section. A research
+horizon describes the campaign; readiness below concerns its next authorized
+action, which may be reading, derivation, construction, or confirmation.
+
 ## Search-scope and domain-coverage declaration
 
 - **Domains considered:** `<scientific domains or subfields actually searched>`
@@ -74,11 +81,11 @@ the current starting point; they do not decide which question is valuable.
 
 | Planning field | Record |
 | --- | --- |
-| Selected horizon | `<open discovery | strategic development | short-horizon execution>` |
+| Selected horizon | `<use the Research horizon recorded above>` |
 | Existing qualified capabilities | `<IDs and exact evidence boundaries, or none>` |
 | Planned new capabilities | `<dictionary, action, observable, artifact, solver, validation route, or none>` |
 | Dependency order and milestones | `<bounded sequence; several capabilities are allowed when explicit>` |
-| First planned physical checkpoint | `<earliest honest discriminator and prerequisites>` |
+| First planned physical checkpoint | `<earliest honest discriminator and prerequisites, or bounded work needed to specify it>` |
 | Campaign construction budget | `<literature, derivation, implementation, compute, and review ceiling>` |
 | Separate numerical-repair budget | `<begins only after a frozen route fails>` |
 | Failure value and pivot rule | `<what is retained and when the campaign stops>` |
@@ -94,12 +101,12 @@ guarantee publication, or replace the next-gate checks below.
 | --- | --- | --- | --- |
 | Paper-shaped scientific question | `<specific contribution, not only a tool check>` | `<scope or significance risk>` | `<credible | conditional | blocked>` |
 | Minimum publishable physical claim | `<smallest bounded physical conclusion that could anchor a paper>` | `<risk that only a technical result is reached>` | `<assessment>` |
-| Targeted prior-work gap | `<search contract and closest overlap>` | `<novelty uncertainty>` | `<assessment>` |
-| Physical discriminator or mechanism | `<observable that survives generic flexibility>` | `<genericity risk>` | `<assessment>` |
-| Research horizon and current readiness | `<why this is discovery, strategic development, or short-horizon execution>` | `<construction or sunk-cost risk>` | `<assessment>` |
-| First physical-discriminator gate | `<earliest honest checkpoint plus prerequisite milestones>` | `<risk that infrastructure loses contact with physics>` | `<assessment>` |
+| Targeted prior-work gap | `<refer to Gap plausibility above; add only publication-specific evidence>` | `<novelty uncertainty>` | `<assessment>` |
+| Physical discriminator or mechanism | `<refer to Falsifiability and holographic leverage above; name any unresolved publication requirement>` | `<genericity risk>` | `<assessment>` |
+| Research horizon and current readiness | `<refer to the capability map and next-gate readiness below>` | `<construction or sunk-cost risk>` | `<assessment>` |
+| First physical-discriminator gate | `<refer to the planned physical checkpoint and prerequisite milestones>` | `<risk that infrastructure loses contact with physics>` | `<assessment>` |
 | Numerical-dependence lane | `<analytic/semi-analytic | qualified-route reuse | new infrastructure | numerical-method contribution>` | `<implementation risk>` | `<assessment>` |
-| Construction, repair, and pivot budgets | `<planned capability cost; separate maximum repair count; pivot rule>` | `<sunk-cost or repair-ladder risk>` | `<assessment>` |
+| Construction, repair, and pivot budgets | `<refer to the capability map; record any publication-specific cost>` | `<sunk-cost or repair-ladder risk>` | `<assessment>` |
 
 - **Independent question review:** `<not selected for the pilot | preserved
   report link, with the reviewer's provider or model family>`
@@ -119,6 +126,9 @@ explicit prerequisite milestones and a planned physical checkpoint.
 Do not combine these axes into one score. Readiness cannot decide scientific
 value, and numerical progress cannot compensate for a missing physical claim
 or unresolved source and novelty boundary.
+Reuse the canonical progress snapshot when one exists. Otherwise summarize the
+applicable axes here; mark an inapplicable axis with a reason instead of opening
+work merely to fill it.
 
 | Evidence axis | Current status | Evidence | Next condition |
 | --- | --- | --- | --- |
@@ -137,6 +147,8 @@ Before assigning readiness statuses, read the private portfolio's reviewed-
 knowledge and closure-lesson indexes and the primary evidence linked by every
 potentially relevant entry. Select by knowledge class, scientific topic,
 source convention, method risk, outcome, and failure mode.
+On continuation, reuse the applicable review and revisit it when relevant
+knowledge, the source revision, or the task boundary changes.
 
 | Knowledge or lesson ID | Why it applies or does not apply | Candidate-specific control added | Where enforced |
 | --- | --- | --- | --- |
@@ -147,12 +159,22 @@ were searched. Do not treat a previous gate's failure as evidence that a
 different candidate must fail. Do not copy an old threshold, convention, paper
 claim, or conclusion without re-establishing its applicability.
 
+## Next-gate readiness
+
+Judge the next proposed action using the rows below. For exploration or
+construction, name the unknown to be resolved and its scientific purpose;
+the final observable or dictionary may itself be the approved target. Record
+the applicable known constraints, checks, acceptance boundary, cost, and stop
+rule. Before physical confirmation, close the exact dictionary, observable,
+comparison, and claim criteria. Link the detailed action or contract below
+instead of repeating it in the table.
+
 | Next-gate readiness test | Status | Evidence already available | Missing evidence or risk | Exact consequence |
 | --- | --- | --- | --- | --- |
 | Gate-complete inputs | `<status>` | `<sources, equations, data, conventions, branch, ensemble needed for this gate>` | `<bounded gap or declared construction target>` | `<admit, evidence task, development milestone, defer, or reject gate>` |
-| Invariant target beyond the generic baseline | `<status>` | `<dimensionless ratio, branch feature, consistency condition, or other discriminator>` | `<genericity or convention risk>` | `<consequence>` |
-| Cheapest discriminating test | `<status>` | `<predeclared cheap kill test, or cheapest honest alternative>` | `<cost and why no cheaper test exists>` | `<consequence and owner risk decision>` |
-| Positive-result endpoint | `<status>` | `<exact supported result and later decision a pass would open>` | `<risk of a merely formal or already-known result>` | `<consequence>` |
+| Invariant target beyond the generic baseline | `<status>` | `<discriminator and baseline, or named construction target and its link to the physical question>` | `<genericity or convention risk; what remains to be established>` | `<consequence>` |
+| Cheapest discriminating test | `<status>` | `<predeclared cheap kill test, or cheapest honest next action to close a named prerequisite>` | `<cost and why no cheaper test exists>` | `<consequence and owner risk decision>` |
+| Positive-result endpoint | `<status>` | `<bounded finding or qualified capability and the later decision it would inform>` | `<risk of a merely formal or already-known result; no physical claim from construction alone>` | `<consequence>` |
 | Cost ceiling | `<status>` | `<maximum literature, implementation, compute, and review cost>` | `<likely escalation pressure>` | `<stop condition>` |
 
 ## Cheapest honest next action
@@ -163,15 +185,18 @@ stop condition, maximum cost, and link to the physical question.>`
 
 ## Generic baseline and discriminator
 
-`<Name the simplest non-holographic or generic holographic baseline. State
-what invariant information must survive convention changes or coefficient
-rescalings for the candidate to be worth a detailed gate.>`
+`<Refer to the opportunity assessment's simplest non-holographic or generic
+holographic baseline. For a physical test, state what invariant information
+must survive convention changes or coefficient rescalings. If determining the
+comparison is the authorized exploration or construction target, name that
+unknown and the condition for closing it before confirmation.>`
 
 ## Positive-result contract
 
-`<State what a pass would support, what it would not support, and the one next
-owner decision it would permit. A pass does not authorize a solver, manuscript,
-publication, public transfer, or disclosure unless explicitly stated.>`
+`<State what a pass would establish at this stage, its non-claims, and the next
+decision or already authorized step it would permit. A pass does not authorize
+additional calculation, manuscript work, publication, public transfer, or
+disclosure unless explicitly stated.>`
 
 ## Owner disposition
 

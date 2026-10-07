@@ -130,15 +130,19 @@ Use a prompt such as:
 ```text
 This is a separate private research repository using a pinned HoloForge
 release. Run one bounded holoforge-research-gate workflow. Freeze the question,
-inputs, exclusions, acceptance and stop conditions before calculation. Keep
+known scientific envelope, any authorized construction target, exclusions,
+acceptance and stop conditions before work. Keep
 scientific support, authorization, and disclosure status separate. Do not
 publish, transfer, or disclose any artifact without a later explicit review.
 ```
 
-Before the detailed gate, ask the agent to copy and complete
+At candidate assessment, ask the agent to copy and complete
 `.agents/skills/holoforge-research-gate/assets/explore-intake-scorecard.example.md`
-inside the private repository. First ask it to assess the scientific
-opportunity independently of current capabilities: importance, gap
+inside the private repository, or update the existing candidate scorecard.
+Reuse that opportunity assessment for subsequent routine gates; update it when
+new evidence materially changes the contribution, cost or feasibility. First
+ask the agent to assess the scientific opportunity independently of current
+capabilities: importance, gap
 plausibility, falsifiability, holographic leverage, explanatory depth, outcome
 value, and owner fit.
 
@@ -151,15 +155,26 @@ demonstrated. Nonholographic methods need not be classical.
 The agent recommends; the named human owner decides
 whether the question deserves investment. Then choose open discovery,
 strategic development, or short-horizon execution and qualify the proposed
-next gate through its inputs, discriminator, cheapest honest test, endpoint,
-cost, and stop rules. A failed next-gate prerequisite stops that gate, not the
-scientific value judgment. Publication-targeted work must name the minimum
-publishable physical claim, earliest honest physical-discriminator gate and
+next action through its inputs, stage-appropriate target, cheapest honest test,
+endpoint, cost, and stop rules. An exploration or construction milestone may
+resolve a named unknown; fix the known scientific envelope and explicitly
+identify the missing item it is authorized to determine. Freeze the resulting
+dictionary and implementation before using them for confirmation. A failed
+next-gate prerequisite stops that gate, not the scientific value judgment.
+Publication-targeted work must name the minimum publishable physical claim,
+earliest honest physical-discriminator gate and
 prerequisites, numerical-dependence lane, campaign construction budget, and
 separate repair budget, while tracking scientific opportunity, physical-claim
 progress, source and novelty readiness, and numerical credibility separately.
 Only short-horizon execution normally reaches the discriminator in the first
 or second detailed gate.
+
+Keep the required contract, attempts, evidence, result, critique and decisions
+in existing canonical records, with links instead of repeated copies. These
+are information obligations, not a requirement for separate files at every
+step. Routine development attempts update the same log and cumulative budget;
+they do not each require another scorecard, report or PDF. Necessary scientific
+checks and the declared owner return boundary still apply.
 
 To let the agent work for a longer interval without weakening owner control,
 freeze the detailed gate first and then approve a project-local copy of
@@ -202,9 +217,10 @@ reassessment; a second repair needs a new owner-approved rationale showing
 that it directly unlocks the frozen physical
 discriminator.
 
-At each owner gate, and again after an approved gate is recorded and closed,
+At each owner gate, and after an approved gate is recorded and closed,
 the agent should state what is completed, the current stage, the proposed next
-stage, and what remains closed. It should then offer five paths: A, approve all
+stage, and what remains closed. When an actual owner or portfolio decision is
+pending, offer five paths: A, approve all
 recommendations; B, approve selected decisions; C, request revision or
 evidence; D, receive a status walkthrough only; or E, write a custom response.
 The post-closure menu applies only to the next eligible handoff and must not

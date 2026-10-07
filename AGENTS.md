@@ -14,6 +14,8 @@ states. A passing model calculation is not empirical validation of nature.
    when orienting to the project or its environment; reuse unchanged context.
 4. Before a substantial change, state its files, validation, and scientific
    boundary. Prefer narrow, reversible changes and maintained library functions.
+5. Scale workflow detail, reviews, and checks to the task's stage, claim, and
+   decision; complete routine work within the approved scope.
 
 ## Choose the matching workflow
 
