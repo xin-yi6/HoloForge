@@ -29,10 +29,12 @@ reached.
 
 ## Deliver authorized public changes
 
-`AGENTS.md` records standing owner authorization to commit, push and merge
-scoped, owner-requested work in this public repository. After relevant local
-checks and public-content review pass, inspect every outgoing commit, verify
-the existing `origin` destination and intended branch, and use a normal
+`AGENTS.md` records standing owner authorization to commit, push, and create
+and merge the corresponding pull request for scoped, owner-requested
+implementation work in this public repository. The implementation request
+covers these routine delivery steps without a second per-PR approval. After
+relevant local checks and public-content review pass, inspect every outgoing
+commit, verify the existing `origin` destination and intended branch, and use a normal
 fast-forward push. Merge the corresponding pull request into `main` only after
 full default CI passes for the exact reviewed head, blocking review feedback is
 resolved, and the scope and target are verified. Do not include unrelated work

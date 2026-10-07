@@ -319,9 +319,10 @@ Confirm that the agent has:
 - kept support claims within the evidence;
 - excluded private paths, secrets, unpublished results, and confidential
   material;
-- used the standing public-repository commit, push and merge authorization in
-  `AGENTS.md` within its scope, required passing full default CI for the exact
-  reviewed head and resolved blocking feedback before merging, verified the
+- used the standing public-repository commit, push, pull-request creation and
+  merge authorization in `AGENTS.md` within its scope, required passing full
+  default CI for the exact reviewed head and resolved blocking feedback before
+  merging, verified the
   remote commit, updated local `main` without disturbing unrelated work, and
   reported CI; and
 - obtained separate authority for releases, branch deletion, history rewrites,
