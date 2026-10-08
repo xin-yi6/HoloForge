@@ -13,7 +13,11 @@ Existing stopped or stricter contracts are not amended by using this template.
 Use sections or references in existing canonical project records for this
 information; the template does not require a new file for each field. For a
 construction milestone, freeze the known scientific envelope and explicitly
-name the missing item to be determined within the approved development scope.
+name the missing items to be investigated within the approved development scope.
+Apply [nonlinear research practice](../research-gate-workflow.md#allow-nonlinear-research-within-an-agreed-scope):
+allow a serious attempt, including interacting unknowns and backtracking. A
+learning checkpoint need not guarantee a complete construction. Resource
+accounting controls authority and spending, not scientific value.
 
 ## Authorization record
 
@@ -38,10 +42,12 @@ name the missing item to be determined within the approved development scope.
 
 Check and bound only the routine work needed to reach the return milestone:
 
-- [ ] retrieve and inspect up to `<count>` additional sources within the
-      frozen source classes;
-- [ ] complete the frozen analytic derivation or consistency audit;
-- [ ] implement only the already specified local calculation;
+- [ ] retrieve and inspect sources within the frozen classes and owner-agreed
+      source/resource policy;
+- [ ] investigate the authorized analytical or conceptual construction,
+      including alternative derivations and backtracking within its envelope;
+- [ ] implement the specified calculation or develop the authorized missing
+      model, observable or method;
 - [ ] develop and debug within the explicitly completed allowance below;
 - [ ] run the frozen analytic, physical, numerical, and independent checks;
 - [ ] prepare plots, tables, machine-readable evidence, and a review packet;
@@ -53,24 +59,29 @@ Check and bound only the routine work needed to reach the return milestone:
       checked here and explicitly included by the owner**.
 
 Allowed work inherits every exclusion in the frozen contract. The agent may
-choose among routine implementation alternatives only when the contract's
-decision criteria already distinguish them. Record the choice, evidence, and
-uncertainty in the gate ledger; do not turn each routine choice into a new
-owner gate.
+choose among permitted exploratory approaches and routine implementation
+alternatives using the contract's constraints and learning objective. Record
+the choice, evidence, and uncertainty in the gate ledger; do not turn each
+routine choice into a new owner gate.
 
 ## Development and qualification boundary
 
 Complete this section when development is needed; otherwise write `not
 authorized`. Do not add a separate approval for routine attempts inside it.
 
-- **Permitted changes:** `<components, algorithms/representations and limits>`
+- **Permitted changes:** `<classes of analytical approaches, working hypotheses,
+  model/observable construction choices, algorithms or representations; fixed
+  constraints and changes requiring a new owner decision>`
 - **Known envelope and construction target:** `<fixed scientific constraints,
   explicitly missing dictionary/observable/method item, permitted alternatives,
   and the validation boundary before physical confirmation>`
-- **Development allowance:** `<finite attempts and aggregate effort/compute;
-  how these charge the existing construction or repair budget>`
-- **Recoverable development failures:** `<tests that block production but
-  permit further in-scope debugging; all other stop rules still apply>`
+- **Development allowance:** `<owner-agreed cumulative resource policy and review
+  boundary; how work charges the construction or repair budget. Do not impose
+  an attempt quota by default; retain explicit limits required by the contract
+  or mission>`
+- **Recoverable development failures:** `<unsuccessful derivations, incomplete
+  constructions or tests that permit another in-scope approach; what they block
+  from claim-bearing use; all other stop rules still apply>`
 - **Attempt record:** `<one existing log with revision, rationale, settings,
   outcome, evidence and cumulative usage; retain failed attempts>`
 - **Confirmatory qualification:** `<prospective acceptance tests, operating
@@ -87,11 +98,15 @@ authorized`. Do not add a separate approval for routine attempts inside it.
 
 ## Cost and repair ceilings
 
-- **Additional primary sources:** `<count>`
+- **Additional primary sources:** `<owner-agreed cap, or explicitly no separate
+  cap where the governing policy permits it; do not infer uncapped authority
+  from an omitted field>`
 - **Implementation scope:** `<files, modules, or function boundary>`
 - **Compute ceiling:** `<runs, resolutions, wall time, or other useful bound>`
-- **Independent checks:** `<named checks and maximum attempts>`
-- **Repair budget:** `<zero or one already authorized bounded repair>`
+- **Independent checks:** `<named checks and applicable resources; an attempt
+  ceiling only when selected or required by the governing policy>`
+- **Repair budget:** `<separately authorized repair allowance and return boundary;
+  planned construction and its routine failed attempts are not numerical repairs>`
 - **Additional-numerics test:** `<which claim-bearing physical decision or
   approved construction validation requirement could more precision or another
   run change; write none when no further numerical work is authorized>`
@@ -127,17 +142,20 @@ Stop the window and return to the owner as soon as any trigger fires:
 The decision owner may revoke or narrow the window at any time. A window ends
 at its first mandatory return and never rolls over to another gate or
 candidate automatically.
-An explicitly recoverable development-test failure is recorded and blocks
-production; it is not by itself trigger 1. This exception must be agreed before
-the test and cannot waive another trigger, an exhausted budget or a stricter
-contract. A failed confirmation cannot be relabeled as development afterward.
+An explicitly recoverable development failure is recorded, with unsupported
+claims and unqualified production blocked; it is not by itself trigger 1 or 4.
+Apply the approved development/impasse boundary to decide when recurrence
+requires return. This distinction must be agreed before development and cannot
+waive another trigger, an exhausted budget or a stricter contract. A failed
+confirmation cannot be relabeled as development afterward.
 
 ## Consolidated return receipt
 
 - **Bounded outcome:** `<positive | negative | conditional | inconclusive |
   source stop | prior-art stop | technical stop>`
 - **Return trigger:** `<milestone or numbered trigger>`
-- **Completed work:** `<evidence-linked summary>`
+- **Completed work:** `<evidence-linked summary of what was resolved, narrowed,
+  tried or revised, including useful learning without construction closure>`
 - **Checks passed and failed:** `<non-aggregate ledger>`
 - **Separate statuses:** `<execution; numerical qualification; physical-question
   outcome; artifact integrity; independent verification; human review. Unknown
@@ -146,7 +164,9 @@ contract. A failed confirmation cannot be relabeled as development afterward.
 - **Budget used:** `<sources, development, compute, repair, reporting and relevant
   owner wait; measured usage versus ceilings, unknown where not measured>`
 - **Current stage:** `<project-local stage>`
-- **Recommended next decision:** `<one bounded recommendation with reason>`
+- **Recommended next decision:** `<continue, revise, pause or close, with an
+  evidence and investment rationale; an execution stop alone does not decide
+  the topic's scientific value>`
 - **Scope that remains closed:** `<explicit list>`
 
 End the receipt with the standard A--E owner response paths. The receipt is a

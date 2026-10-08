@@ -209,7 +209,11 @@ class PublicContentPolicyTests(unittest.TestCase):
         self.assertIn("evidence-based reason", workflow)
         self.assertIn("what work the recommendation opens", workflow)
         self.assertIn("tradeoff or uncertainty", workflow)
-        self.assertIn("recommendation is to pause", workflow)
+        # Guard the stated policy, not the quality of an agent's judgment.
+        self.assertIn("withhold that conclusion", workflow)
+        self.assertIn("recommend continued evidence gathering or construction", workflow)
+        self.assertIn("honor every current", workflow)
+        self.assertIn("execution stop while making this separate recommendation", workflow)
         self.assertIn("recommendation is advice, not owner approval", workflow)
         self.assertIn("recommended selections", template)
         self.assertIn("reason and scope effect", template)

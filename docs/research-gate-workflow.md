@@ -46,6 +46,37 @@ This stage guidance is prospective. Existing frozen gates, framework pins,
 owner selections and autonomous mission/schema requirements continue to
 control their work.
 
+### Allow nonlinear research within an agreed scope
+
+Apply the [research objective](research-objective.md): exploration can require
+several interacting unknowns, failed approaches and backtracking. Do not require
+every problem to decompose into independently solvable short steps, or treat
+one or two unsuccessful attempts as a default reason to pause a topic. Assess
+what has been learned, what changed in the physical picture, plausible routes
+forward and remaining uncertainty. Time, run counts and completed gates record
+activity or resource use; they do not measure scientific worth or guarantee
+adequate investigation.
+
+Before recommending a new contract, check that its permitted work can actually
+address its target. An inventory that forbids construction can report what is
+available, but cannot promise to resolve an original construction problem.
+For exploratory work, specify the scientific constraints, classes of permitted
+approaches and meaningful review boundary without pretending to know every
+intermediate step. Include analytical and conceptual development as well as
+code development. Apply relevant prior lessons to these choices rather than
+merely listing lesson IDs. Record this reasoning in the existing proposal;
+do not add a separate approval or checklist.
+
+Within that authority, continue investigating unresolved prerequisites and
+revise unsuccessful approaches. A gap in the current derivation is not evidence
+that no derivation exists. Distinguish an attempt failure, an execution return
+boundary and the investment decision to pause or abandon a project. At a real
+return boundary, preserve the incomplete result and recommend further work,
+revision or pause on the accumulated evidence and prospective scientific value.
+Neither stopping execution nor finding an obstacle automatically selects a new
+topic. Freedom to explore does not change a frozen confirmation criterion,
+erase negative evidence or extend an existing contract, budget or mission.
+
 ## Assess scientific opportunity before execution readiness
 
 Capability availability cannot decide which physics questions are worth
@@ -191,11 +222,12 @@ not the research endpoint. Before selecting the lead, also record:
 
 In the short-horizon lane, the first or second detailed gate should normally
 evaluate the physical discriminator. Open discovery and strategic development
-may require more prerequisite gates, but each one must close a named source,
-dictionary, model, capability, or validation milestone and the owner must
-approve the campaign and its planned physics checkpoint. Do not keep a
-campaign alive through generic infrastructure work that is not necessary for
-the selected question.
+may require more prerequisite gates. Give each a meaningful learning or
+construction objective and report what was resolved, narrowed, attempted or
+revised; completing the construction is not guaranteed at every checkpoint.
+The owner must approve the campaign and its planned physics checkpoint. Do not
+keep a campaign alive through generic infrastructure work that is not necessary
+for the selected question.
 
 Planned model or capability construction is not a numerical repair. A repair
 begins only after a frozen route fails its prospective acceptance criteria. If
@@ -445,9 +477,11 @@ the next test; it does not decide a different candidate in advance.
    decision it would open. A successful exploration or construction milestone
    may qualify a prerequisite or close an uncertainty; state that narrower
    endpoint without presenting it as a supported physical claim.
-5. **Cost ceiling:** the owner fixes the maximum literature, implementation,
-   compute, and review cost of the first gate and the conditions that stop
-   further investment.
+5. **Cost ceiling:** record the owner's resource policy and conditions for
+   returning to an investment decision. Do not invent per-source or per-attempt
+   quotas merely to make exploration measurable. Use limits proportionate to
+   the work and required by the applicable contract or mission schema; preserve
+   every already agreed hard cap. Resource limits are not scientific verdicts.
 
 Mark every next-gate item `pass`, `conditional`, or `fail` and cite the
 evidence. A gate opens only when the inputs, endpoint, methods, cost, and stop
@@ -523,20 +557,26 @@ itself being constructed, explicitly name that missing item, allowed
 alternatives and its qualification boundary. Freeze the completed scientific
 inputs before their confirmatory use; development permission does not confer
 scientific support. Explicitly distinguish recoverable
-development-test failures from milestone stops. If that distinction is absent,
+development failures from milestone stops. If that distinction is absent,
 the existing first-failure rule controls; this policy never reopens a stopped
 gate or overrides a stricter frozen contract.
 
-Within the declared allowance, the agent may diagnose failed synthetic tests,
-correct code, inspect conditioning and compare permitted representations
-without asking again. Keep a compact attempt log: revision, changed component,
-rationale, test/configuration, outcome and cumulative cost, including failures.
-A failed development test blocks production use of that implementation, not
-all remaining authorized development. Scope, safety, disclosure and budget
-stops apply in every phase. Development is not an unlimited retry entitlement.
+Within the declared allowance, the agent may revisit assumptions, try alternative
+derivations or ansatzes, develop coupled model/observable choices, diagnose
+failed synthetic tests, correct code and compare permitted representations
+without asking again. These choices must remain within the agreed scientific
+envelope; changing a fixed action, ensemble or boundary condition still needs
+the authority specified by the contract. Keep a compact attempt log: approach
+or revision, rationale, evidence, outcome, what was learned and cumulative cost,
+including failures. An unsuccessful approach can motivate another permitted
+route without a new gate. A failed development test blocks production use of
+that implementation, not all remaining authorized development. Scope, safety,
+disclosure and budget stops apply in every phase. Development is not an
+unlimited retry entitlement.
 
-Once the implementation is ready, record its exact code, configuration,
-environment and input hashes **before confirmatory qualification**. Test the
+Before claim-bearing confirmation, record the resulting assumptions, equations,
+method and evidence to be tested. For executable work, record the exact code,
+configuration, environment and input hashes **before confirmatory qualification**. Test the
 relevant operating regime and include checks not used to tune it where tuning
 could conceal bias. Distinguish exact-answer implementation fixtures from
 out-of-family approximation/robustness tests; specify what each must establish
@@ -685,6 +725,20 @@ into one owner packet and A--E handoff.
 
 ## Check the version of record before a source stop
 
+First distinguish unavailable evidence from a failed tool or representation.
+For new contracts, separate failed retrievals from parsing, OCR or page-rendering
+failures after a source is accessible. An optional image-render failure is not
+another failed paper access when adequate text is available. Log it and charge
+the applicable time/tool resources; do not erase earlier retrieval failures
+because a fallback succeeds. Retry and fallback limits still apply.
+
+Use a reliable available representation for the claims it supports. If an
+equation or figure cannot be checked, withhold the dependent claim, try permitted
+legal alternatives and continue unaffected authorized work. Return when an
+essential evidence gap prevents the declared milestone or a mandatory boundary
+is reached. Neither a rendering error nor inaccessible evidence establishes a
+physical negative. Older explicit accounting and stops remain unchanged.
+
 Do not close a source or source-normalization stop from preprint text alone
 when a later authoritative record may exist. Before closure:
 
@@ -709,7 +763,7 @@ nearly exhausted, or hostile criticism identifies a tractable alternative
 explanation that the current contract cannot distinguish.
 
 Inside an explicitly approved development allowance, recurrence of a designated
-recoverable test failure is diagnostic evidence, not automatically a new owner
+recoverable development failure is diagnostic evidence, not automatically a new owner
 gate. Apply the declared development/impasse boundary and return when that
 boundary is reached or resolution needs undelegated work. This does not waive
 scientific-scope, safety or cumulative-budget stops.
@@ -887,9 +941,14 @@ reviewer's scientific judgment. Every owner-review gate must end with a
 4. identifies the most important tradeoff or uncertainty when the choice is
    not clear-cut.
 
-If the evidence cannot support a preferred scientific option, the
-recommendation is to pause and obtain the named missing evidence. The
-recommendation must not be omitted or replaced by an unsupported guess.
+If the evidence cannot support a scientific conclusion, withhold that conclusion.
+Where justified, recommend continued evidence gathering or construction, stating
+the learning objective, permitted route changes and remaining investment.
+Recommend pausing the project when the evidence and investment assessment support
+it, or when no defensible next investigation can be identified; explain that
+judgment rather than inferring it from an incomplete gate. Honor every current
+execution stop while making this separate recommendation. The recommendation
+must not be omitted or replaced by an unsupported guess.
 
 A recommendation is advice, not owner approval. The decision owner retains the
 final choice unless authority for a bounded class of routine gates has been

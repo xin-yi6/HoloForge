@@ -48,7 +48,11 @@ status requests do not open a scientific gate or require an A-E menu.
   raw evidence, and human review states. Finish authorized routine work and
   return at its first declared stop, outcome, or undelegated decision. Model
   upgrades and personal skill defaults cannot expand that authority.
-- For new numerical work, distinguish an explicitly approved
+- When proposing Explore work, apply [nonlinear research practice](docs/research-gate-workflow.md#allow-nonlinear-research-within-an-agreed-scope).
+  Ensure permitted methods can address the target, allow iterative analytical
+  and conceptual construction, and apply relevant prior lessons. An unresolved
+  step or failed approach is not by itself a reason to pause the whole topic.
+- For new analytical or numerical construction, distinguish an explicitly approved
   [development allowance](docs/research-gate-workflow.md#separate-development-from-confirmation)
   from confirmatory qualification. Recoverable development failures block
   production, not permitted debugging; this never overrides an older stop.

@@ -13,10 +13,21 @@ Benchmark count, test count, pull-request count, report count, release count,
 and agent activity measure engineering work. They are not research-output
 metrics.
 
+Research is nonlinear. Questions, models, observables and approximations may
+develop together through failed approaches, backtracking and revised working
+hypotheses. Scientific progress and value cannot be reduced to scores, elapsed
+time, run counts, completed gates or a fixed sequence of steps. Quantify
+physical results and uncertainty where appropriate, and account for resources
+to respect the owner's investment; neither accounting nor a checklist replaces
+scientific judgment. An unresolved construction can be the substance of the
+research. Use checkpoints to assess learning and revise the route within the
+approved scope, following [nonlinear research practice](research-gate-workflow.md#allow-nonlinear-research-within-an-agreed-scope).
+
 ## Two research loops
 
-Use a fast **discovery loop** to compare candidates, test the simplest
-alternative, and reach the first physical discriminator with bounded effort.
+Use a **discovery loop** to compare candidates, develop the question and test
+physical alternatives. Use cheap decisive tests when available; allow sustained
+construction when the selected research horizon requires it.
 Use the heavier **confirmation loop** only after a result supplies a credible
 signal, robust exclusion, or scientifically important tension.
 
@@ -33,8 +44,9 @@ confirmation:
 
 The discovery loop may include a bounded derivation, model construction, or
 signal pilot when that is the cheapest honest way to distinguish a valuable
-question. It must not demand a full confirmation package before any physical
-work is attempted.
+question. The arrows show dependencies, not a mandatory linear schedule:
+discovery can revisit earlier steps inside its approved envelope. It must not
+demand a full confirmation package before any physical work is attempted.
 
 ## Scientific value and research authority
 
