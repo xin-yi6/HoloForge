@@ -27,6 +27,10 @@ readiness, or proposed investment. Link canonical records where they already
 contain the requested facts rather than copy them into every section. A research
 horizon describes the campaign; readiness below concerns its next authorized
 action, which may be reading, derivation, construction, or confirmation.
+Scientific progress cannot be reduced to scores, elapsed time or counts of
+completed steps. Check whether the proposed methods permit a serious attempt at the
+learning objective; do not demand the solution to a declared construction
+target before allowing work on it. Reuse the same record as the route develops.
 
 ## Search-scope and domain-coverage declaration
 
@@ -84,7 +88,7 @@ the current starting point; they do not decide which question is valuable.
 | Selected horizon | `<use the Research horizon recorded above>` |
 | Existing qualified capabilities | `<IDs and exact evidence boundaries, or none>` |
 | Planned new capabilities | `<dictionary, action, observable, artifact, solver, validation route, or none>` |
-| Dependency order and milestones | `<bounded sequence; several capabilities are allowed when explicit>` |
+| Dependencies, learning milestones and permitted route changes | `<interacting unknowns, possible backtracking and approach choices within the scientific envelope; no guaranteed linear sequence>` |
 | First planned physical checkpoint | `<earliest honest discriminator and prerequisites, or bounded work needed to specify it>` |
 | Campaign construction budget | `<literature, derivation, implementation, compute, and review ceiling>` |
 | Separate numerical-repair budget | `<begins only after a frozen route fails>` |
@@ -175,13 +179,15 @@ instead of repeating it in the table.
 | Invariant target beyond the generic baseline | `<status>` | `<discriminator and baseline, or named construction target and its link to the physical question>` | `<genericity or convention risk; what remains to be established>` | `<consequence>` |
 | Cheapest discriminating test | `<status>` | `<predeclared cheap kill test, or cheapest honest next action to close a named prerequisite>` | `<cost and why no cheaper test exists>` | `<consequence and owner risk decision>` |
 | Positive-result endpoint | `<status>` | `<bounded finding or qualified capability and the later decision it would inform>` | `<risk of a merely formal or already-known result; no physical claim from construction alone>` | `<consequence>` |
-| Cost ceiling | `<status>` | `<maximum literature, implementation, compute, and review cost>` | `<likely escalation pressure>` | `<stop condition>` |
+| Cost ceiling | `<status>` | `<owner-agreed resource policy, with explicit required caps and no invented attempt quotas>` | `<likely escalation pressure>` | `<stop condition>` |
 
 ## Cheapest honest next action
 
-`<Name one source, derivation, construction, analytic, or numerical action
-appropriate to the selected horizon. State its input, acceptance condition,
-stop condition, maximum cost, and link to the physical question.>`
+`<Name a coherent source, derivation, construction or numerical investigation
+appropriate to the selected horizon. State what it should teach, known inputs,
+permitted approach changes, acceptance/review boundary, resource policy and link
+to the physical question. Several coupled unknowns may belong to one milestone;
+an incomplete first attempt does not automatically warrant pausing the topic.>`
 
 ## Generic baseline and discriminator
 

@@ -26,6 +26,7 @@ scope; they do not choose another question, broaden an audit, or authorize work.
 
 Read these common controls before scientific execution:
 
+- [Nonlinear research and contract design](../../../docs/research-gate-workflow.md#allow-nonlinear-research-within-an-agreed-scope)
 - [One gate, one bounded question](../../../docs/research-gate-workflow.md#one-gate-one-bounded-question)
 - [Bounded autonomy and return triggers](../../../docs/research-gate-workflow.md#use-an-owner-approved-bounded-autonomy-window)
 - [Support, review, and authorization states](../../../docs/research-gate-workflow.md#three-statuses-that-must-not-be-confused)
@@ -43,6 +44,11 @@ step can close a named prerequisite before the final dictionary or physical
 discriminator is available. Keep its scientific purpose, methods, basic checks,
 cost, and stop conditions explicit; qualification and confirmation still require
 their frozen criteria.
+Before recommending a contract, verify that its permitted approaches and
+resources can address its target; an inventory-only audit cannot undertake a
+construction it forbids. Apply relevant prior lessons to the actual methods and
+stop rules. Unsuccessful approaches and interacting unknowns belong inside an
+approved development allowance, not automatically in a new gate or topic pause.
 
 ## Load the current phase
 
@@ -50,7 +56,7 @@ their frozen criteria.
 | --- | --- |
 | New intake or candidate assessment | [Scientific opportunity](../../../docs/research-gate-workflow.md#assess-scientific-opportunity-before-execution-readiness), [portfolio intent and search scope](../../../docs/research-gate-workflow.md#declare-portfolio-intent-and-search-scope), [research horizons](../../../docs/research-gate-workflow.md#choose-one-of-three-research-horizons), [publication pathway](../../../docs/research-gate-workflow.md#keep-publication-targeted-work-physics-first), and [next-gate qualification](../../../docs/research-gate-workflow.md#record-opportunity-and-qualify-the-next-gate). Use the [intake scorecard](assets/explore-intake-scorecard.example.md); read applicable private knowledge/closure indexes and primary evidence before proposing candidates. |
 | An owner-selected question or claim review (pilot) | [Independent question review](../../../docs/research-gate-workflow.md#review-the-question-independently) and the [review template](../../../docs/templates/question-review-template.md). Confirm the owner's selection and disclosure approval first. Give the reviewer only the card, preserve the report before replying, reply item by item and return disputed items to the owner. When the owner has approved a private reviewer configuration, run [the review runner](scripts/run_question_review.py) instead of a manual handoff. For owner-selected [independent candidate proposals](../../../docs/research-gate-workflow.md#declare-portfolio-intent-and-search-scope), record your own seeds first, then send a scope brief through the same runner. Before an owner-chosen construction investment, the owner may ask for [independent advice](../../../docs/research-gate-workflow.md#keep-publication-targeted-work-physics-first) on a comparison card. When [blind re-derivation](../../../docs/research-gate-workflow.md#verify-the-physical-comparison) is owner-selected and authorized, seal the setup before deriving and send it only after a decisive own result. Approval of a reviewer or card class alone does not select a use. A status or maintenance request does not open a review. |
-| Develop, qualify or execute numerical work | [Development and confirmation](../../../docs/research-gate-workflow.md#separate-development-from-confirmation), [physical-comparison verification](../../../docs/research-gate-workflow.md#verify-the-physical-comparison), [claim-sufficiency checkpoint](../../../docs/research-gate-workflow.md#use-a-claim-sufficiency-checkpoint), and the frozen contract. Record allowed development failures prospectively; freeze the exact implementation before confirmatory qualification and use that revision for production. |
+| Develop analytical, conceptual or numerical work; qualify and confirm | [Development and confirmation](../../../docs/research-gate-workflow.md#separate-development-from-confirmation), [physical-comparison verification](../../../docs/research-gate-workflow.md#verify-the-physical-comparison), [claim-sufficiency checkpoint](../../../docs/research-gate-workflow.md#use-a-claim-sufficiency-checkpoint), and the frozen contract. Record allowed development failures prospectively. Fix the resulting assumptions, equations and methods before claim-bearing confirmation; for executable work, freeze the exact implementation before qualification and use that revision for production. |
 | Source inconsistency or recurring blocker | [Version-of-record audit](../../../docs/research-gate-workflow.md#check-the-version-of-record-before-a-source-stop), then the [bounded impasse protocol](../../../docs/research-gate-workflow.md#use-a-bounded-impasse-protocol) when triggered. A search result does not validate a fix. |
 | A proposed model-derived repair | [Separate repair gate](../../../docs/research-gate-workflow.md#treat-a-model-derived-repair-as-a-new-gate); preserve the original source stop and obtain the required new authority before repair work. |
 | Durable evidence milestone | [Research knowledge](../../../docs/research-gate-workflow.md#update-research-knowledge-during-the-gate), [consolidated state and delivery](../../../docs/research-gate-workflow.md#consolidate-current-state-and-delivery), and the [knowledge template](../../../docs/templates/research-knowledge-template.md). Preserve provisional, challenged, retired, and human-reviewed states and their primary evidence. |
@@ -67,8 +73,9 @@ checks and records instead of creating a new gate or report for each attempt.
 Use maintained numerical libraries when suitable and preserve actual execution
 provenance. At the first declared stop or outcome, finish the permitted stop
 record and return; do not expand a repair, loosen a threshold, or hide a failure.
-An explicitly recoverable development test is not a milestone stop. Follow the
-approved phase boundary; never infer that exception for an older contract.
+An explicitly recoverable development failure is not a milestone stop. An
+execution return does not itself justify abandoning the scientific question.
+Follow the approved phase boundary; never infer that exception for an older contract.
 
 Lead with the bounded outcome, supported and unsupported claims, verification,
 critic findings, and any remaining uncertainty. At a real owner decision,

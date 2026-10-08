@@ -22,7 +22,7 @@ Then give:
 
 1. **First choice and why:** the physical payoff, the readers, and what a negative outcome would show.
 2. **Second choice and why.**
-3. **First milestone and stop rule for your first choice:** the smallest construction step whose result would tell the owner whether to continue, and the outcome that should stop the investment.
+3. **First learning milestone for your first choice:** what a serious construction attempt would teach, plausible follow-ups if it remains incomplete, and the scope needed to investigate interacting unknowns. Distinguish recoverable approach failures, an owner-review boundary, and evidence that would justify ending the investment; do not equate an unresolved step with a failed topic.
 4. **Main risk of your first choice,** and what evidence would make you change your recommendation.
 5. **Any candidate you would advise against,** only if you have a specific, supported reason.
 

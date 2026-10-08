@@ -169,6 +169,13 @@ progress, source and novelty readiness, and numerical credibility separately.
 Only short-horizon execution normally reaches the discriminator in the first
 or second detailed gate.
 
+Exploratory research can revisit assumptions and develop several ingredients
+together. Use [nonlinear research practice](research-gate-workflow.md#allow-nonlinear-research-within-an-agreed-scope)
+when drafting the contract: give its target enough methodological freedom for
+a serious attempt. Checkpoints assess learning and the next investment; elapsed
+time, run counts and incomplete steps do not measure scientific value or by
+themselves justify abandoning a topic.
+
 Keep the required contract, attempts, evidence, result, critique and decisions
 in existing canonical records, with links instead of repeated copies. These
 are information obligations, not a requirement for separate files at every
@@ -197,16 +204,19 @@ This delegates execution only. It does not delegate the physical verdict,
 novelty or publication judgment, disclosure decision, or permission to push,
 merge, release, or start another gate.
 
-When a new numerical capability needs development, include the template's
+When analytical, conceptual or numerical construction needs development, include
+the template's
 [development allowance](research-gate-workflow.md#separate-development-from-confirmation)
 in that same approval: permitted changes, cumulative resources, recoverable
-test failures, and the final qualification boundary. Failed development tests
-remain recorded and block production, but need not trigger another approval.
+development failures, and the final qualification boundary. Unsuccessful
+attempts remain recorded and unsupported claims stay blocked, while another
+permitted approach need not trigger another approval.
 Freeze the exact implementation before confirmation, then use the qualified
 revision for the already authorized physical calculation. Existing stopped
 contracts are not reopened by this guidance.
 
-If the same blocker recurs, ask the agent to use the bounded impasse protocol:
+If the same blocker reaches the approved development/impasse boundary, use the
+bounded impasse protocol:
 classify the problem, inspect targeted authoritative external evidence, audit
 the physics independently, inspect the corresponding numerical or software
 layer, and propose at most one costed repair before returning for approval.
