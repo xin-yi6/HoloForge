@@ -61,6 +61,11 @@ All notable changes to HoloForge are recorded here.
 
 ### Fixed
 
+- Remove the review runner's default elapsed-time deadline; keep an optional
+  explicit positive deadline. Reserve each attempt before dispatch, preserve
+  restrictive raw output files and lifecycle receipts on success or failure,
+  clean up local reviewer processes, and suppress provider text in automatic
+  error diagnostics. Preserve approval, single-call and no-overwrite controls.
 - The hard-wall chiral model card and guide now state the operator-
   normalization caveat for the printed `m_q` and `sigma` (Cherman, Cohen and
   Werbos, *Phys. Rev. C* 79, 045203 (2009)). These are EKSS-convention
