@@ -120,6 +120,11 @@ contribution; it cannot certify that the calculation establishes the claim.
 - **Excluded or stopped on the way, and why:** `<list>`
 - **Evidence boundary:** `<analytic | numerical | comparison; what is
   established and what is not>`
+- **Physical relevance and proposed next action:** `<what the result changes
+  for its readers and what remains unresolved; where a correction is quoted,
+  distinguish its coefficient size from its full-observable effect, or state
+  that the latter is unknown. Explain the decision any further numerics could
+  change using the current sufficiency disposition>`
 - **Inputs that already encode the answer, and shared inputs:** `<list, or
   none>`
 - **Intended readers:** `<community or subfield>`
