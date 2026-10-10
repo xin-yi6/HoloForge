@@ -21,19 +21,26 @@ oversized card and any overwrite of a preserved report.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import codecs
 import hashlib
 import json
+import math
+import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
 
 
-RUNNER_VERSION = 1
+RUNNER_VERSION = 2
 CARD_KINDS = ("question", "claim", "brief", "derivation")
 # A brief asks for proposals and a derivation setup for an independent
 # result; neither has a report to rebut. A disagreement goes to the owner.
@@ -41,7 +48,8 @@ REVIEW_KINDS = ("question", "claim")
 # A card is a short record. The cap keeps a manuscript, data file or code
 # listing from being sent under the name of a card.
 MAX_CARD_CHARS = 12000
-DEFAULT_TIMEOUT_SECONDS = 1800
+DEFAULT_TIMEOUT_SECONDS = None
+CLEANUP_GRACE_SECONDS = 2.0
 SECRET_WORDS = ("key", "token", "secret", "password")
 
 ROOT = Path(__file__).resolve().parents[4]
@@ -90,10 +98,84 @@ def read_text(path: Path) -> str:
         return handle.read()
 
 
+def open_new_binary(path: Path):
+    """Reserve a private file without following or overwriting an existing path."""
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    return os.fdopen(fd, "wb")
+
+
 def write_new_text(path: Path, text: str) -> None:
-    """Write a file that must not exist yet, without newline translation."""
-    with path.open("x", encoding="utf-8", newline="") as handle:
-        handle.write(text)
+    """Persist exact UTF-8 bytes with owner-only permissions before proceeding."""
+    with open_new_binary(path) as handle:
+        handle.write(text.encode("utf-8"))
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def write_new_json(path: Path, value: Mapping[str, Any]) -> None:
+    write_new_text(path, json.dumps(value, indent=2, sort_keys=True) + "\n")
+
+
+def positive_timeout(value: str) -> float:
+    try:
+        seconds = float(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("timeout must be a positive number") from error
+    if not math.isfinite(seconds) or seconds <= 0:
+        raise argparse.ArgumentTypeError("timeout must be finite and positive")
+    return seconds
+
+
+class ReviewCancelled(Exception):
+    """A local interruption; it does not attest provider-side cancellation."""
+
+
+@contextlib.contextmanager
+def cancellation_handlers():
+    previous = {}
+    if threading.current_thread() is threading.main_thread():
+        def cancel(signum, frame):
+            raise ReviewCancelled(signum)
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            previous[signum] = signal.signal(signum, cancel)
+    try:
+        yield
+    finally:
+        for signum, handler in previous.items():
+            signal.signal(signum, handler)
+
+
+@contextlib.contextmanager
+def postpone_spawn_cancellation():
+    """Remember signals until the spawned process and its PID are captured."""
+    previous = {}
+    pending = []
+    if threading.current_thread() is threading.main_thread():
+        def remember(signum, frame):
+            pending.append(signum)
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            previous[signum] = signal.signal(signum, remember)
+    try:
+        yield
+    finally:
+        for signum, handler in previous.items():
+            signal.signal(signum, handler)
+        if pending:
+            raise ReviewCancelled(pending[0])
+
+
+@contextlib.contextmanager
+def defer_cancellation():
+    """Allow bounded cleanup and the terminal receipt to finish once interrupted."""
+    previous = {}
+    if threading.current_thread() is threading.main_thread():
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            previous[signum] = signal.signal(signum, signal.SIG_IGN)
+    try:
+        yield
+    finally:
+        for signum, handler in previous.items():
+            signal.signal(signum, handler)
 
 
 def load_config(path: Path) -> tuple[dict[str, Any], str]:
@@ -162,38 +244,186 @@ def fill_template(template: str, values: Mapping[str, str]) -> str:
     )
 
 
-def call_reviewer(
-    reviewer: Mapping[str, Any], message: str, timeout: int
-) -> dict[str, Any]:
-    """Run the reviewer command in a fresh empty directory, prompt on stdin."""
-    workdir = Path(tempfile.mkdtemp(prefix="question-review-"))
-    try:
+def stop_local_process(process: subprocess.Popen) -> dict[str, Any]:
+    """Bounded local teardown, including the POSIX group where supported."""
+    scope = "process_group" if os.name == "posix" else "direct_child"
+    errors = []
+    with defer_cancellation():
         try:
-            completed = subprocess.run(
-                reviewer["command"],
-                input=message,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                cwd=workdir,
-                timeout=timeout,
-                check=False,
-            )
-        except FileNotFoundError as error:
-            raise ReviewFailed(f"reviewer command not found: {error}") from error
-        except subprocess.TimeoutExpired as error:
-            raise ReviewFailed(f"reviewer timed out after {timeout} s") from error
-        left_empty = not any(workdir.iterdir())
+            if os.name == "posix":
+                os.killpg(process.pid, signal.SIGTERM)
+            elif process.poll() is None:
+                process.terminate()
+        except ProcessLookupError:
+            pass
+        except OSError as error:
+            errors.append(type(error).__name__)
+        try:
+            process.wait(timeout=CLEANUP_GRACE_SECONDS)
+        except subprocess.TimeoutExpired:
+            pass
+        # A descendant can outlive an already exited group leader. Kill the
+        # remaining group too; regular output files never wait on inherited pipes.
+        try:
+            if os.name == "posix":
+                os.killpg(process.pid, signal.SIGKILL)
+            elif process.poll() is None:
+                process.kill()
+        except ProcessLookupError:
+            pass
+        except OSError as error:
+            errors.append(type(error).__name__)
+        try:
+            process.wait(timeout=CLEANUP_GRACE_SECONDS)
+        except subprocess.TimeoutExpired:
+            errors.append("local_process_not_reaped")
+    return {"scope": scope, "errors": errors,
+            "local_process_reaped": process.poll() is not None,
+            "provider_cancellation": "unknown"}
+
+
+def raw_stream_records(out_dir: Path, prefix: str) -> dict[str, Any]:
+    records = {}
+    for stream in ("stdout", "stderr"):
+        path = out_dir / f"{prefix}{stream}.raw"
+        if path.exists():
+            digest = hashlib.sha256()
+            size = 0
+            with path.open("rb") as handle:
+                os.fsync(handle.fileno())
+                for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                    digest.update(chunk)
+                    size += len(chunk)
+            records[stream] = {"path": path.name, "bytes": size,
+                               "sha256": digest.hexdigest()}
+    return records
+
+
+def call_reviewer(
+    reviewer: Mapping[str, Any], message_path: Path, out_dir: Path,
+    prefix: str, timeout: Optional[float], result: dict[str, Any],
+) -> None:
+    """Run once with durable streams; retain state even if finalization fails."""
+    workdir = None
+    process = None
+    result.update(outcome="launch_error", cleanup=None)
+    try:
+        workdir = Path(tempfile.mkdtemp(prefix="question-review-"))
+        with message_path.open("rb") as stdin, \
+                open_new_binary(out_dir / f"{prefix}stdout.raw") as stdout, \
+                open_new_binary(out_dir / f"{prefix}stderr.raw") as stderr:
+            with postpone_spawn_cancellation():
+                process = subprocess.Popen(
+                    reviewer["command"], stdin=stdin, stdout=stdout, stderr=stderr,
+                    cwd=workdir, start_new_session=(os.name == "posix"),
+                )
+                result["process_started"] = True
+                write_new_json(out_dir / f"{prefix}process.json", {
+                    "pid": process.pid, "recorded_utc": utc_now(),
+                    "local_process_scope": "process_group" if os.name == "posix" else "direct_child",
+                    "provider_state": "unavailable",
+                })
+            process.wait(timeout=timeout)
+            result["outcome"] = "completed" if process.returncode == 0 else "nonzero_exit"
+    except subprocess.TimeoutExpired:
+        result["outcome"] = "timeout"
+    except (KeyboardInterrupt, ReviewCancelled):
+        result["outcome"] = "cancelled"
+    except OSError as error:
+        result["outcome"] = "local_error" if process is not None else "launch_error"
+        result["error_type"] = type(error).__name__
     finally:
-        shutil.rmtree(workdir, ignore_errors=True)
-    if completed.returncode != 0:
-        tail = completed.stderr.strip()[-600:]
-        raise ReviewFailed(
-            f"reviewer command exited with {completed.returncode}: {tail}"
-        )
-    if not completed.stdout.strip():
-        raise ReviewFailed("reviewer returned an empty report")
-    return {"output": completed.stdout, "working_directory_left_empty": left_empty}
+        # Clean remaining same-group descendants even after a normal leader
+        # exit. An inherited output descriptor must not keep background work
+        # running or leave captured output deliberately open after completion.
+        with defer_cancellation():
+            if process is not None:
+                result["cleanup"] = stop_local_process(process)
+                result["returncode"] = process.poll()
+            if workdir is not None:
+                try:
+                    result["working_directory_left_empty"] = not any(workdir.iterdir())
+                except OSError as error:
+                    result["directory_inspection_error"] = type(error).__name__
+                shutil.rmtree(workdir, ignore_errors=True)
+    result["raw_streams"] = raw_stream_records(out_dir, prefix)
+    if result["outcome"] == "completed":
+        decoder = codecs.getincrementaldecoder("utf-8")()
+        nonblank = False
+        try:
+            with (out_dir / f"{prefix}stdout.raw").open("rb") as handle:
+                for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                    nonblank = bool(decoder.decode(chunk).strip()) or nonblank
+                nonblank = bool(decoder.decode(b"", final=True).strip()) or nonblank
+        except UnicodeDecodeError:
+            result["outcome"] = "invalid_output"
+        else:
+            if not nonblank:
+                result["outcome"] = "empty_output"
+
+
+def copy_report(source: Path, destination: Path) -> str:
+    digest = hashlib.sha256()
+    with source.open("rb") as src, open_new_binary(destination) as dst:
+        for chunk in iter(lambda: src.read(1024 * 1024), b""):
+            dst.write(chunk)
+            digest.update(chunk)
+        dst.flush()
+        os.fsync(dst.fileno())
+    return digest.hexdigest()
+
+
+def run_attempt(
+    out_dir: Path, prefix: str, reviewer: Mapping[str, Any],
+    receipt: dict[str, Any], snapshots: Mapping[str, str],
+    timeout: Optional[float],
+) -> Path:
+    """Reserve before dispatch; failures preserve evidence and cannot retry here."""
+    if timeout is not None and (not math.isfinite(timeout) or timeout <= 0):
+        raise Refused("timeout must be finite and positive")
+    out_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    report_name = "rebuttal.md" if prefix else "report.md"
+    receipt_name = f"{prefix}receipt.json"
+    names = list(snapshots) + [f"{prefix}{n}" for n in
+            ("start.json", "process.json", "stdout.raw", "stderr.raw")] + [report_name, receipt_name]
+    if any((out_dir / name).exists() or (out_dir / name).is_symlink() for name in names):
+        raise Refused("attempt evidence already exists; a preserved attempt is never overwritten or retried")
+    started = time.monotonic()
+    receipt.update(started_utc=utc_now(), timeout_seconds=timeout)
+    try:
+        write_new_json(out_dir / f"{prefix}start.json", {**receipt, "outcome": "started"})
+    except FileExistsError as error:
+        raise Refused("an attempt is already reserved; no duplicate invocation") from error
+    result: dict[str, Any] = {"outcome": "preparation_error", "process_started": False,
+                              "returncode": None, "raw_streams": {}}
+    with cancellation_handlers():
+        try:
+            for name, text in snapshots.items():
+                write_new_text(out_dir / name, text)
+            call_reviewer(reviewer, out_dir / f"{prefix}message.md",
+                          out_dir, prefix, timeout, result)
+        except (KeyboardInterrupt, ReviewCancelled):
+            result["outcome"] = "cancelled"
+        except OSError as error:
+            if result["process_started"]:
+                result["outcome"] = "local_error"
+            result["error_type"] = type(error).__name__
+        # Preserve safe metadata even for failure. Provider text stays in private
+        # raw files and is never copied into automatic terminal diagnostics.
+        with defer_cancellation():
+            if result["outcome"] == "completed":
+                try:
+                    report_hash = copy_report(out_dir / f"{prefix}stdout.raw",
+                                              out_dir / report_name)
+                except OSError as error:
+                    result.update(outcome="local_error", error_type=type(error).__name__)
+                else:
+                    receipt["sha256"]["rebuttal" if prefix else "report"] = report_hash
+            receipt.update(result, finished_utc=utc_now(), elapsed_seconds=time.monotonic() - started)
+            write_new_json(out_dir / receipt_name, receipt)
+    if result["outcome"] != "completed":
+        raise ReviewFailed(f"reviewer outcome {result['outcome']}; evidence preserved in {out_dir}")
+    return out_dir
 
 
 def base_receipt(
@@ -252,22 +482,6 @@ def run_review(args: argparse.Namespace) -> Path:
     )
     message = fill_template(template, {"INPUT_SCOPE": scope, "CARD": card})
 
-    out_dir = args.out_dir
-    out_dir.mkdir(parents=True, exist_ok=True)
-    for name in ("card.md", "message.md", "report.md", "receipt.json"):
-        if (out_dir / name).exists():
-            raise Refused(
-                f"{name} already exists in the output directory; a preserved "
-                "review is never overwritten"
-            )
-
-    started = utc_now()
-    result = call_reviewer(reviewer, message, args.timeout)
-    finished = utc_now()
-
-    write_new_text(out_dir / "card.md", card)
-    write_new_text(out_dir / "message.md", message)
-    write_new_text(out_dir / "report.md", result["output"])
     stage = KIND_STAGES.get(args.card_kind, "review")
     receipt = base_receipt(stage, args.reviewer, reviewer, config)
     receipt.update(
@@ -276,22 +490,16 @@ def run_review(args: argparse.Namespace) -> Path:
             "author_family": args.author_family,
             "fallback_decision": args.fallback_decision,
             "input_scope": "fixed prompt and one card; empty working directory",
-            "working_directory_left_empty": result["working_directory_left_empty"],
-            "started_utc": started,
-            "finished_utc": finished,
             "sha256": {
                 "card": sha256_text(card),
                 "prompt_template": sha256_text(template),
                 "message": sha256_text(message),
-                "report": sha256_text(result["output"]),
                 "configuration": sha256_text(config_text),
             },
         }
     )
-    write_new_text(
-        out_dir / "receipt.json", json.dumps(receipt, indent=2, sort_keys=True) + "\n"
-    )
-    return out_dir
+    return run_attempt(args.out_dir, "", reviewer, receipt,
+                       {"card.md": card, "message.md": message}, args.timeout)
 
 
 def run_rebuttal(args: argparse.Namespace) -> Path:
@@ -302,6 +510,8 @@ def run_rebuttal(args: argparse.Namespace) -> Path:
         report = read_text(review_dir / "report.md")
     except (OSError, json.JSONDecodeError) as error:
         raise Refused(f"no preserved review in {review_dir.name}: {error}") from error
+    if receipt.get("outcome", "completed") != "completed":
+        raise Refused("a failed or incomplete initial attempt has no report to rebut")
     if receipt.get("card_kind") not in REVIEW_KINDS:
         raise Refused("only a question or claim review has a rebuttal round")
     if sha256_text(report) != receipt["sha256"]["report"]:
@@ -330,12 +540,6 @@ def run_rebuttal(args: argparse.Namespace) -> Path:
         template, {"CARD": card, "REPORT": report, "REPLY": reply}
     )
 
-    started = utc_now()
-    result = call_reviewer(reviewer, message, args.timeout)
-    finished = utc_now()
-
-    write_new_text(review_dir / "rebuttal-message.md", message)
-    write_new_text(review_dir / "rebuttal.md", result["output"])
     rebuttal_receipt = base_receipt("rebuttal", name, reviewer, config)
     rebuttal_receipt.update(
         {
@@ -344,25 +548,18 @@ def run_rebuttal(args: argparse.Namespace) -> Path:
                 "fixed rebuttal prompt, the card, the preserved report and "
                 "the author reply; empty working directory"
             ),
-            "working_directory_left_empty": result["working_directory_left_empty"],
-            "started_utc": started,
-            "finished_utc": finished,
             "sha256": {
                 "card": sha256_text(card),
                 "report": sha256_text(report),
                 "reply": sha256_text(reply),
                 "prompt_template": sha256_text(template),
                 "message": sha256_text(message),
-                "rebuttal": sha256_text(result["output"]),
                 "configuration": sha256_text(config_text),
             },
         }
     )
-    write_new_text(
-        review_dir / "rebuttal-receipt.json",
-        json.dumps(rebuttal_receipt, indent=2, sort_keys=True) + "\n",
-    )
-    return review_dir
+    return run_attempt(review_dir, "rebuttal-", reviewer, rebuttal_receipt,
+                       {"rebuttal-message.md": message}, args.timeout)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -391,7 +588,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--fallback-decision",
         help="owner decision record allowing a reviewer of the author's family",
     )
-    review.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS)
+    review.add_argument("--timeout", type=positive_timeout, default=DEFAULT_TIMEOUT_SECONDS,
+                        help="optional explicit deadline in seconds; no default time limit")
     review.set_defaults(run=run_review)
 
     rebuttal = commands.add_parser(
@@ -401,7 +599,8 @@ def build_parser() -> argparse.ArgumentParser:
     rebuttal.add_argument("--reply", type=Path, required=True)
     rebuttal.add_argument("--config", type=Path, required=True)
     rebuttal.add_argument("--prompt", type=Path, default=DEFAULT_REBUTTAL_PROMPT)
-    rebuttal.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS)
+    rebuttal.add_argument("--timeout", type=positive_timeout, default=DEFAULT_TIMEOUT_SECONDS,
+                        help="optional explicit deadline in seconds; no default time limit")
     rebuttal.set_defaults(run=run_rebuttal)
     return parser
 

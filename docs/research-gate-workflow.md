@@ -368,11 +368,39 @@ reviewer in an empty working directory with only the fixed
 preserves the output, the exact message sent and a receipt with their hashes,
 and it allows one [rebuttal](templates/question-review-rebuttal-prompt.md). A
 scope brief goes through the same runner with the proposal prompt and has no
-rebuttal round. The runner an unapproved card class, a reviewer of the author's own family
+rebuttal round. The runner refuses an unapproved card class, a reviewer of the author's own family
 without a recorded fallback, an oversized card and any overwrite. HoloForge
 holds no provider names, network code or credentials for this; each command
 uses its own login. Because the author launches its own reviewer, the owner
 audits the receipt and the message actually sent.
+
+The runner has **no default elapsed-time deadline**. Silence while a reviewer
+reasons is not evidence that it has stalled. An optional `--timeout SECONDS`
+sets an explicit finite, positive deadline for that invocation; it is recorded
+in the receipt. This setting is operational and does not change a gate's
+scientific authority, source allowance or reviewer-call limit.
+
+Before dispatch, the runner reserves the attempt with `start.json` and saves
+the exact input snapshots. It records the local process in `process.json`,
+captures stdout and stderr directly into owner-readable `stdout.raw` and
+`stderr.raw`, and writes `receipt.json` for completion, failure, explicit
+timeout or handled cancellation. A usable `report.md` requires a zero exit
+status and nonblank UTF-8 output. Failure diagnostics identify the outcome and
+evidence directory without echoing provider output. A rebuttal uses separate
+`rebuttal-` lifecycle and raw files and leaves the initial evidence unchanged.
+Any reserved attempt prevents another invocation in that location, including
+after a failure; the runner never retries automatically. Moving to another
+directory does not authorize a new call.
+
+On POSIX, cleanup stops the local process group, including descendants left
+after the command exits; other platforms stop only the direct child. This
+does not attest that remote processing or billing stopped, or reach a child
+that deliberately leaves the process group. Forced termination of the runner
+or a storage failure can leave only start records and partial raw streams,
+without a terminal receipt. Treat such an attempt as incomplete, inspect its
+preserved evidence and local process state, and apply the existing call limit.
+These records describe local execution; they do not certify the provider's
+actual model, reasoning effort or scientific correctness.
 
 **Recheck a materially changed claim.** When a stop, exclusion or failed
 qualification materially changes the central contribution of
