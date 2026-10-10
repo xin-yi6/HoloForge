@@ -71,7 +71,12 @@ checks, evidence, knowledge updates, and critique without pausing at routine
 choices. Keep necessary independent checks and selected reviews; reuse sufficient
 checks and records instead of creating a new gate or report for each attempt.
 Use maintained numerical libraries when suitable and preserve actual execution
-provenance. At the first declared stop or outcome, finish the permitted stop
+provenance. Before extending numerical work or recommending its continuation,
+apply the evidence-linked next-work disposition in the
+[claim-sufficiency checkpoint](../../../docs/research-gate-workflow.md#use-a-claim-sufficiency-checkpoint).
+Review the physical consequence of the next action as well as numerical
+correctness; reuse the current record for a coherent batch of checks.
+At the first declared stop or outcome, finish the permitted stop
 record and return; do not expand a repair, loosen a threshold, or hide a failure.
 An explicitly recoverable development failure is not a milestone stop. An
 execution return does not itself justify abandoning the scientific question.

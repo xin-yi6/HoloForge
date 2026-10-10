@@ -458,6 +458,46 @@ prospective validation boundary. Do not declare claim-sufficiency by lowering
 a threshold, dropping a failed check, or redefining the physical decision after
 seeing the result.
 
+**Apply the checkpoint when choosing the next work.** Before extending a
+numerical batch, recommending another numerical gate, or resuming after a
+method change, put a short disposition in the existing attempt, result or
+proposal record. Reuse linked evidence instead of creating another form:
+
+- **Physical question and relevance:** what remains unknown, which observable
+  or comparison it affects, and why resolving it matters. When a small
+  correction is involved, distinguish its size in an intermediate coefficient
+  from its effect on the full physical observable; mark that effect unknown
+  when it has not been established.
+- **Evidence already sufficient or still missing:** assess the four conditions
+  above against the frozen controls and uncertainty evidence. Name any failed,
+  missing or invalidated requirement. Unknown is not passed; a passing solver
+  or a large check count is not a sufficiency decision.
+- **Consequence of more work:** name the unresolved physical alternative or
+  authorized construction requirement, the possible outcomes that would change
+  the decision, and why existing evidence cannot decide it. A new gate name,
+  smaller residual or extra digits alone supplies no such reason.
+- **Action within authority:** stop refinement and develop the physical
+  interpretation; finish a named outstanding control or construction; or test
+  a distinct physical alternative already authorized. Return for a new
+  investment or scope decision only where the governing contract requires it.
+
+One disposition may cover a coherent batch of declared checks. Refresh it when
+the purpose, claim-relevant evidence or status, or method impact changes;
+routine retries and iterations under the same purpose and still-valid evidence
+reuse it. Do not add a
+per-run owner question, arbitrary attempt quota, universal research score or
+automatic topic rejection. A small effect may expose valuable structure; its
+importance still needs a scientific argument. Completing a numerical
+prerequisite should lead directly to the already authorized physical work.
+Honor the contract's return triggers and complete permitted reporting; a
+stopping rule for refinement does not replace the physical assessment.
+The independent critic should challenge the proposed next action against this
+disposition, rather than only checking calculation accuracy. Documentation and
+schema checks can establish that these obligations are present, not that an
+agent has made the scientific judgment correctly. Use the contrasting
+[sufficiency walkthroughs](agent-workflow-evaluation.md#claim-sufficiency-walkthroughs)
+when auditing instruction changes.
+
 ## Record opportunity and qualify the next gate
 
 At candidate assessment or an investment decision, complete the generic
