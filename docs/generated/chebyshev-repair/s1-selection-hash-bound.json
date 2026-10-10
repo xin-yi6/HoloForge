@@ -1,0 +1,2291 @@
+{
+  "plan": "docs/numerics/chebyshev-construction-repair-plan.md",
+  "plan_sha256": "7d26e662d33e50713a5403a5a0455e59b7abc052ad4ed1732135d9efab7b25fb",
+  "result": {
+    "build_agreement": {
+      "C-S1": {
+        "differing_grids": 0,
+        "max_relative_difference": 0.0,
+        "seconds": 0.02741034733298875
+      },
+      "C-T1": {
+        "differing_grids": 28,
+        "max_relative_difference": 5.5233471758500866e-15,
+        "seconds": 0.013688514000023133
+      },
+      "C-T2": {
+        "differing_grids": 0,
+        "max_relative_difference": 0.0,
+        "seconds": 0.016845930333147408
+      },
+      "C-T3": {
+        "differing_grids": 0,
+        "max_relative_difference": 0.0,
+        "seconds": 0.009485500000058286
+      },
+      "current": {
+        "differing_grids": 28,
+        "max_relative_difference": 5.523347175849798e-15,
+        "seconds": 0.004130833333571597
+      },
+      "verified": {
+        "files": 56,
+        "local_label": "B1",
+        "local_matrices_match_s0_hashes": true,
+        "other_label": "B3",
+        "saved_bytes_match_s0_hashes": true
+      }
+    },
+    "evidence": {
+      "differing_grids": {
+        "C-S1": 0,
+        "C-T1": 28,
+        "C-T2": 0,
+        "C-T3": 0,
+        "current": 28
+      },
+      "plan_sha256": "7d26e662d33e50713a5403a5a0455e59b7abc052ad4ed1732135d9efab7b25fb",
+      "tool_sha256": "6d0eff7cbd4176b6b621d37251db7ccfcc7471b3e0cf4439ab49816bd4093d63"
+    },
+    "metric_c": {
+      "C-S1": {
+        "improvement": 97.10613116609609,
+        "worst_rows_1_3_abs": 1.1788279629738254e-06,
+        "worst_rows_1_3_scaled": 4.374658172324563e-17
+      },
+      "C-T1": {
+        "improvement": 4.8386412729839545,
+        "worst_rows_1_3_abs": 1.4526801341619086e-05,
+        "worst_rows_1_3_scaled": 8.779450806995005e-16
+      },
+      "C-T2": {
+        "improvement": 134.70657732736046,
+        "worst_rows_1_3_abs": 1.086737436089034e-06,
+        "worst_rows_1_3_scaled": 3.153566356720877e-17
+      },
+      "C-T3": {
+        "improvement": 134.70657732736046,
+        "worst_rows_1_3_abs": 1.086737436089034e-06,
+        "worst_rows_1_3_scaled": 3.153566356720877e-17
+      },
+      "current": {
+        "worst_rows_1_3_abs": 0.00028126927162636437,
+        "worst_rows_1_3_scaled": 4.248061302885832e-15
+      }
+    },
+    "passed": false,
+    "qualification": {
+      "B1": {
+        "C-S1": {
+          "comparisons": 1680,
+          "failure_count": 26,
+          "failures": [
+            {
+              "candidate": 4.401596871211621e-17,
+              "current": 8.315976850580409e-18,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 5.292940264623769
+            },
+            {
+              "candidate": 4.020256213408663e-17,
+              "current": 7.869285505895783e-18,
+              "grid": "150|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 5.108794452046031
+            },
+            {
+              "candidate": 7.726270196299911e-17,
+              "current": 1.626825711410727e-17,
+              "grid": "150|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.749291913760054
+            },
+            {
+              "candidate": 2.770626518841866e-17,
+              "current": 7.83407582381119e-18,
+              "grid": "256|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.536634800521994
+            },
+            {
+              "candidate": 3.876164879839198e-17,
+              "current": 1.1128013423198878e-17,
+              "grid": "192|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.483249644324161
+            },
+            {
+              "candidate": 3.96604038156585e-17,
+              "current": 1.1419934720933143e-17,
+              "grid": "192|1e-05|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.472909853237566
+            },
+            {
+              "candidate": 6.948981123294995e-17,
+              "current": 2.071175293155028e-17,
+              "grid": "64|0.0|1.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 3.3550907768456377
+            },
+            {
+              "candidate": 4.288642460462081e-17,
+              "current": 1.3288207048275578e-17,
+              "grid": "40|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.22740490487663
+            },
+            {
+              "candidate": 4.59249787484376e-16,
+              "current": 1.6139386307108243e-16,
+              "grid": "40|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.84552199659605
+            },
+            {
+              "candidate": 1.082586017456207e-15,
+              "current": 3.8666227053249846e-16,
+              "grid": "640|0.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.7998232565212673
+            },
+            {
+              "candidate": 1.5516832693908745e-15,
+              "current": 5.714089954190196e-16,
+              "grid": "1024|0.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.7155387504059343
+            },
+            {
+              "candidate": 1.090462139769223e-15,
+              "current": 4.116950486713864e-16,
+              "grid": "512|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.648713272817683
+            },
+            {
+              "candidate": 3.8186078420483054e-16,
+              "current": 1.47224133279742e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 2.5937376957027363
+            },
+            {
+              "candidate": 1.6634570854049426e-16,
+              "current": 6.562612658003664e-17,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 2.534748235333096
+            },
+            {
+              "candidate": 1.6634570854049426e-16,
+              "current": 6.562612658003664e-17,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.534748235333096
+            },
+            {
+              "candidate": 6.799891798789074e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 2.50373091224192
+            },
+            {
+              "candidate": 1.3289582768466476e-16,
+              "current": 5.429867081075405e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_all",
+              "ratio": 2.4474968852892114
+            },
+            {
+              "candidate": 4.283399064802246e-17,
+              "current": 1.7863421790328347e-17,
+              "grid": "96|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.397860340016924
+            },
+            {
+              "candidate": 3.168823650384604e-17,
+              "current": 1.3313558706835364e-17,
+              "grid": "640|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.3801477277128664
+            },
+            {
+              "candidate": 3.0935380229132425e-17,
+              "current": 1.3879564686358458e-17,
+              "grid": "150|0.0|1.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 2.2288436941784844
+            },
+            {
+              "candidate": 3.448399542349237e-17,
+              "current": 1.551391108781131e-17,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.222778977416284
+            },
+            {
+              "candidate": 2.2910471243890818e-17,
+              "current": 1.04560551352123e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.1911199728410424
+            },
+            {
+              "candidate": 1.5398996738702109e-16,
+              "current": 7.209700598201955e-17,
+              "grid": "41|1e-05|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.135871875531489
+            },
+            {
+              "candidate": 2.1282730455766416e-16,
+              "current": 1.0172959452044701e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v3_ir",
+              "ratio": 2.0920883992601307
+            },
+            {
+              "candidate": 2.1282730455766416e-16,
+              "current": 1.0172959452044701e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v3_uv",
+              "ratio": 2.0920883992601307
+            },
+            {
+              "candidate": 6.880712747323582e-16,
+              "current": 3.43218708472808e-16,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.0047603983885733
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 3,
+            "4_to_8_eps": 3,
+            "8_to_64_eps": 0,
+            "at_least_64_eps": 0,
+            "below_1_eps": 20,
+            "largest": 1.5516832693908745e-15
+          },
+          "qualified": false,
+          "worst_exactness": 1.0996775951450889e-15,
+          "worst_ratio_to_current": 5.292940264623769
+        },
+        "C-T1": {
+          "comparisons": 1680,
+          "failure_count": 126,
+          "failures": [
+            {
+              "candidate": 4.2938676888903476e-16,
+              "current": 4.054492552135388e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 10.590394811870816
+            },
+            {
+              "candidate": 6.967629267432736e-16,
+              "current": 7.378321366674545e-17,
+              "grid": "64|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 9.44338003343583
+            },
+            {
+              "candidate": 3.0083954027630283e-16,
+              "current": 3.320472775289823e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 9.060141751954115
+            },
+            {
+              "candidate": 6.451086681398441e-16,
+              "current": 7.514503394227886e-17,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.584847651215
+            },
+            {
+              "candidate": 2.3710223015218965e-16,
+              "current": 2.7646416621046614e-17,
+              "grid": "17|-1.0|1.0",
+              "metric": "b:D1_stored_v2_ir",
+              "ratio": 8.576237325877846
+            },
+            {
+              "candidate": 6.366625185496566e-16,
+              "current": 7.498903764416134e-17,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.490074530236717
+            },
+            {
+              "candidate": 6.954456952149614e-16,
+              "current": 8.391410501029193e-17,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.28758997226588
+            },
+            {
+              "candidate": 6.860899355353891e-16,
+              "current": 8.433033757670368e-17,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.135742785463746
+            },
+            {
+              "candidate": 4.363130626889164e-15,
+              "current": 5.525226928764995e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 7.896744664321718
+            },
+            {
+              "candidate": 6.466541027783062e-16,
+              "current": 8.550986266924893e-17,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 7.562333543670349
+            },
+            {
+              "candidate": 4.8199048883145e-16,
+              "current": 6.660969608079886e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 7.236040954860178
+            },
+            {
+              "candidate": 4.8199048883145e-16,
+              "current": 6.660969608079886e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 7.236040954860178
+            },
+            {
+              "candidate": 9.78475770197682e-16,
+              "current": 1.3996874020005726e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 6.990673551816978
+            },
+            {
+              "candidate": 8.531368339193602e-15,
+              "current": 1.3119038327448916e-15,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 6.5030439932044795
+            },
+            {
+              "candidate": 4.221960740598951e-16,
+              "current": 7.07644918369651e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 5.966213606572575
+            },
+            {
+              "candidate": 4.2950637550196475e-15,
+              "current": 7.394205015950317e-16,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.808689028441333
+            },
+            {
+              "candidate": 1.8001587293220486e-14,
+              "current": 3.191849834791302e-15,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.639860339606958
+            },
+            {
+              "candidate": 4.644171570947626e-16,
+              "current": 8.376909788247642e-17,
+              "grid": "512|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.544015261407198
+            },
+            {
+              "candidate": 7.438843125048137e-15,
+              "current": 1.3650333441995292e-15,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.44956880112724
+            },
+            {
+              "candidate": 6.777345473171769e-16,
+              "current": 1.289571750203301e-16,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.255500883997591
+            },
+            {
+              "candidate": 6.377736842696674e-16,
+              "current": 1.231479867082567e-16,
+              "grid": "1280|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.178920917161097
+            },
+            {
+              "candidate": 7.74348774263681e-16,
+              "current": 1.543374133269463e-16,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.017246029796488
+            },
+            {
+              "candidate": 4.021361748301368e-17,
+              "current": 8.311560519581315e-18,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.838275241848254
+            },
+            {
+              "candidate": 3.292572470506545e-16,
+              "current": 6.950299102552342e-17,
+              "grid": "17|2.0|5.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 4.737310469555794
+            },
+            {
+              "candidate": 9.726414604173014e-16,
+              "current": 2.1449901342860213e-16,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 4.534479878813306
+            },
+            {
+              "candidate": 1.9694961593638808e-15,
+              "current": 4.477232634339999e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.398914061909606
+            },
+            {
+              "candidate": 1.0457067379774626e-16,
+              "current": 2.4613874022343544e-17,
+              "grid": "40|0.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 4.248444340895746
+            },
+            {
+              "candidate": 2.9144278447456727e-15,
+              "current": 7.283860500211109e-16,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.001213154289821
+            },
+            {
+              "candidate": 3.759123362833308e-15,
+              "current": 9.756525188776384e-16,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.8529325657434796
+            },
+            {
+              "candidate": 1.2996234963180528e-15,
+              "current": 3.458374738027069e-16,
+              "grid": "128|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.75790246796523
+            },
+            {
+              "candidate": 5.510131660981511e-16,
+              "current": 1.47224133279742e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.7426823566430216
+            },
+            {
+              "candidate": 1.1265239336579984e-14,
+              "current": 3.0278677563516505e-15,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.720518940415594
+            },
+            {
+              "candidate": 4.0379710872020335e-16,
+              "current": 1.0857159705998066e-16,
+              "grid": "2|0.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.719178124432715
+            },
+            {
+              "candidate": 7.400494065296282e-17,
+              "current": 2.0171553134615158e-17,
+              "grid": "320|0.0|1.0",
+              "metric": "b:D2_stored_v3_ir",
+              "ratio": 3.6687775184731564
+            },
+            {
+              "candidate": 9.833891150728952e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 3.6208542709586835
+            },
+            {
+              "candidate": 4.0379710872020335e-16,
+              "current": 1.1213297785382188e-16,
+              "grid": "2|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.601055786163094
+            },
+            {
+              "candidate": 1.5338822990450673e-15,
+              "current": 4.267655856181273e-16,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.594203353635913
+            },
+            {
+              "candidate": 2.8878329261846564e-16,
+              "current": 8.103085884247868e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.563868095978729
+            },
+            {
+              "candidate": 1.2689668321674133e-16,
+              "current": 3.6200685202389853e-17,
+              "grid": "41|-1.0|1.0",
+              "metric": "b:D2_stored_v3_ir",
+              "ratio": 3.505366887595929
+            },
+            {
+              "candidate": 6.079065901350855e-17,
+              "current": 1.7545935418334187e-17,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.464657629480778
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 62,
+            "4_to_8_eps": 8,
+            "8_to_64_eps": 13,
+            "at_least_64_eps": 10,
+            "below_1_eps": 33,
+            "largest": 3.594241082970863e-11
+          },
+          "qualified": false,
+          "worst_exactness": 1.4669958985495136e-14,
+          "worst_ratio_to_current": 10.590394811870816
+        },
+        "C-T2": {
+          "comparisons": 1680,
+          "failure_count": 112,
+          "failures": [
+            {
+              "candidate": 6.967629267432736e-16,
+              "current": 7.378321366674545e-17,
+              "grid": "64|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 9.44338003343583
+            },
+            {
+              "candidate": 3.0083954027630283e-16,
+              "current": 3.320472775289823e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 9.060141751954115
+            },
+            {
+              "candidate": 3.508917754431961e-16,
+              "current": 4.054492552135388e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 8.654394376884259
+            },
+            {
+              "candidate": 6.451086681398441e-16,
+              "current": 7.514503394227886e-17,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.584847651215
+            },
+            {
+              "candidate": 2.3710223015218965e-16,
+              "current": 2.7646416621046614e-17,
+              "grid": "17|-1.0|1.0",
+              "metric": "b:D1_stored_v2_ir",
+              "ratio": 8.576237325877846
+            },
+            {
+              "candidate": 6.366625185496566e-16,
+              "current": 7.498903764416134e-17,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.490074530236717
+            },
+            {
+              "candidate": 6.954456952149614e-16,
+              "current": 8.391410501029193e-17,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.28758997226588
+            },
+            {
+              "candidate": 6.860899355353891e-16,
+              "current": 8.433033757670368e-17,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.135742785463746
+            },
+            {
+              "candidate": 4.3089343256066825e-15,
+              "current": 5.525226928764995e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 7.798655840131838
+            },
+            {
+              "candidate": 6.466541027783062e-16,
+              "current": 8.550986266924893e-17,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 7.562333543670349
+            },
+            {
+              "candidate": 9.78475770197682e-16,
+              "current": 1.3996874020005726e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 6.990673551816978
+            },
+            {
+              "candidate": 4.447309850050604e-16,
+              "current": 7.07644918369651e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 6.284663020398419
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.660969608079886e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 5.982075959685706
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.660969608079886e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 5.982075959685706
+            },
+            {
+              "candidate": 7.829713345141642e-15,
+              "current": 1.3119038327448916e-15,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.968206776833299
+            },
+            {
+              "candidate": 7.929923492234638e-15,
+              "current": 1.3650333441995292e-15,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.80932584975412
+            },
+            {
+              "candidate": 4.256461356190077e-15,
+              "current": 7.394205015950317e-16,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.756482741563568
+            },
+            {
+              "candidate": 1.7802553805528746e-14,
+              "current": 3.191849834791302e-15,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.577503556552108
+            },
+            {
+              "candidate": 4.644171570947626e-16,
+              "current": 8.376909788247642e-17,
+              "grid": "512|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.544015261407198
+            },
+            {
+              "candidate": 6.777345473171769e-16,
+              "current": 1.289571750203301e-16,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.255500883997591
+            },
+            {
+              "candidate": 6.377736842696674e-16,
+              "current": 1.231479867082567e-16,
+              "grid": "1280|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.178920917161097
+            },
+            {
+              "candidate": 7.74348774263681e-16,
+              "current": 1.543374133269463e-16,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.017246029796488
+            },
+            {
+              "candidate": 4.021361748301368e-17,
+              "current": 8.311560519581315e-18,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.838275241848254
+            },
+            {
+              "candidate": 3.292572470506545e-16,
+              "current": 6.950299102552342e-17,
+              "grid": "17|2.0|5.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 4.737310469555794
+            },
+            {
+              "candidate": 1.0008899671139604e-15,
+              "current": 2.1449901342860213e-16,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 4.666175154447111
+            },
+            {
+              "candidate": 1.9999055427493288e-15,
+              "current": 4.477232634339999e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.466834105090321
+            },
+            {
+              "candidate": 2.9919925059964692e-15,
+              "current": 7.283860500211109e-16,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.1077015490751805
+            },
+            {
+              "candidate": 1.2078089893805631e-14,
+              "current": 3.0278677563516505e-15,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.988975366730946
+            },
+            {
+              "candidate": 1.2996234963180528e-15,
+              "current": 3.458374738027069e-16,
+              "grid": "128|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.75790246796523
+            },
+            {
+              "candidate": 1.0314056303451557e-16,
+              "current": 2.799363056705808e-17,
+              "grid": "96|0.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 3.6844296700795844
+            },
+            {
+              "candidate": 9.833891150728952e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 3.6208542709586835
+            },
+            {
+              "candidate": 2.8878329261846564e-16,
+              "current": 8.103085884247868e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.563868095978729
+            },
+            {
+              "candidate": 7.497545882003588e-16,
+              "current": 2.1438213652511497e-16,
+              "grid": "3|2.0|5.0",
+              "metric": "b:D2_stored_v1_all",
+              "ratio": 3.497281071795479
+            },
+            {
+              "candidate": 6.079065901350855e-17,
+              "current": 1.7545935418334187e-17,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.464657629480778
+            },
+            {
+              "candidate": 1.7094234581388059e-16,
+              "current": 4.964011192293275e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 3.4436333680969926
+            },
+            {
+              "candidate": 3.9121039107920774e-17,
+              "current": 1.14051541612243e-17,
+              "grid": "1024|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.4301192736987325
+            },
+            {
+              "candidate": 1.444903211003757e-15,
+              "current": 4.267655856181273e-16,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3857069541138354
+            },
+            {
+              "candidate": 5.390900359585069e-16,
+              "current": 1.5993152641879438e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.3707552727712575
+            },
+            {
+              "candidate": 3.2473334846800183e-15,
+              "current": 9.756525188776384e-16,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3283709331429328
+            },
+            {
+              "candidate": 4.358433319298019e-17,
+              "current": 1.3288207048275578e-17,
+              "grid": "40|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.279925804485125
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 56,
+            "4_to_8_eps": 7,
+            "8_to_64_eps": 14,
+            "at_least_64_eps": 10,
+            "below_1_eps": 25,
+            "largest": 3.594241082970863e-11
+          },
+          "qualified": false,
+          "worst_exactness": 1.321783063106887e-14,
+          "worst_ratio_to_current": 9.44338003343583
+        },
+        "C-T3": {
+          "comparisons": 1680,
+          "failure_count": 112,
+          "failures": [
+            {
+              "candidate": 6.967629267432736e-16,
+              "current": 7.378321366674545e-17,
+              "grid": "64|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 9.44338003343583
+            },
+            {
+              "candidate": 3.0083954027630283e-16,
+              "current": 3.320472775289823e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 9.060141751954115
+            },
+            {
+              "candidate": 3.508917754431961e-16,
+              "current": 4.054492552135388e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 8.654394376884259
+            },
+            {
+              "candidate": 6.451086681398441e-16,
+              "current": 7.514503394227886e-17,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.584847651215
+            },
+            {
+              "candidate": 2.3710223015218965e-16,
+              "current": 2.7646416621046614e-17,
+              "grid": "17|-1.0|1.0",
+              "metric": "b:D1_stored_v2_ir",
+              "ratio": 8.576237325877846
+            },
+            {
+              "candidate": 6.366625185496566e-16,
+              "current": 7.498903764416134e-17,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.490074530236717
+            },
+            {
+              "candidate": 6.954456952149614e-16,
+              "current": 8.391410501029193e-17,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.28758997226588
+            },
+            {
+              "candidate": 6.860899355353891e-16,
+              "current": 8.433033757670368e-17,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.135742785463746
+            },
+            {
+              "candidate": 4.3089343256066825e-15,
+              "current": 5.525226928764995e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 7.798655840131838
+            },
+            {
+              "candidate": 6.466541027783062e-16,
+              "current": 8.550986266924893e-17,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 7.562333543670349
+            },
+            {
+              "candidate": 9.78475770197682e-16,
+              "current": 1.3996874020005726e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 6.990673551816978
+            },
+            {
+              "candidate": 4.447309850050604e-16,
+              "current": 7.07644918369651e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 6.284663020398419
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.660969608079886e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 5.982075959685706
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.660969608079886e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 5.982075959685706
+            },
+            {
+              "candidate": 7.829713345141642e-15,
+              "current": 1.3119038327448916e-15,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.968206776833299
+            },
+            {
+              "candidate": 7.929923492234638e-15,
+              "current": 1.3650333441995292e-15,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.80932584975412
+            },
+            {
+              "candidate": 4.256461356190077e-15,
+              "current": 7.394205015950317e-16,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.756482741563568
+            },
+            {
+              "candidate": 1.7802553805528746e-14,
+              "current": 3.191849834791302e-15,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.577503556552108
+            },
+            {
+              "candidate": 4.644171570947626e-16,
+              "current": 8.376909788247642e-17,
+              "grid": "512|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.544015261407198
+            },
+            {
+              "candidate": 6.777345473171769e-16,
+              "current": 1.289571750203301e-16,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.255500883997591
+            },
+            {
+              "candidate": 6.377736842696674e-16,
+              "current": 1.231479867082567e-16,
+              "grid": "1280|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.178920917161097
+            },
+            {
+              "candidate": 7.74348774263681e-16,
+              "current": 1.543374133269463e-16,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.017246029796488
+            },
+            {
+              "candidate": 4.021361748301368e-17,
+              "current": 8.311560519581315e-18,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.838275241848254
+            },
+            {
+              "candidate": 3.292572470506545e-16,
+              "current": 6.950299102552342e-17,
+              "grid": "17|2.0|5.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 4.737310469555794
+            },
+            {
+              "candidate": 1.0008899671139604e-15,
+              "current": 2.1449901342860213e-16,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 4.666175154447111
+            },
+            {
+              "candidate": 1.9999055427493288e-15,
+              "current": 4.477232634339999e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.466834105090321
+            },
+            {
+              "candidate": 2.9919925059964692e-15,
+              "current": 7.283860500211109e-16,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.1077015490751805
+            },
+            {
+              "candidate": 1.2078089893805631e-14,
+              "current": 3.0278677563516505e-15,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.988975366730946
+            },
+            {
+              "candidate": 1.2996234963180528e-15,
+              "current": 3.458374738027069e-16,
+              "grid": "128|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.75790246796523
+            },
+            {
+              "candidate": 1.0314056303451557e-16,
+              "current": 2.799363056705808e-17,
+              "grid": "96|0.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 3.6844296700795844
+            },
+            {
+              "candidate": 9.833891150728952e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 3.6208542709586835
+            },
+            {
+              "candidate": 2.8878329261846564e-16,
+              "current": 8.103085884247868e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.563868095978729
+            },
+            {
+              "candidate": 7.497545882003588e-16,
+              "current": 2.1438213652511497e-16,
+              "grid": "3|2.0|5.0",
+              "metric": "b:D2_stored_v1_all",
+              "ratio": 3.497281071795479
+            },
+            {
+              "candidate": 6.079065901350855e-17,
+              "current": 1.7545935418334187e-17,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.464657629480778
+            },
+            {
+              "candidate": 1.7094234581388059e-16,
+              "current": 4.964011192293275e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 3.4436333680969926
+            },
+            {
+              "candidate": 3.9121039107920774e-17,
+              "current": 1.14051541612243e-17,
+              "grid": "1024|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.4301192736987325
+            },
+            {
+              "candidate": 1.444903211003757e-15,
+              "current": 4.267655856181273e-16,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3857069541138354
+            },
+            {
+              "candidate": 5.390900359585069e-16,
+              "current": 1.5993152641879438e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.3707552727712575
+            },
+            {
+              "candidate": 3.2473334846800183e-15,
+              "current": 9.756525188776384e-16,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3283709331429328
+            },
+            {
+              "candidate": 4.358433319298019e-17,
+              "current": 1.3288207048275578e-17,
+              "grid": "40|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.279925804485125
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 56,
+            "4_to_8_eps": 7,
+            "8_to_64_eps": 14,
+            "at_least_64_eps": 10,
+            "below_1_eps": 25,
+            "largest": 3.594241082970863e-11
+          },
+          "qualified": false,
+          "worst_exactness": 1.321783063106887e-14,
+          "worst_ratio_to_current": 9.44338003343583
+        }
+      },
+      "B3": {
+        "C-S1": {
+          "comparisons": 1680,
+          "failure_count": 26,
+          "failures": [
+            {
+              "candidate": 4.401596871211621e-17,
+              "current": 8.315976850580409e-18,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 5.292940264623769
+            },
+            {
+              "candidate": 4.020256213408663e-17,
+              "current": 7.869285505895783e-18,
+              "grid": "150|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 5.108794452046031
+            },
+            {
+              "candidate": 7.726270196299911e-17,
+              "current": 1.626825711410727e-17,
+              "grid": "150|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.749291913760054
+            },
+            {
+              "candidate": 2.770626518841866e-17,
+              "current": 7.83407582381119e-18,
+              "grid": "256|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.536634800521994
+            },
+            {
+              "candidate": 3.876164879839198e-17,
+              "current": 1.1128013423198878e-17,
+              "grid": "192|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.483249644324161
+            },
+            {
+              "candidate": 3.96604038156585e-17,
+              "current": 1.1419934720933143e-17,
+              "grid": "192|1e-05|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.472909853237566
+            },
+            {
+              "candidate": 6.948981123294995e-17,
+              "current": 2.071175293155028e-17,
+              "grid": "64|0.0|1.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 3.3550907768456377
+            },
+            {
+              "candidate": 4.288642460462081e-17,
+              "current": 1.3288207048275578e-17,
+              "grid": "40|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.22740490487663
+            },
+            {
+              "candidate": 4.59249787484376e-16,
+              "current": 1.6139386307108243e-16,
+              "grid": "40|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.84552199659605
+            },
+            {
+              "candidate": 1.082586017456207e-15,
+              "current": 3.8666227053250013e-16,
+              "grid": "640|0.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.799823256521255
+            },
+            {
+              "candidate": 1.5516832693908745e-15,
+              "current": 5.714089954190197e-16,
+              "grid": "1024|0.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.715538750405934
+            },
+            {
+              "candidate": 1.090462139769223e-15,
+              "current": 4.1169504867138584e-16,
+              "grid": "512|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.6487132728176865
+            },
+            {
+              "candidate": 3.8186078420483054e-16,
+              "current": 1.47224133279742e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 2.5937376957027363
+            },
+            {
+              "candidate": 1.6634570854049426e-16,
+              "current": 6.562612658003664e-17,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 2.534748235333096
+            },
+            {
+              "candidate": 1.6634570854049426e-16,
+              "current": 6.562612658003664e-17,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.534748235333096
+            },
+            {
+              "candidate": 6.799891798789074e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 2.50373091224192
+            },
+            {
+              "candidate": 1.3289582768466476e-16,
+              "current": 5.429867081075405e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_all",
+              "ratio": 2.4474968852892114
+            },
+            {
+              "candidate": 4.283399064802246e-17,
+              "current": 1.7863421790328347e-17,
+              "grid": "96|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.397860340016924
+            },
+            {
+              "candidate": 3.168823650384604e-17,
+              "current": 1.3313558706970357e-17,
+              "grid": "640|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.380147727688733
+            },
+            {
+              "candidate": 3.0935380229132425e-17,
+              "current": 1.3879564686358458e-17,
+              "grid": "150|0.0|1.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 2.2288436941784844
+            },
+            {
+              "candidate": 3.448399542349237e-17,
+              "current": 1.551391108781131e-17,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.222778977416284
+            },
+            {
+              "candidate": 2.2910471243890818e-17,
+              "current": 1.04560551352123e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.1911199728410424
+            },
+            {
+              "candidate": 1.5398996738702109e-16,
+              "current": 7.209700598201955e-17,
+              "grid": "41|1e-05|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 2.135871875531489
+            },
+            {
+              "candidate": 2.1282730455766416e-16,
+              "current": 1.0172959452044701e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v3_ir",
+              "ratio": 2.0920883992601307
+            },
+            {
+              "candidate": 2.1282730455766416e-16,
+              "current": 1.0172959452044701e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v3_uv",
+              "ratio": 2.0920883992601307
+            },
+            {
+              "candidate": 6.880712747323582e-16,
+              "current": 3.43218708472808e-16,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 2.0047603983885733
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 3,
+            "4_to_8_eps": 3,
+            "8_to_64_eps": 0,
+            "at_least_64_eps": 0,
+            "below_1_eps": 20,
+            "largest": 1.5516832693908745e-15
+          },
+          "qualified": false,
+          "worst_exactness": 1.0996775951450889e-15,
+          "worst_ratio_to_current": 5.292940264623769
+        },
+        "C-T1": {
+          "comparisons": 1680,
+          "failure_count": 125,
+          "failures": [
+            {
+              "candidate": 4.2938676888903476e-16,
+              "current": 4.054492552135388e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 10.590394811870816
+            },
+            {
+              "candidate": 6.967629267432736e-16,
+              "current": 7.378321366674545e-17,
+              "grid": "64|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 9.44338003343583
+            },
+            {
+              "candidate": 3.0083954027630283e-16,
+              "current": 3.320472775289823e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 9.060141751954115
+            },
+            {
+              "candidate": 6.45108668139845e-16,
+              "current": 7.514503394227871e-17,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.584847651215028
+            },
+            {
+              "candidate": 2.3710223015218965e-16,
+              "current": 2.7646416621046614e-17,
+              "grid": "17|-1.0|1.0",
+              "metric": "b:D1_stored_v2_ir",
+              "ratio": 8.576237325877846
+            },
+            {
+              "candidate": 6.366625185496566e-16,
+              "current": 7.498903764416134e-17,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.490074530236717
+            },
+            {
+              "candidate": 6.954456952149614e-16,
+              "current": 8.391410501029193e-17,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.28758997226588
+            },
+            {
+              "candidate": 6.860899355353897e-16,
+              "current": 8.43303375767144e-17,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.135742785462718
+            },
+            {
+              "candidate": 4.363130626889164e-15,
+              "current": 5.525226928764995e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 7.896744664321718
+            },
+            {
+              "candidate": 6.466541027783062e-16,
+              "current": 8.550986266924893e-17,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 7.562333543670349
+            },
+            {
+              "candidate": 9.78475770197682e-16,
+              "current": 1.3996874020005726e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 6.990673551816978
+            },
+            {
+              "candidate": 8.187835135689818e-15,
+              "current": 1.3350301618061646e-15,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 6.133071274294269
+            },
+            {
+              "candidate": 3.9846426160691794e-16,
+              "current": 6.667011730711413e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 5.976654574813524
+            },
+            {
+              "candidate": 3.9846426160691794e-16,
+              "current": 6.667011730711413e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 5.976654574813524
+            },
+            {
+              "candidate": 4.221960740598951e-16,
+              "current": 7.07644918369651e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 5.966213606572575
+            },
+            {
+              "candidate": 4.2950637550196475e-15,
+              "current": 7.394205015950317e-16,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.808689028441333
+            },
+            {
+              "candidate": 1.8801508230112436e-14,
+              "current": 3.2942319421629694e-15,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.70740268451392
+            },
+            {
+              "candidate": 4.644171570947588e-16,
+              "current": 8.376909788239351e-17,
+              "grid": "512|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.544015261412639
+            },
+            {
+              "candidate": 6.777345473171769e-16,
+              "current": 1.2895717502056853e-16,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.255500883987874
+            },
+            {
+              "candidate": 6.37773684269676e-16,
+              "current": 1.2314798670855977e-16,
+              "grid": "1280|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.178920917148421
+            },
+            {
+              "candidate": 7.743487742636789e-16,
+              "current": 1.5433741332692545e-16,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.017246029797152
+            },
+            {
+              "candidate": 4.021361748301368e-17,
+              "current": 8.311560519581315e-18,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.838275241848254
+            },
+            {
+              "candidate": 3.292572470506545e-16,
+              "current": 6.950299102552342e-17,
+              "grid": "17|2.0|5.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 4.737310469555794
+            },
+            {
+              "candidate": 7.780328887315767e-15,
+              "current": 1.6820521033723823e-15,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.6254981470055645
+            },
+            {
+              "candidate": 9.726414604173014e-16,
+              "current": 2.1449901342860213e-16,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 4.534479878813306
+            },
+            {
+              "candidate": 1.9694961593638808e-15,
+              "current": 4.477232634339999e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.398914061909606
+            },
+            {
+              "candidate": 1.1146931038083466e-14,
+              "current": 2.5937941274054258e-15,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.297538852566433
+            },
+            {
+              "candidate": 1.0457067379774626e-16,
+              "current": 2.4613874022343544e-17,
+              "grid": "40|0.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 4.248444340895746
+            },
+            {
+              "candidate": 2.9144278447456727e-15,
+              "current": 7.283860500211109e-16,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.001213154289821
+            },
+            {
+              "candidate": 3.759123362833308e-15,
+              "current": 9.756525188776384e-16,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.8529325657434796
+            },
+            {
+              "candidate": 1.2996234963180528e-15,
+              "current": 3.458374738027069e-16,
+              "grid": "128|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.75790246796523
+            },
+            {
+              "candidate": 5.510131660981511e-16,
+              "current": 1.47224133279742e-16,
+              "grid": "2|1e-05|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.7426823566430216
+            },
+            {
+              "candidate": 4.0379710872020335e-16,
+              "current": 1.0857159705998066e-16,
+              "grid": "2|0.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.719178124432715
+            },
+            {
+              "candidate": 9.833891150728952e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 3.6208542709586835
+            },
+            {
+              "candidate": 4.0379710872020335e-16,
+              "current": 1.1213297785382188e-16,
+              "grid": "2|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.601055786163094
+            },
+            {
+              "candidate": 1.5338822990450673e-15,
+              "current": 4.267655856181273e-16,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.594203353635913
+            },
+            {
+              "candidate": 2.8878329261846564e-16,
+              "current": 8.103085884247868e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.563868095978729
+            },
+            {
+              "candidate": 1.2689668321674133e-16,
+              "current": 3.6200685202389853e-17,
+              "grid": "41|-1.0|1.0",
+              "metric": "b:D2_stored_v3_ir",
+              "ratio": 3.505366887595929
+            },
+            {
+              "candidate": 6.079065901350855e-17,
+              "current": 1.7545935418334187e-17,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.464657629480778
+            },
+            {
+              "candidate": 3.9121039101842144e-17,
+              "current": 1.1405154155420771e-17,
+              "grid": "1024|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.4301192749111817
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 61,
+            "4_to_8_eps": 8,
+            "8_to_64_eps": 12,
+            "at_least_64_eps": 11,
+            "below_1_eps": 33,
+            "largest": 3.594241082970863e-11
+          },
+          "qualified": false,
+          "worst_exactness": 1.6569520811259667e-14,
+          "worst_ratio_to_current": 10.590394811870816
+        },
+        "C-T2": {
+          "comparisons": 1680,
+          "failure_count": 111,
+          "failures": [
+            {
+              "candidate": 6.967629267432736e-16,
+              "current": 7.378321366674545e-17,
+              "grid": "64|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 9.44338003343583
+            },
+            {
+              "candidate": 3.0083954027630283e-16,
+              "current": 3.320472775289823e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 9.060141751954115
+            },
+            {
+              "candidate": 3.508917754431961e-16,
+              "current": 4.054492552135388e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 8.654394376884259
+            },
+            {
+              "candidate": 6.451086681398441e-16,
+              "current": 7.514503394227871e-17,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.584847651215016
+            },
+            {
+              "candidate": 2.3710223015218965e-16,
+              "current": 2.7646416621046614e-17,
+              "grid": "17|-1.0|1.0",
+              "metric": "b:D1_stored_v2_ir",
+              "ratio": 8.576237325877846
+            },
+            {
+              "candidate": 6.366625185496566e-16,
+              "current": 7.498903764416134e-17,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.490074530236717
+            },
+            {
+              "candidate": 6.954456952149614e-16,
+              "current": 8.391410501029193e-17,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.28758997226588
+            },
+            {
+              "candidate": 6.860899355353891e-16,
+              "current": 8.43303375767144e-17,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.13574278546271
+            },
+            {
+              "candidate": 4.3089343256066825e-15,
+              "current": 5.525226928764995e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 7.798655840131838
+            },
+            {
+              "candidate": 6.466541027783062e-16,
+              "current": 8.550986266924893e-17,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 7.562333543670349
+            },
+            {
+              "candidate": 9.78475770197682e-16,
+              "current": 1.3996874020005726e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 6.990673551816978
+            },
+            {
+              "candidate": 4.447309850050604e-16,
+              "current": 7.07644918369651e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 6.284663020398419
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.667011730711413e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 5.976654574813526
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.667011730711413e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 5.976654574813526
+            },
+            {
+              "candidate": 7.829713345141642e-15,
+              "current": 1.3350301618061646e-15,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.864821312013512
+            },
+            {
+              "candidate": 4.256461356190077e-15,
+              "current": 7.394205015950317e-16,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.756482741563568
+            },
+            {
+              "candidate": 4.644171570947626e-16,
+              "current": 8.376909788239351e-17,
+              "grid": "512|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.544015261412684
+            },
+            {
+              "candidate": 1.7802553805528746e-14,
+              "current": 3.2942319421629694e-15,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.404159184322557
+            },
+            {
+              "candidate": 6.777345473171769e-16,
+              "current": 1.2895717502056853e-16,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.255500883987874
+            },
+            {
+              "candidate": 6.377736842696674e-16,
+              "current": 1.2314798670855977e-16,
+              "grid": "1280|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.178920917148352
+            },
+            {
+              "candidate": 7.74348774263681e-16,
+              "current": 1.5433741332692545e-16,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.017246029797167
+            },
+            {
+              "candidate": 4.021361748301368e-17,
+              "current": 8.311560519581315e-18,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.838275241848254
+            },
+            {
+              "candidate": 3.292572470506545e-16,
+              "current": 6.950299102552342e-17,
+              "grid": "17|2.0|5.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 4.737310469555794
+            },
+            {
+              "candidate": 7.929923492234638e-15,
+              "current": 1.6820521033723823e-15,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.7144339205282435
+            },
+            {
+              "candidate": 1.0008899671139604e-15,
+              "current": 2.1449901342860213e-16,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 4.666175154447111
+            },
+            {
+              "candidate": 1.2078089893805631e-14,
+              "current": 2.5937941274054258e-15,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.656533749610789
+            },
+            {
+              "candidate": 1.9999055427493288e-15,
+              "current": 4.477232634339999e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.466834105090321
+            },
+            {
+              "candidate": 2.9919925059964692e-15,
+              "current": 7.283860500211109e-16,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.1077015490751805
+            },
+            {
+              "candidate": 1.2996234963180528e-15,
+              "current": 3.458374738027069e-16,
+              "grid": "128|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.75790246796523
+            },
+            {
+              "candidate": 1.0314056303451557e-16,
+              "current": 2.799363056705808e-17,
+              "grid": "96|0.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 3.6844296700795844
+            },
+            {
+              "candidate": 7.497545882003588e-16,
+              "current": 2.0585784054265145e-16,
+              "grid": "3|2.0|5.0",
+              "metric": "b:D2_stored_v1_all",
+              "ratio": 3.642098771773611
+            },
+            {
+              "candidate": 9.833891150728952e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 3.6208542709586835
+            },
+            {
+              "candidate": 2.8878329261846564e-16,
+              "current": 8.103085884247868e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.563868095978729
+            },
+            {
+              "candidate": 6.079065901350855e-17,
+              "current": 1.7545935418334187e-17,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.464657629480778
+            },
+            {
+              "candidate": 1.7094234581388059e-16,
+              "current": 4.964011192293275e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 3.4436333680969926
+            },
+            {
+              "candidate": 3.9121039107920774e-17,
+              "current": 1.1405154155420771e-17,
+              "grid": "1024|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.4301192754441536
+            },
+            {
+              "candidate": 1.444903211003757e-15,
+              "current": 4.267655856181273e-16,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3857069541138354
+            },
+            {
+              "candidate": 5.390900359585069e-16,
+              "current": 1.5993152641879438e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.3707552727712575
+            },
+            {
+              "candidate": 3.2473334846800183e-15,
+              "current": 9.756525188776384e-16,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3283709331429328
+            },
+            {
+              "candidate": 4.358433319298019e-17,
+              "current": 1.3288207048275578e-17,
+              "grid": "40|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.279925804485125
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 56,
+            "4_to_8_eps": 7,
+            "8_to_64_eps": 12,
+            "at_least_64_eps": 10,
+            "below_1_eps": 26,
+            "largest": 3.594241082970863e-11
+          },
+          "qualified": false,
+          "worst_exactness": 1.321783063106887e-14,
+          "worst_ratio_to_current": 9.44338003343583
+        },
+        "C-T3": {
+          "comparisons": 1680,
+          "failure_count": 111,
+          "failures": [
+            {
+              "candidate": 6.967629267432736e-16,
+              "current": 7.378321366674545e-17,
+              "grid": "64|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 9.44338003343583
+            },
+            {
+              "candidate": 3.0083954027630283e-16,
+              "current": 3.320472775289823e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 9.060141751954115
+            },
+            {
+              "candidate": 3.508917754431961e-16,
+              "current": 4.054492552135388e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 8.654394376884259
+            },
+            {
+              "candidate": 6.451086681398441e-16,
+              "current": 7.514503394227871e-17,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.584847651215016
+            },
+            {
+              "candidate": 2.3710223015218965e-16,
+              "current": 2.7646416621046614e-17,
+              "grid": "17|-1.0|1.0",
+              "metric": "b:D1_stored_v2_ir",
+              "ratio": 8.576237325877846
+            },
+            {
+              "candidate": 6.366625185496566e-16,
+              "current": 7.498903764416134e-17,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.490074530236717
+            },
+            {
+              "candidate": 6.954456952149614e-16,
+              "current": 8.391410501029193e-17,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.28758997226588
+            },
+            {
+              "candidate": 6.860899355353891e-16,
+              "current": 8.43303375767144e-17,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 8.13574278546271
+            },
+            {
+              "candidate": 4.3089343256066825e-15,
+              "current": 5.525226928764995e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 7.798655840131838
+            },
+            {
+              "candidate": 6.466541027783062e-16,
+              "current": 8.550986266924893e-17,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 7.562333543670349
+            },
+            {
+              "candidate": 9.78475770197682e-16,
+              "current": 1.3996874020005726e-16,
+              "grid": "128|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 6.990673551816978
+            },
+            {
+              "candidate": 4.447309850050604e-16,
+              "current": 7.07644918369651e-17,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 6.284663020398419
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.667011730711413e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 5.976654574813526
+            },
+            {
+              "candidate": 3.9846426160691804e-16,
+              "current": 6.667011730711413e-17,
+              "grid": "3|-1.0|1.0",
+              "metric": "b:D2_stored_v1_uv",
+              "ratio": 5.976654574813526
+            },
+            {
+              "candidate": 7.829713345141642e-15,
+              "current": 1.3350301618061646e-15,
+              "grid": "320|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.864821312013512
+            },
+            {
+              "candidate": 4.256461356190077e-15,
+              "current": 7.394205015950317e-16,
+              "grid": "192|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.756482741563568
+            },
+            {
+              "candidate": 4.644171570947626e-16,
+              "current": 8.376909788239351e-17,
+              "grid": "512|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.544015261412684
+            },
+            {
+              "candidate": 1.7802553805528746e-14,
+              "current": 3.2942319421629694e-15,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 5.404159184322557
+            },
+            {
+              "candidate": 6.777345473171769e-16,
+              "current": 1.2895717502056853e-16,
+              "grid": "1024|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.255500883987874
+            },
+            {
+              "candidate": 6.377736842696674e-16,
+              "current": 1.2314798670855977e-16,
+              "grid": "1280|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.178920917148352
+            },
+            {
+              "candidate": 7.74348774263681e-16,
+              "current": 1.5433741332692545e-16,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 5.017246029797167
+            },
+            {
+              "candidate": 4.021361748301368e-17,
+              "current": 8.311560519581315e-18,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 4.838275241848254
+            },
+            {
+              "candidate": 3.292572470506545e-16,
+              "current": 6.950299102552342e-17,
+              "grid": "17|2.0|5.0",
+              "metric": "b:D1_stored_v2_uv",
+              "ratio": 4.737310469555794
+            },
+            {
+              "candidate": 7.929923492234638e-15,
+              "current": 1.6820521033723823e-15,
+              "grid": "384|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.7144339205282435
+            },
+            {
+              "candidate": 1.0008899671139604e-15,
+              "current": 2.1449901342860213e-16,
+              "grid": "16|2.0|5.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 4.666175154447111
+            },
+            {
+              "candidate": 1.2078089893805631e-14,
+              "current": 2.5937941274054258e-15,
+              "grid": "640|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.656533749610789
+            },
+            {
+              "candidate": 1.9999055427493288e-15,
+              "current": 4.477232634339999e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.466834105090321
+            },
+            {
+              "candidate": 2.9919925059964692e-15,
+              "current": 7.283860500211109e-16,
+              "grid": "160|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 4.1077015490751805
+            },
+            {
+              "candidate": 1.2996234963180528e-15,
+              "current": 3.458374738027069e-16,
+              "grid": "128|1e-05|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.75790246796523
+            },
+            {
+              "candidate": 1.0314056303451557e-16,
+              "current": 2.799363056705808e-17,
+              "grid": "96|0.0|1.0",
+              "metric": "b:D2_stored_v2_ir",
+              "ratio": 3.6844296700795844
+            },
+            {
+              "candidate": 7.497545882003588e-16,
+              "current": 2.0585784054265145e-16,
+              "grid": "3|2.0|5.0",
+              "metric": "b:D2_stored_v1_all",
+              "ratio": 3.642098771773611
+            },
+            {
+              "candidate": 9.833891150728952e-17,
+              "current": 2.715903600319507e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D1_stored_v1_ir",
+              "ratio": 3.6208542709586835
+            },
+            {
+              "candidate": 2.8878329261846564e-16,
+              "current": 8.103085884247868e-17,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.563868095978729
+            },
+            {
+              "candidate": 6.079065901350855e-17,
+              "current": 1.7545935418334187e-17,
+              "grid": "160|0.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.464657629480778
+            },
+            {
+              "candidate": 1.7094234581388059e-16,
+              "current": 4.964011192293275e-17,
+              "grid": "16|-1.0|1.0",
+              "metric": "b:D2_stored_v1_ir",
+              "ratio": 3.4436333680969926
+            },
+            {
+              "candidate": 3.9121039107920774e-17,
+              "current": 1.1405154155420771e-17,
+              "grid": "1024|2.0|5.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.4301192754441536
+            },
+            {
+              "candidate": 1.444903211003757e-15,
+              "current": 4.267655856181273e-16,
+              "grid": "80|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3857069541138354
+            },
+            {
+              "candidate": 5.390900359585069e-16,
+              "current": 1.5993152641879438e-16,
+              "grid": "96|-1.0|1.0",
+              "metric": "b:D1_stored_v2_all",
+              "ratio": 3.3707552727712575
+            },
+            {
+              "candidate": 3.2473334846800183e-15,
+              "current": 9.756525188776384e-16,
+              "grid": "256|-1.0|1.0",
+              "metric": "b:D2_stored_v2_all",
+              "ratio": 3.3283709331429328
+            },
+            {
+              "candidate": 4.358433319298019e-17,
+              "current": 1.3288207048275578e-17,
+              "grid": "40|-1.0|1.0",
+              "metric": "b:D1_stored_v1_uv",
+              "ratio": 3.279925804485125
+            }
+          ],
+          "failures_by_candidate_size": {
+            "1_to_4_eps": 56,
+            "4_to_8_eps": 7,
+            "8_to_64_eps": 12,
+            "at_least_64_eps": 10,
+            "below_1_eps": 26,
+            "largest": 3.594241082970863e-11
+          },
+          "qualified": false,
+          "worst_exactness": 1.321783063106887e-14,
+          "worst_ratio_to_current": 9.44338003343583
+        }
+      }
+    },
+    "qualified": [],
+    "selected": null,
+    "stopped": "no candidate qualifies"
+  },
+  "runtime": {
+    "byteorder": "little",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "d5eb95acb361613f144bf5a5674c4a2e461bbfff",
+    "holoforge_git_src_modified": "false",
+    "holoforge_source_sha256": "66d9bd288254e4a11253e0345187e1d8cbdbe48dd19ba0463f559361e800277a",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+    "numpy": "2.4.6",
+    "numpy_blas": "accelerate",
+    "numpy_lapack": "accelerate",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.15",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "accelerate",
+    "scipy_lapack": "accelerate"
+  },
+  "stage": "select",
+  "status": "stopped",
+  "tool": "chebyshev-repair",
+  "tool_sha256": "9e3399309122e77bdaa660e4a3e3615fea8e4a336d0311b39fe649921f482e71",
+  "wall_seconds": 0.07866295800158696
+}
