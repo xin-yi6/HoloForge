@@ -110,6 +110,11 @@ authorized`. Do not add a separate approval for routine attempts inside it.
 - **Additional-numerics test:** `<which claim-bearing physical decision or
   approved construction validation requirement could more precision or another
   run change; write none when no further numerical work is authorized>`
+- **Next-work disposition:** `<link the current evidence-linked sufficiency
+  assessment in the existing attempt/result/proposal record: physical relevance,
+  sufficient or missing evidence, possible decision-changing outcomes and action
+  within authority. Update before extending a batch, proposing another numerical
+  gate or resuming after a method change; do not require one receipt per run>`
 - **Review artifacts:** `<canonical result, critique and short status summary
   records or sections, with linked evidence; scientific PDF when needed for
   equations, figures or owner delivery; no process diagram or separate progress

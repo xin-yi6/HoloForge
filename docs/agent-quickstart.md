@@ -118,6 +118,14 @@ The procedure is stored at
 
 ### Begin private Explore research
 
+Before extending numerical work, expect the agent to explain which physical
+decision another run could change, what existing evidence already settles, and
+any unresolved or newly affected requirement. The
+[claim-sufficiency checkpoint](research-gate-workflow.md#use-a-claim-sufficiency-checkpoint)
+puts this assessment in the existing research record. More precision is not a
+default next step; neither is abandoning a question after a failed approach.
+This assessment does not add an approval request for each routine run.
+
 Do not develop unpublished research inside the public clone. Create a separate
 access-controlled repository, pin the HoloForge release or commit it uses, and
 open that private repository as the agent's primary workspace. Give the agent

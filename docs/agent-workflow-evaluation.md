@@ -5,6 +5,31 @@ Regression tests can establish numerical or record-handling behavior. A role
 arrangement needs observed task outcomes, cost, intervention and recovery
 measurements before it becomes a default.
 
+## Claim-sufficiency walkthroughs
+
+Use these synthetic situations to review the
+[next-work disposition](research-gate-workflow.md#use-a-claim-sufficiency-checkpoint).
+They test both unnecessary continuation and premature stopping. They are
+instruction walkthroughs, not research productivity scores or proof of reliable
+agent behavior. Policy text tests establish discoverability only; report any
+observed agent exercise separately, with its inputs and limitations.
+
+| Situation | Expected next action and reason |
+| --- | --- |
+| The frozen comparison and all controls pass, its uncertainty cannot reverse the decision, interpretation is sound, and a denser grid would only add digits. | Stop refinement; complete the authorized physical interpretation and report. Do not invent another convergence gate. |
+| The main comparison passes but an independent residual exceeds its frozen threshold. | Do not declare sufficiency or waive the check. Follow the contract's development/confirmation and return rules; a technical failure is not a physical negative. |
+| Every computed residual passes, but uncertainty in a shared normalization can reverse the physical comparison. | Sufficiency remains unresolved. Address that specific risk within authority; do not launch an unrelated grid ladder. |
+| An approved construction has a working solver but has not reached its declared validation boundary. | Finish the necessary development and qualification. Proceed to the already authorized physical calculation without another routine approval. |
+| A coefficient changes appreciably, but its contribution to the measured response is unknown. | Establish physical relevance using available analytical or saved evidence first; any new numerical work must identify the decision it can change. A small total effect does not automatically make the mechanism trivial. |
+| The original comparison is sufficient, but a newly identified branch instability could distinguish a different physical interpretation. | State the new alternative and discriminating outcomes. Reuse existing evidence, execute only if that test is authorized, and otherwise present the concrete investment decision. |
+
+Also inspect continuity across milestones: renaming a gate cannot by itself
+justify repeating a sufficient calculation. A method change can invalidate a
+specific dependent check; record that dependency rather than reopening every
+previous result. Preserve old failures, thresholds and framework pins. A
+correct walkthrough does not guarantee the same judgment in a long, ambiguous
+research task.
+
 ## Independent question review pilot
 
 The [independent question review](research-gate-workflow.md#review-the-question-independently)
