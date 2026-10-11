@@ -212,6 +212,16 @@ and record the relocation explicitly. Do not split work to hide contrary evidenc
 
 ## Triage external feedback before rewriting
 
+Match the review input to the question. A claim-card review evaluates a stated
+claim; it is not a review of an unseen manuscript's argument or exposition.
+For a manuscript-writing review, supply the relevant draft sections within the
+existing disclosure authority and record the version and sections actually
+inspected. A local review can use selected passages; a judgment about the
+whole paper needs the whole argument. General writing advice or a favorable
+claim review does not establish that the draft communicates its physics.
+This distinction does not require another provider call or expand a runner's
+approved input classes: do not disguise a manuscript as a short review card.
+
 Treat human or AI review as proposed evidence, not automatic authority or proof.
 For each substantive comment, record: adopt now, propose a scientific test,
 defer as a stronger-claim extension, or decline with a reason. Distinguish a
@@ -371,9 +381,22 @@ Do not replace an unresolved physical question with more fluent assertions.
   one- or two-column format for the journal and reader, not as a scientific
   quality signal. Render and inspect every final page, equations, tables,
   figures and references. Compilation alone is insufficient.
-- Ask whether a physicist can explain the question and result after reading
-  the abstract, introduction and figures without the private gate log.
-  Report this as editorial review, not an independent mathematical proof.
+- Check what a reader can reconstruct from the abstract, introduction and
+  organizing equations or figures without the private gate log: the physical
+  setup, the question, the principal answer, its mechanism and why it matters
+  relative to the baseline. Identify where each first becomes clear. Compare
+  that reading with the intended central claim; use an independent reader
+  when one is already available within the task's scope, and distinguish that
+  review from the author's own check. Few or no figures can be appropriate
+  for an equation-led argument.
+- Act on a mismatch before declaring the editorial revision complete. If the
+  physics is present but its explanation arrives too late, repair the order or
+  interpretation using existing evidence. If a consequential inference lacks
+  evidence, name the gap rather than polishing it into an established result.
+  Record the specific passage and disposition in the existing revision note;
+  a completed checklist or clean PDF build does not establish reader understanding.
+  Report this as editorial review, not an independent mathematical proof, a
+  numerical writing score, a new research gate or a requirement for more plots.
 - Make separate revision passes for argument order, paragraph/equation
   reasoning, and scientific preservation. In the private change note, connect
   substantial edits to specific lessons and explain why they fit this paper.
