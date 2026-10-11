@@ -165,7 +165,10 @@ directly. Keep names that distinguish physical roles or avoid repeating long
 expressions; even a single-use definition can clarify an observable or an
 assumption. There is no symbol quota. When simplifying notation, check every
 occurrence and preserve units, normalizations, signs and the distinction
-between observables and intermediate quantities.
+between observables and intermediate quantities. Check for symbol collisions
+across the main text and appendices; rename or clarify them where context does
+not reliably distinguish the objects. Repeating a definition locally can help
+readers use a self-contained appendix.
 
 ## Check the physical story as a connected argument
 
@@ -238,7 +241,9 @@ an appropriately rounded value or scale. Keep full-precision inputs, raw
 results and acceptance checks unchanged. Check that rounding preserves the
 comparison and uncertainty meaning, and never makes a failed check appear to
 pass. There is no universal digit count, and omitting numerical detail must
-not conceal a consequential limitation.
+not conceal a consequential limitation. Distinguish an exact prescribed input
+from a rounded summary, especially when input sensitivity matters to the
+reported comparison; provide its reproducible specification where needed.
 
 An incomplete secondary study can become a separate methods note when it
 does not support the paper's central claim. Preserve all failed attempts and
