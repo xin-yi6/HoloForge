@@ -157,6 +157,16 @@ Avoid unnecessary bold slogans, marketing claims and workflow jargon. Lists,
 tables and negative results are legitimate when they clarify the argument;
 there is no blanket ban on them or on numerical-method papers.
 
+Introduce a symbol when it identifies a physical quantity, exposes useful
+structure, or makes an expression easier to follow. Check its later uses:
+an unused definition, a short expression used only in the next equation, or
+a chain of aliases hiding an already defined quantity can often be written
+directly. Keep names that distinguish physical roles or avoid repeating long
+expressions; even a single-use definition can clarify an observable or an
+assumption. There is no symbol quota. When simplifying notation, check every
+occurrence and preserve units, normalizations, signs and the distinction
+between observables and intermediate quantities.
+
 ## Check the physical story as a connected argument
 
 A good physical story explains why a question matters, why the chosen method
