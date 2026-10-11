@@ -392,6 +392,22 @@ Any reserved attempt prevents another invocation in that location, including
 after a failure; the runner never retries automatically. Moving to another
 directory does not authorize a new call.
 
+The runner's process count and deadline do not describe the client's request
+behavior. A client may retry, switch transport or model, or impose its own
+request timeout within that process. Before dispatch, check those behaviors
+against the approved scope and resource allowance. Record the effective,
+allowlisted operational settings in the private review note, without credentials;
+label settings that cannot be verified. Do not treat a missing runner deadline
+as an instruction to disable connection safeguards or permit unlimited retries.
+When usage matters to the decision and can be inspected without another model
+request, record available usage before and after the attempt. Distinguish live
+from cached readings, and account for concurrent use and allowance resets;
+missing usage is unknown, and an absent final answer does not establish no use.
+Preserve available progress and structured output in the raw evidence, with the
+client's completion or error status. Progress events and partial responses are
+not a completed reviewer report. These checks reuse existing authority and do
+not require an extra provider probe or expand the reviewer-call allowance.
+
 On POSIX, cleanup stops the local process group, including descendants left
 after the command exits; other platforms stop only the direct child. This
 does not attest that remote processing or billing stopped, or reach a child
