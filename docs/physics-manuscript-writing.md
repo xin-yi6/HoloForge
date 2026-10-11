@@ -525,6 +525,16 @@ claims, evidence, uncertainties and unresolved issues; make no new calculation.
 Use natural, author-led physics prose without formulaic recaps or invented
 author experience. Retain AI provenance and the author's scientific review.
 Keep the physical argument in the manuscript and the internal audit history in
-a private companion note. Preserve the old draft, check the revised claim map,
-and render and visually inspect the final PDF. Do not submit or disclose it.
+a private companion note. Preserve the old draft and check the revised claim map.
+Read the delivered manuscript without relying on that companion: reconstruct
+the physical question, principal answer, reasoning and consequence, citing the
+passages that convey them. Compare this reading with the intended claim; repair
+mismatches using existing evidence or record the unresolved gap. Distinguish
+self-review from independent reading; another reviewer is not required.
+For adopted substantive feedback, check the other passages affected by the
+change, including summaries and captions where relevant. Record the correction
+or pending disposition in the existing revision note. Corrections that affect
+no claim or dependent value need only a local check. Restore consistency through
+explanation, revision or deletion, without repeating caveats mechanically.
+Render and visually inspect the final PDF. Do not submit or disclose it.
 ```
