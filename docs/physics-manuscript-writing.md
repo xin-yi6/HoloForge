@@ -205,6 +205,23 @@ evidence adequate for one need not establish the other. Do not promote a
 tested interval or a small retained correction into a controlled validity
 domain without examining the relevant omitted terms and numerical resolution.
 
+Select numerical detail by its scientific role and the passage's purpose.
+In an abstract, retain a number when its magnitude, uncertainty, bound or
+precision is part of the principal result or changes its interpretation.
+A precision measurement, quantitative prediction or numerical-method paper
+may need such numbers up front. Supporting error budgets and intermediate
+coefficients belong where they explain or establish the result; do not list
+them merely because they are available, or move them all to appendices.
+
+Choose displayed digits using both the supported uncertainty and the
+distinction the reader needs to make. Retain precision needed for a small
+difference, cancellation, bound or reproducible specification; otherwise use
+an appropriately rounded value or scale. Keep full-precision inputs, raw
+results and acceptance checks unchanged. Check that rounding preserves the
+comparison and uncertainty meaning, and never makes a failed check appear to
+pass. There is no universal digit count, and omitting numerical detail must
+not conceal a consequential limitation.
+
 An incomplete secondary study can become a separate methods note when it
 does not support the paper's central claim. Preserve all failed attempts and
 their interpretation, retain any limitation that changes the central claim,
@@ -518,6 +535,9 @@ docs/physics-manuscript-writing.md and its comparative reading study. Select
 relevant argument types, extend the corpus if needed, record reading scope,
 and explain which structural lessons fit this paper. Check that motivation,
 method, results and interpretation form one evidence-supported physical story.
+Select numerical detail and displayed precision for their evidential support
+and role in the argument, including whether an abstract needs the number;
+preserve the full-precision record and consequential comparisons.
 Trace missing references through relevant cited papers, read the candidate
 sources, and integrate their contributions in original, claim-led prose.
 Preserve all scientific
