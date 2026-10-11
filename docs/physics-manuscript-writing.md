@@ -67,6 +67,10 @@ HoloForge. The public study contains only generic editorial observations and
 primary-source links. Neither an author's prominence, a two-column layout nor
 a famous paper's historical claims are substitutes for current evidence.
 
+The [selected external methods](scientific-writing-methods.md) compare concrete
+editorial techniques and agent workflows. Adapt useful mechanisms to the argument;
+do not assume their templates or claimed effectiveness transfer between fields.
+
 ## Share the reasoning, adapt to the evidence
 
 Physics communities share an argumentative core: identify a consequential
@@ -162,7 +166,11 @@ agent completed tasks. Background, motivation, methods, results and analysis
 must connect, whether or not they appear as separate named sections.
 
 Before a substantial rewrite, summarize that connection in a short private
-outline using existing evidence:
+outline using existing evidence. If the existing order is unclear, optionally
+reverse-outline the draft: state what each paragraph actually establishes, then
+locate repetition, missing dependence or unexplained detours. This implements the
+coherence check; paragraph counts and repeated rhetorical templates are not targets.
+The outline should connect:
 
 1. **Background and motivation:** what is known, what consequential question
    remains, and why the reader should care about answering it.
@@ -370,6 +378,11 @@ imitate a named author's distinctive voice.
 - **Use ordinary technical language.** Prefer concrete observables, assumptions
   and mechanisms to vague praise of the framework. Keep necessary terminology
   and stable notation; do not vary technical terms merely to avoid repetition.
+- **Diagnose a difficult sentence through its reader.** Identify its physical
+  subject and intended inference. Check continuity with what is already known,
+  whether interruptions hide the governing verb, and where the syntax directs
+  emphasis. Reorder only when understanding improves; preserve a deliberate
+  contrast, a theorem's dependencies and necessary qualifications.
 - **Read the argument aloud or sentence by sentence.** Check whether its rhythm
   is natural, pronouns are clear, and each sentence gives a physicist a reason
   to read the next. Delete padding, not derivations needed to understand the result.
