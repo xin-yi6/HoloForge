@@ -380,9 +380,10 @@ imitate a named author's distinctive voice.
   and stable notation; do not vary technical terms merely to avoid repetition.
 - **Diagnose a difficult sentence through its reader.** Identify its physical
   subject and intended inference. Check continuity with what is already known,
-  whether interruptions hide the governing verb, and where the syntax directs
-  emphasis. Reorder only when understanding improves; preserve a deliberate
-  contrast, a theorem's dependencies and necessary qualifications.
+  whether interruptions hide the governing verb, and whether emphasis falls on
+  the scientific point the reader should retain. Reorder only when understanding
+  improves; preserve a deliberate contrast, a theorem's dependencies and necessary
+  qualifications.
 - **Read the argument aloud or sentence by sentence.** Check whether its rhythm
   is natural, pronouns are clear, and each sentence gives a physicist a reason
   to read the next. Delete padding, not derivations needed to understand the result.
