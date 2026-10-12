@@ -1,0 +1,3483 @@
+{
+  "acceptance_checks": [
+    {
+      "criterion": "maximum absolute or scaled error <= 1e-12",
+      "description": "canonical conversion, source functions, coordinate map, and exact identities",
+      "id": "source-algebra",
+      "passed": true,
+      "value": 4.440892098500626e-16
+    },
+    {
+      "criterion": "all final residual states accepted and <= 2.0e-08",
+      "description": "every continuation and reported final solve reaches an accepted final state",
+      "id": "nonlinear-solver",
+      "passed": true,
+      "value": 0.0
+    },
+    {
+      "criterion": "<= 2.0e-08",
+      "description": "maximum final scaled coupled collocation residual",
+      "id": "collocation-residual",
+      "passed": true,
+      "value": 9.579273285665559e-10
+    },
+    {
+      "criterion": "<= 1.0e-07",
+      "description": "maximum four-equation residual on the twice-denser grid",
+      "id": "independent-equations",
+      "passed": true,
+      "value": 1.3885307056175917e-08
+    },
+    {
+      "criterion": "<= 1.0e-07",
+      "description": "maximum independent Einstein-constraint residual",
+      "id": "einstein-constraint",
+      "passed": true,
+      "value": 6.610971726869125e-12
+    },
+    {
+      "criterion": "<= 1.0e-08",
+      "description": "maximum endpoint, BF no-log source, and horizon regularity residual",
+      "id": "boundary-and-source",
+      "passed": true,
+      "value": 1.1641532182693481e-10
+    },
+    {
+      "criterion": "<= 1.0e-08",
+      "description": "maximum normalized radial Maxwell-flux drift",
+      "id": "maxwell-flux",
+      "passed": true,
+      "value": 1.3292918377877943e-11
+    },
+    {
+      "criterion": "<= 2.0e-07",
+      "description": "maximum scaled spectral-versus-source exact-field difference",
+      "id": "exact-fields",
+      "passed": true,
+      "value": 1.0427774199683881e-09
+    },
+    {
+      "criterion": "final <= 2.0e-06; zero ordering failures above 5.0e-10",
+      "description": "N=60 to 80 thermodynamic refinement and amended ordering rule",
+      "id": "spectral-refinement",
+      "passed": true,
+      "value": 1.6259418231391729e-09
+    },
+    {
+      "criterion": "<= 2.0e-07",
+      "description": "maximum source Eq. (3), exact T, and exact Omega relative error",
+      "id": "source-thermodynamics",
+      "passed": true,
+      "value": 1.2664193092574128e-09
+    },
+    {
+      "criterion": "<= 2.0e-07",
+      "description": "maximum source Eq. (4) and both Eq. (5) derivative errors",
+      "id": "equation-of-state",
+      "passed": true,
+      "value": 3.607450714743046e-10
+    },
+    {
+      "criterion": "identity <= 2.0e-06; fit <= 2.0e-05",
+      "description": "finite-xi identity and low-temperature fit intercept and slope",
+      "id": "low-temperature-relation",
+      "passed": true,
+      "value": 1.3640644169754523e-11
+    },
+    {
+      "criterion": "neutral <= 1.0e-10; determinism <= 1.0e-12",
+      "description": "neutral AdS--Schwarzschild limit and duplicate physical observables",
+      "id": "neutral-limit-and-determinism",
+      "passed": true,
+      "value": 5.683481717505065e-13
+    }
+  ],
+  "background": {
+    "coordinate": "u = z/z_H in [0, 1]",
+    "description": "Top-down-derived homogeneous equal-charge asymptotically AdS Einstein--Maxwell--dilaton black brane with L = r_H = 1, used as a control for the coupled spectral infrastructure.",
+    "dimension": 5,
+    "id": "five-dimensional-gubser-rocha-charged-dilatonic-brane"
+  },
+  "benchmark": "gubser-rocha-emd",
+  "boundary_conditions": [
+    {
+      "expression": "A = -log(z) + u^4 a(u)",
+      "field": "A",
+      "interpretation": "The source metric and lower forbidden powers are fixed.",
+      "location": "u = 0",
+      "role": "asymptotically AdS boundary metric"
+    },
+    {
+      "expression": "f = 1 - u^4 b(u), b'(0) = 0, b(1) = 1",
+      "field": "f",
+      "interpretation": "Both exact endpoints are collocation nodes.",
+      "location": "u = 0 and u = 1",
+      "role": "normalized boundary and regular horizon"
+    },
+    {
+      "expression": "phi = u^2 p(u), p'(0) = 0; retain scalar equation at u=1",
+      "field": "phi",
+      "interpretation": "The z^2 coefficient is a response, not a source.",
+      "location": "u = 0 and u = 1",
+      "role": "zero BF-bound logarithmic source and regular horizon"
+    },
+    {
+      "expression": "Phi = -Omega + u^2 v(u), v(1) = Omega",
+      "field": "Phi",
+      "interpretation": "Phi(0) = -Omega and Phi(1) = 0.",
+      "location": "u = 0 and u = 1",
+      "role": "fixed chemical-potential source and regular horizon gauge"
+    }
+  ],
+  "configuration": {
+    "bulk_dimension": 5,
+    "collocation_tolerance": 2e-08,
+    "continuation_xi": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0,
+      3.0,
+      4.0,
+      6.0,
+      8.0,
+      12.0,
+      16.0
+    ],
+    "degrees": [
+      40,
+      60,
+      80
+    ],
+    "ensemble": "fixed boundary chemical potential for each source case",
+    "instability_threshold_xi": 1.0,
+    "polish_maximum_evaluations": 32,
+    "polish_trigger_tolerance": 1e-09,
+    "refinement_order_floor": 5e-10,
+    "reported_xi": [
+      0.0,
+      0.5,
+      1.0,
+      2.0,
+      4.0,
+      8.0,
+      16.0
+    ],
+    "units": "L = r_H = 1"
+  },
+  "contract_review": {
+    "amendments": [
+      "TRF polish maximum evaluations increased from 12 to 32",
+      "refinement ordering floor increased from 1e-10 to 5e-10",
+      "final collocation acceptance ceiling increased from 1e-9 to 3e-9 after cross-platform CI evidence; the 1e-9 TRF polish trigger is unchanged",
+      "final collocation acceptance ceiling increased from 3e-9 to the method-conditioned 2e-8 after Python 3.11.16 CI measured 3.6060792132977416e-9 and degree-80 epsilon times ||D2||_inf was 1.2124701243009436e-8; the 1e-9 TRF polish trigger is unchanged"
+    ],
+    "authorization": "owner-approved prospective numerical-contract amendments, bounded bosonic reproduction, and scoped v0.5.3 release",
+    "review_state": "approved",
+    "reviewed_by": "Xin-Yi Liu",
+    "reviewed_on": "2026-08-20"
+  },
+  "equations": [
+    {
+      "dependent_fields": [
+        "A",
+        "phi"
+      ],
+      "expression": "A'' - A'^2 + phi'^2/6 = 0",
+      "id": "warp-equation",
+      "kind": "coupled nonlinear boundary-value equation",
+      "source_reference": "Gubser and Rocha, arXiv:0911.2898v2, Eq. (1), derived in conformal gauge"
+    },
+    {
+      "dependent_fields": [
+        "f",
+        "A",
+        "Phi",
+        "phi"
+      ],
+      "expression": "f'' + 3 A' f' - exp(-2A) Z Phi'^2 = 0",
+      "id": "blackening-equation",
+      "kind": "coupled nonlinear boundary-value equation",
+      "source_reference": "Gubser and Rocha, arXiv:0911.2898v2, Eq. (1), derived in conformal gauge"
+    },
+    {
+      "dependent_fields": [
+        "Phi",
+        "A",
+        "phi"
+      ],
+      "expression": "Phi'' + [A' + (Z_phi/Z) phi'] Phi' = 0",
+      "id": "maxwell-equation",
+      "kind": "coupled nonlinear boundary-value equation",
+      "source_reference": "Gubser and Rocha, arXiv:0911.2898v2, Eq. (1), derived in conformal gauge"
+    },
+    {
+      "dependent_fields": [
+        "phi",
+        "A",
+        "f",
+        "Phi"
+      ],
+      "expression": "f phi'' + (3 A' f + f') phi' - exp(2A) V_phi + exp(-2A) Z_phi Phi'^2/2 = 0",
+      "id": "scalar-equation",
+      "kind": "coupled nonlinear boundary-value equation",
+      "source_reference": "Gubser and Rocha, arXiv:0911.2898v2, Eq. (1), derived in conformal gauge"
+    },
+    {
+      "dependent_fields": [
+        "A",
+        "f",
+        "phi",
+        "Phi"
+      ],
+      "expression": "6 A' f' + f(24 A'^2 - phi'^2) + 2 exp(2A) V + exp(-2A) Z Phi'^2 = 0",
+      "id": "einstein-constraint",
+      "kind": "independent radial constraint",
+      "source_reference": "Gubser and Rocha, arXiv:0911.2898v2, Eq. (1), derived in conformal gauge"
+    }
+  ],
+  "generated_by_ai": true,
+  "numerical_method": {
+    "coordinate": "u = z/z_H in [0, 1] with exact endpoints",
+    "factorization": [
+      "A = -log(z) + u^4 a",
+      "f = 1 - u^4 b",
+      "phi = u^2 p",
+      "Phi = -Omega + u^2 v"
+    ],
+    "independent_checks": "twice-denser barycentric equations, Einstein constraint, Maxwell flux, source exact fields, and source thermodynamics",
+    "initialization": "neutral analytic solution, theta-secant charge continuation, and lower-to-higher degree interpolation; charged exact fields are never solver seeds",
+    "nonlinear_solver": "scipy.optimize.root(method='hybr', xtol=1e-11), then at most thirty-two scipy.optimize.least_squares(method='trf') evaluations only after a failed root or a scaled root residual above 1e-9; the owner-approved method-conditioned final acceptance ceiling is 2e-8",
+    "route": "coupled UV-factorized Chebyshev collocation",
+    "unknowns": [
+      "a(u)",
+      "b(u)",
+      "p(u)",
+      "v(u)"
+    ]
+  },
+  "observables": [
+    {
+      "extraction": "absolute exact-horizon derivative abs(f'(z_H))/(4 pi)",
+      "id": "temperature",
+      "normalization": "L = r_H = 1",
+      "symbol": "T"
+    },
+    {
+      "extraction": "exp(3 A(z_H))/(2 pi)",
+      "id": "entropy-density",
+      "normalization": "source hatted density with L = r_H = 1",
+      "symbol": "hat s"
+    },
+    {
+      "extraction": "abs(-exp(A) Z Phi')/(8 pi^2)",
+      "id": "charge-density",
+      "normalization": "source hatted density with L = r_H = 1",
+      "symbol": "hat rho"
+    },
+    {
+      "extraction": "3 mu_bh/(8 pi^2) from the boundary f coefficient",
+      "id": "energy-density",
+      "normalization": "source hatted density with L = r_H = 1",
+      "symbol": "hat epsilon"
+    }
+  ],
+  "passed": true,
+  "primary_source": {
+    "doi": "10.1103/PhysRevD.81.046001",
+    "equation_7_specific_heats_in_scope": false,
+    "equations_in_scope": [
+      "(1)",
+      "(2)",
+      "(3)",
+      "(4)",
+      "(5)",
+      "(6)"
+    ],
+    "figure_1_in_scope": false,
+    "id": "arXiv:0911.2898v2",
+    "model_origin": "top-down consistent truncation of five-dimensional maximal gauged supergravity with a type IIB lift",
+    "pdf_sha256": "7a6fadd4c420caaa443fb6b47c770436638bfb95ecf55b1bb1232c80421f7e97",
+    "source_archive_sha256": "4b024dab3abe6d2b4f3f58830e246771a1e6934690c9b7b582ae9e4e496cbe66"
+  },
+  "result_review_state": "approved",
+  "result_reviewed_by": "Xin-Yi Liu",
+  "result_reviewed_on": "2026-08-19",
+  "results": {
+    "cases": [
+      {
+        "degree": 80,
+        "diagnostics": {
+          "blackening_equation": 9.358932611296127e-09,
+          "boundary_and_source": 2.7284841053187847e-12,
+          "einstein_constraint": 2.7841674544061483e-13,
+          "exact_blackening_error": 1.454392162258955e-14,
+          "exact_gauge_error": 0.0,
+          "exact_scalar_error": 0.0,
+          "exact_warp_error": 2.1874080479648034e-34,
+          "horizon_scalar_equation": 0.0,
+          "maximum_equation_residual": 9.358932611296127e-09,
+          "maximum_exact_field_error": 1.454392162258955e-14,
+          "maxwell_equation": 0.0,
+          "maxwell_flux_drift": 0.0,
+          "scalar_equation": 0.0,
+          "warp_equation": 5.464419462583163e-29
+        },
+        "equation_of_state": {
+          "chemical_potential_derivative_relative_error": 0.0,
+          "derivative_Omega": 0.0,
+          "derivative_temperature": 0.3183098861837906,
+          "equation_energy_density": 0.037995443865876666,
+          "equation_relative_error": 2.9767771902584715e-14,
+          "maximum_relative_error": 5.686969586003076e-13,
+          "temperature_derivative_relative_error": 5.686969586003076e-13
+        },
+        "nonlinear": {
+          "final_scaled_residual": 4.664387784441535e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 328,
+            "message": "The solution converged.",
+            "scaled_residual": 4.664387784441535e-10,
+            "success": true
+          }
+        },
+        "source_exact_thermodynamics": {
+          "Omega": 0.0,
+          "degree": 80,
+          "hat_epsilon": 0.037995443865876666,
+          "hat_rho": 0.0,
+          "hat_s": 0.15915494309189535,
+          "maxwell_flux": -0.0,
+          "mu_bh": 1.0,
+          "temperature": 0.3183098861837907,
+          "xi": 0.0
+        },
+        "stability_interpretation": "below the cited unequal-charge instability threshold",
+        "thermodynamic_relative_errors": {
+          "charge_density": 0.0,
+          "chemical_potential": 0.0,
+          "energy_density": 2.9767771902584715e-14,
+          "entropy_density": 0.0,
+          "mu_bh": 2.9753977059954195e-14,
+          "temperature": 5.683481717505065e-13
+        },
+        "thermodynamics": {
+          "Omega": 0.0,
+          "degree": 80,
+          "hat_epsilon": 0.0379954438658778,
+          "hat_rho": 0.0,
+          "hat_s": 0.15915494309189535,
+          "maxwell_flux": -0.0,
+          "mu_bh": 1.0000000000000298,
+          "temperature": 0.3183098861839716,
+          "xi": 0.0
+        },
+        "xi": 0.0
+      },
+      {
+        "degree": 80,
+        "diagnostics": {
+          "blackening_equation": 1.4730933889344786e-10,
+          "boundary_and_source": 1.8189894035458565e-12,
+          "einstein_constraint": 5.455547505603338e-14,
+          "exact_blackening_error": 1.6358026044827056e-12,
+          "exact_gauge_error": 3.995692665625938e-12,
+          "exact_scalar_error": 5.900546717896304e-11,
+          "exact_warp_error": 6.576737852231895e-13,
+          "horizon_scalar_equation": 2.465125088240496e-13,
+          "maximum_equation_residual": 1.3885307056175917e-08,
+          "maximum_exact_field_error": 5.900546717896304e-11,
+          "maxwell_equation": 1.4137878044499877e-09,
+          "maxwell_flux_drift": 4.249298230309287e-13,
+          "scalar_equation": 1.3885307056175917e-08,
+          "warp_equation": 4.858486406747404e-12
+        },
+        "equation_of_state": {
+          "chemical_potential_derivative_relative_error": 2.7417896569763028e-11,
+          "derivative_Omega": 0.7071067811671602,
+          "derivative_temperature": 0.3183098861853748,
+          "equation_energy_density": 0.0593678810400756,
+          "equation_relative_error": 3.4786873919684003e-12,
+          "maximum_relative_error": 2.7417896569763028e-11,
+          "temperature_derivative_relative_error": 2.3328608448814636e-12
+        },
+        "nonlinear": {
+          "final_scaled_residual": 9.579273285665559e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 328,
+            "message": "The solution converged.",
+            "scaled_residual": 9.579273285665559e-10,
+            "success": true
+          }
+        },
+        "source_exact_thermodynamics": {
+          "Omega": 0.7071067811865476,
+          "degree": 80,
+          "hat_epsilon": 0.059367881040432294,
+          "hat_rho": 0.02238903000979517,
+          "hat_s": 0.1989436788648692,
+          "maxwell_flux": -1.7677669529663689,
+          "mu_bh": 1.5625,
+          "temperature": 0.3183098861837907,
+          "xi": 0.5
+        },
+        "stability_interpretation": "below the cited unequal-charge instability threshold",
+        "thermodynamic_relative_errors": {
+          "charge_density": 3.042165814993737e-11,
+          "chemical_potential": 0.0,
+          "energy_density": 2.5295081993255986e-12,
+          "entropy_density": 1.972738422473682e-12,
+          "mu_bh": 2.5295321393059567e-12,
+          "temperature": 2.6438043214905426e-12
+        },
+        "thermodynamics": {
+          "Omega": 0.7071067811865476,
+          "degree": 80,
+          "hat_epsilon": 0.05936788104028212,
+          "hat_rho": 0.022389030009114057,
+          "hat_s": 0.19894367886526165,
+          "maxwell_flux": -1.7677669529125906,
+          "mu_bh": 1.5624999999960476,
+          "temperature": 0.31830988618463224,
+          "xi": 0.5
+        },
+        "xi": 0.5
+      },
+      {
+        "degree": 80,
+        "diagnostics": {
+          "blackening_equation": 8.987453175980241e-10,
+          "boundary_and_source": 5.4569682106375694e-12,
+          "einstein_constraint": 3.3843120901935345e-12,
+          "exact_blackening_error": 1.8415047264852547e-11,
+          "exact_gauge_error": 1.2768441859378754e-10,
+          "exact_scalar_error": 1.0427774199683881e-09,
+          "exact_warp_error": 3.4922472899601154e-11,
+          "horizon_scalar_equation": 5.020118553751666e-14,
+          "maximum_equation_residual": 1.1849897768755862e-08,
+          "maximum_exact_field_error": 1.0427774199683881e-09,
+          "maxwell_equation": 1.1849897768755862e-08,
+          "maxwell_flux_drift": 3.327496949303831e-12,
+          "scalar_equation": 4.851416966650193e-09,
+          "warp_equation": 2.1683762974326846e-10
+        },
+        "equation_of_state": {
+          "chemical_potential_derivative_relative_error": 3.607450714743046e-10,
+          "derivative_Omega": 1.4142135618629246,
+          "derivative_temperature": 0.31830988625787926,
+          "equation_energy_density": 0.1519817754246028,
+          "equation_relative_error": 9.019945350216819e-11,
+          "maximum_relative_error": 3.607450714743046e-10,
+          "temperature_derivative_relative_error": 1.7967213943692296e-10
+        },
+        "nonlinear": {
+          "final_scaled_residual": 1.6355215550352289e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 662,
+            "message": "The solution converged.",
+            "scaled_residual": 1.6355215550352289e-10,
+            "success": true
+          }
+        },
+        "source_exact_thermodynamics": {
+          "Omega": 1.4142135623730951,
+          "degree": 80,
+          "hat_epsilon": 0.15198177546350666,
+          "hat_rho": 0.07164489603134454,
+          "hat_s": 0.3183098861837907,
+          "maxwell_flux": -5.656854249492381,
+          "mu_bh": 4.0,
+          "temperature": 0.3183098861837907,
+          "xi": 1.0
+        },
+        "stability_interpretation": "threshold point",
+        "thermodynamic_relative_errors": {
+          "charge_density": 4.887332196226071e-10,
+          "chemical_potential": 0.0,
+          "energy_density": 1.6577763484733178e-10,
+          "entropy_density": 1.0476772197605878e-10,
+          "mu_bh": 1.6577761385860867e-10,
+          "temperature": 5.308396339229217e-11
+        },
+        "thermodynamics": {
+          "Omega": 1.4142135623730951,
+          "degree": 80,
+          "hat_epsilon": 0.15198177543831148,
+          "hat_rho": 0.0716448959963293,
+          "hat_s": 0.3183098862171393,
+          "maxwell_flux": -5.656854246727687,
+          "mu_bh": 3.9999999993368895,
+          "temperature": 0.31830988620068784,
+          "xi": 1.0
+        },
+        "xi": 1.0
+      },
+      {
+        "degree": 80,
+        "diagnostics": {
+          "blackening_equation": 8.799657102620283e-11,
+          "boundary_and_source": 2.1827872842550278e-11,
+          "einstein_constraint": 2.1547065690810734e-12,
+          "exact_blackening_error": 1.4014900351355664e-11,
+          "exact_gauge_error": 7.327205509000123e-11,
+          "exact_scalar_error": 3.012335517127538e-10,
+          "exact_warp_error": 2.6472476988281812e-11,
+          "horizon_scalar_equation": 3.2230954378585135e-13,
+          "maximum_equation_residual": 4.510175425754955e-09,
+          "maximum_exact_field_error": 3.012335517127538e-10,
+          "maxwell_equation": 2.43287506029388e-09,
+          "maxwell_flux_drift": 2.6859885712929674e-12,
+          "scalar_equation": 4.510175425754955e-09,
+          "warp_equation": 1.0702501964179565e-11
+        },
+        "equation_of_state": {
+          "chemical_potential_derivative_relative_error": 7.67084371673387e-11,
+          "derivative_Omega": 2.828427124529226,
+          "derivative_temperature": 0.31830988622975226,
+          "equation_energy_density": 0.9498860965234768,
+          "equation_relative_error": 4.3814770738037725e-11,
+          "maximum_relative_error": 8.84392655898614e-11,
+          "temperature_derivative_relative_error": 8.84392655898614e-11
+        },
+        "nonlinear": {
+          "final_scaled_residual": 6.546883906042771e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 659,
+            "message": "The solution converged.",
+            "scaled_residual": 6.546883906042771e-10,
+            "success": true
+          }
+        },
+        "source_exact_thermodynamics": {
+          "Omega": 2.8284271247461903,
+          "degree": 80,
+          "hat_epsilon": 0.9498860966469167,
+          "hat_rho": 0.3582244801567227,
+          "hat_s": 0.7957747154594768,
+          "maxwell_flux": -28.284271247461902,
+          "mu_bh": 25.0,
+          "temperature": 0.3183098861837907,
+          "xi": 2.0
+        },
+        "stability_interpretation": "analytic verification point only; stability not claimed",
+        "thermodynamic_relative_errors": {
+          "charge_density": 1.416843126915972e-10,
+          "chemical_potential": 0.0,
+          "energy_density": 8.613757343195554e-11,
+          "entropy_density": 7.941639394907789e-11,
+          "mu_bh": 8.613739055363112e-11,
+          "temperature": 5.595325841217897e-11
+        },
+        "thermodynamics": {
+          "Omega": 2.8284271247461903,
+          "degree": 80,
+          "hat_epsilon": 0.9498860965650958,
+          "hat_rho": 0.3582244801059679,
+          "hat_s": 0.7957747155226743,
+          "maxwell_flux": -28.284271243454466,
+          "mu_bh": 24.999999997846565,
+          "temperature": 0.31830988620160117,
+          "xi": 2.0
+        },
+        "xi": 2.0
+      },
+      {
+        "degree": 80,
+        "diagnostics": {
+          "blackening_equation": 1.1130494352177255e-10,
+          "boundary_and_source": 7.275957614183426e-11,
+          "einstein_constraint": 1.2361403072474992e-12,
+          "exact_blackening_error": 5.278666392882769e-12,
+          "exact_gauge_error": 2.6649791404540006e-11,
+          "exact_scalar_error": 5.290382558447935e-11,
+          "exact_warp_error": 1.2798984094786192e-11,
+          "horizon_scalar_equation": 1.2004492260051763e-12,
+          "maximum_equation_residual": 2.3620278005104578e-09,
+          "maximum_exact_field_error": 5.290382558447935e-11,
+          "maxwell_equation": 2.1827872837785717e-10,
+          "maxwell_flux_drift": 1.833720218278299e-12,
+          "scalar_equation": 2.3620278005104578e-09,
+          "warp_equation": 1.6044831930124645e-10
+        },
+        "equation_of_state": {
+          "chemical_potential_derivative_relative_error": 1.2611296646480772e-11,
+          "derivative_Omega": 5.656854249563721,
+          "derivative_temperature": 0.31830988616609396,
+          "equation_energy_density": 10.98068327761606,
+          "equation_relative_error": 1.055928279203999e-11,
+          "maximum_relative_error": 2.1768659264406623e-11,
+          "temperature_derivative_relative_error": 2.1768659264406623e-11
+        },
+        "nonlinear": {
+          "final_scaled_residual": 1.3611722487193668e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 656,
+            "message": "The solution converged.",
+            "scaled_residual": 1.3611722487193668e-10,
+            "success": true
+          }
+        },
+        "source_exact_thermodynamics": {
+          "Omega": 5.656854249492381,
+          "degree": 80,
+          "hat_epsilon": 10.980683277238356,
+          "hat_rho": 2.4359264650657146,
+          "hat_s": 2.705634032562221,
+          "maxwell_flux": -192.33304448274095,
+          "mu_bh": 289.0,
+          "temperature": 0.3183098861837907,
+          "xi": 4.0
+        },
+        "stability_interpretation": "analytic verification point only; stability not claimed",
+        "thermodynamic_relative_errors": {
+          "charge_density": 2.9810114627854344e-11,
+          "chemical_potential": 0.0,
+          "energy_density": 2.3837937204623135e-11,
+          "entropy_density": 3.8397246720877426e-11,
+          "mu_bh": 2.3837848265867223e-11,
+          "temperature": 3.3827267021361616e-11
+        },
+        "thermodynamics": {
+          "Omega": 5.656854249492381,
+          "degree": 80,
+          "hat_epsilon": 10.980683277500113,
+          "hat_rho": 2.43592646513833,
+          "hat_s": 2.705634032458332,
+          "maxwell_flux": -192.33304448847443,
+          "mu_bh": 289.00000000688914,
+          "temperature": 0.31830988617302314,
+          "xi": 4.0
+        },
+        "xi": 4.0
+      },
+      {
+        "degree": 80,
+        "diagnostics": {
+          "blackening_equation": 1.5090968876971542e-10,
+          "boundary_and_source": 5.820766091346741e-11,
+          "einstein_constraint": 3.5420684485417416e-12,
+          "exact_blackening_error": 1.109756730954814e-11,
+          "exact_gauge_error": 7.04308104400716e-11,
+          "exact_scalar_error": 8.318751810460184e-11,
+          "exact_warp_error": 4.292910471548339e-11,
+          "horizon_scalar_equation": 2.2288562026116302e-12,
+          "maximum_equation_residual": 2.230402987694489e-09,
+          "maximum_exact_field_error": 8.318751810460184e-11,
+          "maxwell_equation": 1.2182325043487662e-09,
+          "maxwell_flux_drift": 6.491081074000232e-12,
+          "scalar_equation": 2.230402987694489e-09,
+          "warp_equation": 2.1018471040335635e-11
+        },
+        "equation_of_state": {
+          "chemical_potential_derivative_relative_error": 1.7128138632074673e-11,
+          "derivative_Omega": 11.313708498790978,
+          "derivative_temperature": 0.3183098862339772,
+          "equation_energy_density": 160.53075032405732,
+          "equation_relative_error": 1.637272607260814e-11,
+          "maximum_relative_error": 3.105005172492672e-11,
+          "temperature_derivative_relative_error": 3.105005172492672e-11
+        },
+        "nonlinear": {
+          "final_scaled_residual": 9.547466670214624e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 332,
+            "message": "The solution converged.",
+            "scaled_residual": 9.547466670214624e-11,
+            "success": true
+          }
+        },
+        "source_exact_thermodynamics": {
+          "Omega": 11.313708498984761,
+          "degree": 80,
+          "hat_epsilon": 160.5307503333289,
+          "hat_rho": 18.62767296814958,
+          "hat_s": 10.345071300973197,
+          "maxwell_flux": -1470.782104868019,
+          "mu_bh": 4225.0,
+          "temperature": 0.3183098861837907,
+          "xi": 8.0
+        },
+        "stability_interpretation": "analytic verification point only; stability not claimed",
+        "thermodynamic_relative_errors": {
+          "charge_density": 4.600566531515767e-11,
+          "chemical_potential": 0.0,
+          "energy_density": 4.138311150205811e-11,
+          "entropy_density": 1.2878781645257433e-10,
+          "mu_bh": 4.1383192888268176e-11,
+          "temperature": 1.2661555585415993e-10
+        },
+        "thermodynamics": {
+          "Omega": 11.313708498984761,
+          "degree": 80,
+          "hat_epsilon": 160.53075032668565,
+          "hat_rho": 18.6276729672926,
+          "hat_s": 10.345071302305517,
+          "maxwell_flux": -1470.7821048003545,
+          "mu_bh": 4224.999999825156,
+          "temperature": 0.3183098862240937,
+          "xi": 8.0
+        },
+        "xi": 8.0
+      },
+      {
+        "degree": 80,
+        "diagnostics": {
+          "blackening_equation": 1.244184256084064e-10,
+          "boundary_and_source": 1.1641532182693481e-10,
+          "einstein_constraint": 6.610971726869125e-12,
+          "exact_blackening_error": 6.059974744232477e-11,
+          "exact_gauge_error": 5.337903719741608e-10,
+          "exact_scalar_error": 5.327804172770927e-10,
+          "exact_warp_error": 4.221397675863159e-10,
+          "horizon_scalar_equation": 2.7400062081977193e-12,
+          "maximum_equation_residual": 1.7508396438235588e-09,
+          "maximum_exact_field_error": 5.337903719741608e-10,
+          "maxwell_equation": 1.7508396438235588e-09,
+          "maxwell_flux_drift": 1.3292918377877943e-11,
+          "scalar_equation": 1.5948173912900877e-09,
+          "warp_equation": 6.728013976543017e-11
+        },
+        "equation_of_state": {
+          "chemical_potential_derivative_relative_error": 7.54339931070506e-11,
+          "derivative_Omega": 22.6274169996764,
+          "derivative_temperature": 0.31830988573632335,
+          "equation_energy_density": 2509.561072596656,
+          "equation_relative_error": 7.457783783942096e-11,
+          "maximum_relative_error": 1.4658046412966812e-10,
+          "temperature_derivative_relative_error": 1.4658046412966812e-10
+        },
+        "nonlinear": {
+          "final_scaled_residual": 1.7462298270990904e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 660,
+            "message": "The solution converged.",
+            "scaled_residual": 1.7462298270990904e-10,
+            "success": true
+          }
+        },
+        "source_exact_thermodynamics": {
+          "Omega": 22.627416997969522,
+          "degree": 80,
+          "hat_epsilon": 2509.561071897288,
+          "hat_rho": 147.3019062404444,
+          "hat_s": 40.9028203746171,
+          "maxwell_flux": -11630.492336956335,
+          "mu_bh": 66049.0,
+          "temperature": 0.3183098861837907,
+          "xi": 16.0
+        },
+        "stability_interpretation": "analytic verification point only; stability not claimed",
+        "thermodynamic_relative_errors": {
+          "charge_density": 2.1477465679304302e-10,
+          "chemical_potential": 0.0,
+          "energy_density": 2.041034750558736e-10,
+          "entropy_density": 1.2664193092574128e-09,
+          "mu_bh": 2.041035603854432e-10,
+          "temperature": 1.2591796471521572e-09
+        },
+        "thermodynamics": {
+          "Omega": 22.627416997969522,
+          "degree": 80,
+          "hat_epsilon": 2509.561072409498,
+          "hat_rho": 147.3019062720811,
+          "hat_s": 40.90282032281698,
+          "maxwell_flux": -11630.492339454271,
+          "mu_bh": 66049.00001348084,
+          "temperature": 0.31830988578298136,
+          "xi": 16.0
+        },
+        "xi": 16.0
+      }
+    ],
+    "continuation_solves": [
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 5.802836440172434e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 168,
+            "message": "The solution converged.",
+            "scaled_residual": 5.802836440172434e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 0.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 5.784631812707533e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 248,
+            "message": "The solution converged.",
+            "scaled_residual": 5.784631812707533e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 0.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 4.664387784441535e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 328,
+            "message": "The solution converged.",
+            "scaled_residual": 4.664387784441535e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 0.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 2.0545501570560287e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 868,
+            "message": "The solution converged.",
+            "scaled_residual": 2.0545501570560287e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 0.25
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 2.000469486162815e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 248,
+            "message": "The solution converged.",
+            "scaled_residual": 2.000469486162815e-10,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 0.25
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 5.407219672132456e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 328,
+            "message": "The solution converged.",
+            "scaled_residual": 5.407219672132456e-10,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 0.25
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 2.8991657585795918e-11,
+          "final_success": true,
+          "polish": {
+            "applied": true,
+            "function_evaluations": 17,
+            "library_success": true,
+            "message": "`xtol` termination condition is satisfied."
+          },
+          "root": {
+            "function_evaluations": 182,
+            "message": "The solution converged.",
+            "scaled_residual": 1.479086202158745e-09,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 0.5
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 2.348088456003439e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 248,
+            "message": "The solution converged.",
+            "scaled_residual": 2.348088456003439e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 0.5
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 9.579273285665559e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 328,
+            "message": "The solution converged.",
+            "scaled_residual": 9.579273285665559e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 0.5
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 3.0759313465666356e-12,
+          "final_success": true,
+          "polish": {
+            "applied": true,
+            "function_evaluations": 16,
+            "library_success": true,
+            "message": "`xtol` termination condition is satisfied."
+          },
+          "root": {
+            "function_evaluations": 180,
+            "message": "The solution converged.",
+            "scaled_residual": 1.4651758365992427e-09,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 0.75
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 8.337377451496362e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 248,
+            "message": "The solution converged.",
+            "scaled_residual": 8.337377451496362e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 0.75
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 3.3069660864902427e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 656,
+            "message": "The solution converged.",
+            "scaled_residual": 3.3069660864902427e-10,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 0.75
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 3.1706598339891957e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 183,
+            "message": "The solution converged.",
+            "scaled_residual": 3.1706598339891957e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 1.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 8.205278945551798e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 501,
+            "message": "The solution converged.",
+            "scaled_residual": 8.205278945551798e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 1.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 1.6355215550352289e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 662,
+            "message": "The solution converged.",
+            "scaled_residual": 1.6355215550352289e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 1.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 1.3257483531064108e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 511,
+            "message": "The solution converged.",
+            "scaled_residual": 1.3257483531064108e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 1.5
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 3.534742162697028e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 249,
+            "message": "The solution converged.",
+            "scaled_residual": 3.534742162697028e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 1.5
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 1.542902499404585e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 333,
+            "message": "The solution converged.",
+            "scaled_residual": 1.542902499404585e-10,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 1.5
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 3.8588199686055585e-12,
+          "final_success": true,
+          "polish": {
+            "applied": true,
+            "function_evaluations": 18,
+            "library_success": true,
+            "message": "`xtol` termination condition is satisfied."
+          },
+          "root": {
+            "function_evaluations": 180,
+            "message": "The solution converged.",
+            "scaled_residual": 4.783453748887699e-09,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 2.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 1.7328597969194784e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 745,
+            "message": "The solution converged.",
+            "scaled_residual": 1.7328597969194784e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 2.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 6.546883906042771e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 659,
+            "message": "The solution converged.",
+            "scaled_residual": 6.546883906042771e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 2.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 1.4907924031768982e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 188,
+            "message": "The solution converged.",
+            "scaled_residual": 1.4907924031768982e-10,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 3.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 3.113326644366909e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 499,
+            "message": "The solution converged.",
+            "scaled_residual": 3.113326644366909e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 3.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 2.319282942050041e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 659,
+            "message": "The solution converged.",
+            "scaled_residual": 2.319282942050041e-10,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 3.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 1.0913936421156025e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 350,
+            "message": "The solution converged.",
+            "scaled_residual": 1.0913936421156025e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 4.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 1.0913936420083999e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 248,
+            "message": "The solution converged.",
+            "scaled_residual": 1.0913936420083999e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 4.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 1.3611722487193668e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 656,
+            "message": "The solution converged.",
+            "scaled_residual": 1.3611722487193668e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 4.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 1.4530038757016831e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 514,
+            "message": "The solution converged.",
+            "scaled_residual": 1.4530038757016831e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 6.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 1.457230527762505e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 502,
+            "message": "The solution converged.",
+            "scaled_residual": 1.457230527762505e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 6.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 5.3742719958072716e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 985,
+            "message": "The solution converged.",
+            "scaled_residual": 5.3742719958072716e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 6.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 2.1827872842073822e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 520,
+            "message": "The solution converged.",
+            "scaled_residual": 2.1827872842073822e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 8.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 1.8511788426993344e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 748,
+            "message": "The solution converged.",
+            "scaled_residual": 1.8511788426993344e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 8.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 9.547466670214624e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 332,
+            "message": "The solution converged.",
+            "scaled_residual": 9.547466670214624e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 8.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 8.036953926493532e-12,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 1192,
+            "message": "The solution converged.",
+            "scaled_residual": 8.036953926493532e-12,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 12.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 1.2441361510909608e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 250,
+            "message": "The solution converged.",
+            "scaled_residual": 1.2441361510909608e-11,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 12.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 2.6193447404199366e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 330,
+            "message": "The solution converged.",
+            "scaled_residual": 2.6193447404199366e-10,
+            "success": true
+          }
+        },
+        "reported_case": false,
+        "xi": 12.0
+      },
+      {
+        "degree": 40,
+        "nonlinear": {
+          "final_scaled_residual": 4.365574568319473e-11,
+          "final_success": true,
+          "polish": {
+            "applied": true,
+            "function_evaluations": 13,
+            "library_success": true,
+            "message": "`xtol` termination condition is satisfied."
+          },
+          "root": {
+            "function_evaluations": 1196,
+            "message": "The solution converged.",
+            "scaled_residual": 2.370158603876847e-08,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 16.0
+      },
+      {
+        "degree": 60,
+        "nonlinear": {
+          "final_scaled_residual": 8.731149136257781e-11,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 502,
+            "message": "The solution converged.",
+            "scaled_residual": 8.731149136257781e-11,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 16.0
+      },
+      {
+        "degree": 80,
+        "nonlinear": {
+          "final_scaled_residual": 1.7462298270990904e-10,
+          "final_success": true,
+          "polish": {
+            "applied": false,
+            "function_evaluations": 0,
+            "library_success": false,
+            "message": "not applied"
+          },
+          "root": {
+            "function_evaluations": 660,
+            "message": "The solution converged.",
+            "scaled_residual": 1.7462298270990904e-10,
+            "success": true
+          }
+        },
+        "reported_case": true,
+        "xi": 16.0
+      }
+    ],
+    "determinism": {
+      "comparison_state_present": true,
+      "maximum_scaled_difference": 0.0,
+      "repeat_enabled": true
+    },
+    "field_overlay": {
+      "numerical": {
+        "Phi": [
+          -2.8284271247461903,
+          -2.828257839140266,
+          -2.8277500147448853,
+          -2.826903748821013,
+          -2.8257192034495606,
+          -2.8241966055003433,
+          -2.822336246588628,
+          -2.8201384830192824,
+          -2.8176037357185337,
+          -2.81473249015335,
+          -2.811525296238464,
+          -2.807982768231047,
+          -2.8041055846130667,
+          -2.799894487961337,
+          -2.795350284805302,
+          -2.790473845472561,
+          -2.7852661039221798,
+          -2.7797280575658156,
+          -2.773860767076688,
+          -2.7676653561864315,
+          -2.7611430114698776,
+          -2.7542949821177922,
+          -2.747122579697624,
+          -2.739627177902311,
+          -2.73181021228718,
+          -2.723673179995006,
+          -2.715217639469269,
+          -2.7064452101556764,
+          -2.6973575721919945,
+          -2.6879564660862645,
+          -2.67824369238345,
+          -2.6682211113205896,
+          -2.6578906424705164,
+          -2.647254264374209,
+          -2.6363140141618517,
+          -2.6250719871626766,
+          -2.613530336503652,
+          -2.601691272697109,
+          -2.5895570632173737,
+          -2.5771300320664885,
+          -2.5644125593291074,
+          -2.5514070807166505,
+          -2.5381160871008053,
+          -2.5245421240364614,
+          -2.510687791274176,
+          -2.496555742262258,
+          -2.4821486836385667,
+          -2.467469374712122,
+          -2.45252062693463,
+          -2.437305303362014,
+          -2.4218263181060746,
+          -2.4060866357763624,
+          -2.390089270912384,
+          -2.3738372874062432,
+          -2.3573337979158295,
+          -2.340581963268667,
+          -2.3235849918565323,
+          -2.306346139020975,
+          -2.2888687064298296,
+          -2.271156041444873,
+          -2.2532115364807193,
+          -2.23503862835509,
+          -2.2166407976305793,
+          -2.198021567948036,
+          -2.1791845053517,
+          -2.160133217606215,
+          -2.140871353505651,
+          -2.1214026021746712,
+          -2.101730692361975,
+          -2.0818593917261525,
+          -2.061792506114082,
+          -2.0415338788320163,
+          -2.0210873899094945,
+          -2.000456955356216,
+          -1.9796465264120275,
+          -1.9586600887901642,
+          -1.9375016619138867,
+          -1.9161752981466669,
+          -1.8946850820160581,
+          -1.8730351294314058,
+          -1.8512295868955513,
+          -1.8292726307106664,
+          -1.8071684661783882,
+          -1.7849213267944033,
+          -1.7625354734376244,
+          -1.7400151935541317,
+          -1.7173648003360218,
+          -1.694588631895325,
+          -1.671691050433149,
+          -1.6486764414042037,
+          -1.6255492126768805,
+          -1.602313793689029,
+          -1.578974634599616,
+          -1.5555362054364106,
+          -1.5320029952398642,
+          -1.508379511203353,
+          -1.4846702778099303,
+          -1.4608798359657857,
+          -1.4370127421305334,
+          -1.4130735674445432,
+          -1.3890668968534516,
+          -1.3649973282300318,
+          -1.3408694714935943,
+          -1.31668794772707,
+          -1.2924573882919645,
+          -1.268182433941332,
+          -1.2438677339309496,
+          -1.219517945128872,
+          -1.1951377311235216,
+          -1.1707317613305002,
+          -1.146304710098278,
+          -1.1218612558129564,
+          -1.0974060800022303,
+          -1.072943866438759,
+          -1.0484793002431094,
+          -1.0240170669864241,
+          -0.9995618517930223,
+          -0.975118338443095,
+          -0.9506912084756383,
+          -0.9262851402918313,
+          -0.9019048082590058,
+          -0.8775548818153867,
+          -0.8532400245757674,
+          -0.8289648934383063,
+          -0.8047341376926322,
+          -0.7805523981293745,
+          -0.7564243061513642,
+          -0.7323544828866004,
+          -0.7083475383031765,
+          -0.6844080703263575,
+          -0.6605406639579532,
+          -0.6367498903981725,
+          -0.613040306170153,
+          -0.5894164522472716,
+          -0.5658828531834335,
+          -0.5424440162465061,
+          -0.5191044305550427,
+          -0.4958685662185074,
+          -0.47274087348115357,
+          -0.4497257818697036,
+          -0.4268276993449849,
+          -0.40405101145768985,
+          -0.38140008050840546,
+          -0.35887924471212695,
+          -0.33649281736741044,
+          -0.3142450860302808,
+          -0.292140311693057,
+          -0.2701827279682272,
+          -0.24837654027759193,
+          -0.2267259250468654,
+          -0.2052350289058178,
+          -0.18390796789406005,
+          -0.162748826672666,
+          -0.1417616577418892,
+          -0.12095048066509095,
+          -0.10031928129881873,
+          -0.07987201102935426,
+          -0.05961258601606678,
+          -0.03954488644129306,
+          -0.01967275576714611,
+          5.009326287108706e-13
+        ],
+        "f": [
+          1.0,
+          0.9999999964177979,
+          0.9999999426902557,
+          0.9999997099157237,
+          0.9999990833952812,
+          0.9999977628383634,
+          0.9999953626504078,
+          0.9999914123022887,
+          0.9999853567812417,
+          0.9999765571229166,
+          0.9999642910241301,
+          0.9999477535358252,
+          0.99992605783568,
+          0.9998982360797437,
+          0.9998632403324149,
+          0.9998199435740136,
+          0.9997671407851354,
+          0.9997035501069155,
+          0.9996278140762672,
+          0.9995385009351022,
+          0.9994341060124751,
+          0.9993130531785418,
+          0.9991736963691582,
+          0.9990143211798908,
+          0.9988331465281557,
+          0.9986283263821437,
+          0.9983979515551392,
+          0.9981400515637843,
+          0.9978525965487891,
+          0.9975334992565386,
+          0.9971806170799953,
+          0.9967917541572509,
+          0.9963646635260303,
+          0.9958970493324085,
+          0.9953865690919536,
+          0.9948308360014685,
+          0.9942274212994614,
+          0.9935738566734338,
+          0.9928676367120384,
+          0.99210622140012,
+          0.9912870386546185,
+          0.9904074868992783,
+          0.9894649376760744,
+          0.9884567382912385,
+          0.9873802144937363,
+          0.9862326731840185,
+          0.9850114051508471,
+          0.9837136878339681,
+          0.9823367881103859,
+          0.9808779651019681,
+          0.9793344730020935,
+          0.9777035639190413,
+          0.9759824907337981,
+          0.9741685099699504,
+          0.97225888467332,
+          0.9702508872989827,
+          0.9681418026033112,
+          0.9659289305386715,
+          0.9636095891483989,
+          0.9611811174596786,
+          0.9586408783719524,
+          0.9559862615384789,
+          0.9532146862386719,
+          0.9503236042388505,
+          0.947310502639042,
+          0.9441729067034813,
+          0.9409083826724692,
+          0.937514540553258,
+          0.9339890368876487,
+          0.9303295774940017,
+          0.9265339201813773,
+          0.9225998774335453,
+          0.918525319060622,
+          0.9143081748161146,
+          0.9099464369771835,
+          0.90543816288595,
+          0.900781477449716,
+          0.8959745755979825,
+          0.8910157246941908,
+          0.8859032669001418,
+          0.8806356214910835,
+          0.8752112871194926,
+          0.8696288440256139,
+          0.8638869561928644,
+          0.857984373446239,
+          0.851919933491914,
+          0.8456925638962709,
+          0.8393012840026194,
+          0.8327452067839419,
+          0.8260235406300271,
+          0.8191355910674138,
+          0.8120807624106123,
+          0.8048585593431252,
+          0.7974685884268405,
+          0.7899105595384248,
+          0.7821842872313962,
+          0.7742896920226212,
+          0.7662268016020249,
+          0.7579957519643693,
+          0.749596788462014,
+          0.7410302667776303,
+          0.7322966538158977,
+          0.7233965285132833,
+          0.7143305825650543,
+          0.7050996210687456,
+          0.6957045630833634,
+          0.6861464421036735,
+          0.6764264064489817,
+          0.6665457195658852,
+          0.6565057602445357,
+          0.6463080227480211,
+          0.6359541168545406,
+          0.6254457678121145,
+          0.6147848162056311,
+          0.6039732177361125,
+          0.5930130429121339,
+          0.5819064766534077,
+          0.5706558178066108,
+          0.5592634785735907,
+          0.5477319838521693,
+          0.5360639704898156,
+          0.5242621864505348,
+          0.512329489895385,
+          0.500268848177092,
+          0.4880833367493206,
+          0.47577613799119034,
+          0.46335053994773123,
+          0.4508099349870046,
+          0.43815781837469603,
+          0.4253977867670523,
+          0.4125335366230871,
+          0.3995688625370488,
+          0.38650765549221056,
+          0.37335390103708743,
+          0.36011167738526717,
+          0.34678515344008176,
+          0.33337858674541854,
+          0.319896321364017,
+          0.3063427856846608,
+          0.29272249015972607,
+          0.2790400249746037,
+          0.26530005765056364,
+          0.2515073305826897,
+          0.23766665851454827,
+          0.22378292595132088,
+          0.2098610845131632,
+          0.19590615023062186,
+          0.18192320078395574,
+          0.16791737268828233,
+          0.1538938584264964,
+          0.1398579035319466,
+          0.12581480362290698,
+          0.11176990139091869,
+          0.09772858354509739,
+          0.08369627771455856,
+          0.06967844931112721,
+          0.05568059835455108,
+          0.041708256262446564,
+          0.027766982607244306,
+          0.013862361842440163,
+          4.525269048372138e-13
+        ],
+        "phi": [
+          0.0,
+          3.909577192569015e-05,
+          0.00015638683194613007,
+          0.0003518844140460218,
+          0.0006256072463068636,
+          0.0009775815580411764,
+          0.0014078410898587046,
+          0.0019164271067301612,
+          0.0025033884136352194,
+          0.003168781374396766,
+          0.003912669933499936,
+          0.004735125640575857,
+          0.00563622767789736,
+          0.006616062891093772,
+          0.007674725822835443,
+          0.008812318749352769,
+          0.010028951720011609,
+          0.011324742600165472,
+          0.012699817117234082,
+          0.014154308909851183,
+          0.015688359580090034,
+          0.017302118748956163,
+          0.01899574411531748,
+          0.020769401518284505,
+          0.02262326500295858,
+          0.024557516889527644,
+          0.02657234784582241,
+          0.02866795696351113,
+          0.030844551838056056,
+          0.0331023486524533,
+          0.03544157226472876,
+          0.03786245629920949,
+          0.040365243241682065,
+          0.042950184538608334,
+          0.045617540700550435,
+          0.04836758140989162,
+          0.051200585632880935,
+          0.054116841736030985,
+          0.05711664760695586,
+          0.06020031077980142,
+          0.06336814856545663,
+          0.06662048818671028,
+          0.0699576669184705,
+          0.07338003223312234,
+          0.07688794195109967,
+          0.0804817643967929,
+          0.08416187855997045,
+          0.08792867426292868,
+          0.09178255233358468,
+          0.09572392478469105,
+          0.09975321499931342,
+          0.10387085792270212,
+          0.1080773002607082,
+          0.1123730006849472,
+          0.11675843004496012,
+          0.12123407158764828,
+          0.12580042118424747,
+          0.1304579875650771,
+          0.13520729256227862,
+          0.14004887136074654,
+          0.14498327275749426,
+          0.15001105942974005,
+          0.15513280821205042,
+          0.16034911038290472,
+          0.16566057196103784,
+          0.17106781401190285,
+          0.1765714729645676,
+          0.18217220093936504,
+          0.187870666086646,
+          0.19366755293703286,
+          0.1995635627636355,
+          0.205559413956716,
+          0.21165584241131194,
+          0.21785360192830905,
+          0.22415346462943692,
+          0.2305562213866691,
+          0.2370626822665338,
+          0.24367367698989878,
+          0.25039005540786563,
+          0.25721268799445995,
+          0.264142466356836,
+          0.27118030376372354,
+          0.27832713569282785,
+          0.28558392039790814,
+          0.2929516394962809,
+          0.30043129857756584,
+          0.30802392783457305,
+          0.31573058271731524,
+          0.3235523446111857,
+          0.3314903215403815,
+          0.33954564889764655,
+          0.3477194902014392,
+          0.3560130378816512,
+          0.3644275140950927,
+          0.3729641715720649,
+          0.38162429449545937,
+          0.39040919941393276,
+          0.3993202361907653,
+          0.4083587889900649,
+          0.4175262773019979,
+          0.4268241570087946,
+          0.4362539214933827,
+          0.44581710279265435,
+          0.4555152727975517,
+          0.4653500445023196,
+          0.4753230733054056,
+          0.4854360583645767,
+          0.4956907440088903,
+          0.5060889212102689,
+          0.5166324291175903,
+          0.5273231566564492,
+          0.5381630441980076,
+          0.5491540853006384,
+          0.5602983285282676,
+          0.5715978793494839,
+          0.5830549021216499,
+          0.5946716221644381,
+          0.6064503279275179,
+          0.6183933732575391,
+          0.6305031797699948,
+          0.642782239331972,
+          0.6552331166621518,
+          0.667858452054687,
+          0.680660964233904,
+          0.6936434533472003,
+          0.7068088041041426,
+          0.7201599890704803,
+          0.7337000721265764,
+          0.7474322121003528,
+          0.7613596665853757,
+          0.7754857959552363,
+          0.7898140675861065,
+          0.8043480603004131,
+          0.8190914690458753,
+          0.8340481098253876,
+          0.8492219248942778,
+          0.8646169882423096,
+          0.8802375113788004,
+          0.8960878494407637,
+          0.9121725076461127,
+          0.9284961481162405,
+          0.9450635970941322,
+          0.9618798525855091,
+          0.9789500924521017,
+          0.9962796829889146,
+          1.0138741880213058,
+          1.0317393785615203,
+          1.0498812430667106,
+          1.0683059983422085,
+          1.0870201011377627,
+          1.1060302604916425,
+          1.1253434508842173,
+          1.1449669262647328,
+          1.1649082350170117,
+          1.18517523594107,
+          1.2057761153420334,
+          1.2267194053163086,
+          1.2480140033265323,
+          1.269669193191752,
+          1.2916946676119414,
+          1.3141005523530462
+        ],
+        "source_subtracted_A": [
+          -0.0,
+          -5.0949274029088857e-11,
+          -8.152255615026708e-10,
+          -4.127393120528718e-09,
+          -1.3045988820141125e-08,
+          -3.185491762364172e-08,
+          -6.606540790747036e-08,
+          -1.2241852829179019e-07,
+          -2.0888826808796975e-07,
+          -3.346851839714173e-07,
+          -5.102606160134012e-07,
+          -7.473114766218751e-07,
+          -1.0587856164319816e-06,
+          -1.4588877717623715e-06,
+          -1.9630860987460015e-06,
+          -2.588119299679392e-06,
+          -3.3520043476574056e-06,
+          -4.274044816165583e-06,
+          -5.374839820864799e-06,
+          -6.676293581288899e-06,
+          -8.201625610680156e-06,
+          -9.975381542787002e-06,
+          -1.2023444605105951e-05,
+          -1.4373047748673828e-05,
+          -1.7052786445079925e-05,
+          -2.009263216193185e-05,
+          -2.3523946528648366e-05,
+          -2.7379496205174165e-05,
+          -3.169346846695617e-05,
+          -3.6501487520225546e-05,
+          -4.184063156229882e-05,
+          -4.774945060229661e-05,
+          -5.426798505844136e-05,
+          -6.143778514894249e-05,
+          -6.930193109436543e-05,
+          -7.790505415025502e-05,
+          -8.729335848962674e-05,
+          -9.751464395578151e-05,
+          -0.00010861832970680413,
+          -0.00012065547877409848,
+          -0.00013367882355838962,
+          -0.0001477427922877388,
+          -0.00016290353646322426,
+          -0.00017921895931904036,
+          -0.0001967487453248721,
+          -0.00021555439075959337,
+          -0.00023569923538661988,
+          -0.0002572484952626395,
+          -0.0002802692967128978,
+          -0.0003048307115076929,
+          -0.00033100379327621486,
+          -0.0003588616151953683,
+          -0.00038847930899278357,
+          -0.00041993410530491947,
+          -0.00045330537543296617,
+          -0.0004886746745412176,
+          -0.0005261257863445732,
+          -0.0005657447693339012,
+          -0.0006076200045900722,
+          -0.0006518422452396214,
+          -0.0006985046676072645,
+          -0.0007477029241229093,
+          -0.0007995351980434147,
+          -0.0008541022600521108,
+          -0.000911507526801963,
+          -0.0009718571214712359,
+          -0.001035259936403547,
+          -0.0011018276979073314,
+          -0.0011716750332930886,
+          -0.0012449195402302667,
+          -0.0013216818585095047,
+          -0.0014020857442998875,
+          -0.0014862581469951928,
+          -0.0015743292887474198,
+          -0.0016664327467904392,
+          -0.0017627055386613567,
+          -0.0018632882104320557,
+          -0.001968324928068727,
+          -0.0020779635720428328,
+          -0.002192355835322912,
+          -0.0023116573248830427,
+          -0.002436027666870413,
+          -0.002565630615581337,
+          -0.0027006341664022717,
+          -0.0028412106728800315,
+          -0.0029875369680933232,
+          -0.003139794490506467,
+          -0.0032981694144952898,
+          -0.003462852785744983,
+          -0.0036340406617300365,
+          -0.0038119342574970357,
+          -0.00399674009698264,
+          -0.004188670170110701,
+          -0.004387942095925232,
+          -0.004594779292029536,
+          -0.0048094111506160305,
+          -0.005032073221386947,
+          -0.00526300740168234,
+          -0.00550246213414914,
+          -0.005750692612303124,
+          -0.006007960994354819,
+          -0.006274536625690813,
+          -0.006550696270423727,
+          -0.00683672435244745,
+          -0.00713291320645948,
+          -0.007439563339438804,
+          -0.007756983703096242,
+          -0.008085491977844052,
+          -0.008425414868863541,
+          -0.00877708841488316,
+          -0.009140858310316285,
+          -0.009517080241446723,
+          -0.0099061202373925,
+          -0.010308355036623555,
+          -0.01072417246985673,
+          -0.011153971860203244,
+          -0.011598164441497583,
+          -0.01205717379579584,
+          -0.0125314363110945,
+          -0.013021401660388518,
+          -0.013527533303261735,
+          -0.014050309011281195,
+          -0.014590221418551813,
+          -0.015147778598878009,
+          -0.015723504671075896,
+          -0.016317940434085375,
+          -0.016931644033644333,
+          -0.017565191662412376,
+          -0.01821917829556427,
+          -0.018894218464017763,
+          -0.019590947067615046,
+          -0.02031002023074392,
+          -0.021052116203066393,
+          -0.021817936308220896,
+          -0.022608205943580113,
+          -0.023423675634382378,
+          -0.02426512214580725,
+          -0.025133349656840883,
+          -0.026029191000075023,
+          -0.0269535089719115,
+          -0.027907197718004498,
+          -0.028891184199167735,
+          -0.029906429743401457,
+          -0.030953931690159173,
+          -0.03203472513348199,
+          -0.03314988477119364,
+          -0.034300526867972615,
+          -0.03548781134080366,
+          -0.03671294397605304,
+          -0.037977178788226124,
+          -0.039281820531375834,
+          -0.04062822737514979,
+          -0.04201781375858256,
+          -0.04345205343594948,
+          -0.04493248273034777,
+          -0.04646070401221742,
+          -0.048038389421716524,
+          -0.04966728485568086,
+          -0.0513492142420082,
+          -0.0530860841267159,
+          -0.05487988860140443
+        ]
+      },
+      "source_exact": {
+        "Phi": [
+          -2.8284271247461903,
+          -2.828257839140242,
+          -2.8277500147447894,
+          -2.8269037488207975,
+          -2.8257192034491787,
+          -2.824196605499748,
+          -2.822336246587773,
+          -2.820138483018122,
+          -2.8176037357170225,
+          -2.8147324901514446,
+          -2.8115252962361206,
+          -2.807982768228223,
+          -2.8041055846097196,
+          -2.799894487957427,
+          -2.795350284800789,
+          -2.7904738454674063,
+          -2.7852661039163453,
+          -2.779728057559265,
+          -2.7738607670693853,
+          -2.7676653561783433,
+          -2.76114301146097,
+          -2.754294982108032,
+          -2.747122579686981,
+          -2.7396271778907555,
+          -2.731810212274684,
+          -2.723673179981542,
+          -2.715217639454811,
+          -2.7064452101401977,
+          -2.697357572175472,
+          -2.687956466068676,
+          -2.6782436923647754,
+          -2.66822111130081,
+          -2.6578906424496127,
+          -2.647254264352162,
+          -2.636314014138646,
+          -2.6250719871382957,
+          -2.613530336478084,
+          -2.6016912726703425,
+          -2.5895570631893987,
+          -2.577130032037295,
+          -2.5644125592986855,
+          -2.551407080684992,
+          -2.5381160870679023,
+          -2.52454212400231,
+          -2.5106877912387744,
+          -2.4965557422256053,
+          -2.4821486836006623,
+          -2.467469374672965,
+          -2.452520626894218,
+          -2.4373053033203487,
+          -2.421826318063159,
+          -2.4060866357322026,
+          -2.3900892708669885,
+          -2.3738372873596205,
+          -2.357333797867988,
+          -2.3405819632196128,
+          -2.3235849918062734,
+          -2.306346138969519,
+          -2.288868706377188,
+          -2.2711560413910616,
+          -2.2532115364257557,
+          -2.2350386282989922,
+          -2.2166407975733637,
+          -2.198021567889719,
+          -2.1791845052922953,
+          -2.160133217545739,
+          -2.140871353444121,
+          -2.12140260211211,
+          -2.1017306922984083,
+          -2.0818593916616064,
+          -2.061792506048582,
+          -2.041533878765586,
+          -2.0210873898421546,
+          -2.000456955287987,
+          -1.9796465263429335,
+          -1.9586600887202321,
+          -1.9375016618431486,
+          -1.9161752980751572,
+          -1.89468508194381,
+          -1.8730351293584508,
+          -1.851229586821916,
+          -1.8292726306363771,
+          -1.8071684661034715,
+          -1.7849213267188895,
+          -1.7625354733615493,
+          -1.7400151934775345,
+          -1.7173648002589432,
+          -1.6945886318178045,
+          -1.6716910503552203,
+          -1.6486764413258983,
+          -1.6255492125982265,
+          -1.6023137936100598,
+          -1.578974634520369,
+          -1.5555362053569282,
+          -1.5320029951601926,
+          -1.5083795111235356,
+          -1.4846702777300096,
+          -1.4608798358857955,
+          -1.437012742050507,
+          -1.4130735673645136,
+          -1.3890668967734578,
+          -1.3649973281501178,
+          -1.3408694714138096,
+          -1.316687947647465,
+          -1.2924573882125852,
+          -1.268182433862215,
+          -1.2438677338521293,
+          -1.2195179450503826,
+          -1.1951377310454012,
+          -1.1707317612527925,
+          -1.1463047100210393,
+          -1.1218612557362373,
+          -1.0974060799260792,
+          -1.0729438663632171,
+          -1.0484793001682082,
+          -1.0240170669121968,
+          -0.999561851719512,
+          -0.9751183383703499,
+          -0.9506912084037127,
+          -0.9262851402207783,
+          -0.9019048081888723,
+          -0.8775548817462071,
+          -0.8532400245075717,
+          -0.8289648933711338,
+          -0.8047341376265251,
+          -0.7805523980643918,
+          -0.7564243060875628,
+          -0.7323544828240256,
+          -0.7083475382418642,
+          -0.6844080702663367,
+          -0.6605406638992539,
+          -0.6367498903408446,
+          -0.6130403061142538,
+          -0.5894164521928573,
+          -0.5658828531305464,
+          -0.5424440161951734,
+          -0.5191044305052932,
+          -0.49586856617038233,
+          -0.4727408734347076,
+          -0.44972578182499356,
+          -0.42682769930205255,
+          -0.40405101141655875,
+          -0.3814000804691009,
+          -0.3588792446746969,
+          -0.33649281733191305,
+          -0.31424508599676804,
+          -0.2921403116615524,
+          -0.270182727938749,
+          -0.24837654025018363,
+          -0.2267259250215905,
+          -0.20523502888271894,
+          -0.18390796787315056,
+          -0.16274882665397694,
+          -0.14176165772548588,
+          -0.12095048065100755,
+          -0.10031928128706502,
+          -0.07987201101998664,
+          -0.05961258600912078,
+          -0.039544886436787774,
+          -0.019672755765130834,
+          0.0
+        ],
+        "f": [
+          1.0,
+          0.9999999964177979,
+          0.9999999426902557,
+          0.9999997099157237,
+          0.9999990833952811,
+          0.9999977628383632,
+          0.9999953626504074,
+          0.9999914123022879,
+          0.9999853567812405,
+          0.9999765571229146,
+          0.999964291024127,
+          0.9999477535358208,
+          0.9999260578356738,
+          0.999898236079735,
+          0.9998632403324033,
+          0.9998199435739983,
+          0.9997671407851157,
+          0.9997035501068904,
+          0.9996278140762359,
+          0.9995385009350635,
+          0.9994341060124277,
+          0.9993130531784845,
+          0.9991736963690894,
+          0.999014321179809,
+          0.9988331465280592,
+          0.9986283263820306,
+          0.9983979515550077,
+          0.9981400515636321,
+          0.9978525965486139,
+          0.9975334992563382,
+          0.9971806170797671,
+          0.9967917541569923,
+          0.9963646635257386,
+          0.9958970493320808,
+          0.9953865690915866,
+          0.9948308360010593,
+          0.9942274212990065,
+          0.99357385667293,
+          0.9928676367114818,
+          0.9921062213995071,
+          0.9912870386539456,
+          0.9904074868985414,
+          0.9894649376752694,
+          0.9884567382903615,
+          0.9873802144927829,
+          0.9862326731829845,
+          0.9850114051497278,
+          0.9837136878327594,
+          0.9823367881090832,
+          0.9808779651005665,
+          0.9793344730005885,
+          0.9777035639174282,
+          0.9759824907320719,
+          0.9741685099681064,
+          0.9722588846713534,
+          0.9702508872968885,
+          0.9681418026010844,
+          0.9659289305363074,
+          0.9636095891458926,
+          0.9611811174570252,
+          0.958640878369147,
+          0.9559862615355167,
+          0.953214686235548,
+          0.9503236042355603,
+          0.9473105026355807,
+          0.9441729066998443,
+          0.9409083826686521,
+          0.9375145405492564,
+          0.9339890368834582,
+          0.9303295774896182,
+          0.9265339201767966,
+          0.9225998774287635,
+          0.9185253190556352,
+          0.9143081748109193,
+          0.9099464369717761,
+          0.9054381628803274,
+          0.9007814774438752,
+          0.8959745755919204,
+          0.8910157246879047,
+          0.8859032668936292,
+          0.880635621484342,
+          0.8752112871125204,
+          0.8696288440184095,
+          0.8638869561854258,
+          0.8579843734385654,
+          0.8519199334840044,
+          0.8456925638881244,
+          0.8393012839942358,
+          0.832745206775321,
+          0.8260235406211692,
+          0.8191355910583195,
+          0.8120807624012827,
+          0.8048585593335618,
+          0.7974685884170448,
+          0.7899105595283986,
+          0.7821842872211417,
+          0.7742896920121416,
+          0.766226801591323,
+          0.7579957519534488,
+          0.7495967884508792,
+          0.7410302667662854,
+          0.7322966538043473,
+          0.7233965285015327,
+          0.7143305825531088,
+          0.705099621056611,
+          0.695704563071046,
+          0.6861464420911803,
+          0.6764264064363203,
+          0.6665457195530635,
+          0.6565057602315616,
+          0.6463080227349034,
+          0.6359541168412881,
+          0.6254457677987365,
+          0.6147848161921374,
+          0.6039732177225137,
+          0.5930130428984406,
+          0.5819064766396316,
+          0.5706558177927636,
+          0.5592634785596845,
+          0.547731983838216,
+          0.5360639704758281,
+          0.5242621864365267,
+          0.5123294898813697,
+          0.500268848163085,
+          0.4880833367353359,
+          0.4757761379772436,
+          0.463350539933838,
+          0.45080993497317956,
+          0.438157818360956,
+          0.4253977867534142,
+          0.41253353660956815,
+          0.3995688625236671,
+          0.3865076554789837,
+          0.3733539010240339,
+          0.36011167737240446,
+          0.34678515342742877,
+          0.3333785867329955,
+          0.3198963213518434,
+          0.30634278567275697,
+          0.2927224901481118,
+          0.2790400249632985,
+          0.26530005763958864,
+          0.25150733057206653,
+          0.2376666585042989,
+          0.2237829259414661,
+          0.2098610845037251,
+          0.1959061502216214,
+          0.18192320077541646,
+          0.16791737268022677,
+          0.15389385841894754,
+          0.13985790352492622,
+          0.1258148036164386,
+          0.11176990138502507,
+          0.09772858353980285,
+          0.08369627770988597,
+          0.0696784493071001,
+          0.05568059835119199,
+          0.041708256259778476,
+          0.02776698260529198,
+          0.013862361841226245,
+          1.1102230246251565e-16
+        ],
+        "phi": [
+          0.0,
+          3.909577204932324e-05,
+          0.00015638683237128093,
+          0.0003518844149218308,
+          0.0006256072477438682,
+          0.0009775815601443276,
+          0.0014078410927525521,
+          0.001916427110464896,
+          0.002503388418287244,
+          0.0031687813800897044,
+          0.003912669940287235,
+          0.004735125648463819,
+          0.005636227686961927,
+          0.006616062901458534,
+          0.007674725834553148,
+          0.008812318762395974,
+          0.010028951734385744,
+          0.01132474261597181,
+          0.012699817134593307,
+          0.01415430892879598,
+          0.015688359600567314,
+          0.017302118770932216,
+          0.018995744138858673,
+          0.02076940154352179,
+          0.02262326502997679,
+          0.024557516918302193,
+          0.026572347876267034,
+          0.028667956995587114,
+          0.03084455187183552,
+          0.033102348688077106,
+          0.03544157230229878,
+          0.03786245633871264,
+          0.0403652432830126,
+          0.042950184581668,
+          0.045617540745343854,
+          0.04836758145653825,
+          0.05120058568153468,
+          0.05411684178677317,
+          0.05711664765974031,
+          0.060200310834495355,
+          0.06336814862194513,
+          0.06662048824498765,
+          0.06995766697865365,
+          0.07338003229537758,
+          0.0768879420155334,
+          0.08048176446338194,
+          0.08416187862857914,
+          0.08792867433340197,
+          0.09178255240585535,
+          0.09572392485883031,
+          0.09975321507549444,
+          0.10387085800109587,
+          0.10807730034137902,
+          0.11237300076781205,
+          0.11675843012983808,
+          0.12123407167437011,
+          0.12580042127275992,
+          0.13045798765548028,
+          0.13520729265477285,
+          0.14004887145551936,
+          0.14498327285461357,
+          0.1500110595291141,
+          0.15513280831347998,
+          0.16034911048619727,
+          0.16566057206611884,
+          0.17106781411886254,
+          0.17657147307361418,
+          0.1821722010507111,
+          0.18787066620038986,
+          0.1936675530531027,
+          0.19956356288182614,
+          0.205559414076802,
+          0.211655842533175,
+          0.21785360205200818,
+          0.22415346475518366,
+          0.23055622151471775,
+          0.2370626823970448,
+          0.24367367712285073,
+          0.2503900555430623,
+          0.25721268813163345,
+          0.2641424664957928,
+          0.27118030390445136,
+          0.2783271358355107,
+          0.28558392054283327,
+          0.29295163964368903,
+          0.3004312987275229,
+          0.308023927986934,
+          0.3157305828718014,
+          0.3235523447675374,
+          0.3314903216985031,
+          0.33954564905766643,
+          0.3477194903636457,
+          0.35601303804634066,
+          0.3644275142624075,
+          0.37296417174191326,
+          0.38162429466756553,
+          0.3904091995879908,
+          0.3993202363666175,
+          0.4083587891678024,
+          0.41752627748192156,
+          0.4268241571912551,
+          0.4362539216785861,
+          0.44581710298054295,
+          0.45551527298783384,
+          0.4653500446946387,
+          0.47532307349955444,
+          0.4854360585606309,
+          0.49569074420717935,
+          0.5060889214111938,
+          0.5166324293213903,
+          0.52732315686306,
+          0.5381630444071029,
+          0.5491540855118375,
+          0.5602983287413846,
+          0.5715978795646641,
+          0.5830549023392942,
+          0.5946716223849563,
+          0.6064503281510654,
+          0.6183933734839155,
+          0.6305031799987818,
+          0.642782239562834,
+          0.6552331168950938,
+          0.6678584522900827,
+          0.6806609644722553,
+          0.6936434535887886,
+          0.7068088043488227,
+          0.7201599893177912,
+          0.7337000723761068,
+          0.7474322123520903,
+          0.7613596668397584,
+          0.7754857962128336,
+          0.7898140678471679,
+          0.8043480605646697,
+          0.8190914693127878,
+          0.834048110094661,
+          0.8492219251661812,
+          0.8646169885174769,
+          0.8802375116576452,
+          0.8960878497230789,
+          0.9121725079313038,
+          0.9284961484040117,
+          0.9450635973849005,
+          0.9618798528800125,
+          0.9789500927505652,
+          0.9962796832907846,
+          1.0138741883260063,
+          1.0317393788693374,
+          1.0498812433785116,
+          1.068305998658221,
+          1.087020101457264,
+          1.1060302608142865,
+          1.1253434512108298,
+          1.144966926595841,
+          1.1649082353518183,
+          1.1851752362794632,
+          1.205776115685117,
+          1.2267194056635373,
+          1.2480140036777194,
+          1.2696691935477642,
+          1.2916946679721868,
+          1.3141005527179004
+        ],
+        "source_subtracted_A": [
+          -0.0,
+          -5.094926261076495e-11,
+          -8.152255384492294e-10,
+          -4.127393133228374e-09,
+          -1.304598885759384e-08,
+          -3.1854917675796244e-08,
+          -6.606540816576347e-08,
+          -1.2241852878110008e-07,
+          -2.0888826882884803e-07,
+          -3.3468518514934154e-07,
+          -5.102606178222519e-07,
+          -7.473114791152307e-07,
+          -1.0587856198362913e-06,
+          -1.4588877762624144e-06,
+          -1.9630861045510147e-06,
+          -2.5881193071956156e-06,
+          -3.3520043570263273e-06,
+          -4.27404482784919e-06,
+          -5.374839835214657e-06,
+          -6.676293598729694e-06,
+          -8.201625631659975e-06,
+          -9.975381567667394e-06,
+          -1.2023444634214758e-05,
+          -1.4373047782611018e-05,
+          -1.705278648467777e-05,
+          -2.009263220761285e-05,
+          -2.3523946581010743e-05,
+          -2.7379496264836635e-05,
+          -3.169346853460972e-05,
+          -3.650148759642112e-05,
+          -4.184063164805983e-05,
+          -4.7749450698572796e-05,
+          -5.4267985165864015e-05,
+          -6.14377852683097e-05,
+          -6.930193122647692e-05,
+          -7.790505429598749e-05,
+          -8.72933586499834e-05,
+          -9.751464413177909e-05,
+          -0.00010861832989985007,
+          -0.0001206554789850295,
+          -0.00013367882378825628,
+          -0.00014774279253741002,
+          -0.0001629035367338473,
+          -0.0001792189596118033,
+          -0.00019674874564132652,
+          -0.00021555439110103672,
+          -0.00023569923575447044,
+          -0.00025724849565801275,
+          -0.00028026929713689114,
+          -0.0003048307119616449,
+          -0.00033100379376132735,
+          -0.00035886161571337116,
+          -0.00038847930954556345,
+          -0.0004199341058941826,
+          -0.00045330537606034366,
+          -0.0004886746752080923,
+          -0.0005261257870519606,
+          -0.000565744770083379,
+          -0.0006076200053833497,
+          -0.0006518422460785878,
+          -0.0006985046684942729,
+          -0.0007477029250600384,
+          -0.000799535199032534,
+          -0.00085410226109469,
+          -0.0009115075278996118,
+          -0.0009718571226254025,
+          -0.0010352599376162036,
+          -0.0011018276991807963,
+          -0.0011716750346300667,
+          -0.001244919541633423,
+          -0.0013216818599808694,
+          -0.0014020857458413027,
+          -0.0014862581486083867,
+          -0.0015743292904340305,
+          -0.0016664327485526181,
+          -0.001762705540501869,
+          -0.0018632882123539724,
+          -0.001968324930075163,
+          -0.0020779635741365945,
+          -0.0021923558375063143,
+          -0.00231165732715799,
+          -0.002436027669238325,
+          -0.002565630618044608,
+          -0.002700634168963885,
+          -0.0028412106755434027,
+          -0.002987536970862334,
+          -0.003139794493384821,
+          -0.0032981694174856677,
+          -0.003462852788849682,
+          -0.0036340406649510437,
+          -0.003811934260836772,
+          -0.003996740100444041,
+          -0.004188670173697673,
+          -0.004387942099642439,
+          -0.004594779295881174,
+          -0.0048094111546058554,
+          -0.005032073225517464,
+          -0.005263007405955977,
+          -0.005502462138568254,
+          -0.005750692616871417,
+          -0.0060079609990765365,
+          -0.006274536630571537,
+          -0.006550696275468629,
+          -0.006836724357660973,
+          -0.00713291321184488,
+          -0.007439563344998873,
+          -0.007756983708833612,
+          -0.008085491983762655,
+          -0.008425414874968742,
+          -0.008777088421181481,
+          -0.009140858316813716,
+          -0.009517080248148749,
+          -0.009906120244302902,
+          -0.010308355043745485,
+          -0.010724172477193872,
+          -0.011153971867760584,
+          -0.01159816444928198,
+          -0.012057173803814852,
+          -0.012531436319355091,
+          -0.013021401668896343,
+          -0.013527533312020765,
+          -0.014050309020295373,
+          -0.014590221427826717,
+          -0.01514777860842108,
+          -0.015723504680896228,
+          -0.01631794044419166,
+          -0.016931644044043487,
+          -0.017565191673109715,
+          -0.01821917830656436,
+          -0.018894218475327046,
+          -0.01959094707924286,
+          -0.02031002024270112,
+          -0.021052116215363292,
+          -0.021817936320864956,
+          -0.02260820595657742,
+          -0.023423675647739783,
+          -0.024265122159534303,
+          -0.025133349670950295,
+          -0.0260291910145789,
+          -0.02695350898681953,
+          -0.02790719773332409,
+          -0.028891184214907578,
+          -0.029906429759574388,
+          -0.03095393170678032,
+          -0.03203472515056463,
+          -0.0331498847887475,
+          -0.03430052688600746,
+          -0.03548781135933374,
+          -0.03671294399509603,
+          -0.03797717880779694,
+          -0.039281820551485935,
+          -0.04062822739581323,
+          -0.04201781377981911,
+          -0.043452053457776335,
+          -0.04493248275277878,
+          -0.046460704035271666,
+          -0.048038389445415525,
+          -0.049667284880040685,
+          -0.05134921426705105,
+          -0.0530860841524623,
+          -0.054879888627876905
+        ]
+      },
+      "u": [
+        0.0,
+        0.00625,
+        0.0125,
+        0.018750000000000003,
+        0.025,
+        0.03125,
+        0.037500000000000006,
+        0.043750000000000004,
+        0.05,
+        0.05625,
+        0.0625,
+        0.06875,
+        0.07500000000000001,
+        0.08125,
+        0.08750000000000001,
+        0.09375,
+        0.1,
+        0.10625000000000001,
+        0.1125,
+        0.11875000000000001,
+        0.125,
+        0.13125,
+        0.1375,
+        0.14375000000000002,
+        0.15000000000000002,
+        0.15625,
+        0.1625,
+        0.16875,
+        0.17500000000000002,
+        0.18125000000000002,
+        0.1875,
+        0.19375,
+        0.2,
+        0.20625000000000002,
+        0.21250000000000002,
+        0.21875,
+        0.225,
+        0.23125,
+        0.23750000000000002,
+        0.24375000000000002,
+        0.25,
+        0.25625000000000003,
+        0.2625,
+        0.26875,
+        0.275,
+        0.28125,
+        0.28750000000000003,
+        0.29375,
+        0.30000000000000004,
+        0.30625,
+        0.3125,
+        0.31875000000000003,
+        0.325,
+        0.33125000000000004,
+        0.3375,
+        0.34375,
+        0.35000000000000003,
+        0.35625,
+        0.36250000000000004,
+        0.36875,
+        0.375,
+        0.38125000000000003,
+        0.3875,
+        0.39375000000000004,
+        0.4,
+        0.40625,
+        0.41250000000000003,
+        0.41875,
+        0.42500000000000004,
+        0.43125,
+        0.4375,
+        0.44375000000000003,
+        0.45,
+        0.45625000000000004,
+        0.4625,
+        0.46875,
+        0.47500000000000003,
+        0.48125,
+        0.48750000000000004,
+        0.49375,
+        0.5,
+        0.50625,
+        0.5125000000000001,
+        0.51875,
+        0.525,
+        0.53125,
+        0.5375,
+        0.5437500000000001,
+        0.55,
+        0.55625,
+        0.5625,
+        0.56875,
+        0.5750000000000001,
+        0.58125,
+        0.5875,
+        0.59375,
+        0.6000000000000001,
+        0.6062500000000001,
+        0.6125,
+        0.61875,
+        0.625,
+        0.6312500000000001,
+        0.6375000000000001,
+        0.64375,
+        0.65,
+        0.65625,
+        0.6625000000000001,
+        0.6687500000000001,
+        0.675,
+        0.68125,
+        0.6875,
+        0.6937500000000001,
+        0.7000000000000001,
+        0.70625,
+        0.7125,
+        0.71875,
+        0.7250000000000001,
+        0.7312500000000001,
+        0.7375,
+        0.74375,
+        0.75,
+        0.7562500000000001,
+        0.7625000000000001,
+        0.76875,
+        0.775,
+        0.78125,
+        0.7875000000000001,
+        0.7937500000000001,
+        0.8,
+        0.80625,
+        0.8125,
+        0.8187500000000001,
+        0.8250000000000001,
+        0.83125,
+        0.8375,
+        0.84375,
+        0.8500000000000001,
+        0.8562500000000001,
+        0.8625,
+        0.86875,
+        0.875,
+        0.8812500000000001,
+        0.8875000000000001,
+        0.89375,
+        0.9,
+        0.90625,
+        0.9125000000000001,
+        0.9187500000000001,
+        0.925,
+        0.93125,
+        0.9375,
+        0.9437500000000001,
+        0.9500000000000001,
+        0.95625,
+        0.9625,
+        0.96875,
+        0.9750000000000001,
+        0.9812500000000001,
+        0.9875,
+        0.99375,
+        1.0
+      ],
+      "warp_quantity": "A + log(z) = u^4 a",
+      "xi": 2.0
+    },
+    "low_temperature": {
+      "cases": [
+        {
+          "absolute_error": 4.85589346510551e-12,
+          "exact_finite_xi": 1.0625,
+          "inverse_xi_squared": 0.0625,
+          "ratio": 1.062499999995144,
+          "xi": 4.0
+        },
+        {
+          "absolute_error": 2.206013149930186e-12,
+          "exact_finite_xi": 1.015625,
+          "inverse_xi_squared": 0.015625,
+          "ratio": 1.015625000002206,
+          "xi": 8.0
+        },
+        {
+          "absolute_error": 7.26818605301105e-12,
+          "exact_finite_xi": 1.00390625,
+          "inverse_xi_squared": 0.00390625,
+          "ratio": 1.0039062499927318,
+          "xi": 16.0
+        }
+      ],
+      "fit": {
+        "intercept": 0.9999999999970671,
+        "intercept_absolute_error": 2.932876164152276e-12,
+        "slope": 0.9999999999863594,
+        "slope_absolute_error": 1.3640644169754523e-11
+      },
+      "maximum_fit_error": 1.3640644169754523e-11,
+      "maximum_identity_error": 7.26818605301105e-12
+    },
+    "refinement": {
+      "cases": [
+        {
+          "observables": {
+            "charge_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "chemical_potential": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "energy_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 4.85722573273506e-16,
+              "ordered_above_floor": true
+            },
+            "entropy_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "mu_bh": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 1.2878587085651432e-14,
+              "ordered_above_floor": true
+            },
+            "temperature": {
+              "coarse_to_middle": 9.048317650695026e-15,
+              "middle_to_fine": 1.990074771640593e-13,
+              "ordered_above_floor": true
+            }
+          },
+          "xi": 0.0
+        },
+        {
+          "observables": {
+            "charge_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "chemical_potential": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "energy_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "entropy_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "mu_bh": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "temperature": {
+              "coarse_to_middle": 2.9254376698872875e-14,
+              "middle_to_fine": 3.8968828164342995e-14,
+              "ordered_above_floor": true
+            }
+          },
+          "xi": 0.5
+        },
+        {
+          "observables": {
+            "charge_density": {
+              "coarse_to_middle": 1.9366661052622192e-11,
+              "middle_to_fine": 5.299306826689332e-11,
+              "ordered_above_floor": true
+            },
+            "chemical_potential": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "energy_density": {
+              "coarse_to_middle": 1.3897633044379631e-11,
+              "middle_to_fine": 3.812203330788577e-11,
+              "ordered_above_floor": true
+            },
+            "entropy_density": {
+              "coarse_to_middle": 1.8441359550536163e-11,
+              "middle_to_fine": 5.046030260302814e-11,
+              "ordered_above_floor": true
+            },
+            "mu_bh": {
+              "coarse_to_middle": 9.144285328165855e-11,
+              "middle_to_fine": 2.508329099768319e-10,
+              "ordered_above_floor": true
+            },
+            "temperature": {
+              "coarse_to_middle": 9.364842235015658e-12,
+              "middle_to_fine": 2.5548896331883952e-11,
+              "ordered_above_floor": true
+            }
+          },
+          "xi": 1.0
+        },
+        {
+          "observables": {
+            "charge_density": {
+              "coarse_to_middle": 4.78785899815648e-11,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "chemical_potential": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "energy_density": {
+              "coarse_to_middle": 7.710332372568018e-11,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "entropy_density": {
+              "coarse_to_middle": 5.972533578813e-11,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "mu_bh": {
+              "coarse_to_middle": 8.117098104816545e-11,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "temperature": {
+              "coarse_to_middle": 1.7374324201568925e-11,
+              "middle_to_fine": 6.539213615042172e-14,
+              "ordered_above_floor": true
+            }
+          },
+          "xi": 2.0
+        },
+        {
+          "observables": {
+            "charge_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 2.4283990451369676e-11,
+              "ordered_above_floor": true
+            },
+            "chemical_potential": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "energy_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 1.9405571766245096e-11,
+              "ordered_above_floor": true
+            },
+            "entropy_density": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 3.1351424085144604e-11,
+              "ordered_above_floor": true
+            },
+            "mu_bh": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 1.940563511450689e-11,
+              "ordered_above_floor": true
+            },
+            "temperature": {
+              "coarse_to_middle": 1.3644640972643174e-13,
+              "middle_to_fine": 8.461342737575706e-12,
+              "ordered_above_floor": true
+            }
+          },
+          "xi": 4.0
+        },
+        {
+          "observables": {
+            "charge_density": {
+              "coarse_to_middle": 2.0773955841844329e-10,
+              "middle_to_fine": 1.552968228680381e-10,
+              "ordered_above_floor": true
+            },
+            "chemical_potential": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "energy_density": {
+              "coarse_to_middle": 1.868094122296165e-10,
+              "middle_to_fine": 1.3967222835532007e-10,
+              "ordered_above_floor": true
+            },
+            "entropy_density": {
+              "coarse_to_middle": 5.811691252814406e-10,
+              "middle_to_fine": 4.3527654423125095e-10,
+              "ordered_above_floor": true
+            },
+            "mu_bh": {
+              "coarse_to_middle": 1.8680935068301187e-10,
+              "middle_to_fine": 1.3967212386588497e-10,
+              "ordered_above_floor": true
+            },
+            "temperature": {
+              "coarse_to_middle": 1.9109053228660855e-10,
+              "middle_to_fine": 1.3429879430759684e-10,
+              "ordered_above_floor": true
+            }
+          },
+          "xi": 8.0
+        },
+        {
+          "observables": {
+            "charge_density": {
+              "coarse_to_middle": 6.862798906519151e-12,
+              "middle_to_fine": 2.7554828358571007e-10,
+              "ordered_above_floor": true
+            },
+            "chemical_potential": {
+              "coarse_to_middle": 0.0,
+              "middle_to_fine": 0.0,
+              "ordered_above_floor": true
+            },
+            "energy_density": {
+              "coarse_to_middle": 1.0519910335268176e-11,
+              "middle_to_fine": 2.6187881168802215e-10,
+              "ordered_above_floor": true
+            },
+            "entropy_density": {
+              "coarse_to_middle": 1.6860872869421902e-09,
+              "middle_to_fine": 1.6259418231391729e-09,
+              "ordered_above_floor": true
+            },
+            "mu_bh": {
+              "coarse_to_middle": 1.0520059354107304e-11,
+              "middle_to_fine": 2.618787330988829e-10,
+              "ordered_above_floor": true
+            },
+            "temperature": {
+              "coarse_to_middle": 5.775332012625256e-08,
+              "middle_to_fine": 5.032374517099925e-10,
+              "ordered_above_floor": true
+            }
+          },
+          "xi": 16.0
+        }
+      ],
+      "coarse_to_middle_maximum": 5.775332012625256e-08,
+      "degrees": [
+        40,
+        60,
+        80
+      ],
+      "maximum_final_change": 1.6259418231391729e-09,
+      "ordering_failures": 0,
+      "ordering_floor": 5e-10
+    },
+    "summary": {
+      "low_temperature_fit_error": 1.3640644169754523e-11,
+      "maximum_boundary_residual": 1.1641532182693481e-10,
+      "maximum_collocation_residual": 9.579273285665559e-10,
+      "maximum_constraint_residual": 6.610971726869125e-12,
+      "maximum_eos_error": 3.607450714743046e-10,
+      "maximum_equation_residual": 1.3885307056175917e-08,
+      "maximum_exact_field_error": 1.0427774199683881e-09,
+      "maximum_final_refinement": 1.6259418231391729e-09,
+      "maximum_flux_drift": 1.3292918377877943e-11,
+      "maximum_low_temperature_identity_error": 7.26818605301105e-12,
+      "maximum_thermodynamic_error": 1.2664193092574128e-09,
+      "neutral_limit_error": 5.683481717505065e-13,
+      "refinement_ordering_failures": 0,
+      "solver_success": true,
+      "source_algebra_error": 4.440892098500626e-16
+    }
+  },
+  "scope": "Owner-reviewed reproduction of the public homogeneous equal-charge Gubser--Rocha top-down-derived classical EMD background and source Eqs. (2)--(6). Source Figure 1 and the charged-fermion Dirac system are not reproduced. This is not stability evidence, a Fermi-liquid validation, QCD, a private phenomenological EMD model, or a new prediction.",
+  "software_versions": {
+    "byteorder": "little",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "unknown",
+    "holoforge_git_src_modified": "unknown",
+    "holoforge_source_sha256": "66d9bd288254e4a11253e0345187e1d8cbdbe48dd19ba0463f559361e800277a",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+    "numpy": "2.4.6",
+    "numpy_blas": "accelerate",
+    "numpy_lapack": "accelerate",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.15",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "accelerate",
+    "scipy_lapack": "accelerate"
+  },
+  "solvers": [
+    {
+      "description": "Neutral initialization followed by deterministic charge and degree continuation; no shooting or charged exact seed.",
+      "library_function": "scipy.optimize.root and scipy.optimize.least_squares",
+      "method": "Chebyshev--Gauss--Lobatto collocation, hybr solve, frozen thirty-two-evaluation TRF polish",
+      "problem_type": "coupled nonlinear EMD boundary-value problem"
+    }
+  ],
+  "support_level": "reproduced"
+}

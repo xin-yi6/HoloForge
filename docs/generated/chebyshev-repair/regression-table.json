@@ -1,0 +1,670 @@
+{
+  "plan": "docs/numerics/chebyshev-construction-repair-plan.md",
+  "plan_section": "8",
+  "allowance": "10 * max(E, X, 8 eps |baseline value|); E = max of listed estimators in absolute units; X = |baseline B1 - baseline B3|",
+  "routine": "chebyshev_lobatto_grid",
+  "consumers": [
+    {
+      "id": "soft-wall-vector",
+      "module": "src/holoforge/benchmarks/soft_wall_vector.py",
+      "call_sites": [
+        "_spectral_level_diagnostics",
+        "_spectral_spectrum"
+      ],
+      "control_functions": [
+        "_finite_difference_spectrum"
+      ],
+      "commands": {
+        "table": [
+          [
+            "soft-wall-vector",
+            "--method",
+            "spectral",
+            "--spectral-degree",
+            "40"
+          ],
+          [
+            "soft-wall-vector",
+            "--method",
+            "spectral",
+            "--spectral-degree",
+            "56"
+          ],
+          [
+            "soft-wall-vector",
+            "--method",
+            "spectral",
+            "--spectral-degree",
+            "64"
+          ],
+          [
+            "soft-wall-vector",
+            "--method",
+            "spectral",
+            "--spectral-degree",
+            "100"
+          ],
+          [
+            "soft-wall-vector",
+            "--method",
+            "spectral",
+            "--modes",
+            "6",
+            "--spectral-degree",
+            "64"
+          ]
+        ],
+        "verdict_controls": [
+          [
+            "soft-wall-vector",
+            "--method",
+            "spectral",
+            "--spectral-degree",
+            "64",
+            "--z-max",
+            "4"
+          ],
+          [
+            "soft-wall-vector",
+            "--method",
+            "spectral",
+            "--spectral-degree",
+            "64",
+            "--z-max",
+            "6"
+          ]
+        ],
+        "controls": [
+          [
+            "soft-wall-vector"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/*/numerical_mass_squared_gev2",
+          "key": [
+            "command",
+            "n"
+          ]
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "/results/*/relative_error",
+          "normalization": "abs(numerical - analytic) / analytic",
+          "conversion": "multiply by /results/*/analytic_mass_squared_gev2 of the same mode"
+        }
+      ],
+      "report_only": [
+        "/spectral_convergence/levels/*/max_relative_error"
+      ],
+      "not_recorded": [
+        "eigenvalues at the two lower refinement degrees"
+      ],
+      "source_keys": [
+        "n",
+        "numerical_mass_squared_gev2",
+        "analytic_mass_squared_gev2",
+        "relative_error",
+        "spectral_convergence",
+        "levels",
+        "max_relative_error"
+      ],
+      "committed_record": null
+    },
+    {
+      "id": "hard-wall-vector",
+      "module": "src/holoforge/benchmarks/hard_wall_vector.py",
+      "call_sites": [
+        "_spectral_dimensionless_masses"
+      ],
+      "control_functions": [
+        "_shooting_dimensionless_masses",
+        "_collocation_dimensionless_masses"
+      ],
+      "commands": {
+        "table": [
+          [
+            "hard-wall-vector",
+            "--method",
+            "spectral"
+          ]
+        ],
+        "controls": [
+          [
+            "hard-wall-vector",
+            "--method",
+            "shooting"
+          ],
+          [
+            "hard-wall-vector",
+            "--method",
+            "collocation"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/*/numerical_m_z_m",
+          "key": [
+            "n"
+          ]
+        },
+        {
+          "pointer": "/results/*/numerical_ratio",
+          "key": [
+            "n"
+          ],
+          "note": "n >= 2; the n = 1 ratio is identically 1 and is a control"
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "/spectral_convergence/successive_max_relative_differences/-1",
+          "normalization": "max over modes of abs(current - previous) / current",
+          "conversion": "d * |value| for a mass; 2 d * |ratio| for a ratio"
+        },
+        {
+          "pointer": "spectral leaf minus shooting leaf at the same cutoff (baseline runs)",
+          "normalization": "absolute",
+          "conversion": "none"
+        }
+      ],
+      "not_recorded": [
+        "spectra at the two lower ladder degrees",
+        "per-mode refinement"
+      ],
+      "source_keys": [
+        "n",
+        "numerical_m_z_m",
+        "numerical_ratio",
+        "spectral_convergence",
+        "successive_max_relative_differences"
+      ],
+      "committed_record": null
+    },
+    {
+      "id": "hard-wall-chiral",
+      "module": "src/holoforge/benchmarks/hard_wall_chiral.py",
+      "call_sites": [
+        "_mode_diagnostics",
+        "solve_spectral_mode"
+      ],
+      "control_functions": [
+        "_independent_level"
+      ],
+      "commands": {
+        "table": [
+          [
+            "hard-wall-chiral"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/levels/*/observables/*",
+          "key": [
+            "degree",
+            "name"
+          ]
+        },
+        {
+          "pointer": "/results/table/*/computed",
+          "key": [
+            "observable"
+          ]
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "/results/refinement/*/N80_to_N96",
+          "normalization": "abs(N96 - N80) / abs(N80)",
+          "conversion": "multiply by the degree-80 level value"
+        },
+        {
+          "pointer": "/results/refinement/*/N64_to_N80",
+          "normalization": "abs(N80 - N64) / abs(N64)",
+          "conversion": "multiply by the degree-64 level value"
+        },
+        {
+          "pointer": "/results/cutoff_changes/*",
+          "normalization": "abs(finest - second finest) / abs(second finest)",
+          "conversion": "multiply by the second-finest /results/independent/*/<name>"
+        },
+        {
+          "pointer": "/results/cross_route_differences/*",
+          "normalization": "abs(independent - spectral) / abs(spectral)",
+          "conversion": "multiply by the degree-96 level value"
+        },
+        {
+          "pointer": "/results/independent/*/f_pi_route_relative_difference",
+          "normalization": "abs(bvp - dop853) / abs(dop853)",
+          "conversion": "multiply by f_pi_dop853_MeV of the same entry"
+        }
+      ],
+      "controls": [
+        "/results/independent/*/m_pi_MeV",
+        "/results/independent/*/m_a1_MeV",
+        "/results/independent/*/sqrt_F_a1_MeV",
+        "/results/independent/*/g_rho_pi_pi",
+        "/results/independent/*/f_pi_bvp_MeV",
+        "/results/independent/*/f_pi_dop853_MeV"
+      ],
+      "report_only": [
+        "/results/gmor/*/m_pi_MeV",
+        "/results/gmor/*/f_pi_MeV",
+        "/results/gmor/*/R_GMOR"
+      ],
+      "committed_record": "docs/generated/hard-wall-chiral/hard-wall-chiral-result.json",
+      "record_pointers": [
+        "/results/levels/*/observables/*",
+        "/results/levels/*/degree",
+        "/results/table/*/computed",
+        "/results/refinement/*/N80_to_N96",
+        "/results/refinement/*/N64_to_N80",
+        "/results/cutoff_changes/*",
+        "/results/cross_route_differences/*",
+        "/results/independent/*/f_pi_route_relative_difference",
+        "/results/independent/*/f_pi_dop853_MeV",
+        "/results/independent/*/epsilon",
+        "/results/independent/*/m_pi_MeV",
+        "/results/gmor/*/R_GMOR",
+        "/results/gmor/*/m_q_factor"
+      ]
+    },
+    {
+      "id": "gubser-nellore-ed",
+      "module": "src/holoforge/benchmarks/gubser_nellore_ed.py",
+      "call_sites": [
+        "coupled_equation_diagnostics",
+        "solve_coupled_profile"
+      ],
+      "control_functions": [],
+      "commands": {
+        "table": [
+          [
+            "gubser-nellore-ed"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/presets/*/curve/*/temperature_L",
+          "key": [
+            "preset",
+            "position"
+          ]
+        },
+        {
+          "pointer": "/results/presets/*/curve/*/sound_speed_squared",
+          "key": [
+            "preset",
+            "position"
+          ]
+        }
+      ],
+      "key_checks": [
+        {
+          "pointer": "/results/presets/*/curve/*/x_h",
+          "rule": "configured coordinate; must agree to 4 eps relative"
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "/results/presets/*/refinement/maximum_final_change",
+          "normalization": "preset maximum of abs(fine - middle) / abs(fine) over temperature, entropy and sound speed",
+          "conversion": "multiply by the leaf's own magnitude"
+        },
+        {
+          "pointer": "/results/presets/*/maximum_derivative_disagreement",
+          "normalization": "absolute, maximum of abs(barycentric - pchip)",
+          "conversion": "none; sound_speed_squared only"
+        }
+      ],
+      "report_only": [
+        "/results/presets/*/curve/*/phi_h",
+        "/results/presets/*/independent_comparisons/*/temperature_relative_error",
+        "/results/presets/*/independent_comparisons/*/entropy_relative_error",
+        "/results/presets/*/independent_comparisons/*/sound_speed_relative_error"
+      ],
+      "not_recorded": [
+        "entropy as a curve leaf"
+      ],
+      "gates_reported": [
+        "/results/presets/*/maximum_collocation_residual"
+      ],
+      "committed_record": "docs/generated/gubser-nellore-ed/gubser-nellore-ed-result.json",
+      "record_pointers": [
+        "/results/presets/*/curve/*/temperature_L",
+        "/results/presets/*/curve/*/sound_speed_squared",
+        "/results/presets/*/curve/*/x_h",
+        "/results/presets/*/curve/*/phi_h",
+        "/results/presets/*/refinement/maximum_final_change",
+        "/results/presets/*/maximum_derivative_disagreement",
+        "/results/presets/*/independent_comparisons/*/target_phi_h",
+        "/results/presets/*/independent_comparisons/*/temperature_relative_error",
+        "/results/presets/*/maximum_collocation_residual"
+      ],
+      "absent_pointers": [
+        "/results/presets/*/curve/*/entropy"
+      ]
+    },
+    {
+      "id": "gubser-rocha-emd",
+      "module": "src/holoforge/benchmarks/gubser_rocha_emd.py",
+      "call_sites": [
+        "equation_diagnostics",
+        "solve_emd_profile"
+      ],
+      "control_functions": [],
+      "commands": {
+        "table": [
+          [
+            "gubser-rocha-emd"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/cases/*/thermodynamics/{mu_bh,hat_epsilon,hat_s,hat_rho,temperature,Omega}",
+          "key": [
+            "xi"
+          ]
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "/results/refinement/cases/*/observables/*/middle_to_fine",
+          "normalization": "abs(fine - middle) / max(1, abs(fine), abs(middle))",
+          "conversion": "multiply by max(1, |fine value|); the middle value is not recorded",
+          "name_map": {
+            "mu_bh": "mu_bh",
+            "energy_density": "hat_epsilon",
+            "entropy_density": "hat_s",
+            "charge_density": "hat_rho",
+            "temperature": "temperature",
+            "chemical_potential": "Omega"
+          }
+        },
+        {
+          "pointer": "/results/cases/*/source_exact_thermodynamics/*",
+          "normalization": "absolute difference from the closed-form value",
+          "conversion": "none"
+        }
+      ],
+      "report_only": [
+        "/results/cases/*/thermodynamics/maxwell_flux"
+      ],
+      "source_keys": [
+        "xi",
+        "thermodynamics",
+        "source_exact_thermodynamics",
+        "mu_bh",
+        "hat_epsilon",
+        "hat_s",
+        "hat_rho",
+        "temperature",
+        "Omega",
+        "maxwell_flux",
+        "refinement",
+        "cases",
+        "observables",
+        "middle_to_fine",
+        "energy_density",
+        "entropy_density",
+        "charge_density",
+        "chemical_potential"
+      ],
+      "committed_record": null
+    },
+    {
+      "id": "dewolfe-gubser-rosen-emd",
+      "module": "src/holoforge/benchmarks/dewolfe_gubser_rosen_emd.py",
+      "call_sites": [
+        "einstein_constraint_residual"
+      ],
+      "imports_solver_from": "holoforge.benchmarks.gubser_nellore_ed",
+      "control_functions": [],
+      "commands": {
+        "table": [
+          [
+            "dewolfe-gubser-rosen-emd"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/curve/*/{temperature_BH,entropy_BH,susceptibility_integral,chi_2_over_T2_BH}",
+          "key": [
+            "position"
+          ]
+        },
+        {
+          "pointer": "/results/degree_branches/*/points/*/{temperature_BH,entropy_BH,susceptibility_integral,chi_2_over_T2_BH}",
+          "key": [
+            "degree",
+            "position"
+          ]
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "/results/degree_branches/*/points/*",
+          "normalization": "absolute difference of the same position at the two finest degrees (150 vs 120; 120 vs 80 for the lower branches)",
+          "conversion": "none"
+        },
+        {
+          "pointer": "/results/quadrature_refinement/records/*/middle_to_fine_change",
+          "normalization": "abs(a - b) / max(abs(a), abs(b))",
+          "conversion": "multiply by the leaf's magnitude; susceptibility fields only"
+        }
+      ],
+      "report_only": [
+        "/results/curve/*/phi_h",
+        "/results/curve/*/x_h",
+        "/results/curve/*/temperature_MeV",
+        "/results/curve/*/s_over_T3_plot",
+        "/results/curve/*/chi_2_over_T2_plot",
+        "/results/refinement/maximum_final_change"
+      ],
+      "committed_record": "docs/generated/dewolfe-gubser-rosen-emd/dewolfe-gubser-rosen-emd-result.json",
+      "record_pointers": [
+        "/results/curve/*/temperature_BH",
+        "/results/curve/*/entropy_BH",
+        "/results/curve/*/susceptibility_integral",
+        "/results/curve/*/chi_2_over_T2_BH",
+        "/results/degree_branches/*/points/*/temperature_BH",
+        "/results/degree_branches/*/points/*/chi_2_over_T2_BH",
+        "/results/quadrature_refinement/records/*/middle_to_fine_change",
+        "/results/refinement/maximum_final_change",
+        "/configuration/physical_phi_h_targets/*"
+      ]
+    },
+    {
+      "id": "dewolfe-gubser-rosen-emd-finite-density",
+      "module": "src/holoforge/benchmarks/dewolfe_gubser_rosen_emd_critical_point.py",
+      "call_sites": [
+        "_solve_charged_once",
+        "_solve_explicit_maxwell_once",
+        "charged_equation_diagnostics",
+        "explicit_maxwell_diagnostics"
+      ],
+      "control_functions": [],
+      "commands": {
+        "table": [
+          [
+            "dewolfe-gubser-rosen-emd-finite-density"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/refinement/states/*/{primary,explicit}/point/{temperature_BH,mu_BH,entropy_BH,rho_canonical_BH}",
+          "key": [
+            "degree"
+          ]
+        },
+        {
+          "pointer": "/results/controls/*/{primary,explicit}/point/{temperature_BH,mu_BH,entropy_BH,rho_canonical_BH}",
+          "key": [
+            "label"
+          ]
+        },
+        {
+          "pointer": "/results/critical/step_roots/-1/{phi_H,eta,T_BH,mu_BH,rho_canonical_BH}",
+          "key": [
+            "field"
+          ],
+          "note": "critical coordinates, compared separately"
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "/results/refinement/changes/*/changes/*",
+          "normalization": "abs(a - b) / max(1, abs(a), abs(b))",
+          "conversion": "multiply by max(1, |coarse value|, |fine value|); both recorded"
+        },
+        {
+          "pointer": "primary point leaf minus explicit point leaf",
+          "normalization": "absolute",
+          "conversion": "none"
+        },
+        {
+          "pointer": "/results/critical/scaled_step_changes/-1/*",
+          "normalization": "abs(a - b) / max(1, abs(a), abs(b))",
+          "conversion": "multiply by max(1, |previous root|, |final root|); critical coordinates only"
+        }
+      ],
+      "not_recorded": [
+        "refinement for the control states (single degree)"
+      ],
+      "source_keys": [
+        "states",
+        "changes",
+        "controls",
+        "primary",
+        "explicit",
+        "point",
+        "temperature_BH",
+        "mu_BH",
+        "entropy_BH",
+        "rho_canonical_BH",
+        "label",
+        "degree",
+        "coarse_degree",
+        "fine_degree",
+        "step_roots",
+        "scaled_step_changes",
+        "critical",
+        "phi_H",
+        "eta"
+      ],
+      "committed_record": null
+    },
+    {
+      "id": "holographic-superconductor-optical",
+      "module": "src/holoforge/benchmarks/holographic_superconductor_optical.py",
+      "call_sites": [
+        "_independent_element_equation_residual",
+        "_independent_equation_residual_localization",
+        "solve_endpoint_split_spectral_response",
+        "solve_series_transferred_spectral_response",
+        "solve_spectral_response"
+      ],
+      "control_functions": [
+        "solve_dop853_response",
+        "solve_riccati_dop853_response",
+        "solve_static_london_response"
+      ],
+      "commands": {
+        "table": [
+          [
+            "holographic-superconductor-optical"
+          ]
+        ]
+      },
+      "leaves": [
+        {
+          "pointer": "/results/normal_responses/*/spectral_conductivity",
+          "key": [
+            "omega_over_temperature"
+          ]
+        },
+        {
+          "pointer": "/results/figure_2_provenance/responses/*/spectral_conductivity",
+          "key": [
+            "omega_over_temperature"
+          ]
+        },
+        {
+          "pointer": "/results/near_critical_pole/points/*/responses/*/spectral_conductivity",
+          "key": [
+            "position",
+            "omega_over_temperature"
+          ]
+        },
+        {
+          "pointer": "/results/near_critical_pole/points/*/pole_intercept",
+          "key": [
+            "position"
+          ]
+        }
+      ],
+      "estimators": [
+        {
+          "pointer": "resolution_change, series_truncation_change, background_cutoff_change of the same response",
+          "normalization": "abs(delta sigma) / (1 + abs(sigma_spectral))",
+          "conversion": "multiply by 1 + spectral_conductivity/magnitude"
+        },
+        {
+          "pointer": "route_relative_difference of the same response",
+          "normalization": "abs(delta sigma) / (1 + abs(sigma_independent))",
+          "conversion": "multiply by 1 + independent_conductivity/magnitude"
+        },
+        {
+          "pointer": "/results/near_critical_pole/points/*/intercept_stability",
+          "normalization": "abs(reduced - intercept) / abs(intercept)",
+          "conversion": "multiply by |pole_intercept|"
+        },
+        {
+          "pointer": "/results/near_critical_pole/points/*/static_pole_relative_difference",
+          "normalization": "abs(rho_s - intercept) / abs(rho_s)",
+          "conversion": "multiply by |static_london/superfluid_density_over_tc|"
+        }
+      ],
+      "controls": [
+        "independent_conductivity of every response",
+        "/results/near_critical_pole/points/*/static_london/superfluid_density_over_tc"
+      ],
+      "report_only": [
+        "/results/near_critical_pole fit outputs (slopes and coefficients)",
+        "/results/near_critical_pole/points/*/temperature_over_tc"
+      ],
+      "source_keys": [
+        "normal_responses",
+        "figure_2_provenance",
+        "near_critical_pole",
+        "points",
+        "responses",
+        "omega_over_temperature",
+        "spectral_conductivity",
+        "independent_conductivity",
+        "real",
+        "imag",
+        "magnitude",
+        "resolution_change",
+        "series_truncation_change",
+        "background_cutoff_change",
+        "route_relative_difference",
+        "pole_intercept",
+        "intercept_stability",
+        "static_pole_relative_difference",
+        "static_london",
+        "superfluid_density_over_tc",
+        "temperature_over_tc"
+      ],
+      "committed_record": null
+    }
+  ]
+}
