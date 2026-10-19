@@ -19,11 +19,22 @@ the other or for the underlying reproducibility record.
 | Private companion record | Exact artifact mapping, hashes, gate history, failed attempts, owner decisions, AI provenance and unresolved administrative checks |
 | Owner-review packet | Current status, progress map, colored status tables, critic responses and approval choices |
 
-Do not merely move every numerical detail to an appendix. The main text must
-still explain how the result was obtained and why its accuracy is adequate.
-A source ambiguity or failed check that changes the interpretation belongs
-beside the affected claim, even if the full audit trail lives elsewhere.
-Moving text must never conceal contradictory evidence or strengthen a claim.
+The main text must retain the physical reasoning needed to follow the central
+argument: its assumptions, the observable's meaning, how the result was obtained
+and why its accuracy is adequate. Bring short physical interpretations into
+the main text when they explain a result's mechanism or consequence. A source
+ambiguity or failed check that changes the interpretation belongs beside the
+affected claim, even if the full audit trail lives elsewhere. Moving text must
+never conceal contradictory evidence or strengthen a claim.
+
+Organize appendices into coherent technical units in dependency order, each
+with a clear role in the argument. A calculation or reviewer comment does not
+automatically need its own appendix. Merge short fragments that serve the same
+derivation or method, using subsections where useful, and remove genuine
+duplication. Keep definitions needed for a self-contained reading and the
+derivations, controls and uncertainties needed to assess the result. Let these
+dependencies determine the structure; neither an appendix-count target nor
+cosmetic shortening justifies removing necessary reasoning.
 
 The [owner-review PDF style](research-gate-workflow.md#owner-review-pdf-packet)
 is **not** the default manuscript style. Progress diagrams, approval menus,
@@ -210,6 +221,17 @@ does not justify omitting contradictory results, inventing a mechanism,
 inflating novelty, or presenting a partly answered question as settled.
 
 ## Lead with physical variables when they carry the argument
+
+Introduce the model as a physical system before detailed perturbation or
+response formulas. Writing down an action alone does not explain what the
+model represents. As relevant to the question, explain the spacetime dimensions,
+the roles of fields and couplings, the source/operator dictionary, symmetries
+and their explicit or spontaneous breaking, the background state, control
+parameters and approximation regime. For a holographic model, distinguish
+bulk quantities from boundary sources and observables. Explain why the model
+is suitable for the question and which assumptions limit that use. Select
+the detail and form for the argument; this is not a mandatory field table or
+a boilerplate model section.
 
 For a model calculation, introduce the observable, physical control variables,
 local assumptions and predicted relation before implementation coordinates or
