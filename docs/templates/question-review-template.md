@@ -90,6 +90,11 @@ Written by the author after the intake scorecard is prepared, to inform the
 owner's investment decision. One page is a target; do not omit a decisive
 assumption, relation or shared input to meet it.
 
+For both question and claim cards, use the existing fields below to carry a
+concise summary of the research aim and relevant owner-fit context already
+recorded in intake. Keep it within the approved disclosure scope; do not send
+the project history or invent missing preferences. State missing context.
+
 - **Question, in one sentence:** `<question>`
 - **Contribution type:** `<physical comparison | analytical result |
   computational or methodological advantage>`
@@ -98,8 +103,9 @@ assumption, relation or shared input to meet it.
   the same problem and regime>`
 - **Inputs that already encode the answer, and shared inputs:** `<list, or
   none>`
-- **Outcome value:** `<what a positive, a negative and an inconclusive outcome
-  would each change for the intended readers>`
+- **Outcome value and research aim:** `<what a positive, a negative and an
+  inconclusive outcome would each change for the intended readers; the owner's
+  stated research aim and relevant fit constraints from intake, or unknown>`
 - **Closest prior work known to the author:** `<sources and search scope>`
 - **Model, regime and necessary assumptions:** `<short statement>`
 - **Owner-approved recipients for this card:** `<decision record>`
@@ -127,7 +133,8 @@ contribution; it cannot certify that the calculation establishes the claim.
   change using the current sufficiency disposition>`
 - **Inputs that already encode the answer, and shared inputs:** `<list, or
   none>`
-- **Intended readers:** `<community or subfield>`
+- **Intended readers and research aim:** `<community or subfield; the owner's
+  stated research aim and relevant fit constraints from intake, or unknown>`
 - **Owner-approved recipients for this card:** `<decision record>`
 
 ## Reviewer report
@@ -150,12 +157,14 @@ information. Do not give an aggregate score.
 | Item | Verdict | Reason and locator |
 | --- | --- | --- |
 | 1. What is claimed, and what could undermine it? Is agreement already forced by shared assumptions, shared inputs, an identity or a fit? For an analytical result, what is new beyond a restated identity? For a computational claim, which named nonholographic comparison could refute the advantage? | `<verdict>` | `<reason>` |
-| 2. Who uses the result, and what would each outcome change for them? | `<verdict>` | `<reason>` |
+| 2. Who uses the result, and what would each outcome change for them? Separately, how does it fit the stated owner research aim and constraints? | `<verdict>` | `<reason; fit unknown if context is missing>` |
 | 3. What is new against the closest prior work found? State the search scope. | `<verdict>` | `<reason>` |
 | 4. Strongest supported referee objection. | `<verdict>` | `<objection>` |
 | 5. Optional: a better question. | `<verdict or not answered>` | `<proposal, or none>` |
 
-- **Overall reading:** `<one paragraph, no score>`
+- **Overall reading:** `<one paragraph separating scientific value, owner fit
+  and information added by the review, with no score. Include decisive
+  acknowledged objections; no new information does not imply a pass>`
 
 ## Author reply
 
@@ -164,7 +173,8 @@ information. Do not give an aggregate score.
 | `<1–5>` | `<Confirmed | Disputed | Already known | Needs owner decision>` | `<locator>` | `<action, or none>` |
 
 Brief factual clarification and one rebuttal round are allowed. Disputed items
-go to the owner.
+go to the owner. `Already known` does not by itself resolve an objection or
+justify withdrawing a verdict.
 
 ## Owner disposition
 
@@ -175,6 +185,10 @@ go to the owner.
 - **Work remaining closed:** `<scope>`
 
 ## Pilot record
+
+The count of new useful objections measures information added by the review,
+not the scientific value or owner fit of the question. Keep those assessments
+in the overall reading.
 
 - **Supported, useful objections not already in the project's records:** `<count>`
 - **Unsupported or irrelevant concerns:** `<count>`

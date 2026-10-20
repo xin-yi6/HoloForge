@@ -293,10 +293,13 @@ ranked lower can be seen.
 
 Use the [question-review template](templates/question-review-template.md). The
 author writes a short card. One page is a target, not a reason to omit a
-decisive assumption, relation, shared input or evidence limitation. One
-reviewer from a different provider or model family than the author reads it in
-a fresh context. The review is input-limited: the reviewer receives the card
-and public literature access, without the process history, the author's
+decisive assumption, relation, shared input or evidence limitation. Carry the
+research aim and relevant owner-fit context from the existing intake into the
+card's existing fields, within the approved disclosure scope. State missing
+context rather than inventing preferences; this does not require another form.
+One reviewer from a different provider or model family than the author reads
+it in a fresh context. The review is input-limited: the reviewer receives the
+card and public literature access, without the process history, the author's
 defense or critic report, or another review. Record the actual input scope and
 any prior exposure. Missing information is a `concern` or a request for
 clarification, not a reason to guess. A second reviewer, or a fallback when no
@@ -324,7 +327,8 @@ reason and an evidence locator, without an aggregate score:
    same problem and regime, that could refute it.
 2. **Who uses the result?** State what positive, negative and inconclusive
    outcomes would change for the intended readers in knowledge, control or
-   calculational access.
+   calculational access. Separately assess fit to the stated owner research
+   aim and constraints; mark fit unknown when that context is missing.
 3. **What is new?** Name the closest prior work found and the exact
    difference, with primary-source locators and the actual search scope.
    Neither a missing search hit nor reviewer agreement establishes novelty.
@@ -333,8 +337,16 @@ reason and an evidence locator, without an aggregate score:
 5. **Optional: a better question.** A suggestion is a proposal to the owner.
    Available capability must not choose the science.
 
+Keep scientific value, owner fit and information added by the reviewer
+distinct in the overall reading. Avoid repetitive caveats, but include an
+acknowledged objection when it still determines the assessment: it can justify
+`concern` or `fail` without a new fact. Finding no new objection does not imply
+a pass. A small effect or no immediate application does not by itself settle
+value.
+
 The author replies item by item with `Confirmed`, `Disputed`, `Already known`
-or `Needs owner decision`. Brief factual clarification and one rebuttal round
+or `Needs owner decision`. `Already known` describes awareness, not resolution
+of the objection. Brief factual clarification and one rebuttal round
 are allowed; do not replace the preserved reports with an open discussion
 between models. The verdicts are reviewer assessments, not scientific-support
 states or investment decisions. The named human research owner decides

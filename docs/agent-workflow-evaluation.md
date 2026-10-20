@@ -101,6 +101,33 @@ those equal terms after one more use and removed if it again adds no supported
 objection. These results describe two uses only and do not establish that the
 review improves research outcomes.
 
+### Prospective clarification — 2026-10-20
+
+For future uses, replace the blanket prohibition on restating risks above with
+a requirement to explain why an acknowledged objection remains decisive.
+Avoid repetitive caveats, but allow `concern` or `fail` without a new fact.
+`Already known` does not mean resolved. The historical reports, counts and
+decision above remain as recorded; this clarification was not applied to them.
+
+Use the existing card fields to carry the research aim and relevant owner-fit
+context already recorded in intake, within the approved disclosure scope.
+State what is missing rather than inventing preferences. In the existing
+overall reading, distinguish scientific value, owner fit and information added
+by the reviewer. The count of new useful objections measures only the last of
+these; zero is not a positive assessment of the question.
+
+The following situations are wholly synthetic instruction walkthroughs, not
+observed reviews, research results or scores:
+
+| Situation | Expected distinction |
+| --- | --- |
+| A small perturbative correction establishes a relation that distinguishes two physical mechanisms under stated assumptions. | Its conceptual value depends on what the relation teaches and whether the evidence supports it. Small size or no immediate application does not alone make it unimportant. |
+| A converged calculation adds entries to an established spectral catalogue, but identifies no new pattern, explanatory consequence or useful accuracy target; the card acknowledges this limitation. | Technical correctness and new numbers can coexist with weak demonstrated significance. The acknowledged limitation can still justify concern or failure, even when the reviewer adds no new fact. |
+| A useful analytic classification lies outside the owner's stated research aim and available time. | Preserve the assessment of scientific value while explaining poor owner fit. A recommendation to deprioritize it for this owner is not evidence that the result lacks value. |
+
+These examples clarify existing judgments; they add no approval step and do
+not demonstrate reliable reviewer behavior.
+
 ## Physics workflow availability pilot — 2026-09-21
 
 The separate [physics pilot](../evals/agent-workflows/physics-pilot/README.md)
