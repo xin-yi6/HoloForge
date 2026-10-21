@@ -39,6 +39,10 @@ status requests do not open a scientific gate or require an A-E menu.
   scientific contract. Record conventions, equations, boundary conditions,
   ensemble, methods, tolerances, evidence, and limitations. Use the labels in
   [scientific support](docs/scientific-support.md); preserve AI provenance.
+- In working derivations, scientific reports and papers, follow
+  [notation and derivation clarity](docs/physics-manuscript-writing.md#keep-notation-useful-and-derivations-reconstructible).
+  Avoid unnecessary names and aliases; show the physical setup and governing
+  equations before compressing them into coefficient functions or operators.
 - Keep unpublished research in a separate access-controlled repository. Never
   add secrets, private paths, confidential correspondence, or unpublished
   identifiers, calculations, or results to this public repository. Calculation

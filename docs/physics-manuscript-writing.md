@@ -5,6 +5,10 @@ a paper draft or to revise its presentation. It is an editorial workflow, not
 a new scientific gate, a novelty assessment, or permission to calculate or
 publish. Apply the current task authority and preserve the research contract.
 
+The [notation and derivation guidance](#keep-notation-useful-and-derivations-reconstructible)
+also applies to working notes, intermediate derivations and scientific review
+reports. Those artifacts do not need to adopt a manuscript's structure.
+
 ## Separate the paper from the research record
 
 A paper explains a physical question, a calculation and its consequences to
@@ -17,7 +21,7 @@ the other or for the underlying reproducibility record.
 | Paper main text | Physical motivation, relation to prior work, model and assumptions, the central derivation or calculation, results, interpretation and consequential limitations |
 | Technical appendix or supplement | Necessary derivation details, numerical methods, convergence evidence, uncertainty definitions and reproducibility information |
 | Private companion record | Exact artifact mapping, hashes, gate history, failed attempts, owner decisions, AI provenance and unresolved administrative checks |
-| Owner-review packet | Current status, progress map, colored status tables, critic responses and approval choices |
+| Owner-review packet | Physical setup, essential derivation and evidence for the decision; current status, critic responses and approval choices; a process diagram only when requested |
 
 The main text must retain the physical reasoning needed to follow the central
 argument: its assumptions, the observable's meaning, how the result was obtained
@@ -168,7 +172,12 @@ Avoid unnecessary bold slogans, marketing claims and workflow jargon. Lists,
 tables and negative results are legitimate when they clarify the argument;
 there is no blanket ban on them or on numerical-method papers.
 
-Introduce a symbol when it identifies a physical quantity, exposes useful
+## Keep notation useful and derivations reconstructible
+
+Apply this discipline while developing and explaining a calculation, not only
+when polishing a paper. Do not introduce a new name or symbol merely to shorten
+an expression. Prefer established physical notation where it fits the declared
+conventions. Introduce a symbol when it identifies a physical quantity, exposes useful
 structure, or makes an expression easier to follow. Check its later uses:
 an unused definition, a short expression used only in the next equation, or
 a chain of aliases hiding an already defined quantity can often be written
@@ -180,6 +189,26 @@ between observables and intermediate quantities. Check for symbol collisions
 across the main text and appendices; rename or clarify them where context does
 not reliably distinguish the objects. Repeating a definition locally can help
 readers use a self-contained appendix.
+
+Before compressing a derivation into coefficient functions or operators, show
+the physical setup and governing equation in recognizable model variables.
+Supply the steps that determine its coefficients: the relevant action or
+starting equations, perturbations, gauge and frame conventions, source choices,
+and boundary conditions. Explain non-obvious reductions and label changes of
+state, ensemble, momentum or observable. Distinguish inherited equations from
+new model assumptions or interactions. Then retain shorthand where its role
+is clear and it removes burdensome repetition or exposes useful structure.
+A symbol glossary or a link to earlier project notes does not replace the
+essential reasoning; elementary algebra need not be expanded without purpose.
+
+When a knowledgeable reader cannot recognize or reconstruct a derivation,
+inspect the missing links from model to observable before attributing the
+difficulty to unfamiliarity. Separate unnecessary notation, omitted explanation,
+changed conventions or assumptions, and possible scientific errors. Agreement
+between checks of a compressed equation does not by itself verify its reduction
+from the original model or the clarity of the delivered explanation. Fix the
+presentation within scope; report missing scientific evidence rather than
+inventing it or silently opening new research.
 
 ## Check the physical story as a connected argument
 

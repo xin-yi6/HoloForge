@@ -670,6 +670,11 @@ that implementation, not all remaining authorized development. Scope, safety,
 disclosure and budget stops apply in every phase. Development is not an
 unlimited retry entitlement.
 
+Keep working derivations readable as they develop, using
+[notation and derivation clarity](physics-manuscript-writing.md#keep-notation-useful-and-derivations-reconstructible).
+Show the physical equations and consequential reductions before introducing
+compact solver or operator notation; this is not deferred to manuscript drafting.
+
 Before claim-bearing confirmation, record the resulting assumptions, equations,
 method and evidence to be tested. For executable work, record the exact code,
 configuration, environment and input hashes **before confirmatory qualification**. Test the
@@ -1216,6 +1221,11 @@ physical argument and necessary validity limits in the paper; preserve its
 evidence trail and owner decisions in the private companion record. Do not
 apply the packet's status boxes, progress map or approval menu to a manuscript
 by default, and do not remove a consequential caveat for stylistic reasons.
+
+Apply the same [notation and derivation guidance](physics-manuscript-writing.md#keep-notation-useful-and-derivations-reconstructible)
+to the scientific content of the packet. Include the setup and essential steps
+needed to reconstruct the result without private chat history. Evidence tables,
+status labels and references to earlier notes do not substitute for that reasoning.
 
 When equations, tables, or plots are hard to review reliably in Markdown,
 prepare a concise PDF packet in the standard HoloForge style:
