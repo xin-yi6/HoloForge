@@ -175,8 +175,9 @@ there is no blanket ban on them or on numerical-method papers.
 ## Keep notation useful and derivations reconstructible
 
 Apply this discipline while developing and explaining a calculation, not only
-when polishing a paper. Do not introduce a new name or symbol merely to shorten
-an expression. Prefer established physical notation where it fits the declared
+when polishing a paper. Use recognizable physical quantities directly by
+default. Do not introduce a new name or symbol merely to shorten an expression.
+Prefer established physical notation where it fits the declared
 conventions. Introduce a symbol when it identifies a physical quantity, exposes useful
 structure, or makes an expression easier to follow. Check its later uses:
 an unused definition, a short expression used only in the next equation, or
@@ -189,6 +190,20 @@ between observables and intermediate quantities. Check for symbol collisions
 across the main text and appendices; rename or clarify them where context does
 not reliably distinguish the objects. Repeating a definition locally can help
 readers use a self-contained appendix.
+
+Before retaining a convenience alias, substitute its expression back into the
+argument and read the surrounding equations and prose. If the direct version
+is as clear or clearer, remove the alias. Repetition in code or ease of typing
+does not by itself justify carrying a name into the reader-facing derivation.
+Apply this check during drafting and ordinary scientific review; reviewers
+should challenge unnecessary aliases even when they are correctly defined.
+This is an editorial judgment, not another form or approval gate.
+
+For example, a diffusion estimate can state that the relaxation time is
+`L²/D`, with length `L` and diffusion coefficient `D`. Naming that one-off
+expression `A` adds a lookup without explaining anything. Defining
+`τ = L²/D` becomes useful when the subsequent argument repeatedly compares
+that physical relaxation time with a driving period.
 
 Before compressing a derivation into coefficient functions or operators, show
 the physical setup and governing equation in recognizable model variables.
