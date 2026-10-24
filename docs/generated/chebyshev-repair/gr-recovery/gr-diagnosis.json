@@ -1,0 +1,281 @@
+{
+  "amendment_sha256": "adebf36a610a0bb92926bfc9585f8d8a73e3ea15fabffbb16aa8949a155a9dd3",
+  "plan": "docs/numerics/chebyshev-construction-repair-plan.md",
+  "plan_sha256": "7d26e662d33e50713a5403a5a0455e59b7abc052ad4ed1732135d9efab7b25fb",
+  "result": {
+    "label": "new recovery runs after the S2 stop; not the original R0/S2 records",
+    "passed": true,
+    "runs": {
+      "baseline|B1": {
+        "coarse_to_middle_maximum": 5.775332012625256e-08,
+        "degrees": [
+          40,
+          60,
+          80
+        ],
+        "exit_status": 0,
+        "failing_rows": [],
+        "largest_exact_solution_error_scaled": 1.2664193092574128e-09,
+        "maximum_final_change": 1.6259418231391729e-09,
+        "ordering_failures": 0,
+        "ordering_floor": 5e-10,
+        "passed": true,
+        "record_file": "baseline-B1--gubser-rocha-emd--default.json",
+        "record_sha256": "d80afc38640ffdde7c963f9067fe50f1916c4e4292dbb78b5c5f4632bfdcc47c",
+        "reproduces_original_check_verdicts_and_values": true,
+        "reproduces_original_leaves": true,
+        "rows_above_floor_or_unordered": [
+          {
+            "coarse_to_middle": 5.811691252814406e-10,
+            "exact_solution_error": {
+              "absolute": 1.3323191438985305e-09,
+              "scaled": 1.2878781645257433e-10
+            },
+            "field": "hat_s",
+            "middle_to_fine": 4.3527654423125095e-10,
+            "observable": "entropy_density",
+            "ordered_above_floor": true,
+            "xi": 8.0
+          },
+          {
+            "coarse_to_middle": 1.6860872869421902e-09,
+            "exact_solution_error": {
+              "absolute": 5.180012152550262e-08,
+              "scaled": 1.2664193092574128e-09
+            },
+            "field": "hat_s",
+            "middle_to_fine": 1.6259418231391729e-09,
+            "observable": "entropy_density",
+            "ordered_above_floor": true,
+            "xi": 16.0
+          },
+          {
+            "coarse_to_middle": 5.775332012625256e-08,
+            "exact_solution_error": {
+              "absolute": 4.008093301699489e-10,
+              "scaled": 4.008093301699489e-10
+            },
+            "field": "temperature",
+            "middle_to_fine": 5.032374517099925e-10,
+            "observable": "temperature",
+            "ordered_above_floor": true,
+            "xi": 16.0
+          }
+        ],
+        "source_thermodynamics_check": {
+          "criterion": "<= 2.0e-07",
+          "passed": true,
+          "value": 1.2664193092574128e-09
+        },
+        "spectral_refinement_check": {
+          "criterion": "final <= 2.0e-06; zero ordering failures above 5.0e-10",
+          "passed": true,
+          "value": 1.6259418231391729e-09
+        }
+      },
+      "baseline|B3": {
+        "coarse_to_middle_maximum": 5.7600533454049696e-08,
+        "degrees": [
+          40,
+          60,
+          80
+        ],
+        "exit_status": 0,
+        "failing_rows": [],
+        "largest_exact_solution_error_scaled": 1.3975516127449285e-09,
+        "maximum_final_change": 1.1808046399279386e-09,
+        "ordering_failures": 0,
+        "ordering_floor": 5e-10,
+        "passed": true,
+        "record_file": "baseline-B3--gubser-rocha-emd--default.json",
+        "record_sha256": "37829ce2c2872ca241f90e322653f3a7b696f276fe1319f8cc5c3c6ac6b3f31e",
+        "reproduces_original_check_verdicts_and_values": true,
+        "reproduces_original_leaves": true,
+        "rows_above_floor_or_unordered": [
+          {
+            "coarse_to_middle": 2.1682622136493205e-09,
+            "exact_solution_error": {
+              "absolute": 5.7163802580362244e-08,
+              "scaled": 1.3975516127449285e-09
+            },
+            "field": "hat_s",
+            "middle_to_fine": 1.1808046399279386e-09,
+            "observable": "entropy_density",
+            "ordered_above_floor": true,
+            "xi": 16.0
+          },
+          {
+            "coarse_to_middle": 5.7600533454049696e-08,
+            "exact_solution_error": {
+              "absolute": 4.4149822686634366e-10,
+              "scaled": 4.4149822686634366e-10
+            },
+            "field": "temperature",
+            "middle_to_fine": 3.612100618610725e-10,
+            "observable": "temperature",
+            "ordered_above_floor": true,
+            "xi": 16.0
+          }
+        ],
+        "source_thermodynamics_check": {
+          "criterion": "<= 2.0e-07",
+          "passed": true,
+          "value": 1.3975516127449285e-09
+        },
+        "spectral_refinement_check": {
+          "criterion": "final <= 2.0e-06; zero ordering failures above 5.0e-10",
+          "passed": true,
+          "value": 1.1808046399279386e-09
+        }
+      },
+      "candidate|B1": {
+        "coarse_to_middle_maximum": 5.7670203612580906e-08,
+        "degrees": [
+          40,
+          60,
+          80
+        ],
+        "exit_status": 1,
+        "failing_rows": [
+          {
+            "coarse_to_middle": 1.948053799024825e-09,
+            "exact_solution_error": {
+              "absolute": 1.9059132938537005e-07,
+              "scaled": 4.659613387042732e-09
+            },
+            "field": "hat_s",
+            "middle_to_fine": 4.730559552544942e-09,
+            "observable": "entropy_density",
+            "ordered_above_floor": false,
+            "xi": 16.0
+          }
+        ],
+        "largest_exact_solution_error_scaled": 4.659613387042732e-09,
+        "maximum_final_change": 4.730559552544942e-09,
+        "ordering_failures": 1,
+        "ordering_floor": 5e-10,
+        "passed": false,
+        "record_file": "candidate-B1--gubser-rocha-emd--default.json",
+        "record_sha256": "dcce5356e272705c4c4c1f661444b3c24d451fcfcf8f7e786324cc042e621227",
+        "reproduces_original_check_verdicts_and_values": true,
+        "reproduces_original_leaves": true,
+        "rows_above_floor_or_unordered": [
+          {
+            "coarse_to_middle": 1.948053799024825e-09,
+            "exact_solution_error": {
+              "absolute": 1.9059132938537005e-07,
+              "scaled": 4.659613387042732e-09
+            },
+            "field": "hat_s",
+            "middle_to_fine": 4.730559552544942e-09,
+            "observable": "entropy_density",
+            "ordered_above_floor": false,
+            "xi": 16.0
+          },
+          {
+            "coarse_to_middle": 5.7670203612580906e-08,
+            "exact_solution_error": {
+              "absolute": 1.4743354870283554e-09,
+              "scaled": 1.4743354870283554e-09
+            },
+            "field": "temperature",
+            "middle_to_fine": 1.5083688187367272e-09,
+            "observable": "temperature",
+            "ordered_above_floor": true,
+            "xi": 16.0
+          }
+        ],
+        "source_thermodynamics_check": {
+          "criterion": "<= 2.0e-07",
+          "passed": true,
+          "value": 4.659613387042732e-09
+        },
+        "spectral_refinement_check": {
+          "criterion": "final <= 2.0e-06; zero ordering failures above 5.0e-10",
+          "passed": false,
+          "value": 4.730559552544942e-09
+        }
+      },
+      "candidate|B3": {
+        "coarse_to_middle_maximum": 5.775196537660676e-08,
+        "degrees": [
+          40,
+          60,
+          80
+        ],
+        "exit_status": 0,
+        "failing_rows": [],
+        "largest_exact_solution_error_scaled": 3.8293404826764406e-10,
+        "maximum_final_change": 3.267327938464967e-10,
+        "ordering_failures": 0,
+        "ordering_floor": 5e-10,
+        "passed": true,
+        "record_file": "candidate-B3--gubser-rocha-emd--default.json",
+        "record_sha256": "784e2533ad6a05b0ad1b8774998dddce01a996b616a83588d3c59616af9aa08f",
+        "reproduces_original_check_verdicts_and_values": true,
+        "reproduces_original_leaves": true,
+        "rows_above_floor_or_unordered": [
+          {
+            "coarse_to_middle": 1.68834349522861e-09,
+            "exact_solution_error": {
+              "absolute": 6.025537402365444e-09,
+              "scaled": 1.4731349445293233e-10
+            },
+            "field": "hat_s",
+            "middle_to_fine": 3.267327938464967e-10,
+            "observable": "entropy_density",
+            "ordered_above_floor": true,
+            "xi": 16.0
+          },
+          {
+            "coarse_to_middle": 5.775196537660676e-08,
+            "exact_solution_error": {
+              "absolute": 4.676870002384703e-11,
+              "scaled": 4.676870002384703e-11
+            },
+            "field": "temperature",
+            "middle_to_fine": 9.174205839457272e-11,
+            "observable": "temperature",
+            "ordered_above_floor": true,
+            "xi": 16.0
+          }
+        ],
+        "source_thermodynamics_check": {
+          "criterion": "<= 2.0e-07",
+          "passed": true,
+          "value": 3.8293404826764406e-10
+        },
+        "spectral_refinement_check": {
+          "criterion": "final <= 2.0e-06; zero ordering failures above 5.0e-10",
+          "passed": true,
+          "value": 3.267327938464967e-10
+        }
+      }
+    }
+  },
+  "runtime": {
+    "byteorder": "little",
+    "chebyshev_construction": "c-s1-r1",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "a648635978d836bd52cfa49eb6be745759997b21",
+    "holoforge_git_src_modified": "false",
+    "holoforge_source_sha256": "1c731e1b97aef6f3b7215bd28e04512fc50242bd8b99e928aa57edea53229d3a",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+    "numpy": "2.4.6",
+    "numpy_blas": "accelerate",
+    "numpy_lapack": "accelerate",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.15",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "accelerate",
+    "scipy_lapack": "accelerate"
+  },
+  "stage": "gr-diagnosis",
+  "status": "ok",
+  "tool": "chebyshev-repair",
+  "tool_sha256": "d70ade987a7869e329c5a9d918e73f40a187abc34eeaa90c00939c16fb3eeb59",
+  "wall_seconds": 0.06800079200183973
+}
