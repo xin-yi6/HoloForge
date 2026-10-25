@@ -5,6 +5,20 @@ Regression tests can establish numerical or record-handling behavior. A role
 arrangement needs observed task outcomes, cost, intervention and recovery
 measurements before it becomes a default.
 
+## Intake authority walkthroughs
+
+Use these wholly synthetic situations to inspect
+[ordinary intake authority](research-gate-workflow.md#begin-an-intake-from-the-owners-instruction).
+These are instruction walkthroughs, not observed agent trials or evidence that
+unnecessary pauses have been eliminated.
+
+| Situation | Expected next action and reason |
+| --- | --- |
+| The owner says to open a fresh intake. Routine source reading is within existing constraints, but no numerical intake budget applies. | Record the instruction, scope, operational estimate and checkpoint, then assess candidates. Do not call the estimate an approved spending limit or ask again merely to create the record. |
+| The owner selects a proposal with an exact resource cap and an explicit source-failure stop. An alternative source remains available when that stop fires. | Preserve the selected proposal and return at its stop. The general intake guidance neither extends the cap nor permits another attempt after that boundary. |
+| Local literature comparison is authorized, but a proposed external review has no applicable use or disclosure permission. | Complete the local assessment and prepare the concrete external-use decision. Do not dispatch on the strength of account access or pause unrelated authorized work. |
+| The owner asks only for an intake proposal, or a completed assessment recommends building a new model. | Prepare the requested proposal or investment recommendation. Neither instruction authorizes scientific construction, and neither silently resumes stopped work. |
+
 ## Claim-sufficiency walkthroughs
 
 Use these synthetic situations to review the

@@ -81,6 +81,7 @@ class AgentOnboardingTests(unittest.TestCase):
             "use-an-owner-approved-bounded-autonomy-window",
             "three-statuses-that-must-not-be-confused",
             "local-git-record-for-private-research",
+            "begin-an-intake-from-the-owners-instruction",
             "assess-scientific-opportunity-before-execution-readiness",
             "declare-portfolio-intent-and-search-scope",
             "record-opportunity-and-qualify-the-next-gate",

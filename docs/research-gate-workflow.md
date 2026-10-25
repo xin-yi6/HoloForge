@@ -29,6 +29,7 @@ and result records rather than adding a separate stage checklist.
 
 | Current stage | Required preparation | Meaning of progress |
 | --- | --- | --- |
+| Candidate assessment | Record the owner's instruction, search scope, applicable resource and disclosure constraints, and assessment endpoint. | Compare scientific opportunities and recommend the next investment; follow [intake authority](#begin-an-intake-from-the-owners-instruction). |
 | Early Explore | State the unknown, relevant prior knowledge, known scientific constraints, and a bounded next step with its learning objective, budget and stops. | Resolve or narrow a named uncertainty; an incomplete dictionary can be the research target. |
 | Model or method construction | Name the missing action, dictionary, observable or capability, permitted development choices, milestone checks and planned physical checkpoint. | Construct and qualify the prerequisite; a working implementation alone is not a physical conclusion. |
 | Physical confirmation | Freeze the exact claim, inputs, comparison, diagnostics, acceptance criteria and independent checks. | Support, exclude or leave unresolved a bounded physical claim in its stated regime. |
@@ -76,6 +77,42 @@ revision or pause on the accumulated evidence and prospective scientific value.
 Neither stopping execution nor finding an obstacle automatically selects a new
 topic. Freedom to explore does not change a frozen confirmation criterion,
 erase negative evidence or extend an existing contract, budget or mission.
+
+## Begin an intake from the owner's instruction
+
+An explicit owner instruction to open or run an ordinary intake authorizes its
+routine scoping, source-based assessment, candidate comparison and recommendation
+within the owner's applicable constraints. Record that instruction and its scope
+in the existing intake record, then proceed. Do not require a second approval
+solely to copy the scope, budget or failure handling into a contract. An owner
+selection of a concrete proposal authorizes that proposal's stated scope, not
+an expanded interpretation of the selection.
+
+Carry forward applicable resource limits and failure rules, with their authority
+and scope. Preserve exact hard caps, declared stops and explicit instructions to
+prepare a proposal or wait before execution. An old intake's unused allowance
+does not automatically transfer to a new one. If no numerical resource policy
+applies, record a proportionate operational estimate and checkpoint for this
+assessment; label them as agent planning, not an owner-approved spending limit
+or unlimited authority. Track actual use and revisit the plan when the evidence
+or prospective cost materially changes. HoloForge supplies no universal intake
+hours, provider-call quota or retry allowance.
+
+Ask only about a genuinely unresolved material scope, cost or external-use
+decision, while completing unaffected authorized work. A routine source-access
+failure can be recorded and another permitted source route tried within the
+applicable failure rules; it need not create a new owner gate. This does not
+waive an explicit source stop or authorize repeated paid attempts. Independent
+proposals and reviews still require the owner's selected use and applicable
+recipient, content-class, account and disclosure authority under the
+[review policy](#review-the-question-independently). An approved provider alone
+does not select a use or authorize an expanded payload.
+
+Intake authority ends at the assessment recommendation or an earlier applicable
+return boundary. It does not authorize new model or method construction,
+claim-bearing calculations, a new research campaign, author contact, publication
+or public transfer. These retain their own authority. This clarification does
+not amend frozen contracts, framework pins, prior stops or historical permissions.
 
 ## Assess scientific opportunity before execution readiness
 
@@ -770,6 +807,7 @@ setup, not independent replication or human review.
 ## Use an owner-approved bounded autonomy window
 
 This section governs routine execution inside one frozen gate. It is distinct
+from [ordinary intake assessment](#begin-an-intake-from-the-owners-instruction) and
 from the campaign-level [`autonomous research workflow`](autonomous-research-workflow.md),
 which may prospectively delegate candidate selection and bounded pivots through
 a separate owner-authorized mission. A gate window cannot roll over into auto

@@ -147,6 +147,9 @@ publish, transfer, or disclose any artifact without a later explicit review.
 At candidate assessment, ask the agent to copy and complete
 `.agents/skills/holoforge-research-gate/assets/explore-intake-scorecard.example.md`
 inside the private repository, or update the existing candidate scorecard.
+An instruction to open an ordinary intake starts its source-based assessment
+under [intake authority](research-gate-workflow.md#begin-an-intake-from-the-owners-instruction);
+recording the scope is not a second approval gate.
 Reuse that opportunity assessment for subsequent routine gates; update it when
 new evidence materially changes the contribution, cost or feasibility. First
 ask the agent to assess the scientific opportunity independently of current
