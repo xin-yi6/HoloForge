@@ -1,0 +1,2649 @@
+{
+  "amendment_sha256": "adebf36a610a0bb92926bfc9585f8d8a73e3ea15fabffbb16aa8949a155a9dd3",
+  "plan": "docs/numerics/chebyshev-construction-repair-plan.md",
+  "plan_sha256": "7d26e662d33e50713a5403a5a0455e59b7abc052ad4ed1732135d9efab7b25fb",
+  "result": {
+    "candidate_source_sha256": {
+      "B1": "1c731e1b97aef6f3b7215bd28e04512fc50242bd8b99e928aa57edea53229d3a",
+      "B3": "1c731e1b97aef6f3b7215bd28e04512fc50242bd8b99e928aa57edea53229d3a"
+    },
+    "gates": {
+      "B1": {
+        "dewolfe-gubser-rosen-emd": {
+          "default": {
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "maximum scaled difference <= 1.0e-12"
+            },
+            "dop853-background-comparison": {
+              "baseline": {
+                "passed": true,
+                "value": 1.9484545264003164e-07
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.1406758453001168e-08
+              },
+              "criterion": "<= 5.0e-04"
+            },
+            "einstein-constraint": {
+              "baseline": {
+                "passed": true,
+                "value": 1.5018317443353408e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.6014742118727366e-12
+              },
+              "criterion": "<= 1.0e-06"
+            },
+            "exact-endpoints-and-regularity": {
+              "baseline": {
+                "passed": true,
+                "value": 1.5118754510646576e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.9881367853410103e-12
+              },
+              "criterion": "<= 1.0e-08"
+            },
+            "explicit-maxwell-response": {
+              "baseline": {
+                "passed": true,
+                "value": 1.6253112189446028e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.6253118850784176e-09
+              },
+              "criterion": "response <= 1.0e-06; flux <= 1.0e-08"
+            },
+            "figure-3-entropy": {
+              "baseline": {
+                "passed": true,
+                "value": 0.08398744084383125
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.08398744077047482
+              },
+              "criterion": "<= 0.15"
+            },
+            "figure-3-susceptibility": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0026071415630015693
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0026071415626863215
+              },
+              "criterion": "<= 5.0e-03"
+            },
+            "independent-equations": {
+              "baseline": {
+                "passed": true,
+                "value": 6.809063872147422e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.823740355588628e-10
+              },
+              "criterion": "<= 1.0e-06"
+            },
+            "nonlinear-solver": {
+              "baseline": {
+                "passed": true,
+                "value": 9.298480765113521e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.355270669510037e-10
+              },
+              "criterion": "library success and scaled residual <= 1.0e-08"
+            },
+            "physical-horizon-targets": {
+              "baseline": {
+                "passed": true,
+                "value": 2.565840998422573e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.5277015664627217e-12
+              },
+              "criterion": "relative target error <= 1.0e-09; monotone branch"
+            },
+            "quadrature-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3660034063324509e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.3647171507723534e-13
+              },
+              "criterion": "<= 2.0e-05; zero failures above floor"
+            },
+            "record-and-privacy-boundary": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "finite public-source Phase 5A record; external regression/privacy suite required"
+            },
+            "source-algebra": {
+              "baseline": {
+                "passed": true,
+                "value": 2.7755575615628914e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.7755575615628914e-16
+              },
+              "criterion": "maximum absolute analytic error <= 1e-12"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 5.4324235944235724e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 5.297515062854029e-11
+              },
+              "criterion": "<= 2.0e-04; zero ordered-change failures above floor"
+            }
+          }
+        },
+        "dewolfe-gubser-rosen-emd-finite-density": {
+          "default": {
+            "charged-point-gates": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "all six reported states pass the frozen point contract"
+            },
+            "critical-derivatives": {
+              "baseline": {
+                "passed": true,
+                "value": 0.001087858491215801
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0010878589708656324
+              },
+              "criterion": "<= 2.0e-03"
+            },
+            "critical-source-coordinates": {
+              "baseline": {
+                "passed": true,
+                "value": 0.1995429434225171
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.19954295088533858
+              },
+              "criterion": "maximum normalized source-coordinate error <= 1"
+            },
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "<= 1.0e-10"
+            },
+            "figure-5-scope-separation": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "three approved 12-anchor records; no absolute-density gate"
+            },
+            "independent-explicit-maxwell-route": {
+              "baseline": {
+                "passed": true,
+                "value": 9.933296676467296e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.928798719110608e-10
+              },
+              "criterion": "<= 5.0e-06"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 2.19824158875781e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 6.021063619850943e-13
+              },
+              "criterion": "N=120 to 150 <= 2.0e-03; zero ordering failures above 1.0e-08"
+            }
+          }
+        },
+        "gubser-nellore-ed": {
+          "default": {
+            "branch-integrity": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "T(x_H) and s(x_H) each have one nonzero derivative sign"
+            },
+            "collocation-residual": {
+              "baseline": {
+                "passed": false,
+                "value": 1.7161236078298979e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.277305965214191e-10
+              },
+              "criterion": "<= 1.0e-09"
+            },
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "maximum scaled difference <= 1.0e-12"
+            },
+            "dop853-comparison": {
+              "baseline": {
+                "passed": true,
+                "value": 9.761564855115647e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.115275524001264e-09
+              },
+              "criterion": "<= 5.0e-04"
+            },
+            "exact-endpoints-and-uv": {
+              "baseline": {
+                "passed": true,
+                "value": 7.108376387510162e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 6.71992423539353e-15
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "figure-2-reproduction": {
+              "baseline": {
+                "passed": true,
+                "value": 7.296166025005935e-05
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.296166060322129e-05
+              },
+              "criterion": "<= 1.5e-03"
+            },
+            "figure-3-reproduction": {
+              "baseline": {
+                "passed": true,
+                "value": 0.001417879453080563
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0014178794531525402
+              },
+              "criterion": "<= 5.0e-03"
+            },
+            "horizon-scalar-equation": {
+              "baseline": {
+                "passed": true,
+                "value": 2.5071785887688564e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.3251660948087317e-11
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "independent-equations": {
+              "baseline": {
+                "passed": true,
+                "value": 9.421138966115898e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.339392355367347e-08
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "nonlinear-solver": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "all final solver statuses are successful"
+            },
+            "potential-algebra": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1102230246251565e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.1102230246251565e-16
+              },
+              "criterion": "maximum absolute error <= 1e-12"
+            },
+            "refinement-order": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "zero failures when the earlier change exceeds 1e-8"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 9.326718960270013e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.325718839460054e-09
+              },
+              "criterion": "<= 2.0e-04"
+            },
+            "thermodynamic-derivative": {
+              "baseline": {
+                "passed": true,
+                "value": 0.00044072887888652046
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0004407288786575092
+              },
+              "criterion": "<= 1.0e-03"
+            }
+          }
+        },
+        "gubser-rocha-emd": {
+          "default": {
+            "boundary-and-source": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1641532182693481e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 5.820766091346741e-11
+              },
+              "criterion": "<= 1.0e-08"
+            },
+            "collocation-residual": {
+              "baseline": {
+                "passed": true,
+                "value": 9.579273285665559e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.8000308924825234e-09
+              },
+              "criterion": "<= 2.0e-08"
+            },
+            "einstein-constraint": {
+              "baseline": {
+                "passed": true,
+                "value": 6.610971726869125e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.2158197197586355e-11
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "equation-of-state": {
+              "baseline": {
+                "passed": true,
+                "value": 3.607450714743046e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 5.403803466174507e-10
+              },
+              "criterion": "<= 2.0e-07"
+            },
+            "exact-fields": {
+              "baseline": {
+                "passed": true,
+                "value": 1.0427774199683881e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.9658674569882745e-09
+              },
+              "criterion": "<= 2.0e-07"
+            },
+            "independent-equations": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3885307056175917e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.509075710995508e-08
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "low-temperature-relation": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3640644169754523e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.1182534332430123e-10
+              },
+              "criterion": "identity <= 2.0e-06; fit <= 2.0e-05"
+            },
+            "maxwell-flux": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3292918377877943e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.158365320523778e-11
+              },
+              "criterion": "<= 1.0e-08"
+            },
+            "neutral-limit-and-determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 5.683481717505065e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.137045130350814e-13
+              },
+              "criterion": "neutral <= 1.0e-10; determinism <= 1.0e-12"
+            },
+            "nonlinear-solver": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "all final residual states accepted and <= 2.0e-08"
+            },
+            "source-algebra": {
+              "baseline": {
+                "passed": true,
+                "value": 4.440892098500626e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.440892098500626e-16
+              },
+              "criterion": "maximum absolute or scaled error <= 1e-12"
+            },
+            "source-thermodynamics": {
+              "baseline": {
+                "passed": true,
+                "value": 1.2664193092574128e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.659613387042732e-09
+              },
+              "criterion": "<= 2.0e-07"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.6259418231391729e-09
+              },
+              "candidate": {
+                "passed": false,
+                "value": 4.730559552544942e-09
+              },
+              "criterion": "final <= 2.0e-06; zero ordering failures above 5.0e-10"
+            }
+          }
+        },
+        "hard-wall-chiral": {
+          "default": {
+            "admissible-spectra": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "relative imaginary part <= 1e-10"
+            },
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "maximum scaled difference <= 1e-11"
+            },
+            "direct-equations-and-boundaries": {
+              "baseline": {
+                "passed": true,
+                "value": 7.37060301834725e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.552509169204286e-11
+              },
+              "criterion": "equations <= 1e-7 and boundaries <= 1e-8"
+            },
+            "gmor-limit": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0037838937211593926
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.003783893722784759
+              },
+              "criterion": "zero ordering failures and final absolute error <= 1%"
+            },
+            "independent-normalizable-routes": {
+              "baseline": {
+                "passed": true,
+                "value": 5.588652184262608e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 5.588652184262608e-09
+              },
+              "criterion": "cutoff change <= 2e-4 and cross-route difference <= 1e-3"
+            },
+            "normalization-and-extraction": {
+              "baseline": {
+                "passed": true,
+                "value": 2.220446049250313e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 8.881784197001252e-16
+              },
+              "criterion": "normalization residual <= 1e-8"
+            },
+            "protected-vector-anchor": {
+              "baseline": {
+                "passed": true,
+                "value": 4.195537642388898e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.195537642388898e-11
+              },
+              "criterion": "protected routes pass; cross route <= 1e-3; J0 anchor <= 1e-6"
+            },
+            "regulated-fpi": {
+              "baseline": {
+                "passed": true,
+                "value": 1.0750763597133783e-06
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.0750763597133783e-06
+              },
+              "criterion": "route difference <= 1e-7 and log-slope error <= 1e-5"
+            },
+            "source-conventions": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "relative error <= 1e-13 and no refit"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 9.930564517580007e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.60418045163599e-13
+              },
+              "criterion": "N80-to-N96 <= 2e-4 and zero resolved ordering failures"
+            },
+            "table-ii-reproduction": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0034899651495055362
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.003489965149441144
+              },
+              "criterion": "every relative error <= 1%"
+            }
+          }
+        },
+        "hard-wall-vector": {
+          "collocation": {
+            "analytic-ratio-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 7.404011112368239e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.404011112368239e-08
+              },
+              "criterion": "value <= 0.0005"
+            }
+          },
+          "shooting": {
+            "analytic-ratio-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 7.399815574415212e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.399815574415212e-08
+              },
+              "criterion": "value <= 0.0005"
+            }
+          },
+          "spectral": {
+            "analytic-ratio-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 7.397723339254338e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.397720531590101e-08
+              },
+              "criterion": "value <= 0.0005"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 2.440176515706307e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.439875222149605e-12
+              },
+              "criterion": "final relative change is smaller than the preceding change and value <= 1e-08"
+            }
+          }
+        },
+        "holographic-superconductor-optical": {
+          "default": {
+            "causality-passivity-sanity": {
+              "baseline": {
+                "passed": true,
+                "value": 6.725919302875631e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.318719096709526e-14
+              },
+              "criterion": "pole intercept > 0 and Re sigma >= -1e-08"
+            },
+            "exact-normal-conductivity": {
+              "baseline": {
+                "passed": true,
+                "value": 2.4688252362818988e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.3359565886016433e-11
+              },
+              "criterion": "maximum complex error <= 1e-08"
+            },
+            "independent-response-route": {
+              "baseline": {
+                "passed": true,
+                "value": 1.4623231640803598e-06
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.4623240142726642e-06
+              },
+              "criterion": "maximum relative difference <= 0.0005"
+            },
+            "low-temperature-condensate-scale": {
+              "baseline": {
+                "passed": true,
+                "value": 8.443622405101484
+              },
+              "candidate": {
+                "passed": true,
+                "value": 8.443622405101484
+              },
+              "criterion": "8.2 <= value <= 8.7"
+            },
+            "near-critical-fit-stability": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0001656080674390441
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0001656080674390441
+              },
+              "criterion": "slope <= 0.1 and pole intercept <= 0.02"
+            },
+            "near-critical-literature-coefficient": {
+              "baseline": {
+                "passed": true,
+                "value": 0.001298193758676754
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.001298193758676754
+              },
+              "criterion": "relative difference <= 0.15"
+            },
+            "optical-backgrounds": {
+              "baseline": {
+                "passed": true,
+                "value": 0.9059083873731124
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.9059083873731124
+              },
+              "criterion": "maximum normalized gate ratio <= 1"
+            },
+            "optical-convention-identities": {
+              "baseline": {
+                "passed": true,
+                "value": 2.6645352591003757e-15
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.6645352591003757e-15
+              },
+              "criterion": "value <= 1e-12"
+            },
+            "optical-response-numerics": {
+              "baseline": {
+                "passed": false,
+                "value": 1.0011431258251273
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.4209006296436339
+              },
+              "criterion": "maximum normalized gate ratio <= 1"
+            },
+            "protected-hhh-benchmark": {
+              "baseline": {
+                "passed": true,
+                "value": null
+              },
+              "candidate": {
+                "passed": true,
+                "value": null
+              },
+              "criterion": "all protected acceptance checks pass"
+            },
+            "static-finite-frequency-agreement": {
+              "baseline": {
+                "passed": true,
+                "value": 4.238235450030753e-07
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.254927582028543e-07
+              },
+              "criterion": "maximum relative difference <= 0.0005"
+            },
+            "static-london-numerics": {
+              "baseline": {
+                "passed": true,
+                "value": 1.6019956722699633e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.6019956722699633e-11
+              },
+              "criterion": "maximum relative change <= 0.0005"
+            }
+          }
+        },
+        "soft-wall-vector": {
+          "finite-difference": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 3.927966006689321e-05
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.927966006689321e-05
+              },
+              "criterion": "value <= 0.0002"
+            }
+          },
+          "spectral-100": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 2.4202861936828413e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.886579864025407e-15
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 2.4202861936828413e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.886579864025407e-15
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-40": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 2.6789681584205027e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.7122748491592574e-13
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 2.6789681584205027e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.7122748491592574e-13
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-56": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 4.0190073491430667e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.992007221626409e-15
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 4.0190073491430667e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.992007221626409e-15
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64-modes-6": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.2656542480726785e-14
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64-zmax-4": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": false,
+                "value": 0.05230922536738003
+              },
+              "candidate": {
+                "passed": false,
+                "value": 0.05230922536737248
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": false,
+                "value": 0.05230922536738003
+              },
+              "candidate": {
+                "passed": false,
+                "value": 0.05230922536737248
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64-zmax-6": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 4.0702708803408427e-07
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.0702708226092454e-07
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": false,
+                "value": 4.0702708803408427e-07
+              },
+              "candidate": {
+                "passed": false,
+                "value": 4.0702708226092454e-07
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          }
+        }
+      },
+      "B3": {
+        "dewolfe-gubser-rosen-emd": {
+          "default": {
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "maximum scaled difference <= 1.0e-12"
+            },
+            "dop853-background-comparison": {
+              "baseline": {
+                "passed": true,
+                "value": 2.0357663127806552e-07
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.8120072132180258e-06
+              },
+              "criterion": "<= 5.0e-04"
+            },
+            "einstein-constraint": {
+              "baseline": {
+                "passed": true,
+                "value": 1.6038047737879924e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.5600765065263199e-12
+              },
+              "criterion": "<= 1.0e-06"
+            },
+            "exact-endpoints-and-regularity": {
+              "baseline": {
+                "passed": true,
+                "value": 2.3566238819506976e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.821355570604423e-12
+              },
+              "criterion": "<= 1.0e-08"
+            },
+            "explicit-maxwell-response": {
+              "baseline": {
+                "passed": true,
+                "value": 1.625307888275529e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.6253149937028866e-09
+              },
+              "criterion": "response <= 1.0e-06; flux <= 1.0e-08"
+            },
+            "figure-3-entropy": {
+              "baseline": {
+                "passed": true,
+                "value": 0.08398744083520882
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.083987440847201
+              },
+              "criterion": "<= 0.15"
+            },
+            "figure-3-susceptibility": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0026071415623803995
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0026071415627844097
+              },
+              "criterion": "<= 5.0e-03"
+            },
+            "independent-equations": {
+              "baseline": {
+                "passed": true,
+                "value": 4.170907330103454e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 5.43433380975257e-10
+              },
+              "criterion": "<= 1.0e-06"
+            },
+            "nonlinear-solver": {
+              "baseline": {
+                "passed": true,
+                "value": 9.302623598618646e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.300914606138235e-10
+              },
+              "criterion": "library success and scaled residual <= 1.0e-08"
+            },
+            "physical-horizon-targets": {
+              "baseline": {
+                "passed": true,
+                "value": 2.3106496306462652e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.2930797799681316e-12
+              },
+              "criterion": "relative target error <= 1.0e-09; monotone branch"
+            },
+            "quadrature-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3621446396497108e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.358285872963351e-13
+              },
+              "criterion": "<= 2.0e-05; zero failures above floor"
+            },
+            "record-and-privacy-boundary": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "finite public-source Phase 5A record; external regression/privacy suite required"
+            },
+            "source-algebra": {
+              "baseline": {
+                "passed": true,
+                "value": 2.7755575615628914e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.7755575615628914e-16
+              },
+              "criterion": "maximum absolute analytic error <= 1e-12"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 5.166959905435512e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 8.623803878086461e-11
+              },
+              "criterion": "<= 2.0e-04; zero ordered-change failures above floor"
+            }
+          }
+        },
+        "dewolfe-gubser-rosen-emd-finite-density": {
+          "default": {
+            "charged-point-gates": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "all six reported states pass the frozen point contract"
+            },
+            "critical-derivatives": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0010878587930916062
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0010878585923056183
+              },
+              "criterion": "<= 2.0e-03"
+            },
+            "critical-source-coordinates": {
+              "baseline": {
+                "passed": true,
+                "value": 0.19954294865244027
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.19954294561932873
+              },
+              "criterion": "maximum normalized source-coordinate error <= 1"
+            },
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "<= 1.0e-10"
+            },
+            "figure-5-scope-separation": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "three approved 12-anchor records; no absolute-density gate"
+            },
+            "independent-explicit-maxwell-route": {
+              "baseline": {
+                "passed": true,
+                "value": 9.899647000153498e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.849625180776597e-10
+              },
+              "criterion": "<= 5.0e-06"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.088192692255375e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 6.809387016794812e-13
+              },
+              "criterion": "N=120 to 150 <= 2.0e-03; zero ordering failures above 1.0e-08"
+            }
+          }
+        },
+        "gubser-nellore-ed": {
+          "default": {
+            "branch-integrity": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "T(x_H) and s(x_H) each have one nonzero derivative sign"
+            },
+            "collocation-residual": {
+              "baseline": {
+                "passed": true,
+                "value": 9.960813696202087e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.85366433874983e-10
+              },
+              "criterion": "<= 1.0e-09"
+            },
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "maximum scaled difference <= 1.0e-12"
+            },
+            "dop853-comparison": {
+              "baseline": {
+                "passed": true,
+                "value": 1.0986648895187867e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.14487882214667e-09
+              },
+              "criterion": "<= 5.0e-04"
+            },
+            "exact-endpoints-and-uv": {
+              "baseline": {
+                "passed": true,
+                "value": 4.884981308350689e-15
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.3322676295501878e-15
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "figure-2-reproduction": {
+              "baseline": {
+                "passed": true,
+                "value": 7.296166088072153e-05
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.296166084375111e-05
+              },
+              "criterion": "<= 1.5e-03"
+            },
+            "figure-3-reproduction": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0014178794533736619
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0014178794500347633
+              },
+              "criterion": "<= 5.0e-03"
+            },
+            "horizon-scalar-equation": {
+              "baseline": {
+                "passed": true,
+                "value": 7.956946046225043e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 8.031842293846181e-11
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "independent-equations": {
+              "baseline": {
+                "passed": true,
+                "value": 9.368683536130996e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.343793750514273e-08
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "nonlinear-solver": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "all final solver statuses are successful"
+            },
+            "potential-algebra": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1102230246251565e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.1102230246251565e-16
+              },
+              "criterion": "maximum absolute error <= 1e-12"
+            },
+            "refinement-order": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "zero failures when the earlier change exceeds 1e-8"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 9.326704916146316e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.327361852394245e-09
+              },
+              "criterion": "<= 2.0e-04"
+            },
+            "thermodynamic-derivative": {
+              "baseline": {
+                "passed": true,
+                "value": 0.00044072887849366804
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.00044072887831858587
+              },
+              "criterion": "<= 1.0e-03"
+            }
+          }
+        },
+        "gubser-rocha-emd": {
+          "default": {
+            "boundary-and-source": {
+              "baseline": {
+                "passed": true,
+                "value": 1.103143471006222e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.8847893965220666e-11
+              },
+              "criterion": "<= 1.0e-08"
+            },
+            "collocation-residual": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3055553122393917e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.364971927103418e-10
+              },
+              "criterion": "<= 2.0e-08"
+            },
+            "einstein-constraint": {
+              "baseline": {
+                "passed": true,
+                "value": 7.604465648462686e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.2176377772189463e-12
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "equation-of-state": {
+              "baseline": {
+                "passed": true,
+                "value": 2.3004132017056795e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 9.5595150961766e-11
+              },
+              "criterion": "<= 2.0e-07"
+            },
+            "exact-fields": {
+              "baseline": {
+                "passed": true,
+                "value": 5.898535396607314e-10
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.4742717235808017e-10
+              },
+              "criterion": "<= 2.0e-07"
+            },
+            "independent-equations": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3824466808007294e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.281904488840899e-08
+              },
+              "criterion": "<= 1.0e-07"
+            },
+            "low-temperature-relation": {
+              "baseline": {
+                "passed": true,
+                "value": 2.768385520823813e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.1713829906057072e-10
+              },
+              "criterion": "identity <= 2.0e-06; fit <= 2.0e-05"
+            },
+            "maxwell-flux": {
+              "baseline": {
+                "passed": true,
+                "value": 1.4471536078770425e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.517537657477654e-12
+              },
+              "criterion": "<= 1.0e-08"
+            },
+            "neutral-limit-and-determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 2.274090260701628e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "neutral <= 1.0e-10; determinism <= 1.0e-12"
+            },
+            "nonlinear-solver": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "all final residual states accepted and <= 2.0e-08"
+            },
+            "source-algebra": {
+              "baseline": {
+                "passed": true,
+                "value": 4.440892098500626e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.440892098500626e-16
+              },
+              "criterion": "maximum absolute or scaled error <= 1e-12"
+            },
+            "source-thermodynamics": {
+              "baseline": {
+                "passed": true,
+                "value": 1.3975516127449285e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.8293404826764406e-10
+              },
+              "criterion": "<= 2.0e-07"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1808046399279386e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.267327938464967e-10
+              },
+              "criterion": "final <= 2.0e-06; zero ordering failures above 5.0e-10"
+            }
+          }
+        },
+        "hard-wall-chiral": {
+          "default": {
+            "admissible-spectra": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "relative imaginary part <= 1e-10"
+            },
+            "determinism": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "maximum scaled difference <= 1e-11"
+            },
+            "direct-equations-and-boundaries": {
+              "baseline": {
+                "passed": true,
+                "value": 1.925971231457428e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.7780808885828568e-11
+              },
+              "criterion": "equations <= 1e-7 and boundaries <= 1e-8"
+            },
+            "gmor-limit": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0037838937213869883
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0037838937222296476
+              },
+              "criterion": "zero ordering failures and final absolute error <= 1%"
+            },
+            "independent-normalizable-routes": {
+              "baseline": {
+                "passed": true,
+                "value": 5.588652184262608e-09
+              },
+              "candidate": {
+                "passed": true,
+                "value": 5.588652184262608e-09
+              },
+              "criterion": "cutoff change <= 2e-4 and cross-route difference <= 1e-3"
+            },
+            "normalization-and-extraction": {
+              "baseline": {
+                "passed": true,
+                "value": 2.220446049250313e-16
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.220446049250313e-16
+              },
+              "criterion": "normalization residual <= 1e-8"
+            },
+            "protected-vector-anchor": {
+              "baseline": {
+                "passed": true,
+                "value": 4.195537642388898e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.195537642388898e-11
+              },
+              "criterion": "protected routes pass; cross route <= 1e-3; J0 anchor <= 1e-6"
+            },
+            "regulated-fpi": {
+              "baseline": {
+                "passed": true,
+                "value": 1.075077360579435e-06
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.075077360579435e-06
+              },
+              "criterion": "route difference <= 1e-7 and log-slope error <= 1e-5"
+            },
+            "source-conventions": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0
+              },
+              "criterion": "relative error <= 1e-13 and no refit"
+            },
+            "spectral-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 7.661975718422788e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.6970423651924466e-13
+              },
+              "criterion": "N80-to-N96 <= 2e-4 and zero resolved ordering failures"
+            },
+            "table-ii-reproduction": {
+              "baseline": {
+                "passed": true,
+                "value": 0.0034899651493720814
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.0034899651493767525
+              },
+              "criterion": "every relative error <= 1%"
+            }
+          }
+        },
+        "hard-wall-vector": {
+          "collocation": {
+            "analytic-ratio-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 7.404011112368239e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.404011112368239e-08
+              },
+              "criterion": "value <= 0.0005"
+            }
+          },
+          "shooting": {
+            "analytic-ratio-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 7.399815574415212e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.399815574415212e-08
+              },
+              "criterion": "value <= 0.0005"
+            }
+          },
+          "spectral": {
+            "analytic-ratio-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 7.39770571436852e-08
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.397704355821308e-08
+              },
+              "criterion": "value <= 0.0005"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 2.4302338283352153e-12
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.4344519381290106e-12
+              },
+              "criterion": "final relative change is smaller than the preceding change and value <= 1e-08"
+            }
+          }
+        },
+        "holographic-superconductor-optical": {
+          "default": {
+            "causality-passivity-sanity": {
+              "baseline": {
+                "passed": true,
+                "value": 6.840014941005439e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 7.3168235673442e-14
+              },
+              "criterion": "pole intercept > 0 and Re sigma >= -1e-08"
+            },
+            "exact-normal-conductivity": {
+              "baseline": {
+                "passed": true,
+                "value": 2.2282689420085284e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.2989861977609892e-11
+              },
+              "criterion": "maximum complex error <= 1e-08"
+            },
+            "independent-response-route": {
+              "baseline": {
+                "passed": true,
+                "value": 1.461902481055287e-06
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.4619024567360608e-06
+              },
+              "criterion": "maximum relative difference <= 0.0005"
+            },
+            "low-temperature-condensate-scale": {
+              "baseline": {
+                "passed": true,
+                "value": 8.443622405101484
+              },
+              "candidate": {
+                "passed": true,
+                "value": 8.443622405101484
+              },
+              "criterion": "8.2 <= value <= 8.7"
+            },
+            "near-critical-fit-stability": {
+              "baseline": {
+                "passed": true,
+                "value": 0.00016560805716356826
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.00016560805716356826
+              },
+              "criterion": "slope <= 0.1 and pole intercept <= 0.02"
+            },
+            "near-critical-literature-coefficient": {
+              "baseline": {
+                "passed": true,
+                "value": 0.001298193749890449
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.001298193749890449
+              },
+              "criterion": "relative difference <= 0.15"
+            },
+            "optical-backgrounds": {
+              "baseline": {
+                "passed": true,
+                "value": 0.9059083873731124
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.9059083873731124
+              },
+              "criterion": "maximum normalized gate ratio <= 1"
+            },
+            "optical-convention-identities": {
+              "baseline": {
+                "passed": true,
+                "value": 2.6645352591003757e-15
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.6645352591003757e-15
+              },
+              "criterion": "value <= 1e-12"
+            },
+            "optical-response-numerics": {
+              "baseline": {
+                "passed": true,
+                "value": 0.9786119424096585
+              },
+              "candidate": {
+                "passed": true,
+                "value": 0.4015137598696055
+              },
+              "criterion": "maximum normalized gate ratio <= 1"
+            },
+            "protected-hhh-benchmark": {
+              "baseline": {
+                "passed": true,
+                "value": null
+              },
+              "candidate": {
+                "passed": true,
+                "value": null
+              },
+              "criterion": "all protected acceptance checks pass"
+            },
+            "static-finite-frequency-agreement": {
+              "baseline": {
+                "passed": true,
+                "value": 4.2376501130063465e-07
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.2520577122912945e-07
+              },
+              "criterion": "maximum relative difference <= 0.0005"
+            },
+            "static-london-numerics": {
+              "baseline": {
+                "passed": true,
+                "value": 1.6020313679071164e-11
+              },
+              "candidate": {
+                "passed": true,
+                "value": 1.6020313679071164e-11
+              },
+              "criterion": "maximum relative change <= 0.0005"
+            }
+          }
+        },
+        "soft-wall-vector": {
+          "finite-difference": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 3.927966006689321e-05
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.927966006689321e-05
+              },
+              "criterion": "value <= 0.0002"
+            }
+          },
+          "spectral-100": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 5.46229728115577e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.930189507173054e-14
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 5.46229728115577e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 3.930189507173054e-14
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-40": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 2.6900703886667543e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.701172618913006e-13
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 2.6900703886667543e-13
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.701172618913006e-13
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-56": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 2.7644553313166398e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.1649348980190553e-14
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 2.7644553313166398e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 2.1649348980190553e-14
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1694349192718315e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 6.661338147750939e-15
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1694349192718315e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 6.661338147750939e-15
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64-modes-6": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1694349192718315e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 6.661338147750939e-15
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": true,
+                "value": 1.1694349192718315e-14
+              },
+              "candidate": {
+                "passed": true,
+                "value": 6.661338147750939e-15
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64-zmax-4": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": false,
+                "value": 0.05230922536737759
+              },
+              "candidate": {
+                "passed": false,
+                "value": 0.052309225367371814
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": false,
+                "value": 0.05230922536737759
+              },
+              "candidate": {
+                "passed": false,
+                "value": 0.052309225367371814
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          },
+          "spectral-64-zmax-6": {
+            "exact-spectrum-relative-error": {
+              "baseline": {
+                "passed": true,
+                "value": 4.0702708781203967e-07
+              },
+              "candidate": {
+                "passed": true,
+                "value": 4.0702708647977204e-07
+              },
+              "criterion": "value <= 0.0002"
+            },
+            "spectral-degree-refinement": {
+              "baseline": {
+                "passed": false,
+                "value": 4.0702708781203967e-07
+              },
+              "candidate": {
+                "passed": false,
+                "value": 4.0702708647977204e-07
+              },
+              "criterion": "soft-wall-spectral-refinement-v2: value <= 1e-08 and (strictly decreasing across three degrees, or every requested mode at the two finest degrees has error and eigenvector-solve mismatch <= eps ||H||_2 kappa / |lambda| with cross-degree stability)"
+            }
+          }
+        }
+      }
+    },
+    "passed": false,
+    "stopped": "regression stop: A1 (2), A2 (13)",
+    "summary": {
+      "B1": {
+        "dewolfe-gubser-rosen-emd": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 5.569589630861665e-11,
+          "largest_relative_report_only_change": {
+            "key": "refinement|maximum_final_change",
+            "value": 0.02483394919866488
+          },
+          "leaves": 320,
+          "seconds": {
+            "baseline": 130.9462034169992,
+            "candidate": 134.2082738329991
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 4.902744876744691e-12,
+            "delta": 2.1678658868040657e-11,
+            "key": "degree=80|2|chi_2_over_T2_BH",
+            "ratio": 4.421739130434783
+          }
+        },
+        "dewolfe-gubser-rosen-emd-finite-density": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 2.23022269705929e-09,
+          "largest_relative_report_only_change": {
+            "key": null,
+            "value": 0.0
+          },
+          "leaves": 53,
+          "seconds": {
+            "baseline": 67.43824354099888,
+            "candidate": 74.62829079199946
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 2.1816994877355e-08,
+            "delta": 3.1609201922577768e-09,
+            "key": "state|degree=120|primary|rho_canonical_BH",
+            "ratio": 0.14488339067900965
+          }
+        },
+        "gubser-nellore-ed": {
+          "checks_failing_at_baseline": [
+            "default:collocation-residual"
+          ],
+          "checks_failing_at_candidate": [],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 6.875058568820992e-11,
+          "largest_relative_report_only_change": {
+            "key": "qcd-like|target_phi_h=2.0|entropy_relative_error",
+            "value": 2.35956714215456
+          },
+          "leaves": 1556,
+          "seconds": {
+            "baseline": 177.5447141250006,
+            "candidate": 174.3203763750007
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 3.3490383240633374e-12,
+            "delta": 6.385950795939621e-16,
+            "key": "cosh-calibration|247|temperature_L",
+            "ratio": 0.0001906801349526405
+          }
+        },
+        "gubser-rocha-emd": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [
+            "default:spectral-refinement"
+          ],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 5.926032703804987e-09,
+          "largest_relative_report_only_change": {
+            "key": "xi=16.0|maxwell_flux",
+            "value": 1.0047722158787037e-09
+          },
+          "leaves": 42,
+          "seconds": {
+            "baseline": 6.245585208000193,
+            "candidate": 6.088851041000453
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 5.0323745170999246e-09,
+            "delta": 1.8751448171983043e-09,
+            "key": "xi=16.0|temperature",
+            "ratio": 0.37261630882729285
+          }
+        },
+        "hard-wall-chiral": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 18,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 9.058850764733813e-13,
+          "largest_relative_report_only_change": {
+            "key": "gmor|factor=1.0|R_GMOR",
+            "value": 1.8118268444621122e-12
+          },
+          "leaves": 28,
+          "seconds": {
+            "baseline": 2.1861665420001373,
+            "candidate": 2.7874249590004183
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 2.362980922043789e-09,
+            "delta": 5.979927664157003e-11,
+            "key": "level=96|sqrt_F_rho_MeV",
+            "ratio": 0.02530671157084436
+          }
+        },
+        "hard-wall-vector": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 9,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 3.288951637947782e-14,
+          "largest_relative_report_only_change": {
+            "key": null,
+            "value": 0.0
+          },
+          "leaves": 7,
+          "seconds": {
+            "baseline": 1.8165736659993854,
+            "candidate": 1.9026627919993189
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 1.4976464512983512e-10,
+            "delta": 7.549516567451064e-14,
+            "key": "spectral|ratio|n=1",
+            "ratio": 0.0005040920412762424
+          }
+        },
+        "holographic-superconductor-optical": {
+          "checks_failing_at_baseline": [
+            "default:optical-response-numerics"
+          ],
+          "checks_failing_at_candidate": [],
+          "controls": 38,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 1.6692139072311547e-09,
+          "largest_relative_report_only_change": {
+            "key": "pole|2|omega=0.2|numerical_gate_ratio",
+            "value": 1.1065543656024481
+          },
+          "leaves": 38,
+          "seconds": {
+            "baseline": 23.302417167000385,
+            "candidate": 27.83392658399862
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 1.0423543520528253e-07,
+            "delta": 8.686175195588199e-10,
+            "key": "pole|3|omega=0.05|spectral_conductivity",
+            "ratio": 0.00833322677502285
+          }
+        },
+        "soft-wall-vector": {
+          "checks_failing_at_baseline": [
+            "spectral-64-zmax-4:exact-spectrum-relative-error",
+            "spectral-64-zmax-4:spectral-degree-refinement",
+            "spectral-64-zmax-6:spectral-degree-refinement"
+          ],
+          "checks_failing_at_candidate": [
+            "spectral-64-zmax-4:exact-spectrum-relative-error",
+            "spectral-64-zmax-4:spectral-degree-refinement",
+            "spectral-64-zmax-6:spectral-degree-refinement"
+          ],
+          "controls": 6,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 3.019806626980547e-14,
+          "largest_relative_report_only_change": {
+            "key": "spectral-100|level=92",
+            "value": 1.6630434782608696
+          },
+          "leaves": 22,
+          "seconds": {
+            "baseline": 4.250404167001761,
+            "candidate": 11.75527787500323
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 3.552713678800501e-13,
+            "delta": 1.2967404927621828e-13,
+            "key": "spectral-64-modes-6|n=1",
+            "ratio": 0.365
+          }
+        }
+      },
+      "B3": {
+        "dewolfe-gubser-rosen-emd": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 8.58527877581271e-11,
+          "largest_relative_report_only_change": {
+            "key": "refinement|maximum_final_change",
+            "value": 0.669028604037441
+          },
+          "leaves": 320,
+          "seconds": {
+            "baseline": 199.20370724999884,
+            "candidate": 147.6039715829993
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 1.1297629498585593e-11,
+            "delta": 2.3376856006507296e-11,
+            "key": "degree=120|3|chi_2_over_T2_BH",
+            "ratio": 2.069182389937107
+          }
+        },
+        "dewolfe-gubser-rosen-emd-finite-density": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 9.080941638229641e-10,
+          "largest_relative_report_only_change": {
+            "key": null,
+            "value": 0.0
+          },
+          "leaves": 53,
+          "seconds": {
+            "baseline": 84.43588191699928,
+            "candidate": 92.47668754199913
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 6.250555628639631e-13,
+            "delta": 2.0694557179012918e-13,
+            "key": "control|neutral|primary|temperature_BH",
+            "ratio": 0.33108348134991117
+          }
+        },
+        "gubser-nellore-ed": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 1.0837296816367842e-10,
+          "largest_relative_report_only_change": {
+            "key": "cosh-calibration|target_phi_h=0.25|sound_speed_relative_error",
+            "value": 5.2230483271366595
+          },
+          "leaves": 1556,
+          "seconds": {
+            "baseline": 216.89701712500027,
+            "candidate": 183.39504574999955
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 3.5648226845188376e-08,
+            "delta": 5.071498776487715e-12,
+            "key": "cosh-calibration|2|temperature_L",
+            "ratio": 0.00014226510615835135
+          }
+        },
+        "gubser-rocha-emd": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 0,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 1.5448651093568894e-09,
+          "largest_relative_report_only_change": {
+            "key": "xi=16.0|maxwell_flux",
+            "value": 2.6208009706347814e-10
+          },
+          "leaves": 42,
+          "seconds": {
+            "baseline": 9.412409999999,
+            "candidate": 7.780792332998317
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 2.6791902030254278e-11,
+            "delta": 6.477485214873013e-12,
+            "key": "xi=0.5|mu_bh",
+            "ratio": 0.2417702635504724
+          }
+        },
+        "hard-wall-chiral": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 18,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 1.0097064285017862e-12,
+          "largest_relative_report_only_change": {
+            "key": "gmor|factor=0.5|R_GMOR",
+            "value": 9.03171769908068e-13
+          },
+          "leaves": 28,
+          "seconds": {
+            "baseline": 9.511042250000173,
+            "candidate": 9.48717004199898
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 2.169144863728434e-09,
+            "delta": 1.8144419300369918e-10,
+            "key": "level=96|sqrt_F_rho_MeV",
+            "ratio": 0.08364779874213836
+          }
+        },
+        "hard-wall-vector": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 9,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 1.837943562382883e-14,
+          "largest_relative_report_only_change": {
+            "key": null,
+            "value": 0.0
+          },
+          "leaves": 7,
+          "seconds": {
+            "baseline": 2.1676774589996057,
+            "candidate": 2.07963241699872
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 1.5349943538467414e-10,
+            "delta": 4.218847493575595e-14,
+            "key": "spectral|ratio|n=1",
+            "ratio": 0.0002748444958773326
+          }
+        },
+        "holographic-superconductor-optical": {
+          "checks_failing_at_baseline": [],
+          "checks_failing_at_candidate": [],
+          "controls": 38,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 1.4407605390386683e-09,
+          "largest_relative_report_only_change": {
+            "key": "normal|omega=50.0|numerical_gate_ratio",
+            "value": 1.987011150610424
+          },
+          "leaves": 38,
+          "seconds": {
+            "baseline": 93.77154433300166,
+            "candidate": 78.89994329100045
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 1.0406121236760343e-07,
+            "delta": 8.677257753714357e-10,
+            "key": "pole|3|omega=0.05|spectral_conductivity",
+            "ratio": 0.008338609128501543
+          }
+        },
+        "soft-wall-vector": {
+          "checks_failing_at_baseline": [
+            "spectral-64-zmax-4:exact-spectrum-relative-error",
+            "spectral-64-zmax-4:spectral-degree-refinement",
+            "spectral-64-zmax-6:spectral-degree-refinement"
+          ],
+          "checks_failing_at_candidate": [
+            "spectral-64-zmax-4:exact-spectrum-relative-error",
+            "spectral-64-zmax-4:spectral-degree-refinement",
+            "spectral-64-zmax-6:spectral-degree-refinement"
+          ],
+          "controls": 6,
+          "controls_changed": 0,
+          "largest_relative_leaf_change": 3.419486915845536e-14,
+          "largest_relative_report_only_change": {
+            "key": "spectral-100|level=92",
+            "value": 2.2857142857142856
+          },
+          "leaves": 22,
+          "seconds": {
+            "baseline": 5.9892717089969665,
+            "candidate": 5.385533790999034
+          },
+          "worst_delta_over_allowance": {
+            "allowance": 1.4210854715202e-13,
+            "delta": 1.545430450278218e-13,
+            "key": "spectral-56|n=1",
+            "ratio": 1.0875000000000001
+          }
+        }
+      }
+    },
+    "violation_counts": {
+      "A1": 2,
+      "A2": 13,
+      "controls": 0,
+      "keys": 0
+    },
+    "violations": {
+      "A1": [
+        {
+          "baseline_value": 1.6259418231391729e-09,
+          "build": "B1",
+          "candidate_value": 4.730559552544942e-09,
+          "check": "spectral-refinement",
+          "consumer": "gubser-rocha-emd",
+          "run": "default"
+        },
+        {
+          "build": "B1",
+          "check": "record",
+          "consumer": "gubser-rocha-emd",
+          "run": "default"
+        }
+      ],
+      "A2": [
+        {
+          "allowance": 6.821210263296962e-12,
+          "baseline": 46.82964054829617,
+          "build": "B1",
+          "candidate": 46.82964054832124,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 2.5067947717616335e-11,
+          "key": "degree=120|3|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 1.4347278920467943e-09,
+          "baseline": 766.3997965902271,
+          "build": "B1",
+          "candidate": 766.3997965862806,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 3.946524884668179e-09,
+          "key": "degree=120|3|entropy_BH"
+        },
+        {
+          "allowance": 4.557985933129061e-15,
+          "baseline": 0.0038442594342710185,
+          "build": "B1",
+          "candidate": 0.0038442594342841556,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 1.313706088357236e-14,
+          "key": "degree=120|3|susceptibility_integral"
+        },
+        {
+          "allowance": 1.1080025785759062e-12,
+          "baseline": 1.6665496073276986,
+          "build": "B1",
+          "candidate": 1.666549607324405,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 3.2935876248529894e-12,
+          "key": "degree=120|3|temperature_BH"
+        },
+        {
+          "allowance": 8.029132914089132e-12,
+          "baseline": 42.86226204907155,
+          "build": "B1",
+          "candidate": 42.86226204909113,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 1.957545237019076e-11,
+          "key": "degree=80|1|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 4.902744876744691e-12,
+          "baseline": 45.17991837468092,
+          "build": "B1",
+          "candidate": 45.1799183747026,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 2.1678658868040657e-11,
+          "key": "degree=80|2|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 1.6413537196058314e-11,
+          "baseline": 46.82964054829549,
+          "build": "B1",
+          "candidate": 46.82964054831798,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 2.2495783014164772e-11,
+          "key": "degree=80|3|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 1.5631940186722204e-11,
+          "baseline": 47.44074749897278,
+          "build": "B1",
+          "candidate": 47.44074749899433,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 2.1543655748246238e-11,
+          "key": "degree=80|4|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 2.3163693185779266e-11,
+          "baseline": 46.655869665620465,
+          "build": "B1",
+          "candidate": 46.655869665643735,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 2.327027459614328e-11,
+          "key": "degree=80|5|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 1.1297629498585593e-11,
+          "baseline": 46.829640548296,
+          "build": "B3",
+          "candidate": 46.829640548319375,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 2.3376856006507296e-11,
+          "key": "degree=120|3|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 1.6413537196058314e-11,
+          "baseline": 46.82964054829713,
+          "build": "B3",
+          "candidate": 46.82964054831905,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 2.192024339819909e-11,
+          "key": "degree=80|3|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 1.3926637620897964e-11,
+          "baseline": 44.23052818041929,
+          "build": "B3",
+          "candidate": 44.23052818043928,
+          "consumer": "dewolfe-gubser-rosen-emd",
+          "delta": 1.9987567156931618e-11,
+          "key": "degree=80|6|chi_2_over_T2_BH"
+        },
+        {
+          "allowance": 1.4210854715202e-13,
+          "baseline": 7.999999999999999,
+          "build": "B3",
+          "candidate": 7.999999999999845,
+          "consumer": "soft-wall-vector",
+          "delta": 1.545430450278218e-13,
+          "key": "spectral-56|n=1"
+        }
+      ],
+      "controls": [],
+      "keys": []
+    }
+  },
+  "runtime": {
+    "byteorder": "little",
+    "chebyshev_construction": "c-s1-r1",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "bc6d0022fa11c0f1f4d9331510e51484427e84bf",
+    "holoforge_git_src_modified": "false",
+    "holoforge_source_sha256": "1c731e1b97aef6f3b7215bd28e04512fc50242bd8b99e928aa57edea53229d3a",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+    "numpy": "2.4.6",
+    "numpy_blas": "accelerate",
+    "numpy_lapack": "accelerate",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.15",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "accelerate",
+    "scipy_lapack": "accelerate"
+  },
+  "stage": "s2",
+  "status": "stopped",
+  "tool": "chebyshev-repair",
+  "tool_sha256": "d9e11cb12a87f83ec11488f5e263c22e8a47464abfeb73f3a7cf15def912a30a",
+  "wall_seconds": 0.08403029100009007
+}

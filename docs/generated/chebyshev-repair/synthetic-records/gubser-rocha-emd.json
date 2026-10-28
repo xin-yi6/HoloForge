@@ -1,0 +1,202 @@
+{
+  "_note": "SYNTHETIC record, hand-built from a manual audit of the record-building source at commit 5846975. It is not a verifier output and carries no physics. It exists only to exercise the regression-table extraction where no verifier record is committed.",
+  "default": {
+    "results": {
+      "cases": [
+        {
+          "xi": 0.5,
+          "degree": 80,
+          "thermodynamics": {
+            "xi": 0.5,
+            "degree": 80,
+            "mu_bh": 2.00000000002,
+            "hat_epsilon": 2.25000000002,
+            "hat_s": 3.50000000002,
+            "hat_rho": 0.35000000002,
+            "temperature": 0.30000000002,
+            "Omega": 0.45000000002,
+            "maxwell_flux": 0.55000000002
+          },
+          "source_exact_thermodynamics": {
+            "xi": 0.5,
+            "degree": 80,
+            "mu_bh": 2.0,
+            "hat_epsilon": 2.25,
+            "hat_s": 3.5,
+            "hat_rho": 0.35,
+            "temperature": 0.3,
+            "Omega": 0.45,
+            "maxwell_flux": 0.55
+          }
+        },
+        {
+          "xi": 1.0,
+          "degree": 80,
+          "thermodynamics": {
+            "xi": 1.0,
+            "degree": 80,
+            "mu_bh": 2.50000000002,
+            "hat_epsilon": 2.50000000002,
+            "hat_s": 4.00000000002,
+            "hat_rho": 0.70000000002,
+            "temperature": 0.35000000002,
+            "Omega": 0.90000000002,
+            "maxwell_flux": 1.10000000002
+          },
+          "source_exact_thermodynamics": {
+            "xi": 1.0,
+            "degree": 80,
+            "mu_bh": 2.5,
+            "hat_epsilon": 2.5,
+            "hat_s": 4.0,
+            "hat_rho": 0.7,
+            "temperature": 0.35,
+            "Omega": 0.9,
+            "maxwell_flux": 1.1
+          }
+        },
+        {
+          "xi": 1.5,
+          "degree": 80,
+          "thermodynamics": {
+            "xi": 1.5,
+            "degree": 80,
+            "mu_bh": 3.00000000002,
+            "hat_epsilon": 2.75000000002,
+            "hat_s": 4.50000000002,
+            "hat_rho": 1.0500000000199998,
+            "temperature": 0.40000000002,
+            "Omega": 1.35000000002,
+            "maxwell_flux": 1.6500000000200001
+          },
+          "source_exact_thermodynamics": {
+            "xi": 1.5,
+            "degree": 80,
+            "mu_bh": 3.0,
+            "hat_epsilon": 2.75,
+            "hat_s": 4.5,
+            "hat_rho": 1.0499999999999998,
+            "temperature": 0.4,
+            "Omega": 1.35,
+            "maxwell_flux": 1.6500000000000001
+          }
+        }
+      ],
+      "refinement": {
+        "degrees": [
+          40,
+          60,
+          80
+        ],
+        "maximum_final_change": 4e-11,
+        "cases": [
+          {
+            "xi": 0.5,
+            "observables": {
+              "mu_bh": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "energy_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "entropy_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "charge_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "temperature": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "chemical_potential": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              }
+            }
+          },
+          {
+            "xi": 1.0,
+            "observables": {
+              "mu_bh": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "energy_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "entropy_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "charge_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "temperature": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "chemical_potential": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              }
+            }
+          },
+          {
+            "xi": 1.5,
+            "observables": {
+              "mu_bh": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "energy_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "entropy_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "charge_density": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "temperature": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              },
+              "chemical_potential": {
+                "coarse_to_middle": 3e-08,
+                "middle_to_fine": 4e-11,
+                "ordered_above_floor": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

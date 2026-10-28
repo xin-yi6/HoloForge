@@ -1,0 +1,62 @@
+{
+  "plan": "docs/numerics/chebyshev-construction-repair-plan.md",
+  "plan_sha256": "7d26e662d33e50713a5403a5a0455e59b7abc052ad4ed1732135d9efab7b25fb",
+  "result": {
+    "C-S1": {
+      "differing_grids": 0,
+      "max_relative_difference": 0.0,
+      "seconds": 0.02741034733298875
+    },
+    "C-T1": {
+      "differing_grids": 28,
+      "max_relative_difference": 5.5233471758500866e-15,
+      "seconds": 0.013688514000023133
+    },
+    "C-T2": {
+      "differing_grids": 0,
+      "max_relative_difference": 0.0,
+      "seconds": 0.016845930333147408
+    },
+    "C-T3": {
+      "differing_grids": 0,
+      "max_relative_difference": 0.0,
+      "seconds": 0.009485500000058286
+    },
+    "current": {
+      "differing_grids": 28,
+      "max_relative_difference": 5.523347175849798e-15,
+      "seconds": 0.004130833333571597
+    },
+    "verified": {
+      "files": 56,
+      "local_label": "B1",
+      "local_matrices_match_s0_hashes": true,
+      "other_label": "B3",
+      "saved_bytes_match_s0_hashes": true
+    }
+  },
+  "runtime": {
+    "byteorder": "little",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "d5eb95acb361613f144bf5a5674c4a2e461bbfff",
+    "holoforge_git_src_modified": "false",
+    "holoforge_source_sha256": "66d9bd288254e4a11253e0345187e1d8cbdbe48dd19ba0463f559361e800277a",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+    "numpy": "2.4.6",
+    "numpy_blas": "accelerate",
+    "numpy_lapack": "accelerate",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.15",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "accelerate",
+    "scipy_lapack": "accelerate"
+  },
+  "stage": "build-agreement",
+  "status": "ok",
+  "tool": "chebyshev-repair",
+  "tool_sha256": "9e3399309122e77bdaa660e4a3e3615fea8e4a336d0311b39fe649921f482e71",
+  "wall_seconds": 2.031924249999065
+}

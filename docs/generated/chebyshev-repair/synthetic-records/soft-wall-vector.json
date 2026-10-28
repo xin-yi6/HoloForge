@@ -1,0 +1,520 @@
+{
+  "_note": "SYNTHETIC record, hand-built from a manual audit of the record-building source at commit 5846975. It is not a verifier output and carries no physics. It exists only to exercise the regression-table extraction where no verifier record is committed.",
+  "spectral-40": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.0000000000012,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.0000000000002998,
+        "relative_error": 2.999822612537173e-13
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.0000000000048,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.8284271247470385,
+        "relative_error": 5.999645225074346e-13
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.0000000000108,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4641016151393136,
+        "relative_error": 9.000207986294603e-13
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.0000000000192,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.0000000000024,
+        "relative_error": 1.1999290450148692e-12
+      }
+    ],
+    "max_relative_error": 1.1999290450148692e-12,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": true
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "spectral_convergence": {
+      "levels": [
+        {
+          "degree": 24,
+          "max_relative_error": 1e-09
+        },
+        {
+          "degree": 32,
+          "max_relative_error": 1e-11
+        },
+        {
+          "degree": 40,
+          "max_relative_error": 1.1999290450148692e-12
+        }
+      ],
+      "branch": "convergence"
+    }
+  },
+  "spectral-56": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.0000000000012,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.0000000000002998,
+        "relative_error": 2.999822612537173e-13
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.0000000000048,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.8284271247470385,
+        "relative_error": 5.999645225074346e-13
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.0000000000108,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4641016151393136,
+        "relative_error": 9.000207986294603e-13
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.0000000000192,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.0000000000024,
+        "relative_error": 1.1999290450148692e-12
+      }
+    ],
+    "max_relative_error": 1.1999290450148692e-12,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": true
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "spectral_convergence": {
+      "levels": [
+        {
+          "degree": 40,
+          "max_relative_error": 1e-09
+        },
+        {
+          "degree": 48,
+          "max_relative_error": 1e-11
+        },
+        {
+          "degree": 56,
+          "max_relative_error": 1.1999290450148692e-12
+        }
+      ],
+      "branch": "convergence"
+    }
+  },
+  "spectral-64": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.0000000000012,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.0000000000002998,
+        "relative_error": 2.999822612537173e-13
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.0000000000048,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.8284271247470385,
+        "relative_error": 5.999645225074346e-13
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.0000000000108,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4641016151393136,
+        "relative_error": 9.000207986294603e-13
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.0000000000192,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.0000000000024,
+        "relative_error": 1.1999290450148692e-12
+      }
+    ],
+    "max_relative_error": 1.1999290450148692e-12,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": true
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "spectral_convergence": {
+      "levels": [
+        {
+          "degree": 48,
+          "max_relative_error": 1e-09
+        },
+        {
+          "degree": 56,
+          "max_relative_error": 1e-11
+        },
+        {
+          "degree": 64,
+          "max_relative_error": 1.1999290450148692e-12
+        }
+      ],
+      "branch": "convergence"
+    }
+  },
+  "spectral-100": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.0000000000012,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.0000000000002998,
+        "relative_error": 2.999822612537173e-13
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.0000000000048,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.8284271247470385,
+        "relative_error": 5.999645225074346e-13
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.0000000000108,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4641016151393136,
+        "relative_error": 9.000207986294603e-13
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.0000000000192,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.0000000000024,
+        "relative_error": 1.1999290450148692e-12
+      }
+    ],
+    "max_relative_error": 1.1999290450148692e-12,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": true
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "spectral_convergence": {
+      "levels": [
+        {
+          "degree": 84,
+          "max_relative_error": 1e-09
+        },
+        {
+          "degree": 92,
+          "max_relative_error": 1e-11
+        },
+        {
+          "degree": 100,
+          "max_relative_error": 1.1999290450148692e-12
+        }
+      ],
+      "branch": "convergence"
+    }
+  },
+  "spectral-64-modes-6": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.0000000000012,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.0000000000002998,
+        "relative_error": 2.999822612537173e-13
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.0000000000048,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.8284271247470385,
+        "relative_error": 5.999645225074346e-13
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.0000000000108,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4641016151393136,
+        "relative_error": 9.000207986294603e-13
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.0000000000192,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.0000000000024,
+        "relative_error": 1.1999290450148692e-12
+      },
+      {
+        "n": 5,
+        "numerical_mass_squared_gev2": 20.00000000003,
+        "analytic_mass_squared_gev2": 20.0,
+        "numerical_mass_gev": 4.472135955002933,
+        "relative_error": 1.4999557151895715e-12
+      },
+      {
+        "n": 6,
+        "numerical_mass_squared_gev2": 24.000000000043197,
+        "analytic_mass_squared_gev2": 24.0,
+        "numerical_mass_gev": 4.898979485570765,
+        "relative_error": 1.7998935675223038e-12
+      }
+    ],
+    "max_relative_error": 1.7998935675223038e-12,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": true
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "spectral_convergence": {
+      "levels": [
+        {
+          "degree": 48,
+          "max_relative_error": 1e-09
+        },
+        {
+          "degree": 56,
+          "max_relative_error": 1e-11
+        },
+        {
+          "degree": 64,
+          "max_relative_error": 1.7998935675223038e-12
+        }
+      ],
+      "branch": "convergence"
+    }
+  },
+  "spectral-64-zmax-4": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.008,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.001999000998752,
+        "relative_error": 0.0020000000000000018
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.032,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.834078333426936,
+        "relative_error": 0.0040000000000000036
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.072,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4744783781166344,
+        "relative_error": 0.005999999999999932
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.128,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.015968127363562,
+        "relative_error": 0.008000000000000007
+      }
+    ],
+    "max_relative_error": 0.008000000000000007,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": false
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": false
+      }
+    ],
+    "passed": false,
+    "spectral_convergence": {
+      "levels": [
+        {
+          "degree": 48,
+          "max_relative_error": 1e-09
+        },
+        {
+          "degree": 56,
+          "max_relative_error": 1e-11
+        },
+        {
+          "degree": 64,
+          "max_relative_error": 0.008000000000000007
+        }
+      ],
+      "branch": "convergence"
+    }
+  },
+  "spectral-64-zmax-6": {
+    "numerical_method": {
+      "route": "spectral"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.008,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.001999000998752,
+        "relative_error": 0.0020000000000000018
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.032,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.834078333426936,
+        "relative_error": 0.0040000000000000036
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.072,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4744783781166344,
+        "relative_error": 0.005999999999999932
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.128,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.015968127363562,
+        "relative_error": 0.008000000000000007
+      }
+    ],
+    "max_relative_error": 0.008000000000000007,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": false
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": false
+      }
+    ],
+    "passed": false,
+    "spectral_convergence": {
+      "levels": [
+        {
+          "degree": 48,
+          "max_relative_error": 1e-09
+        },
+        {
+          "degree": 56,
+          "max_relative_error": 1e-11
+        },
+        {
+          "degree": 64,
+          "max_relative_error": 0.008000000000000007
+        }
+      ],
+      "branch": "convergence"
+    }
+  },
+  "finite-difference": {
+    "numerical_method": {
+      "route": "finite-difference"
+    },
+    "results": [
+      {
+        "n": 1,
+        "numerical_mass_squared_gev2": 4.0000000000012,
+        "analytic_mass_squared_gev2": 4.0,
+        "numerical_mass_gev": 2.0000000000002998,
+        "relative_error": 2.999822612537173e-13
+      },
+      {
+        "n": 2,
+        "numerical_mass_squared_gev2": 8.0000000000048,
+        "analytic_mass_squared_gev2": 8.0,
+        "numerical_mass_gev": 2.8284271247470385,
+        "relative_error": 5.999645225074346e-13
+      },
+      {
+        "n": 3,
+        "numerical_mass_squared_gev2": 12.0000000000108,
+        "analytic_mass_squared_gev2": 12.0,
+        "numerical_mass_gev": 3.4641016151393136,
+        "relative_error": 9.000207986294603e-13
+      },
+      {
+        "n": 4,
+        "numerical_mass_squared_gev2": 16.0000000000192,
+        "analytic_mass_squared_gev2": 16.0,
+        "numerical_mass_gev": 4.0000000000024,
+        "relative_error": 1.1999290450148692e-12
+      }
+    ],
+    "max_relative_error": 1.1999290450148692e-12,
+    "tolerance": 0.0002,
+    "acceptance_checks": [
+      {
+        "id": "exact-spectrum-relative-error",
+        "passed": true
+      },
+      {
+        "id": "spectral-refinement",
+        "passed": true
+      }
+    ],
+    "passed": true
+  }
+}
