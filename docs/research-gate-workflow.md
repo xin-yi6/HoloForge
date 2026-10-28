@@ -423,6 +423,39 @@ holds no provider names, network code or credentials for this; each command
 uses its own login. Because the author launches its own reviewer, the owner
 audits the receipt and the message actually sent.
 
+**Carry existing authority into the dispatch.** Distinguish the owner's
+selection of this review, standing permission for its recipient/account and
+content class, and the execution platform's approval of the actual transfer.
+When the first two already cover the operation, a newly sealed card in that
+class does not by itself require another owner approval. Conversely, account
+access or a standing class permission alone does not select a review or extend
+its budget. A short option response inherits only its referenced proposal's
+scope; make that reference explicit rather than treating the option letter as
+self-contained consent.
+
+Use the existing private operating note and dispatch justification to present
+the original owner wording and locator, the applicable current proposal and
+response, the recipient/account and content class, and the sealed input paths
+and hashes. Explain how the proposed operation falls within that authority.
+Keep this operational context local; it is not additional reviewer input.
+For a new configuration, cite applicable standing decisions and the current
+scope rather than accumulating superseded approvals. Preserve frozen historical
+configurations and receipts. An agent-written summary, hash or nonblank
+`owner_approval` field cannot authenticate human consent, grant new permission
+or guarantee platform approval. No new approval form is required.
+
+If the platform rejects a dispatch, preserve its actual rationale and distinguish
+it from a runner refusal or provider failure. A rejection before launch is not
+a provider attempt; uncertain launch state must be checked before any retry.
+Respect the platform's denial and recovery instructions. If they allow an
+evidence check, provide missing verifiable authority before reconsideration;
+do not repeatedly rephrase the same request or use another wrapper, account or
+execution path to evade the rejection. If still blocked, ask only for the
+specific unresolved permission and continue unaffected authorized work.
+Instruction changes can improve presentation of authority; only an observed,
+authorized dispatch can establish whether that improvement reduces interruptions.
+Do not send private material or spend provider quota merely to test approval.
+
 The runner has **no default elapsed-time deadline**. Silence while a reviewer
 reasons is not evidence that it has stalled. An optional `--timeout SECONDS`
 sets an explicit finite, positive deadline for that invocation; it is recorded
