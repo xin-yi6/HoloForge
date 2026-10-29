@@ -19,20 +19,6 @@ unnecessary pauses have been eliminated.
 | Local literature comparison is authorized, but a proposed external review has no applicable use or disclosure permission. | Complete the local assessment and prepare the concrete external-use decision. Do not dispatch on the strength of account access or pause unrelated authorized work. |
 | The owner asks only for an intake proposal, or a completed assessment recommends building a new model. | Prepare the requested proposal or investment recommendation. Neither instruction authorizes scientific construction, and neither silently resumes stopped work. |
 
-## Review dispatch authority walkthroughs
-
-These synthetic cases exercise the [review dispatch guidance](research-gate-workflow.md#review-the-question-independently).
-They do not test a platform reviewer or prove that future transfers will be approved.
-
-| Situation | Expected next action and reason |
-| --- | --- |
-| The owner selected a review within an active budget and explicitly granted standing permission for new cards of that class to the same recipient/account. | Present the original permission, selected scope and sealed inputs together, then request normal execution. Do not invent another exact-card owner gate. |
-| The owner answers with an option letter to a proposal that explicitly includes a particular external review. | Link the response to that proposal and its scope; do not present the isolated letter as the full authorization. |
-| A recipient is configured, but the new operation adds an unapproved content class, account, or review use. | Finish local preparation and obtain the missing authority. Existing login and an agent-written approval summary do not supply it. |
-| The execution platform denies a transfer before the runner starts. | Preserve the rationale, record no provider attempt, and follow the platform's recovery instructions. Continue independent local work; do not change wrappers or execution paths to evade the denial. |
-| A provider process may have started before an interruption. | Check the existing lifecycle evidence before a retry; absence of a finished report does not establish zero requests or quota use. |
-| A documentation change makes permission evidence clearer but no subsequent authorized dispatch has run. | Report the guidance improvement as unverified operationally. Do not claim the approval problem is fixed or send an otherwise unnecessary probe. |
-
 ## Claim-sufficiency walkthroughs
 
 Use these synthetic situations to review the
