@@ -22,10 +22,6 @@ within their separately recorded authority. If an actual decision is missing,
 finish the authorized preparation first, identify the exact controlling rule,
 and present a concrete decision with its evidence.
 
-For external research reviews, follow the [dispatch authority guidance](research-gate-workflow.md#review-the-question-independently):
-carry applicable owner instructions into the operation, keep platform decisions
-separate from provider outcomes, and preserve a denial rather than routing around it.
-
 The A-E menu belongs to an owner scientific handoff or the next eligible
 portfolio decision. A status answer, maintenance report, or authorized routine
 step does not manufacture another pending scientific decision. Preserve the
