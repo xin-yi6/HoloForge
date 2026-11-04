@@ -467,6 +467,23 @@ preserved evidence and local process state, and apply the existing call limit.
 These records describe local execution; they do not certify the provider's
 actual model, reasoning effort or scientific correctness.
 
+**Optional consultation through the owner.** For a specific consequential
+obstruction or judgment, the owner may carry a self-contained question to
+another model and return its complete answer. Use the
+[consultation packet](templates/consultation-packet-template.md) and its local
+export/import utility to preserve the exact inputs, returned answer and
+owner-reported model/mode. This is an optional delivery route, not an additional
+mandatory review or a reason to interrupt otherwise authorized work. Keep
+provider/account choices in private operating records.
+
+State whether the model saw the author's proposed answer, earlier criticism or
+other reviews. An informed discussion must not be relabelled as a blind
+derivation or independent first assessment. A different interface or reasoning
+mode within the same model family does not create cross-family independence.
+Evaluate the returned advice item by item against evidence under the existing
+feedback rules. A local import establishes preserved bytes, not provider
+execution, correctness, human scientific review or new research authority.
+
 **Recheck a materially changed claim.** When a stop, exclusion or failed
 qualification materially changes the central contribution of
 publication-targeted work, add to the existing return packet the claim as

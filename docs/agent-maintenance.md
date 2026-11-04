@@ -155,6 +155,32 @@ check. Restrict its file/search scope to those inputs until it seals its own
 result, then compare with the executor. Separate roles alone do not establish
 independent methods or human review. Keep one canonical writer.
 
+Treat the executor's claim and the critic's objection as unverified until
+checked. Resolve consequential disagreements with source evidence, a derivation,
+a counterexample or a reproducible check, not voting or persuasive wording.
+Agreement does not establish correctness; an unresolved objection limits the
+affected claim without automatically refuting the question or stopping other
+authorized work. Apply the existing review/rebuttal limits rather than adding
+an open-ended debate.
+
+## Prepare durable records for migration
+
+Reuse the decision ledger, current-state pointers, handoffs and evidence
+records. Preserve the reasons for important decisions and their source locators;
+state the coverage of reconstructed history instead of claiming complete chat
+recovery. Project files and an agent application's original chat storage may
+be separate dependencies.
+
+Before migration or substantial cleanup, inventory tracked and ignored evidence,
+nested repositories and frozen framework copies, external paths, environment
+rebuild inputs and any required original chats. Record backup scope and date,
+missing material, and a representative restoration check. A clean Git tree or
+successful clone does not protect ignored data. Keep secrets out of inventories
+and establish authentication separately on the destination device. Follow the
+[existing retention and recovery policy](private-research-workflow.md#preserve-recoverable-evidence)
+before removing local evidence; a directory named scratch is not automatically
+disposable. This is maintenance, not permission to rerun stopped research.
+
 ## Maintain first, resume from the recorded checkpoint
 
 1. Confirm the affected tasks are idle or explicitly held. Record current
