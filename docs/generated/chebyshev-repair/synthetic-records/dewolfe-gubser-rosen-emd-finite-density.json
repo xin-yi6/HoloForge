@@ -1,0 +1,251 @@
+{
+  "_note": "SYNTHETIC record, hand-built from a manual audit of the record-building source at commit 5846975. It is not a verifier output and carries no physics. It exists only to exercise the regression-table extraction where no verifier record is committed.",
+  "default": {
+    "results": {
+      "critical": {
+        "step_roots": [
+          {
+            "phi_H": 4.84,
+            "eta": 0.4,
+            "T_BH": 0.143,
+            "mu_BH": 0.783,
+            "rho_canonical_BH": 2.5
+          },
+          {
+            "phi_H": 4.8402,
+            "eta": 0.4001,
+            "T_BH": 0.1431,
+            "mu_BH": 0.7831,
+            "rho_canonical_BH": 2.51
+          }
+        ],
+        "scaled_step_changes": [
+          {
+            "phi_H": 4.132060658659189e-05,
+            "eta": 9.999999999998899e-05,
+            "T_BH": 0.00010000000000001674,
+            "mu_BH": 9.999999999998899e-05,
+            "rho_canonical_BH": 0.003984063745019836
+          }
+        ],
+        "maximum_step_change": 0.004
+      },
+      "refinement": {
+        "states": [
+          {
+            "label": "located-critical-state",
+            "degree": 80,
+            "metrics": {
+              "route_temperature_relative_difference": 1e-10
+            },
+            "primary": {
+              "point": {
+                "degree": 80,
+                "x_h": 1.2,
+                "phi_h": 4.84,
+                "eta": 0.4,
+                "temperature_BH": 0.14,
+                "mu_BH": 0.8,
+                "entropy_BH": 12.0,
+                "rho_canonical_BH": 2.5
+              }
+            },
+            "explicit": {
+              "point": {
+                "degree": 80,
+                "x_h": 1.2,
+                "phi_h": 4.84,
+                "eta": 0.4,
+                "temperature_BH": 0.1400000003,
+                "mu_BH": 0.8000000003000001,
+                "entropy_BH": 12.0000000003,
+                "rho_canonical_BH": 2.5000000003
+              }
+            }
+          },
+          {
+            "label": "located-critical-state",
+            "degree": 120,
+            "metrics": {
+              "route_temperature_relative_difference": 1e-10
+            },
+            "primary": {
+              "point": {
+                "degree": 80,
+                "x_h": 1.2,
+                "phi_h": 4.84,
+                "eta": 0.4,
+                "temperature_BH": 0.14000004000000002,
+                "mu_BH": 0.80000004,
+                "entropy_BH": 12.00000004,
+                "rho_canonical_BH": 2.50000004
+              }
+            },
+            "explicit": {
+              "point": {
+                "degree": 80,
+                "x_h": 1.2,
+                "phi_h": 4.84,
+                "eta": 0.4,
+                "temperature_BH": 0.14000004030000002,
+                "mu_BH": 0.8000000403,
+                "entropy_BH": 12.0000000403,
+                "rho_canonical_BH": 2.5000000403
+              }
+            }
+          },
+          {
+            "label": "located-critical-state",
+            "degree": 150,
+            "metrics": {
+              "route_temperature_relative_difference": 1e-10
+            },
+            "primary": {
+              "point": {
+                "degree": 80,
+                "x_h": 1.2,
+                "phi_h": 4.84,
+                "eta": 0.4,
+                "temperature_BH": 0.14000004100000002,
+                "mu_BH": 0.800000041,
+                "entropy_BH": 12.000000041,
+                "rho_canonical_BH": 2.500000041
+              }
+            },
+            "explicit": {
+              "point": {
+                "degree": 80,
+                "x_h": 1.2,
+                "phi_h": 4.84,
+                "eta": 0.4,
+                "temperature_BH": 0.14000004130000002,
+                "mu_BH": 0.8000000413,
+                "entropy_BH": 12.0000000413,
+                "rho_canonical_BH": 2.5000000413
+              }
+            }
+          }
+        ],
+        "changes": [
+          {
+            "coarse_degree": 80,
+            "fine_degree": 120,
+            "changes": {
+              "temperature_BH": 4.000000000670134e-08,
+              "mu_BH": 3.9999999978945766e-08,
+              "entropy_BH": 3.333333301963986e-09,
+              "rho_canonical_BH": 1.599999982439615e-08
+            },
+            "maximum_change": 4e-08
+          },
+          {
+            "coarse_degree": 120,
+            "fine_degree": 150,
+            "changes": {
+              "temperature_BH": 9.999999994736442e-10,
+              "mu_BH": 9.999999717180685e-10,
+              "entropy_BH": 8.3333339943642e-11,
+              "rho_canonical_BH": 3.99999848900467e-10
+            },
+            "maximum_change": 1e-09
+          }
+        ]
+      },
+      "controls": [
+        {
+          "label": "neutral",
+          "degree": 80,
+          "metrics": {
+            "route_temperature_relative_difference": 1e-10
+          },
+          "primary": {
+            "point": {
+              "degree": 80,
+              "x_h": 1.2,
+              "phi_h": 4.84,
+              "eta": 0.4,
+              "temperature_BH": 0.14,
+              "mu_BH": 0.8,
+              "entropy_BH": 12.0,
+              "rho_canonical_BH": 2.5
+            }
+          },
+          "explicit": {
+            "point": {
+              "degree": 80,
+              "x_h": 1.2,
+              "phi_h": 4.84,
+              "eta": 0.4,
+              "temperature_BH": 0.1400000003,
+              "mu_BH": 0.8000000003000001,
+              "entropy_BH": 12.0000000003,
+              "rho_canonical_BH": 2.5000000003
+            }
+          }
+        },
+        {
+          "label": "charged",
+          "degree": 80,
+          "metrics": {
+            "route_temperature_relative_difference": 1e-10
+          },
+          "primary": {
+            "point": {
+              "degree": 80,
+              "x_h": 1.2,
+              "phi_h": 4.84,
+              "eta": 0.4,
+              "temperature_BH": 0.15000000000000002,
+              "mu_BH": 0.81,
+              "entropy_BH": 12.01,
+              "rho_canonical_BH": 2.51
+            }
+          },
+          "explicit": {
+            "point": {
+              "degree": 80,
+              "x_h": 1.2,
+              "phi_h": 4.84,
+              "eta": 0.4,
+              "temperature_BH": 0.15000000030000002,
+              "mu_BH": 0.8100000003000001,
+              "entropy_BH": 12.0100000003,
+              "rho_canonical_BH": 2.5100000003
+            }
+          }
+        },
+        {
+          "label": "high-charge",
+          "degree": 80,
+          "metrics": {
+            "route_temperature_relative_difference": 1e-10
+          },
+          "primary": {
+            "point": {
+              "degree": 80,
+              "x_h": 1.2,
+              "phi_h": 4.84,
+              "eta": 0.4,
+              "temperature_BH": 0.16,
+              "mu_BH": 0.8200000000000001,
+              "entropy_BH": 12.02,
+              "rho_canonical_BH": 2.52
+            }
+          },
+          "explicit": {
+            "point": {
+              "degree": 80,
+              "x_h": 1.2,
+              "phi_h": 4.84,
+              "eta": 0.4,
+              "temperature_BH": 0.1600000003,
+              "mu_BH": 0.8200000003000001,
+              "entropy_BH": 12.0200000003,
+              "rho_canonical_BH": 2.5200000003
+            }
+          }
+        }
+      ]
+    }
+  }
+}

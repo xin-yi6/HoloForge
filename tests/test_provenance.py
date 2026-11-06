@@ -38,6 +38,7 @@ class RuntimeProvenanceTests(unittest.TestCase):
             "scipy",
             "numerical_build_sha256",
             "longdouble_epsilon",
+            "chebyshev_construction",
             "numpy_blas",
             "numpy_lapack",
             "scipy_blas",

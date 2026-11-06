@@ -19,6 +19,7 @@ import numpy as np
 import scipy
 
 from holoforge import __version__
+from holoforge.numerics.chebyshev import CHEBYSHEV_CONSTRUCTION
 
 
 UNKNOWN = "unknown"
@@ -34,8 +35,9 @@ def runtime_versions() -> Dict[str, str]:
     Besides interpreter and library versions, the record fingerprints the
     HoloForge package as it is on disk when the record is made, gives the Git
     commit when the package runs from a HoloForge checkout, and reports the
-    BLAS/LAPACK backends of NumPy and SciPy and the ``long double`` machine
-    epsilon.  The source fingerprint and Git state are recomputed on every
+    BLAS/LAPACK backends of NumPy and SciPy, the ``long double`` machine
+    epsilon and the identifier of the shared Chebyshev matrix construction.
+    The source fingerprint and Git state are recomputed on every
     call, so a long-lived interpreter does not report a stale snapshot.  They
     describe files on disk, not which bytes an already running interpreter
     imported earlier.  Unavailable facts are recorded as ``"unknown"`` rather
@@ -53,6 +55,7 @@ def runtime_versions() -> Dict[str, str]:
         "scipy": scipy.__version__,
         "numerical_build_sha256": _numerical_build_digest(),
         "longdouble_epsilon": repr(float(np.finfo(np.longdouble).eps)),
+        "chebyshev_construction": CHEBYSHEV_CONSTRUCTION,
     }
     versions.update(_numerical_backends())
     versions.update(_source_identity())

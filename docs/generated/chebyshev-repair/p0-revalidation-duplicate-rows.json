@@ -1,0 +1,783 @@
+{
+  "plan": "docs/numerics/chebyshev-construction-repair-plan.md",
+  "plan_sha256": "7d26e662d33e50713a5403a5a0455e59b7abc052ad4ed1732135d9efab7b25fb",
+  "result": {
+    "committed_record_consumers": [
+      "hard-wall-chiral",
+      "gubser-nellore-ed",
+      "dewolfe-gubser-rosen-emd"
+    ],
+    "consumers": [
+      {
+        "checks": {
+          "extraction": {
+            "controls": 6,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 23,
+            "table_leaves": 22
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/*/numerical_mass_squared_gev2": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/*/relative_error": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/spectral_convergence/levels/*/max_relative_error": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "soft-wall-vector",
+        "derived_estimators_checked_by_extraction_only": [],
+        "passed": true,
+        "record_source": "synthetic record (hand-built from a manual source audit; not a verifier output)"
+      },
+      {
+        "checks": {
+          "extraction": {
+            "controls": 9,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 0,
+            "table_leaves": 7
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/*/numerical_m_z_m": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/*/numerical_ratio": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/spectral_convergence/successive_max_relative_differences/-1": {
+                "leaves": 1,
+                "missing": 0,
+                "passed": true,
+                "usable": 1
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "hard-wall-vector",
+        "derived_estimators_checked_by_extraction_only": [
+          "spectral leaf minus shooting leaf at the same cutoff (baseline runs)"
+        ],
+        "passed": true,
+        "record_source": "synthetic record (hand-built from a manual source audit; not a verifier output)"
+      },
+      {
+        "checks": {
+          "extraction": {
+            "controls": 18,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 12,
+            "table_leaves": 28
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/cross_route_differences/*": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/cutoff_changes/*": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/gmor/*/R_GMOR": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/gmor/*/f_pi_MeV": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/gmor/*/m_pi_MeV": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/independent/*/f_pi_bvp_MeV": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/independent/*/f_pi_dop853_MeV": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/independent/*/f_pi_route_relative_difference": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/independent/*/g_rho_pi_pi": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/independent/*/m_a1_MeV": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/independent/*/m_pi_MeV": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/independent/*/sqrt_F_a1_MeV": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/levels/*/observables/*": {
+                "leaves": 21,
+                "missing": 0,
+                "passed": true,
+                "usable": 21
+              },
+              "/results/refinement/*/N64_to_N80": {
+                "leaves": 7,
+                "missing": 0,
+                "passed": true,
+                "usable": 7
+              },
+              "/results/refinement/*/N80_to_N96": {
+                "leaves": 7,
+                "missing": 0,
+                "passed": true,
+                "usable": 7
+              },
+              "/results/table/*/computed": {
+                "leaves": 7,
+                "missing": 0,
+                "passed": true,
+                "usable": 7
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "hard-wall-chiral",
+        "derived_estimators_checked_by_extraction_only": [],
+        "passed": true,
+        "record_source": "committed verifier record"
+      },
+      {
+        "checks": {
+          "extraction": {
+            "controls": 0,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 1250,
+            "table_leaves": 2436
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/presets/*/curve/*/phi_h": {
+                "leaves": 1218,
+                "missing": 0,
+                "passed": true,
+                "usable": 1218
+              },
+              "/results/presets/*/curve/*/sound_speed_squared": {
+                "leaves": 1218,
+                "missing": 0,
+                "passed": true,
+                "usable": 1218
+              },
+              "/results/presets/*/curve/*/temperature_L": {
+                "leaves": 1218,
+                "missing": 0,
+                "passed": true,
+                "usable": 1218
+              },
+              "/results/presets/*/curve/*/x_h": {
+                "leaves": 1218,
+                "missing": 0,
+                "passed": true,
+                "usable": 1218
+              },
+              "/results/presets/*/independent_comparisons/*/entropy_relative_error": {
+                "leaves": 10,
+                "missing": 0,
+                "passed": true,
+                "usable": 10
+              },
+              "/results/presets/*/independent_comparisons/*/sound_speed_relative_error": {
+                "leaves": 10,
+                "missing": 0,
+                "passed": true,
+                "usable": 10
+              },
+              "/results/presets/*/independent_comparisons/*/temperature_relative_error": {
+                "leaves": 10,
+                "missing": 0,
+                "passed": true,
+                "usable": 10
+              },
+              "/results/presets/*/maximum_collocation_residual": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/presets/*/maximum_derivative_disagreement": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/presets/*/refinement/maximum_final_change": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "gubser-nellore-ed",
+        "derived_estimators_checked_by_extraction_only": [],
+        "passed": true,
+        "record_source": "committed verifier record"
+      },
+      {
+        "checks": {
+          "extraction": {
+            "controls": 0,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 3,
+            "table_leaves": 18
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/cases/*/source_exact_thermodynamics/*": {
+                "leaves": 27,
+                "missing": 0,
+                "passed": true,
+                "usable": 27
+              },
+              "/results/cases/*/thermodynamics/Omega": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/cases/*/thermodynamics/hat_epsilon": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/cases/*/thermodynamics/hat_rho": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/cases/*/thermodynamics/hat_s": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/cases/*/thermodynamics/maxwell_flux": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/cases/*/thermodynamics/mu_bh": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/cases/*/thermodynamics/temperature": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/cases/*/observables/*/middle_to_fine": {
+                "leaves": 18,
+                "missing": 0,
+                "passed": true,
+                "usable": 18
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "gubser-rocha-emd",
+        "derived_estimators_checked_by_extraction_only": [],
+        "passed": true,
+        "record_source": "synthetic record (hand-built from a manual source audit; not a verifier output)"
+      },
+      {
+        "checks": {
+          "extraction": {
+            "consistency": {
+              "largest_150_to_120_relative_change_in_three_fields": 5.551312169753692e-11,
+              "recorded_maximum_final_change": 5.551312169753692e-11
+            },
+            "controls": 0,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 101,
+            "table_leaves": 320
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/curve/*/chi_2_over_T2_BH": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/chi_2_over_T2_plot": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/entropy_BH": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/phi_h": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/s_over_T3_plot": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/susceptibility_integral": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/temperature_BH": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/temperature_MeV": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/curve/*/x_h": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/degree_branches/*/points/*": {
+                "leaves": 60,
+                "missing": 0,
+                "passed": true,
+                "usable": 60
+              },
+              "/results/degree_branches/*/points/*/chi_2_over_T2_BH": {
+                "leaves": 60,
+                "missing": 0,
+                "passed": true,
+                "usable": 60
+              },
+              "/results/degree_branches/*/points/*/entropy_BH": {
+                "leaves": 60,
+                "missing": 0,
+                "passed": true,
+                "usable": 60
+              },
+              "/results/degree_branches/*/points/*/susceptibility_integral": {
+                "leaves": 60,
+                "missing": 0,
+                "passed": true,
+                "usable": 60
+              },
+              "/results/degree_branches/*/points/*/temperature_BH": {
+                "leaves": 60,
+                "missing": 0,
+                "passed": true,
+                "usable": 60
+              },
+              "/results/quadrature_refinement/records/*/middle_to_fine_change": {
+                "leaves": 20,
+                "missing": 0,
+                "passed": true,
+                "usable": 20
+              },
+              "/results/refinement/maximum_final_change": {
+                "leaves": 1,
+                "missing": 0,
+                "passed": true,
+                "usable": 1
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "dewolfe-gubser-rosen-emd",
+        "derived_estimators_checked_by_extraction_only": [],
+        "passed": true,
+        "record_source": "committed verifier record"
+      },
+      {
+        "checks": {
+          "extraction": {
+            "controls": 0,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 0,
+            "table_leaves": 53
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/controls/*/explicit/point/entropy_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/controls/*/explicit/point/mu_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/controls/*/explicit/point/rho_canonical_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/controls/*/explicit/point/temperature_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/controls/*/primary/point/entropy_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/controls/*/primary/point/mu_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/controls/*/primary/point/rho_canonical_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/controls/*/primary/point/temperature_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/critical/scaled_step_changes/-1/*": {
+                "leaves": 5,
+                "missing": 0,
+                "passed": true,
+                "usable": 5
+              },
+              "/results/critical/step_roots/-1/T_BH": {
+                "leaves": 1,
+                "missing": 0,
+                "passed": true,
+                "usable": 1
+              },
+              "/results/critical/step_roots/-1/eta": {
+                "leaves": 1,
+                "missing": 0,
+                "passed": true,
+                "usable": 1
+              },
+              "/results/critical/step_roots/-1/mu_BH": {
+                "leaves": 1,
+                "missing": 0,
+                "passed": true,
+                "usable": 1
+              },
+              "/results/critical/step_roots/-1/phi_H": {
+                "leaves": 1,
+                "missing": 0,
+                "passed": true,
+                "usable": 1
+              },
+              "/results/critical/step_roots/-1/rho_canonical_BH": {
+                "leaves": 1,
+                "missing": 0,
+                "passed": true,
+                "usable": 1
+              },
+              "/results/refinement/changes/*/changes/*": {
+                "leaves": 8,
+                "missing": 0,
+                "passed": true,
+                "usable": 8
+              },
+              "/results/refinement/states/*/explicit/point/entropy_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/states/*/explicit/point/mu_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/states/*/explicit/point/rho_canonical_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/states/*/explicit/point/temperature_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/states/*/primary/point/entropy_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/states/*/primary/point/mu_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/states/*/primary/point/rho_canonical_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              },
+              "/results/refinement/states/*/primary/point/temperature_BH": {
+                "leaves": 3,
+                "missing": 0,
+                "passed": true,
+                "usable": 3
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "dewolfe-gubser-rosen-emd-finite-density",
+        "derived_estimators_checked_by_extraction_only": [
+          "primary point leaf minus explicit point leaf"
+        ],
+        "passed": true,
+        "record_source": "synthetic record (hand-built from a manual source audit; not a verifier output)"
+      },
+      {
+        "checks": {
+          "extraction": {
+            "controls": 10,
+            "leaves_without_estimator": 0,
+            "passed": true,
+            "report_only": 18,
+            "table_leaves": 10
+          },
+          "original_p0": {
+            "passed": true
+          },
+          "table_pointers_strict": {
+            "detail": {
+              "/results/figure_2_provenance/responses/*/spectral_conductivity": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/near_critical_pole/points/*/intercept_stability": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/near_critical_pole/points/*/pole_intercept": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/near_critical_pole/points/*/responses/*/spectral_conductivity": {
+                "leaves": 4,
+                "missing": 0,
+                "passed": true,
+                "usable": 4
+              },
+              "/results/near_critical_pole/points/*/static_london/superfluid_density_over_tc": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/near_critical_pole/points/*/static_pole_relative_difference": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/near_critical_pole/points/*/temperature_over_tc": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              },
+              "/results/normal_responses/*/spectral_conductivity": {
+                "leaves": 2,
+                "missing": 0,
+                "passed": true,
+                "usable": 2
+              }
+            },
+            "passed": true
+          }
+        },
+        "consumer": "holographic-superconductor-optical",
+        "derived_estimators_checked_by_extraction_only": [
+          "resolution_change, series_truncation_change, background_cutoff_change of the same response",
+          "route_relative_difference of the same response",
+          "/results/near_critical_pole fit outputs (slopes and coefficients)",
+          "independent_conductivity of every response"
+        ],
+        "passed": true,
+        "record_source": "synthetic record (hand-built from a manual source audit; not a verifier output)"
+      }
+    ],
+    "executable_checks": [
+      "call sites by AST (innermost enclosing function)",
+      "control routes by a module-local AST call graph (not a cross-module proof)",
+      "presence of record-key strings in the module source (presence only; no parent path)",
+      "strict resolution of every table pointer, with wildcard cardinality",
+      "extraction with unique stable keys, matched states and estimator conversions"
+    ],
+    "manual_source_review": [
+      "record structure and estimator normalization of the five consumers without a committed record",
+      "data dependence of control routes on spectral outputs (the call graph shows call dependence only)",
+      "the preset-level and record-level meaning of the GN and DGR refinement maxima"
+    ],
+    "passed": true,
+    "synthetic_record_consumers": [
+      "soft-wall-vector",
+      "hard-wall-vector",
+      "gubser-rocha-emd",
+      "dewolfe-gubser-rosen-emd-finite-density",
+      "holographic-superconductor-optical"
+    ],
+    "table_sha256": "16d31da930ea9969820995e7ab3ac9d453e925bcbaeb0956c95fe766abf2d06f"
+  },
+  "runtime": {
+    "byteorder": "little",
+    "holoforge": "0.7.0",
+    "holoforge_git_commit": "d5eb95acb361613f144bf5a5674c4a2e461bbfff",
+    "holoforge_git_src_modified": "false",
+    "holoforge_source_sha256": "66d9bd288254e4a11253e0345187e1d8cbdbe48dd19ba0463f559361e800277a",
+    "longdouble_epsilon": "2.220446049250313e-16",
+    "numerical_build_sha256": "6bbda22c86dec3941e8fdd74dd074cdced628fe54fcfc7dc431d510abb7a4f64",
+    "numpy": "2.4.6",
+    "numpy_blas": "accelerate",
+    "numpy_lapack": "accelerate",
+    "platform_machine": "arm64",
+    "platform_system": "Darwin",
+    "python": "3.11.15",
+    "python_implementation": "CPython",
+    "scipy": "1.17.1",
+    "scipy_blas": "accelerate",
+    "scipy_lapack": "accelerate"
+  },
+  "stage": "p0-revalidate",
+  "status": "ok",
+  "tool": "chebyshev-repair",
+  "tool_sha256": "9e3399309122e77bdaa660e4a3e3615fea8e4a336d0311b39fe649921f482e71",
+  "wall_seconds": 0.18400649999966845
+}
