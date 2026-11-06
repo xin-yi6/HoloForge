@@ -106,8 +106,10 @@ class PublicContentPolicyTests(unittest.TestCase):
         self.assertIn("assess scientific opportunity before execution readiness", workflow)
         self.assertRegex(
             workflow,
-            r"named human\s+research owner makes the final",
+            r"agents must form and state their own provisional, evidence-based assessment",
         )
+        self.assertRegex(workflow, r"named human research owner retains portfolio\s+priorities")
+        self.assertRegex(workflow, r"neither ai\s+agreement nor human approval certifies truth")
         self.assertIn("three research horizons", workflow)
         self.assertIn("frozen contract", workflow)
         self.assertIn("hostile critic report", workflow)

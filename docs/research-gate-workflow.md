@@ -142,10 +142,14 @@ prepare a **scientific-opportunity assessment** that addresses independently:
 8. **Owner fit:** how does the direction fit the human research owner's
    expertise, interests, available time, risk tolerance, and portfolio?
 
-Agents, literature records, and hostile critics supply evidence and competing
-interpretations for these rows. They must not collapse them into one opaque
-score or certify importance, novelty, or publication value. The named human
-research owner makes the final scientific-value and investment decision.
+Agents must form and state their own provisional, evidence-based assessment
+of scientific significance and investment priority, including uncertainty and
+what would change their view. The owner's uncertainty is not a reason to defer
+that assessment or leave authorized work unfinished. Keep scientific value
+distinct from owner fit. The named human research owner retains portfolio
+priorities and undelegated execution and submission decisions. Neither AI
+agreement nor human approval certifies truth, novelty, importance, or publication
+value; do not collapse the assessment into an opaque score.
 
 The two holographic-leverage rows are independent. A candidate does not need
 both a new phenomenon and a calculational advantage, but it must establish at
@@ -386,8 +390,15 @@ or `Needs owner decision`. `Already known` describes awareness, not resolution
 of the objection. Brief factual clarification and one rebuttal round
 are allowed; do not replace the preserved reports with an open discussion
 between models. The verdicts are reviewer assessments, not scientific-support
-states or investment decisions. The named human research owner decides
-disputed items. Reuse the existing
+states or investment decisions. The coordinator checks disputed claims against
+available evidence, records its own adjudication, and completes authorized
+corrections. Return unresolved consequential scientific disagreements and
+undelegated investment or scope choices with a reasoned recommendation,
+preserving dissent. A human choice authorizes a course of action; it does not
+resolve a scientific dispute by assertion. Neither persuasion nor majority
+agreement establishes correctness. These responsibilities do not authorize
+additional review rounds, calculations, or changes to human-review labels.
+Reuse the existing
 [execution receipts](agent-maintenance.md#record-execution-not-just-requested-roles)
 for each review.
 
