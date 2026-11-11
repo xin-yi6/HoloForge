@@ -50,8 +50,10 @@ status requests do not open a scientific gate or require an A-E menu.
 - A frozen contract, bounded autonomy window, or exact authorized mission
   controls research execution. Preserve framework pins, thresholds, budgets,
   raw evidence, and human review states. Finish authorized routine work and
-  return at its first declared stop, outcome, or undelegated decision. Model
-  upgrades and personal skill defaults cannot expand that authority.
+  stop scientific execution at its first declared stop or outcome. Complete
+  [delegated private closure](docs/research-gate-workflow.md#close-an-eligible-private-gate-under-delegation)
+  when the recorded authority covers it, and return undelegated decisions.
+  Model upgrades and personal skill defaults cannot expand that authority.
 - When proposing Explore work, apply [nonlinear research practice](docs/research-gate-workflow.md#allow-nonlinear-research-within-an-agreed-scope).
   Ensure permitted methods can address the target, allow iterative analytical
   and conceptual construction, and apply relevant prior lessons. An unresolved
@@ -108,9 +110,9 @@ or new concerns. Full default CI remains required for public integration.
   separate explicit authorization. A review-only request, explicit hold, or
   narrower task restriction overrides the standing public-repository
   permission. Never bypass branch protections or platform approval decisions.
-- Treat a bounded autonomy window as execution authority only. A local commit
-  must be explicitly included in it; push, merge, release, branch deletion,
-  public export, and disclosure remain separate owner decisions for that
+- A bounded autonomy window can include private closure under recorded
+  delegation. A local commit must be explicitly included in it. Push, merge,
+  release, branch deletion, public export, and disclosure remain separate owner decisions for that
   research scope. Standing public-repository permission does not expand a
   frozen Explore window or autonomous mission, or permit its pinned framework
   to be changed.

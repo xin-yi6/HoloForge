@@ -685,11 +685,13 @@ status and decision records; preserve raw artifacts and historical evidence.
    explanations, uncontrolled assumptions, window artifacts, missing comparisons, and the
    cheapest defensible next test. It may be a section of the result record;
    a separate reviewer is used when selected or needed for a specific risk.
-6. **Owner review:** a short list of separate decisions covering the
-   implementation, numerical verdict, evidence boundary, and next action,
-   followed by an explicit recommendation for every requested choice.
-7. **Decision record:** after human approval, record what was accepted and what
-   remains closed.
+6. **Review and disposition:** for an owner decision, list the choices about
+   implementation, numerical verdict, evidence boundary, and next action with
+   an explicit recommendation for each. For an eligible private gate, follow
+   [delegated closure](#close-an-eligible-private-gate-under-delegation).
+7. **Decision record:** record the disposition, its authority, and its scope.
+   Link either the owner's decision or the prior delegation and the checks
+   that justified applying it.
 8. **Closure retrospective and optional commit:** classify the outcome, preserve what
    failed as well as what held, state the reusable lesson and non-inference
    boundary, and name a reopening trigger. Commit one logical reviewed gate
@@ -704,9 +706,9 @@ action is already authorized.
 Use the [PDF packet](#owner-review-pdf-packet) when its presentation conditions
 apply, preserving the established scientific-report format.
 
-If a stop condition fires, stop the gate, preserve the bounded stopped result
-under its correct outcome class, and return to owner review. Do not expand the
-scope to rescue the hypothesis.
+If a stop condition fires, stop scientific execution and preserve the bounded
+result under its correct outcome class. Apply an authorized closure or return
+the required decision. Do not expand the scope to rescue the hypothesis.
 
 ### Separate development from confirmation
 
@@ -864,7 +866,7 @@ progress updates are not decision gates. When the frozen criteria already
 distinguish routine alternatives, the agent may choose the best-supported one
 and record its rationale and uncertainty.
 
-The window ends and the agent must return immediately when:
+Stop scientific execution at the first applicable trigger:
 
 1. the physical discriminator, declared outcome, stop condition, or return
    milestone is reached;
@@ -885,10 +887,50 @@ The window ends and the agent must return immediately when:
 
 A window may include one local commit only when the owner explicitly checks
 that item. It never implies permission to push, merge, release, delete a
-branch, disclose research, or start another gate. It ends at the first return
-trigger and cannot renew itself. The return should consolidate the outcome,
-verification, critic, budget used, non-claims, and recommended next decision
-into one owner packet and A--E handoff.
+branch, disclose research, or start another gate. A window cannot renew itself.
+At a declared endpoint, the approved allowance can cover final evidence
+records and delegated closure. When a trigger requires an owner decision,
+return at that trigger. Consolidate the outcome, verification, critic, budget
+used, and evidence boundary. Give an A--E handoff when an owner decision is
+pending.
+
+### Close an eligible private gate under delegation
+
+An owner may delegate routine closure for an approved private Explore gate,
+or for a standing class of future private gates. Record the applicable
+delegation in the approved window or contract before execution. A link to
+standing authority is sufficient when it covers the gate, its eligible
+outcomes, and the verification and reporting allowance. The approved
+scientific scope, resource ceilings, and framework pin govern each gate.
+
+At the first registered endpoint, stop scientific execution. Within the
+authorized allowance, the coordinator may complete the following steps
+without a new owner decision:
+
+1. Verify the disposition against the frozen criteria, including independent
+   checks and criticism appropriate to the claim. Use fresh reviewer context,
+   evidence-linked findings and [execution receipts](agent-maintenance.md#record-execution-not-just-requested-roles).
+   Resolve consequential objections with evidence. Agreement among reviewers
+   alone cannot establish a result.
+2. Retain the supported result and its limitations as private working
+   knowledge. Record the applicable outcome, including conditional,
+   inconclusive, and stopped outcomes when covered by the delegation. A
+   stopped outcome retains its failed or missing checks and evidence boundary.
+3. Record the disposition and closure retrospective in the existing canonical
+   records. Link the authority, result, independent checks, dissent,
+   conditions, and budget used. Keep human review and scientific support
+   separately attributed. Record `awaiting_owner: false` where a structured
+   state is used and no owner decision is pending. Send a completion summary.
+
+Return an owner decision when a required check or consequential disagreement
+prevents applying a delegated outcome, when the contract explicitly requires
+return, or when the next action would exceed the approved scope or budget.
+Preserve the frozen criteria and classify uncertain evidence within the
+authorized outcome rules. The delegation concerns retention of the bounded
+result and closure of its gate. Human review, promotion to reviewed knowledge,
+new investment, and external actions have their own authority. Apply this path
+prospectively. Older pins, explicit stops, and campaign decision rules govern
+the work that uses them.
 
 ## Check the version of record before a source stop
 

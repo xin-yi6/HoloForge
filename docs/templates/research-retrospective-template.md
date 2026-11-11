@@ -3,13 +3,14 @@
 ## Metadata
 
 - Research or gate ID:
-- Stable lesson ID:
+- Working knowledge ID or human-reviewed stable lesson ID:
 - Gate title:
 - Closure date:
 - Decision owner:
 - Generated with AI assistance: yes / no
 - Scientific-support label:
-- Review status:
+- Independent verification and evidence:
+- Human review status:
 - Disclosure status:
 - Primary outcome class: positive / negative / inconclusive / conditional /
   source stop / prior-art stop / technical stop
@@ -17,11 +18,13 @@
   branch / normalization / physical norm / conditioning / solver /
   convergence / verification / cost / other
 
-## Frozen question and accepted outcome
+## Frozen question and recorded outcome
 
-State the original bounded question and the owner-accepted outcome. Link the
-frozen contract, result record, hostile critic report, owner review, decision
-record, and machine-readable evidence. Do not broaden the conclusion.
+State the original bounded question and the outcome. Link the frozen contract,
+result record, independent checks, hostile critic report, disposition and
+machine-readable evidence. Link the owner decision or the
+[applicable delegation](../research-gate-workflow.md#close-an-eligible-private-gate-under-delegation).
+Keep the conclusion within its evidence boundary.
 
 ## What held
 
@@ -83,9 +86,11 @@ make the lesson universal.
 Name the evidence and new owner-approved contract required to reopen the
 direction. Do not use this section as authorization to begin that work.
 
-## Owner review
+## Closure disposition
 
-- Owner disposition: accepted / revise / rejected / pending
-- Decision-record link:
+- Disposition: owner decision / delegated private closure
+- Decision or delegation link:
+- Outcome and conditions:
+- Owner decision pending: yes / no
 - Scope opened:
 - Scope remaining closed:

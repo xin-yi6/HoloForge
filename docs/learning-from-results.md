@@ -92,10 +92,13 @@ A closed gate should retain the artifacts appropriate to its scope:
    evidence when calculation was authorized;
 3. the outcome-first result record, including limitations and explicit
    non-claims;
-4. hostile criticism and owner review;
-5. the recorded owner decision and progress-state update;
+4. hostile criticism and claim-appropriate independent verification, with
+   owner review when a decision requires it;
+5. the disposition, authority link and progress-state update, whether the
+   owner decides directly or the agent applies
+   [delegated private closure](research-gate-workflow.md#close-an-eligible-private-gate-under-delegation);
 6. a closure retrospective; and
-7. a scoped Git commit.
+7. a scoped Git commit when authorized.
 
 Do not delete a failed check because a later method works. That failure may be
 the evidence that distinguishes a fragile representation from a reliable one.
@@ -142,6 +145,11 @@ promote the reusable accepted lesson, preserve already reviewed knowledge,
 retire an unsupported or non-reusable entry with its reason, or leave an
 unresolved entry visibly provisional or challenged. Do not erase the working
 history after promotion.
+
+For delegated closure, link the disposition and retrospective from the
+evidence-linked working entry. Record its applicable working lifecycle state,
+including any challenge or retirement. Promotion to reviewed knowledge follows
+the named-human review process above.
 
 ## Agent retrieval loop
 

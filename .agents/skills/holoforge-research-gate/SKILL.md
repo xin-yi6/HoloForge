@@ -60,7 +60,7 @@ approved development allowance, not automatically in a new gate or topic pause.
 | Source inconsistency or recurring blocker | [Version-of-record audit](../../../docs/research-gate-workflow.md#check-the-version-of-record-before-a-source-stop), then the [bounded impasse protocol](../../../docs/research-gate-workflow.md#use-a-bounded-impasse-protocol) when triggered. A search result does not validate a fix. |
 | A proposed model-derived repair | [Separate repair gate](../../../docs/research-gate-workflow.md#treat-a-model-derived-repair-as-a-new-gate); preserve the original source stop and obtain the required new authority before repair work. |
 | Durable evidence milestone | [Research knowledge](../../../docs/research-gate-workflow.md#update-research-knowledge-during-the-gate), [consolidated state and delivery](../../../docs/research-gate-workflow.md#consolidate-current-state-and-delivery), and the [knowledge template](../../../docs/templates/research-knowledge-template.md). Preserve provisional, challenged, retired, and human-reviewed states and their primary evidence. |
-| Owner review or closure | [Recommendations](../../../docs/research-gate-workflow.md#every-decision-request-includes-a-recommendation), [A-E response paths](../../../docs/research-gate-workflow.md#give-the-owner-clear-response-paths), [post-closure handoff](../../../docs/research-gate-workflow.md#repeat-the-choices-after-a-gate-closes), and [closure lessons](../../../docs/research-gate-workflow.md#learn-from-every-closed-gate). Use the [retrospective template](../../../docs/templates/research-retrospective-template.md) when closing a gate. |
+| Owner review or closure | Read [delegated private closure](../../../docs/research-gate-workflow.md#close-an-eligible-private-gate-under-delegation), [post-closure handoff](../../../docs/research-gate-workflow.md#repeat-the-choices-after-a-gate-closes), and [closure lessons](../../../docs/research-gate-workflow.md#learn-from-every-closed-gate). Use the [retrospective template](../../../docs/templates/research-retrospective-template.md). For pending owner decisions, follow [recommendations](../../../docs/research-gate-workflow.md#every-decision-request-includes-a-recommendation) and [A-E response paths](../../../docs/research-gate-workflow.md#give-the-owner-clear-response-paths). |
 | A requested or needed owner-review PDF | [Conditional PDF policy and visual QA](../../../docs/research-gate-workflow.md#owner-review-pdf-packet) and the [review template](../../../docs/templates/review-packet-template.tex). Prepare and inspect the packet before the scientific decision when the policy requires it. |
 | A requested research-progress view | [Progress-state policy](../../../docs/research-gate-workflow.md#agent-updated-workflow-snapshot) and [rendering guide](../../../docs/research-progress-snapshots.md). Use [the state example](assets/research-progress.example.json) and [renderer](scripts/render_research_progress.py); keep state and figures project-local. |
 
@@ -76,8 +76,10 @@ apply the evidence-linked next-work disposition in the
 [claim-sufficiency checkpoint](../../../docs/research-gate-workflow.md#use-a-claim-sufficiency-checkpoint).
 Review the physical consequence of the next action as well as numerical
 correctness; reuse the current record for a coherent batch of checks.
-At the first declared stop or outcome, finish the permitted stop
-record and return; do not expand a repair, loosen a threshold, or hide a failure.
+At the first declared stop or outcome, stop scientific execution. Complete the
+permitted records and retain and close an eligible private gate under the
+recorded delegation. Return any decision outside that authority. Do not expand
+a repair, loosen a threshold, or hide a failure.
 An explicitly recoverable development failure is not a milestone stop. An
 execution return does not itself justify abandoning the scientific question.
 Follow the approved phase boundary; never infer that exception for an older contract.
