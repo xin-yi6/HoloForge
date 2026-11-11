@@ -211,9 +211,12 @@ test, or implementation choice. Return immediately if the scientific scope,
 threshold, cost, repair, disclosure, Git, or external-action boundary changes.
 ```
 
-This delegates execution only. It does not delegate the physical verdict,
-novelty or publication judgment, disclosure decision, or permission to push,
-merge, release, or start another gate.
+For eligible private Explore gates, one standing owner approval can also
+authorize [delegated closure](research-gate-workflow.md#close-an-eligible-private-gate-under-delegation).
+Reference it in the approved window. At the registered endpoint the agent
+checks the frozen criteria, preserves the bounded result and criticism, and
+reports closure. Human scientific review, new investment, disclosure and
+remote actions follow their own authority.
 
 When analytical, conceptual or numerical construction needs development, include
 the template's

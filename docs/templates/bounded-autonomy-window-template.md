@@ -1,9 +1,10 @@
 # Bounded Autonomy Window
 
 Use this record only after one research question and its scientific contract
-have been frozen. The window reduces repeated approval requests for routine,
-in-scope work; it does not delegate scientific interpretation, change the
-contract, or authorize disclosure or remote actions.
+have been frozen. The window covers routine work and, when authorized,
+[delegated private closure](../research-gate-workflow.md#close-an-eligible-private-gate-under-delegation).
+Scientific interpretation, contract changes, disclosure and remote actions
+require their applicable authority.
 
 The window may be prepared alongside the frozen contract and approved in the
 same owner decision. It has no effect until that approval is recorded.
@@ -29,6 +30,10 @@ accounting controls authority and spending, not scientific value.
 - **Disclosure class:** `<private research record | public literature dry run>`
 - **Return milestone:** `<one outcome, stop, or review packet>`
 - **Window expiry:** `<date, cost ceiling, or milestone; no automatic renewal>`
+- **Delegated private closure, when applicable:** `<link the gate-specific or
+  standing approval, eligible outcomes, independent verification and reporting
+  allowance within the existing cap. A standing delegation needs no repeat
+  closure approval.>`
 - **Claim-bearing physical decision:** `<the classification, comparison, or
   physical conclusion that the numerical evidence must decide; for exploration
   or construction, name the bounded learning/qualification endpoint and planned
@@ -55,6 +60,8 @@ Check and bound only the routine work needed to reach the return milestone:
 - [ ] render a process diagram only if explicitly requested; name the view
       and whether this request covers one milestone or ongoing updates;
 - [ ] write the hostile critic report and consolidated owner recommendations;
+- [ ] retain the bounded private result and complete its closure records when
+      covered by the recorded delegation;
 - [ ] create one local commit for the reviewed gate, **only if separately
       checked here and explicitly included by the owner**.
 
@@ -122,7 +129,9 @@ authorized`. Do not add a separate approval for routine attempts inside it.
 
 ## Mandatory return triggers
 
-Stop the window and return to the owner as soon as any trigger fires:
+Stop scientific execution as soon as any trigger fires. At an eligible
+endpoint, complete the delegated closure within its approved allowance.
+Return to the owner when the disposition requires a decision:
 
 1. the frozen physical discriminator is reached, a milestone acceptance or stop
    condition fires, the claim-sufficiency checkpoint passes, or the stated
@@ -145,8 +154,8 @@ Stop the window and return to the owner as soon as any trigger fires:
    proposed.
 
 The decision owner may revoke or narrow the window at any time. A window ends
-at its first mandatory return and never rolls over to another gate or
-candidate automatically.
+at its first mandatory return or delegated closure and never rolls over to
+another gate or candidate automatically.
 An explicitly recoverable development failure is recorded, with unsupported
 claims and unqualified production blocked; it is not by itself trigger 1 or 4.
 Apply the approved development/impasse boundary to decide when recurrence
@@ -174,5 +183,7 @@ confirmation cannot be relabeled as development afterward.
   the topic's scientific value>`
 - **Scope that remains closed:** `<explicit list>`
 
-End the receipt with the standard A--E owner response paths. The receipt is a
-decision handoff, not evidence that the recommendation was approved.
+When an owner decision is pending, end the receipt with the standard A--E owner
+response paths. For delegated closure, record the applied authority, outcome,
+verification, working knowledge and closure evidence, then report completion.
+Use `awaiting_owner: false` when the recorded state has no pending decision.

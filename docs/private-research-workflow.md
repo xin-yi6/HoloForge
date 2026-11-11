@@ -120,8 +120,11 @@ interruptions by approving a project-local
 [`bounded autonomy window`](templates/bounded-autonomy-window-template.md).
 The window lets the agent finish the listed routine source, derivation,
 implementation, verification, criticism, knowledge, progress, and report work
-before one consolidated return. It must retain explicit cost and repair
-ceilings and mandatory returns for scientific-scope or threshold changes,
+before one consolidated return. When its recorded authority covers
+[delegated private closure](research-gate-workflow.md#close-an-eligible-private-gate-under-delegation),
+the agent can retain the bounded result and report closure at the registered
+endpoint without a new owner decision. The window retains explicit cost and
+repair ceilings and mandatory returns for scientific-scope or threshold changes,
 stops and impasses, interpretation or publication judgments, disclosure,
 external communication, and Git or remote actions. It never rolls over to a
 new gate or candidate. The owner may approve it together with the frozen
@@ -189,8 +192,10 @@ old first-failure contracts; do not apply this distinction retroactively.
    evidence-linked working queue and preserve its non-inference boundary.
    Distill decision-relevant paper knowledge with an exact source version and
    locator; do not copy every paper note into the knowledge base.
-5. **Internal decision and reflection:** retain, revise, or reject the
-   hypothesis, then complete the generic
+5. **Disposition and reflection:** record the owner's decision about the
+   hypothesis or retain and close the bounded result under applicable
+   [private closure delegation](research-gate-workflow.md#close-an-eligible-private-gate-under-delegation).
+   Complete the generic
    [closure retrospective](templates/research-retrospective-template.md). Record
    the outcome class, evidence, lesson, non-inference boundary, prospective
    workflow change, and reopening trigger. Keeping the work private does not

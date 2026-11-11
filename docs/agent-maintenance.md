@@ -11,7 +11,7 @@ The numerical library remains independent of any model provider.
 | Read-only status or review | Current task request, canonical state, latest linked handoff | Explain the checked state; do not open an intake or calculation. |
 | Infrastructure or instruction maintenance | Requested files and behavior, repository instructions, compatibility contract | Implement and validate the authorized change; research decisions remain separate. |
 | Ordinary intake assessment | Owner's instruction or selected proposal, applicable resource and disclosure constraints | Complete the source-based assessment and recommendation under [intake authority](research-gate-workflow.md#begin-an-intake-from-the-owners-instruction); recording its scope does not require another approval. |
-| One scientific gate | Frozen contract and its recorded bounded autonomy window | Complete the listed routine work and return at the first declared stop or outcome. |
+| One scientific gate | Frozen contract and its recorded bounded autonomy window | Stop scientific work at the first declared endpoint. Complete [delegated private closure](research-gate-workflow.md#close-an-eligible-private-gate-under-delegation) when authorized or return for the required decision. |
 | Autonomous research | Exact authorized mission, pinned framework, state and control-plane receipts | Follow delegated transitions only; preserve a terminal campaign when maintenance begins. |
 
 An explicit instruction in the current task controls routine implementation

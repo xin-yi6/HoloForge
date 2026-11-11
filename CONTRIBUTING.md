@@ -92,7 +92,9 @@ status summary, and the standard A-E response paths.
 After a detailed contract is frozen, an owner may approve the
 [`bounded autonomy window template`](docs/templates/bounded-autonomy-window-template.md)
 so routine in-scope work reaches one consolidated owner return instead of many
-intermediate approval gates. The window preserves mandatory returns for scope,
+intermediate approval gates. An approved private window can include
+[delegated retention and closure](docs/research-gate-workflow.md#close-an-eligible-private-gate-under-delegation).
+The window preserves mandatory returns for scope,
 threshold, cost, repair, interpretation, disclosure, Git, and external-action
 changes and never rolls over to another gate.
 Where development is needed, include its permitted changes and recoverable

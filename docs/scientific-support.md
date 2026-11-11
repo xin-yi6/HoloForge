@@ -25,3 +25,7 @@ provenance.
 A claim marked `checked`, `approved`, or `rejected` must also record the human
 reviewer's name and review date. This makes scientific approval attributable
 without erasing AI assistance.
+
+Record agent technical verification with its evidence and provenance. An
+eligible private gate can [retain and close under delegation](research-gate-workflow.md#close-an-eligible-private-gate-under-delegation)
+with human review recorded as `unreviewed`.
