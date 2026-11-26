@@ -14,9 +14,10 @@ As the cutoff vanishes, ``lambda_n`` approaches the zeros of ``J_0``.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from functools import partial
 import math
 from numbers import Integral, Real
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -48,6 +49,14 @@ DEFAULT_SPECTRAL_CONVERGENCE_TOLERANCE = 1.0e-8
 SHOOTING_SOLVER = "scipy.integrate.solve_ivp + scipy.optimize.root_scalar"
 COLLOCATION_SOLVER = "scipy.integrate.solve_bvp"
 SPECTRAL_SOLVER = "scipy.linalg.eigvals"
+
+
+RUST_SHOOTING_SPEC = SolverSpec(
+    problem_type="ODE shooting eigenvalue problem",
+    library_function="ivp::methods::DOP853 + scipy.optimize.root_scalar",
+    method="Rust DOP853 integration with Brent root finding",
+    description="Alternative implementation of the same IR Neumann shooting residual.",
+)
 
 
 HARD_WALL_DEFINITION = BenchmarkDefinition(
@@ -174,6 +183,7 @@ class HardWallSpectrumResult:
     ratio_relative_errors: NDArray[np.float64]
     spectral_refinement_degrees: Tuple[int, ...] = ()
     spectral_refinement_differences: Tuple[float, ...] = ()
+    native_version: Optional[str] = None
 
     @property
     def max_ratio_relative_error(self) -> float:
@@ -298,13 +308,28 @@ class HardWallSpectrumResult:
                 ),
             }
 
+        definition = HARD_WALL_DEFINITION
+        versions = runtime_versions()
+        if self.native_version is not None:
+            definition = replace(definition, solvers=(*definition.solvers, RUST_SHOOTING_SPEC))
+            versions["holoforge-native"] = self.native_version
+            configuration.update(
+                integration_rtol=float(self.config.integration_rtol),
+                integration_atol=float(self.config.integration_atol),
+                root_rtol=float(self.config.root_rtol),
+            )
+            numerical_method.update(
+                integrator="ivp::methods::DOP853",
+                root_finder="scipy.optimize.root_scalar (brentq)",
+            )
+
         record = VerificationRecord(
-            definition=HARD_WALL_DEFINITION,
+            definition=definition,
             configuration=configuration,
             numerical_method=numerical_method,
             results=records,
             acceptance_checks=tuple(checks),
-            software_versions=runtime_versions(),
+            software_versions=versions,
             scope=(
                 "Numerical reproduction of the published hard-wall vector-mode "
                 "equation; not precision validation of the model."
@@ -373,20 +398,34 @@ def solve_hard_wall_spectrum(
     num_modes: int = DEFAULT_NUM_MODES,
     method: str = "shooting",
 ) -> HardWallSpectrumResult:
-    """Solve by shooting, adaptive collocation, or spectral collocation."""
+    """Solve by SciPy or Rust shooting, adaptive collocation, or spectral collocation."""
 
     if config is None:
         config = HardWallConfig()
     _validate_num_modes(num_modes)
 
-    if method == "shooting":
-        numerical = _shooting_dimensionless_masses(config, num_modes)
-        refinement_degrees: Tuple[int, ...] = ()
-        refinement_differences: Tuple[float, ...] = ()
+    refinement_degrees: Tuple[int, ...] = ()
+    refinement_differences: Tuple[float, ...] = ()
+    native_version = None
+    if method in ("shooting", "shooting-rust"):
+        if method == "shooting-rust":
+            try:
+                from holoforge_native import __version__, hard_wall_residual
+            except ImportError as exc:
+                raise RuntimeError(
+                    "shooting-rust requires the optional holoforge-native extension. "
+                    "Install it from the HoloForge checkout with 'python -m pip install ./native'."
+                ) from exc
+            residual = partial(
+                hard_wall_residual, epsilon=float(config.epsilon_fraction),
+                rtol=float(config.integration_rtol), atol=float(config.integration_atol),
+            )
+            native_version = __version__
+        else:
+            residual = partial(_shooting_ir_residual, config=config)
+        numerical = _shooting_dimensionless_masses(config, num_modes, residual)
     elif method == "collocation":
         numerical = _collocation_dimensionless_masses(config, num_modes)
-        refinement_degrees = ()
-        refinement_differences = ()
     elif method == "spectral":
         if num_modes > config.spectral_degree - 17:
             raise ValueError(
@@ -411,7 +450,7 @@ def solve_hard_wall_spectrum(
         numerical = refinement_values[-1]
     else:
         raise ValueError(
-            "method must be 'shooting', 'collocation', or 'spectral'"
+            "method must be 'shooting', 'shooting-rust', 'collocation', or 'spectral'"
         )
 
     analytic = analytic_dimensionless_masses(num_modes)
@@ -421,6 +460,7 @@ def solve_hard_wall_spectrum(
     return HardWallSpectrumResult(
         config=config,
         method=method,
+        native_version=native_version,
         dimensionless_masses=numerical,
         analytic_dimensionless_masses=analytic,
         masses_gev=numerical / float(config.z_m_gev_inverse),
@@ -463,7 +503,7 @@ def hard_wall_cutoff_refinement(
 
 
 def _shooting_dimensionless_masses(
-    config: HardWallConfig, num_modes: int
+    config: HardWallConfig, num_modes: int, residual: Callable[[float], float]
 ) -> NDArray[np.float64]:
     reference = analytic_dimensionless_masses(num_modes + 1)
     roots = np.empty(num_modes, dtype=float)
@@ -475,8 +515,7 @@ def _shooting_dimensionless_masses(
             lower = 0.5 * (reference[index - 1] + reference[index])
         upper = 0.5 * (reference[index] + reference[index + 1])
         solution = root_scalar(
-            _shooting_ir_residual,
-            args=(config,),
+            residual,
             bracket=(float(lower), float(upper)),
             method="brentq",
             rtol=float(config.root_rtol),

@@ -6,6 +6,10 @@ All notable changes to HoloForge are recorded here.
 
 ### Added
 
+- Add an optional Rust DOP853 integrator for the hard-wall vector shooting
+  solver. Install it with `python -m pip install ./native` and select
+  `--method shooting-rust` for repeated spectrum calculations.
+
 - Add `run_question_review.py` to the research-gate skill, so the author of a
   question or claim card can run the independent review without carrying the
   card by hand. Each reviewer is a local non-interactive command named in the

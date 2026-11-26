@@ -1,0 +1,15 @@
+[package]
+name = "holoforge-native"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "BSD-3-Clause"
+description = "Optional Rust numerical kernels for HoloForge"
+
+[lib]
+name = "holoforge_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+ivp = "=0.6.0"
+pyo3 = { version = "0.27", features = ["extension-module", "abi3-py39"] }
