@@ -49,7 +49,7 @@ def _configure_hard_wall(parser: Any) -> None:
     )
     parser.add_argument(
         "--method",
-        choices=("shooting", "collocation", "spectral"),
+        choices=("shooting", "shooting-rust", "collocation", "spectral"),
         default="shooting",
         help="Numerical formulation (default: shooting).",
     )

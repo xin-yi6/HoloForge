@@ -80,6 +80,26 @@ holoforge verify hard-wall-vector --method collocation --json
 holoforge verify hard-wall-vector --method spectral --json
 ```
 
+### Optional Rust shooting integrator
+
+For repeated shooting calculations, install the native extension from a
+HoloForge checkout using the same Python environment as HoloForge and a
+current stable Rust toolchain (including Cargo):
+
+```bash
+python -m pip install ./native
+holoforge verify hard-wall-vector --method shooting-rust --json
+```
+
+In Python, pass `method="shooting-rust"` to `solve_hard_wall_spectrum` or
+`hard_wall_cutoff_refinement`. The Rust integrator evolves the same
+two-component initial value problem from the UV cutoff to the wall.
+HoloForge uses its existing SciPy Brent search, brackets, mode count, mass
+normalization and acceptance criteria. The verification record includes
+the selected route, extension version and configured tolerances. The default
+`shooting` method uses SciPy and works with the base Python installation.
+See the [Rust DOP853 implementation](https://docs.rs/ivp/0.6.0/ivp/methods/struct.DOP853.html).
+
 ## Interpretation limits
 
 The hard wall and its IR boundary condition are phenomenological inputs. The
