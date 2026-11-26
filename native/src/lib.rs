@@ -1,4 +1,5 @@
-//! Finite-cutoff transverse-vector shooting on a hard-wall AdS slice.
+//! Optional numerical kernels for HoloForge.
+mod gubser_nellore;
 use ivp::prelude::{FirstOrderSystem, Ivp, Method};
 use ivp::status::Status;
 use pyo3::exceptions::{PyRuntimeError, PyValueError};
@@ -70,5 +71,9 @@ fn hard_wall_residual(
 fn holoforge_native(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add("__version__", env!("CARGO_PKG_VERSION"))?;
     module.add_function(wrap_pyfunction!(hard_wall_residual, module)?)?;
+    module.add_function(wrap_pyfunction!(
+        gubser_nellore::gubser_nellore_equations,
+        module
+    )?)?;
     Ok(())
 }

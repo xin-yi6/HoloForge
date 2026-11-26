@@ -6,6 +6,10 @@ All notable changes to HoloForge are recorded here.
 
 ### Added
 
+- Add `--residual-backend rust` for the Gubser–Nellore and zero-density
+  DeWolfe–Gubser–Rosen benchmarks. The optional extension evaluates their
+  shared Einstein–scalar collocation residuals during nonlinear solves.
+
 - Add an optional Rust DOP853 integrator for the hard-wall vector shooting
   solver. Install it with `python -m pip install ./native` and select
   `--method shooting-rust` for repeated spectrum calculations.

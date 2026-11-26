@@ -27,6 +27,12 @@ DEWOLFE_GUBSER_ROSEN_MODEL_CARD = ModelCardReference(
 
 def _configure_dewolfe_gubser_rosen(parser: Any) -> None:
     parser.add_argument(
+        "--residual-backend",
+        choices=("numpy", "rust"),
+        default="numpy",
+        help="Evaluate neutral background collocation residuals with NumPy (default) or Rust.",
+    )
+    parser.add_argument(
         "--output-dir",
         type=Path,
         default=None,
@@ -37,7 +43,7 @@ def _configure_dewolfe_gubser_rosen(parser: Any) -> None:
 
 def _execute_dewolfe_gubser_rosen(args: Any) -> BenchmarkExecution:
     try:
-        result = verify_dewolfe_gubser_rosen_emd()
+        result = verify_dewolfe_gubser_rosen_emd(residual_backend=args.residual_backend)
         artifacts = {}
         if args.output_dir is not None:
             artifacts = save_dewolfe_gubser_rosen_artifacts(

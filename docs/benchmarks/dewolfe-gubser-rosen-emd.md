@@ -102,6 +102,13 @@ holoforge verify dewolfe-gubser-rosen-emd --output-dir OUTPUT_DIR
 python3 -m unittest tests.test_dewolfe_gubser_rosen_emd -v
 ```
 
+The neutral background uses the same Einstein–scalar collocation equations
+as the Gubser–Nellore benchmark. After installing the optional extension
+with `python -m pip install ./native`, run
+`holoforge verify dewolfe-gubser-rosen-emd --residual-backend rust` to
+accelerate the background residuals. Both backends use the same horizon
+targeting, susceptibility quadrature, and independent Maxwell checks.
+
 The output directory receives a strict JSON record, the computed curve as CSV,
 and a two-panel Figure 3 comparison. Existing artifact files are never
 overwritten silently.

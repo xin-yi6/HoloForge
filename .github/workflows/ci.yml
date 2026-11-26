@@ -52,11 +52,14 @@ jobs:
       - name: Run verification benchmark
         run: holoforge verify soft-wall-vector
 
-      - name: Build and exercise optional Rust shooting backend
+      - name: Build and exercise optional Rust kernels
         run: |
           python -m pip install ./native
           holoforge verify hard-wall-vector --method shooting-rust
           python -m unittest tests.test_hard_wall_rust -v
+          python -m unittest tests.test_einstein_scalar_rust -v
+          holoforge verify gubser-nellore-ed --residual-backend rust
+          holoforge verify dewolfe-gubser-rosen-emd --residual-backend rust
 
   historical-audit:
     name: Extended historical route audit

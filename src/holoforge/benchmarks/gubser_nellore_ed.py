@@ -10,6 +10,7 @@ the selected bottom-up model; it is not empirical validation of QCD.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import partial
 import hashlib
 import json
 import math
@@ -325,8 +326,11 @@ class CoupledSolverConfig:
     polish_tolerance: float = 1.0e-14
     polish_maximum_evaluations: int = 12
     oversampling_factor: int = 2
+    residual_backend: str = "numpy"
 
     def __post_init__(self) -> None:
+        if self.residual_backend not in ("numpy", "rust"):
+            raise ValueError("residual_backend must be 'numpy' or 'rust'")
         _validate_positive("root_tolerance", self.root_tolerance)
         _validate_integer(
             "maximum_evaluations_factor",
@@ -342,6 +346,12 @@ class CoupledSolverConfig:
         _validate_integer(
             "oversampling_factor", self.oversampling_factor, minimum=2
         )
+
+    def software_versions(self) -> Dict[str, str]:
+        versions = runtime_versions()
+        if self.residual_backend == "rust":
+            versions["holoforge-native"] = _native_collocation().__version__
+        return versions
 
 
 @dataclass(frozen=True)
@@ -600,13 +610,15 @@ def solve_coupled_profile(
         warp_factor = _interpolate_seed(seed.u, seed.warp_factor, u)
         scalar_factor = _interpolate_seed(seed.u, seed.scalar_factor, u)
     initial = np.concatenate((blackening, warp_factor, scalar_factor))
+    equations = (
+        _rust_collocation_equations(preset, resolved_x_h, u)
+        if resolved_config.residual_backend == "rust"
+        else partial(_scaled_coupled_equations, preset, resolved_x_h, u)
+    )
 
     def residual(vector: NDArray[np.float64]) -> NDArray[np.float64]:
         f, c, pfield = np.asarray(vector, dtype=float).reshape(3, size)
-        scaled = _scaled_coupled_equations(
-            preset,
-            resolved_x_h,
-            u,
+        scaled = equations(
             f,
             d1 @ f,
             d2 @ f,
@@ -886,14 +898,17 @@ def verify_gubser_nellore_ed(
     *,
     profile: str = "anchor",
     repeat_for_determinism: bool = True,
+    residual_backend: str = "numpy",
 ) -> VerificationRecord:
     """Run the approved coupled ED reproduction and return inspectable evidence."""
 
     if profile not in {"anchor", "figure"}:
         raise ValueError("profile must be 'anchor' or 'figure'")
-    first = _verify_once(profile)
+    config = CoupledSolverConfig(residual_backend=residual_backend)
+    versions = config.software_versions()
+    first = _verify_once(profile, config)
     if repeat_for_determinism:
-        second = _verify_once(profile)
+        second = _verify_once(profile, config)
         determinism_error: Optional[float] = _maximum_nested_numeric_difference(
             first["determinism_state"], second["determinism_state"]
         )
@@ -1073,12 +1088,13 @@ def verify_gubser_nellore_ed(
                 "phi = x_H u P",
             ],
             "nonlinear_solver": "hybr then frozen TRF polish when required",
+            "collocation_residual_backend": residual_backend,
             "independent_route": "horizon-seeded scalar-coordinate DOP853",
             "oversampling_factor": 2,
         },
         results=public_results,
         acceptance_checks=checks,
-        software_versions=runtime_versions(),
+        software_versions=versions,
         scope=(
             "Numerical reproduction of two public curves in a classical, "
             "zero-density, single-scalar bottom-up model; not empirical QCD "
@@ -1142,24 +1158,25 @@ def save_gubser_nellore_artifacts(
     return paths
 
 
-def _verify_once(profile: str) -> Dict[str, Any]:
+def _verify_once(profile: str, config: CoupledSolverConfig) -> Dict[str, Any]:
     cosh_count = 260 if profile == "anchor" else 700
     cosh_x = np.geomspace(0.10, 35.5, cosh_count)
     qcd_x = np.linspace(0.20, 1.25, 526)
     primary_branches = {
         COSH_CALIBRATION.identifier: solve_primary_branch(
-            COSH_CALIBRATION, cosh_x
+            COSH_CALIBRATION, cosh_x, config=config
         ),
-        QCD_LIKE.identifier: solve_primary_branch(QCD_LIKE, qcd_x),
+        QCD_LIKE.identifier: solve_primary_branch(QCD_LIKE, qcd_x, config=config),
     }
     branches = {
         COSH_CALIBRATION.identifier: solve_coupled_branch(
             COSH_CALIBRATION,
             np.geomspace(0.10, 35.5, 100),
             (40, 60, 80),
+            config=config,
         ),
         QCD_LIKE.identifier: solve_coupled_branch(
-            QCD_LIKE, np.linspace(0.20, 1.25, 106), (80, 120, 150)
+            QCD_LIKE, np.linspace(0.20, 1.25, 106), (80, 120, 150), config=config
         ),
     }
     presets = {
@@ -1271,6 +1288,48 @@ def _evaluate_branch(
         "curve": curve,
         "algebra_maximum_error": _potential_algebra_error(branch.preset),
     }
+
+
+def _native_collocation():
+    try:
+        import holoforge_native
+    except ImportError as exc:
+        raise RuntimeError(
+            "The Rust collocation residual requires the optional native extension. "
+            "From the repository root, run: python -m pip install ./native"
+        ) from exc
+    if not hasattr(holoforge_native, "gubser_nellore_equations"):
+        raise RuntimeError(
+            "The Rust collocation residual requires holoforge-native >= 0.2. "
+            "Update the extension with: python -m pip install ./native"
+        )
+    return holoforge_native
+
+
+def _rust_collocation_equations(
+    preset: PotentialPreset, x_h: float, u: NDArray[np.float64]
+):
+    kernel = _native_collocation().gubser_nellore_equations
+    uv_power = preset.uv_power
+    x_h_squared = x_h**2
+    scalar_scale = x_h * u
+    warp_scale = x_h_squared * u**2
+    denominator = uv_power**2 * x_h * u
+    nonzero = u != 0.0
+
+    def equations(f, fu, fuu, c, cu, cuu, pfield, pu, puu):
+        # Use the same potential and NumPy transcendental functions as the
+        # reference. Small rounding changes can alter the nonlinear iteration.
+        numerator = -np.exp(2.0 * (warp_scale * c)) * preset.first_derivative(
+            scalar_scale * pfield
+        )
+        potential_term = np.divide(numerator, denominator, out=np.zeros_like(u), where=nonzero)
+        return kernel(
+            x_h_squared, uv_power, u, (f, fu, fuu), (c, cu, cuu),
+            (pfield, pu, puu), potential_term,
+        )
+
+    return equations
 
 
 def _scaled_coupled_equations(
