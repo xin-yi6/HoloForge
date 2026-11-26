@@ -43,7 +43,6 @@ from holoforge.core import (
     ObservableSpec,
     SolverSpec,
     VerificationRecord,
-    runtime_versions,
 )
 from holoforge.numerics import chebyshev_lobatto_grid
 
@@ -766,12 +765,15 @@ def independent_master_point(
 def verify_dewolfe_gubser_rosen_emd(
     *,
     repeat_for_determinism: bool = True,
+    residual_backend: str = "numpy",
 ) -> VerificationRecord:
     """Run the owner-approved Phase 5A preflight and return bounded evidence."""
 
-    first = _verify_once()
+    config = CoupledSolverConfig(residual_backend=residual_backend)
+    versions = config.software_versions()
+    first = _verify_once(config)
     if repeat_for_determinism:
-        second = _verify_once()
+        second = _verify_once(config)
         determinism_error: Optional[float] = _maximum_nested_numeric_difference(
             first["determinism_state"], second["determinism_state"]
         )
@@ -944,6 +946,7 @@ def verify_dewolfe_gubser_rosen_emd(
             "coordinate": "u = x/x_H, x = z^(4-Delta_phi)",
             "unknowns": ["h(u)", "C(u)", "P(u)"],
             "nonlinear_solver": "hybr then accepted bounded TRF polish when triggered",
+            "collocation_residual_backend": residual_backend,
             "physical_targeting": "deterministic bracketed x_H to phi_H inversion",
             "quadrature": "Gauss--Legendre on the analytic spectral representation",
             "independent_background": "scalar-coordinate DOP853 master equation",
@@ -951,7 +954,7 @@ def verify_dewolfe_gubser_rosen_emd(
         },
         results=results,
         acceptance_checks=checks,
-        software_versions=runtime_versions(),
+        software_versions=versions,
         scope=(
             "AI-assisted, owner-approved numerical reproduction of the two DGR "
             "black-hole curves in source Figure 3 at zero chemical potential. "
@@ -1051,9 +1054,9 @@ def model_card_sha256(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def _verify_once() -> Dict[str, Any]:
+def _verify_once(config: CoupledSolverConfig) -> Dict[str, Any]:
     branches = {
-        degree: solve_targeted_branch(degree) for degree in DEFAULT_DEGREES
+        degree: solve_targeted_branch(degree, config=config) for degree in DEFAULT_DEGREES
     }
     fine = branches[DEFAULT_DEGREES[-1]]
     equation_diagnostics = [

@@ -27,6 +27,12 @@ GUBSER_NELLORE_MODEL_CARD = ModelCardReference(
 
 def _configure_gubser_nellore(parser: Any) -> None:
     parser.add_argument(
+        "--residual-backend",
+        choices=("numpy", "rust"),
+        default="numpy",
+        help="Evaluate collocation residuals with NumPy (default) or the optional Rust extension.",
+    )
+    parser.add_argument(
         "--profile",
         choices=("anchor", "figure"),
         default="anchor",
@@ -46,7 +52,9 @@ def _configure_gubser_nellore(parser: Any) -> None:
 
 def _execute_gubser_nellore(args: Any) -> BenchmarkExecution:
     try:
-        result = verify_gubser_nellore_ed(profile=args.profile)
+        result = verify_gubser_nellore_ed(
+            profile=args.profile, residual_backend=args.residual_backend
+        )
         artifacts = {}
         if args.output_dir is not None:
             artifacts = save_gubser_nellore_artifacts(result, args.output_dir)

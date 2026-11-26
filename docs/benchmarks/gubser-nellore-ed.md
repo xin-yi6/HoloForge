@@ -125,6 +125,20 @@ holoforge verify gubser-nellore-ed --profile figure --output-dir OUTPUT_DIR
 python3 -m unittest tests.test_gubser_nellore_ed -v
 ```
 
+For repeated background solves, install the optional extension from the
+repository root with a Rust toolchain and Cargo available.
+
+```bash
+python -m pip install ./native
+holoforge verify gubser-nellore-ed --residual-backend rust
+```
+
+Rust evaluates the three scaled equations at the collocation nodes. Both
+backends use the same NumPy spectral derivatives and potential, SciPy
+nonlinear solvers, and independent oversampled and DOP853 checks. NumPy is
+the default. The JSON record identifies the selected residual backend and
+the version of the extension when used.
+
 The output directory receives the complete JSON record, a CSV of both primary
 curves, and a two-panel PNG reproduction. Existing artifact files are never
 overwritten silently.
